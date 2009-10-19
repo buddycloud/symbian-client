@@ -1,0 +1,329 @@
+/*
+============================================================================
+ Name        : Buddycloud.r01
+ Author      : Ross Savage
+ Copyright   : Buddycloud 2008
+ Description : Localisation File : English
+ 
+               Please only translate text between quotations e.g. "Test"
+============================================================================
+*/
+
+// DO NOT TRANSLATE
+CHARACTER_SET UTF8
+
+rls_string r_string_app_caption "buddycloud"
+rls_string r_string_groupinvite_text " invited you to join channel: "
+// DO NOT TRANSLATE
+
+rls_string r_string_langcode "ro"
+rls_string r_string_translatedby "Translated by: mossad"
+
+rls_string r_string_followingtab_hint "Următorul"
+rls_string r_string_placestab_hint "Locuri"
+rls_string r_string_explorertab_hint "In apropiere"
+rls_string r_string_channelstab_hint "Canale"
+
+// CBA
+rls_string r_string_options_menu "Opţiuni"
+rls_string r_string_say_menu "Spune"
+rls_string r_string_cancel_menu "Anulare"
+rls_string r_string_next_menu "Următorul"
+rls_string r_string_endcall_menu "End Call"
+rls_string r_string_hide_menu "Ascunde"
+
+// Item
+rls_string r_string_item_newgroup "Noul canal..."
+rls_string r_string_item_newplace "Loc nou..."
+
+// Menu: Call
+rls_string r_string_options_loudspeaker "Comutare la Vorbitor"
+rls_string r_string_options_handset "Comutare la Handset"
+rls_string r_string_options_hold "Asteptare"
+rls_string r_string_options_resume "CV"
+rls_string r_string_options_endcall "Sfarsitul apelului"
+
+// Menu: Settings & Edit place
+rls_string r_string_options_edititem "Schimba"
+rls_string r_string_options_searchplace "Cautati pentru detalii"
+
+rls_string r_string_note_noresultsfound "Nu sa găsit niciun rezultat"
+rls_string r_string_note_requestsent "Cerere de trimis"
+rls_string r_string_note_messagequeued "Mesajul va fi trimis cand ve-ti fi online"
+rls_string r_string_note_offlinerequired "Ai nevoie de a fi off-line pentru a face acest lucru"
+
+// Positioning methods
+rls_string r_string_positioning_stationary "Acum, puteţi salva acest loc"
+rls_string r_string_positioning_moving "În momentul de faţă va aflati în mişcare. Marcarea locului acum nu poate garanta si datele vor putea fi introduse din nou aici"
+rls_string r_string_positioning_cell "Model de învăţare poate dura câteva minute"
+rls_string r_string_positioning_wifigps "Puteţi în continuare să salvati acest loc acum ca WiFi-ul este vazut"
+rls_string r_string_positioning_bt "Dacă alti utilizatori buddycloud sunt aproape de tine, te vom alatura si pe tine la locul lor"
+rls_string r_string_positioning_none "Nici o poziţionare disponibila în prezent. Vă rugăm să vă verificaţi Setări Poziţionare"
+
+// Menu: Search
+rls_string r_string_options_select "Selectaţi"
+rls_string r_string_options_newsearch "Cautare noua"
+rls_string r_string_options_previousresult "Inapoi la ceea ce a fost inainte"
+rls_string r_string_options_cancelsearch "Anulare cautarea"
+
+// Menu: Help
+rls_string r_string_options_help "Ajutor"
+rls_string r_string_help_help "Ajutor buddycloud"
+rls_string r_string_help_update "Update buddycloud"
+rls_string r_string_help_about "Despre"
+
+// Menu: Following
+rls_string r_string_options_exit "Iesire"
+rls_string r_string_options_done "Gata"
+rls_string r_string_options_connect "Du-te online"
+rls_string r_string_options_disconnect "Du-te offline"
+rls_string r_string_options_itemcontact "Contact"
+rls_string r_string_options_itemgroup "Canal"
+rls_string r_string_options_settings "Setari"
+rls_string r_string_item_viewmessages "Vezi mesajele"
+rls_string r_string_item_viewchannelmessages "Vezi canal"
+rls_string r_string_item_viewprivatemessages "Vizualizati mesaje private"
+rls_string r_string_item_showplacedetails "Arata detaliile locatiei"
+rls_string r_string_item_showchanneldetails "Detaliile canalului"
+rls_string r_string_item_call "Apelare contact"
+rls_string r_string_item_sendplacebysms "Trimite loc prin SMS"
+rls_string r_string_item_sendinvite "Invita in buddycloud"
+rls_string r_string_item_delete "Elimina"
+rls_string r_string_item_noticeaccept "Accepta"
+rls_string r_string_item_noticeacceptandfollow "Accepta si Continua"
+rls_string r_string_item_noticedecline "Neacceptare"
+rls_string r_string_update_setstatus "Actualizeaza starea"
+rls_string r_string_options_invite "Urmariti..."
+rls_string r_string_settings_usersettings "Preferinte"
+rls_string r_string_settings_communitysettings "Partajare online"
+rls_string r_string_settings_clearconnection "Schimbare conexiune"
+
+rls_string r_string_note_followinglistempty "Nu urmaresti nimic.\n\nUtilizeaza Canale, Explorer si file pentru a cauta lucruri, pentru a urmari."
+
+// Menu: Messaging
+rls_string r_string_options_openlink "Deschide link-ul"
+rls_string r_string_options_postmessage "Posteaza mesaj"
+rls_string r_string_options_postmedia "Posteaza Media"
+rls_string r_string_options_replytomessage "Răspundeţi"
+rls_string r_string_options_settopic "Setare subiect"
+rls_string r_string_options_jumptounread "Sariti la necitit"
+rls_string r_string_options_invitetochannel "Invita in canal"
+rls_string r_string_options_invitetootherchannel "Invita in alte canale"
+rls_string r_string_options_invitefriendtochannel "Invita urmaritorul"
+rls_string r_string_options_notificationon "Pune Buzz On"
+rls_string r_string_options_notificationoff "Pune Buzz off"
+
+// Menu: Places
+rls_string r_string_options_setcurrent "Salveaza locatia"
+rls_string r_string_options_setnext "Seteaza locul urmator"
+rls_string r_string_item_relearnplace "Reinvata acest loc"
+rls_string r_string_dialog_relearnplace "Acum sunteţi la acest loc şi doriţi să-l reinvatati?"
+rls_string r_string_item_setnext "Setare ca locul de lângă"
+rls_string r_string_item_editplace "Editeaza Detaliile"
+rls_string r_string_item_deleteplace "Eliminaţi locul"
+
+rls_string r_string_note_placelastseen "Vazut"
+rls_string r_string_note_placevisits "Vizite"
+rls_string r_string_note_placepopulation "Populaţia"
+rls_string r_string_note_learningplace "Invata locatia"
+rls_string r_string_note_updatingplace "Actualizarea locul..."
+rls_string r_string_note_noplaceaddress "Adresa nedefinita"
+rls_string r_string_note_placeslistempty "Nu aveti locuri marcate.\n\nPentru a cunoaste acest loc, apasati\n'Optiuni > Salveaza locatia'"
+
+// Menu: Nearby
+rls_string r_string_options_refresh "Actualizează"
+rls_string r_string_item_placeinfo "Detaliile locului"
+rls_string r_string_item_personinfo "Informatii despre persoana"
+rls_string r_string_item_setcurrent "Setare ca acest loc"
+rls_string r_string_item_subscribe "Adauga la locatiile mele"
+
+// Menu: Explorer
+rls_string r_string_options_explore "Exploreaza"
+rls_string r_string_item_seefollowers "Vezi adepţi"
+rls_string r_string_item_seeplaces "Vezi locurile"
+rls_string r_string_item_seefollowing "A se vedea următoarele"
+rls_string r_string_item_seeproducing "Vezi producatoare"
+rls_string r_string_item_seenearby "A se vedea în apropiere"
+rls_string r_string_item_seebeenhere "Cine a fost aici"
+rls_string r_string_item_seegoinghere "Ce se petrece aici"
+
+rls_string r_string_title_isfollowing "$USER urmareste"
+rls_string r_string_title_followedby "$OBJECT urmaritorii"
+rls_string r_string_title_isproducing "$USER produce"
+rls_string r_string_title_nearbyto "În apropiere de $OBJECT"
+rls_string r_string_title_whosbeento "Cine a fost la $PLACE"
+rls_string r_string_title_whosgoingto "Cine se duce la $PLACE"
+
+rls_string r_string_note_requesting "Cer..."
+rls_string r_string_note_channelrank "Gradul"
+
+// Menu: Channels
+rls_string r_string_list_featuredchannels "Canalele Populare"
+rls_string r_string_list_channelsyoumightlike "Canale care ar putea sa-ti placa"
+rls_string r_string_list_followersfavourites "Adepţii 'Favoriti'"
+rls_string r_string_list_mostpopularchannels "Cele mai populare canale"
+rls_string r_string_list_channelsneartoyou "Canale de langa tine"
+
+rls_string r_string_item_open "Deschide"
+rls_string r_string_item_follow "Urmareste"
+rls_string r_string_item_unfollow "Nu mai urmareste"
+
+// Channel: Settings & Configuration
+rls_string r_string_note_personalchannelcreated "Bine ati venit la canalele buddycloud $USER!\n\nAcesta este canalul tau personal pe buddycloud. Acest canal este doar al tau si iti permite sa difuzezi adeptilor/urmaritorilor tai!"
+rls_string r_string_note_mediauploadready "Poti sa-ti urci media la $LINK"
+rls_string r_string_note_userkickedfromgroup "$USER a fost scos din canal"
+rls_string r_string_note_userbannedfromgroup "$USER a fost banat din canal"
+rls_string r_string_dialog_kickconfirmation "Scoate aceasta persoana din canal (se va alatura la urmatoarea inregistrare)?"
+rls_string r_string_dialog_banconfirmation "Interzice acestei persoane sa mai vada canalul"
+rls_string r_string_item_banfromgroup "Banat din canal"
+rls_string r_string_item_kickfromgroup "Scos din canal"
+rls_string r_string_item_changerole "Schimbaţi rolul"
+rls_string r_string_list_changerole_title "Schimbaţi rolul de a:"
+rls_string r_string_changerole_itemlist_moderator "Moderator"
+rls_string r_string_changerole_itemlist_contributor "Contribuitor"
+rls_string r_string_changerole_itemlist_visitor "Vizitator"
+rls_string r_string_note_changerolefailed "Nu aveţi permisiunea de a schimba rolul acestei persoane"
+
+// Settings Item List
+rls_string r_string_settings_account_title "Cont"
+rls_string r_string_settings_itemlist_fullname "Numele complet"
+rls_string r_string_settings_itemlist_fullname_hint "Numele dvs. complet"
+rls_string r_string_settings_itemlist_email "Adresa de Email"
+rls_string r_string_settings_itemlist_email_hint "Adresa de e-mail"
+rls_string r_string_settings_itemlist_phonenumber "Numărul de telefon"
+rls_string r_string_settings_itemlist_phonenumber_hint "Numărul dvs. de telefon principal"
+rls_string r_string_settings_itemlist_username "Nume de utilizator"
+rls_string r_string_settings_itemlist_username_hint "buddycloud nume de utilizator"
+rls_string r_string_settings_itemlist_password "Parola"
+rls_string r_string_settings_itemlist_password_hint "buddycloud parola"
+
+rls_string r_string_settings_itemlist_language "Arata limba"
+rls_string r_string_settings_itemlist_showname "Afişare nume în canale"
+rls_string r_string_settings_itemlist_accesspoint "Puncte de access internet in folosinta"
+rls_string r_string_settings_itemlist_accesspointuserdefined "Definite de utilizator"
+rls_string r_string_settings_itemlist_accesspointalwaysask "Intodeauna intreaba"
+rls_string r_string_settings_itemlist_testserver "Conecteaza-te la serverul beta"
+rls_string r_string_settings_itemlist_autostart "Porneste aplicatia la repornirea telefonului"
+rls_string r_string_settings_itemlist_showcontacts "Arata persoanele de contact"
+
+rls_string r_string_settings_notifications_title "Notificari"
+rls_string r_string_settings_itemlist_groupnotification "Anunta posturile din canal"
+rls_string r_string_settings_itemlist_groupnever "Niciodată nu notifică"
+rls_string r_string_settings_itemlist_groupfirstonly "Primul post numai"
+rls_string r_string_settings_itemlist_groupallmessages "Toate postarile"
+rls_string r_string_settings_itemlist_notifyreply "Anunta-mi @Raspunsurile:"
+rls_string r_string_settings_itemlist_privatemessagetone "Sunet pentru mesaj privat"
+rls_string r_string_settings_itemlist_channelposttone "Avertizare post pe canal"
+rls_string r_string_settings_itemlist_directreplytone "Ton pentru @Raspunsuri"
+rls_string r_string_settings_itemlist_tonenone "Fara Ton"
+rls_string r_string_settings_itemlist_tonedefault "Ton Default"
+
+rls_string r_string_settings_beacons_title "Poziţionarea"
+rls_string r_string_settings_itemlist_cell "Cell Turnul"
+rls_string r_string_settings_itemlist_wlan "WIFI"
+rls_string r_string_settings_itemlist_bt "Bluetooth"
+rls_string r_string_settings_itemlist_gps "GPS"
+rls_string r_string_settings_itemlist_on "On"
+rls_string r_string_settings_itemlist_off "off"
+
+// Communities
+rls_string r_string_settings_facebook_text "Acum, veţi fi redirectionat catre http://apps.facebook.com/buddycloud. Vă rugăm să adăugaţi la cerere, de login şi să permită accesul la aceasta."
+rls_string r_string_settings_credentials_success "Update de succes"
+rls_string r_string_settings_credentials_fail "Update nu a reuşit.\nVă rugăm să vă verificaţi datele d-voastra şi să încercaţi din nou"
+
+// Edit Place List
+rls_string r_string_newplace_title "Loc Nou"
+rls_string r_string_editplace_title "Editeaza locatia"
+rls_string r_string_updatefailed_title "Update nu a reuşit"
+
+rls_string r_string_editplace_itemlist_name "Nume"
+rls_string r_string_editplace_itemlist_name_hint "de exemplu, 'Acasă' sau 'Starbucks'"
+rls_string r_string_editplace_itemlist_street "Strada"
+rls_string r_string_editplace_itemlist_street_hint "de exemplu, 'Piccadilly 171'"
+rls_string r_string_editplace_itemlist_area "Vecinătate"
+rls_string r_string_editplace_itemlist_area_hint "de exemplu, 'Mayfair'"
+rls_string r_string_editplace_itemlist_city "Oras"
+rls_string r_string_editplace_itemlist_city_hint "de exemplu, 'Londra'"
+rls_string r_string_editplace_itemlist_postcode "Cod poştal"
+rls_string r_string_editplace_itemlist_postcode_hint "de exemplu, 'W1J 9EJ'"
+rls_string r_string_editplace_itemlist_region "Regiunea"
+rls_string r_string_editplace_itemlist_region_hint "de exemplu, 'Greater London'"
+rls_string r_string_editplace_itemlist_country "Tara"
+rls_string r_string_editplace_itemlist_country_hint "de exemplu, 'Regatul Unit'"
+rls_string r_string_editplace_itemlist_visibility "Altele pot fi plasate aici?"
+rls_string r_string_editplace_itemlist_visibility_public "Shared"
+rls_string r_string_editplace_itemlist_visibility_private "Personale"
+
+// Following & Invitations
+rls_string r_string_followingrequest_title "Ca urmare a cererii"
+rls_string r_string_followerrequest_text "$USER doreste sa te urmareasca in buddycloud.\n* Arata-ti locatia si statusul\n* Arata-ti canalele personale\n* Arata-ti locatiile"
+
+rls_string r_string_channelinvite_title "Canal invitaţie"
+
+// Create channel
+rls_string r_string_dialog_createchannelname "Canalul de nume:"
+rls_string r_string_dialog_createchanneldescription "Scurtă Descriere:"
+rls_string r_string_channelfollowing_text "Canalul '$CHANNEL' există deja. Doriţi să urmaţi acest canal?"
+
+// Exit Confirmation
+rls_string r_string_exit_title "Confirmare iesirii"
+rls_string r_string_exit_text "Iesirea va te va scoate din buddycloud.\n\nEsti sigur?"
+
+// Authorization Error
+rls_string r_string_autherror_title "Inregistrarea a eşuat"
+rls_string r_string_autherror_text "Acest nume de utilizator există deja. Vă rugăm să vă verificaţi setările de cont şi să încercăm să reconectaţi."
+
+// Delete Item Message
+rls_string r_string_deleteitem_title "Confirma stergerea"
+rls_string r_string_deleteitem_text "Esti sigur ca vrei sa stergi aceasta?"
+
+// Sms/Email Messages
+rls_string r_string_invitemessage_title "Alaturate in buddycloud"
+rls_string r_string_invitemessage_text "buddycloud va ofera o noua modalitate de a difuza talentul/cunostiintele dvs. catre adeptii/urmaritorii tai! Viziteaza/mergi la http://m.buddycloud.com si ia-l acum!"
+rls_string r_string_sendplacemessage_title "Unde sunt"
+rls_string r_string_sendplacemessage_text "Sunt la $PLACE. http://m.buddycloud.com/place.php?id=$ID pentru detalii."
+
+// Did You Mean?
+rls_string r_string_didyoumean_title "Vrei sa zici...?"
+
+// Dialog
+rls_string r_string_dialog_setmood "Set status:"
+rls_string r_string_dialog_moodis "este"
+rls_string r_string_dialog_setcurrentlocation "Stabiliţi locul meu:"
+rls_string r_string_dialog_setnextlocation "Seteaza locul urmator:"
+rls_string r_string_dialog_settopic "Setare subiect:"
+rls_string r_string_dialog_newmessage "Mesaj nou:"
+rls_string r_string_dialog_addcontact "Introduceţi buddycloud sau Jabber ID-ul (de exemplu, test@gtalk.com):"
+
+// Notes
+rls_string r_string_note_connecting "Conectare..."
+rls_string r_string_note_reconnecting "Reconnectare..."
+rls_string r_string_note_connectingwith "Ma conectez cu\n$APN..."
+rls_string r_string_note_searching "Căutare..."
+rls_string r_string_note_updating "Actualizare..."
+rls_string r_string_note_online "Online"
+rls_string r_string_note_offline "Offline"
+
+// Call
+rls_string r_string_note_dialling "Apelarea $USER"
+rls_string r_string_note_talkingto "Vorbeste cu $USER"
+rls_string r_string_note_hangingup "Deconectat"
+
+// Setup 
+rls_string r_string_step2_title "Fii celebru"
+rls_string r_string_step2_text "canalele buddycloud va ofera o noua modalitate de a difuza talentul/cunostiintele dvs. catre adeptii/urmaritorii tai.\n\nbuddycloud canale va ajuta sa deveniti faimos pt cunostiintele dvs. unice despre un loc sau un subiect si sa creati o comunitate de adepti/urmaritori."
+
+rls_string r_string_step3_title "ce poti sa faci?"
+rls_string r_string_step3_text "Cu buddycloud poti creea un subiect in canal sau un canal personal despre tine. Buddycloud o sa arate automat locatia ta impreuna cu ce-i care te urmeaza sau la un nivel pe oras cu ceilalti.\n\nIntrodu-ti userul sau alege un nou user ca sa incepi :"
+
+rls_string r_string_step4_title "Beneficiul dvs"
+rls_string r_string_step4_text "buddycloud va ofera un nou nivel de interactivitate cu adeptii/urmaritorii dvs. si va creste popularitatea canalului.  Continua toata ziua, la costuri mici si fara depletie de pe telefon pe baterie,  datorita nivelului scazut de date folosit de buddycloud. Impartasi-ti/Imparti-ti locatia continuu, intrun mod sigur si controlat.\n\nVa rugam sa introduceti o parola sigura:"
+
+rls_string r_string_step5_title "Pastram legatura"
+rls_string r_string_step5_text "Fi notificat de noi servicii si noi versiuni ale aplicatiei buddycloud.\n\nVa rugam, lasati adresa de mail (optional), o vom pastra in siguranta:"
+
+rls_string r_string_step6_title "Felicitari!"
+rls_string r_string_step6_text "Conectarea e completa. Acum vei fi conectat si ingregistract la canalele buddycloud"
+rls_string r_string_step6_question "Vrei ca de acum inainte cand pornesti telefonul buddycloud sa porneasca automat?"
+
+// End of File

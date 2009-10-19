@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   version="1.0"
+   width="200"
+   height="100"
+   viewBox="0 0 200 100"
+   id="svg2">
+  <defs
+     id="defs15" />
+  <g
+     transform="translate(-73.40337,-0.3793632)"
+     id="g4">
+    <path
+       d="M 217.13373,50.379363 C 217.13692,73.881831 197.47379,92.935984 173.217,92.935984 C 148.9602,92.935984 129.29707,73.881831 129.30025,50.379363 C 129.29707,26.876894 148.9602,7.8227423 173.217,7.8227423 C 197.47379,7.8227423 217.13692,26.876894 217.13373,50.379363 L 217.13373,50.379363 z"
+       id="path6"
+       style="fill:none;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:9.49724865;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    <path
+       d="M 187.63278,50.379363 C 187.63278,58.257173 181.17861,64.643399 173.217,64.643399 C 165.25538,64.643399 158.80122,58.257173 158.80122,50.379363 C 158.80122,42.501553 165.25538,36.115327 173.217,36.115327 C 181.17861,36.115327 187.63278,42.501553 187.63278,50.379363 L 187.63278,50.379363 z"
+       id="path8"
+       style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:12.05000019;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    <path
+       d="M 217.94763,14.777174 C 235.61939,34.122199 236.18722,63.656775 218.2486,85.915792 L 228.97461,94.79718 C 250.42112,68.185427 250.31881,30.760941 227.66447,5.9615462 L 217.94763,14.777174 z"
+       id="path10"
+       style="fill:#000000;fill-opacity:0.73026315;fill-rule:evenodd;stroke:none;stroke-width:12.05000019;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    <path
+       d="M 128.85911,14.777171 C 111.18735,34.122196 110.61952,63.656772 128.55814,85.915792 L 117.83213,94.797182 C 96.385621,68.185424 96.487931,30.760938 119.14227,5.9615439 L 128.85911,14.777171 z"
+       id="path12"
+       style="fill:#555555;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:12.05000019;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+  </g>
+</svg>

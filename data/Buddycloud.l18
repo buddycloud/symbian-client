@@ -1,0 +1,329 @@
+/*
+============================================================================
+ Name        : Buddycloud.r01
+ Author      : Ross Savage
+ Copyright   : Buddycloud 2008
+ Description : Localisation File : English
+ 
+               Please only translate text between quotations e.g. "Test"
+============================================================================
+*/
+
+// DO NOT TRANSLATE
+CHARACTER_SET UTF8
+
+rls_string r_string_app_caption "buddycloud"
+rls_string r_string_groupinvite_text " invited you to join channel: "
+// DO NOT TRANSLATE
+
+rls_string r_string_langcode "nl"
+rls_string r_string_translatedby "vertaling door: maebs"
+
+rls_string r_string_followingtab_hint "Aan het volgen"
+rls_string r_string_placestab_hint "Plaatsen"
+rls_string r_string_explorertab_hint "Dichtbij"
+rls_string r_string_channelstab_hint "Kanalen"
+
+// CBA
+rls_string r_string_options_menu "Voorkeuren"
+rls_string r_string_say_menu "Zegt"
+rls_string r_string_cancel_menu "Annuleren "
+rls_string r_string_next_menu "Volgende"
+rls_string r_string_endcall_menu "End Call"
+rls_string r_string_hide_menu "Verbergen"
+
+// Item
+rls_string r_string_item_newgroup "Nieuw kanaal..."
+rls_string r_string_item_newplace "Nieuwe plaats..."
+
+// Menu: Call
+rls_string r_string_options_loudspeaker "Luidspreker gebruiken "
+rls_string r_string_options_handset "Overzetten naar handset"
+rls_string r_string_options_hold "Stop"
+rls_string r_string_options_resume "Doorgaan"
+rls_string r_string_options_endcall "Gesprek beëindigen"
+
+// Menu: Settings & Edit place
+rls_string r_string_options_edititem "Wijzigen"
+rls_string r_string_options_searchplace "Zoek voor details"
+
+rls_string r_string_note_noresultsfound "Geen resultaten gevonden"
+rls_string r_string_note_requestsent "Verzoek verstuurd"
+rls_string r_string_note_messagequeued "Bericht wordt verstuurd zodra u online bent"
+rls_string r_string_note_offlinerequired "U dient offline te zijn om dit actie uit te voeren"
+
+// Positioning methods
+rls_string r_string_positioning_stationary "You can now Bookmark this place"
+rls_string r_string_positioning_moving "U bent aan het bewegen. Hier een bookmark aanmaken kan herplaatsing niet nauwkeurig genoeg wordt gedaan"
+rls_string r_string_positioning_cell "Positiebepaling dmv. telefoon masten kunnen paar minuten duren"
+rls_string r_string_positioning_wifigps "You can still Bookmark this place now as Wifi beacons are seen"
+rls_string r_string_positioning_bt "Mocht er andere Buddycloud gebruiker dicht bij jou zijn, we zullen jullie plaatsen samenvoegen"
+rls_string r_string_positioning_none "Geen positionering mogelijk. Aub. uw positionering instellingen controleren"
+
+// Menu: Search
+rls_string r_string_options_select "Selecteren"
+rls_string r_string_options_newsearch "Nieuw zoekopdracht"
+rls_string r_string_options_previousresult "Terug naar vorige"
+rls_string r_string_options_cancelsearch "Zoekopdracht annuleren"
+
+// Menu: Help
+rls_string r_string_options_help "Help"
+rls_string r_string_help_help "buddycloud help"
+rls_string r_string_help_update "Update uitvoeren"
+rls_string r_string_help_about "Over buddycloud"
+
+// Menu: Following
+rls_string r_string_options_exit "Afsluiten"
+rls_string r_string_options_done "Klaar"
+rls_string r_string_options_connect "Ga online"
+rls_string r_string_options_disconnect "Ga offline"
+rls_string r_string_options_itemcontact "Contact"
+rls_string r_string_options_itemgroup "Channel"
+rls_string r_string_options_settings "Instellingen"
+rls_string r_string_item_viewmessages "Bericht lezen"
+rls_string r_string_item_viewchannelmessages "Channel kijken"
+rls_string r_string_item_viewprivatemessages "Private berichten lezen"
+rls_string r_string_item_showplacedetails "Show place details"
+rls_string r_string_item_showchanneldetails "Details weergeven"
+rls_string r_string_item_call "Contact bellen"
+rls_string r_string_item_sendplacebysms "Stuur plaats via SMS"
+rls_string r_string_item_sendinvite "Nodig uit voor buddycloud"
+rls_string r_string_item_delete "Verwijderen"
+rls_string r_string_item_noticeaccept "Aanvaard "
+rls_string r_string_item_noticeacceptandfollow "Aanvaard & Volg"
+rls_string r_string_item_noticedecline "Weigeren"
+rls_string r_string_update_setstatus "Status updaten"
+rls_string r_string_options_invite "Volgen..."
+rls_string r_string_settings_usersettings "Instellingen"
+rls_string r_string_settings_communitysettings "Online delen"
+rls_string r_string_settings_clearconnection "Verbinding wijzigen"
+
+rls_string r_string_note_followinglistempty "U heeft nog niks.\n\nMaak gebruik van Channels en Verkenner tabben om iets interessant te vinden."
+
+// Menu: Messaging
+rls_string r_string_options_openlink "Link openen"
+rls_string r_string_options_postmessage "Bericht sturen"
+rls_string r_string_options_postmedia "Media opsturen"
+rls_string r_string_options_replytomessage "Beantwoorden"
+rls_string r_string_options_settopic "Onderwerp instellen"
+rls_string r_string_options_jumptounread "Overslaan naar ongelezen bericht"
+rls_string r_string_options_invitetochannel "Nodig uit voor kanaal"
+rls_string r_string_options_invitetootherchannel "Nodig uit voor een ander kanaal"
+rls_string r_string_options_invitefriendtochannel "Stuur volger een uitnodiging"
+rls_string r_string_options_notificationon "Trilfunctie aanzetten"
+rls_string r_string_options_notificationoff "Trilfunctie uitzetten"
+
+// Menu: Places
+rls_string r_string_options_setcurrent "Bewaar nieuwe lokatie"
+rls_string r_string_options_setnext "Volgende bestemming instellen"
+rls_string r_string_item_relearnplace "Deze plaats herkennen"
+rls_string r_string_dialog_relearnplace "Bent u nú hier en de positionering wilt aanpassen?"
+rls_string r_string_item_setnext "Als volgende bestemming markeren"
+rls_string r_string_item_editplace "Wijzig details"
+rls_string r_string_item_deleteplace "Plaats verwijderen"
+
+rls_string r_string_note_placelastseen "Gezien"
+rls_string r_string_note_placevisits "Visits"
+rls_string r_string_note_placepopulation "Populatie"
+rls_string r_string_note_learningplace "Plaats verkennen"
+rls_string r_string_note_updatingplace "Plaatsnaam updaten..."
+rls_string r_string_note_noplaceaddress "Adres onbekend"
+rls_string r_string_note_placeslistempty "You have no bookmarked places.\n\nTo learn this place press\n'Options > Bookmark new place'"
+
+// Menu: Nearby
+rls_string r_string_options_refresh "Ververs"
+rls_string r_string_item_placeinfo "Plaats details"
+rls_string r_string_item_personinfo "Persoonlijke info"
+rls_string r_string_item_setcurrent "Deze positie markeren"
+rls_string r_string_item_subscribe "Voeg toe aan mijn lokaties"
+
+// Menu: Explorer
+rls_string r_string_options_explore "Verkennen"
+rls_string r_string_item_seefollowers "Zie aanhangers"
+rls_string r_string_item_seeplaces "Zie plaatsen"
+rls_string r_string_item_seefollowing "Zie aanhangers"
+rls_string r_string_item_seeproducing "Zie producerend"
+rls_string r_string_item_seenearby "Zie dichtstbijzijnde "
+rls_string r_string_item_seebeenhere "Who's been here"
+rls_string r_string_item_seegoinghere "Who's going here"
+
+rls_string r_string_title_isfollowing "$USER hangt aan"
+rls_string r_string_title_followedby "$OBJECT's aanhanger"
+rls_string r_string_title_isproducing "$USER is aan het produceren"
+rls_string r_string_title_nearbyto "Dichtbij $OBJECT"
+rls_string r_string_title_whosbeento "Who's been to $PLACE"
+rls_string r_string_title_whosgoingto "Wie gaat naar $PLACE"
+
+rls_string r_string_note_requesting "Aanvragen..."
+rls_string r_string_note_channelrank "Rang"
+
+// Menu: Channels
+rls_string r_string_list_featuredchannels "Featured Channels"
+rls_string r_string_list_channelsyoumightlike "Channels die je misschien leuk vindt"
+rls_string r_string_list_followersfavourites "Aanhangers' Favorieten "
+rls_string r_string_list_mostpopularchannels "Meest populair channels"
+rls_string r_string_list_channelsneartoyou "Kanalen dichtbij u"
+
+rls_string r_string_item_open "Openen"
+rls_string r_string_item_follow "Volgen"
+rls_string r_string_item_unfollow "Loskoppelen"
+
+// Channel: Settings & Configuration
+rls_string r_string_note_personalchannelcreated "Welcome to buddycloud channels $USER!\n\nThis is your very own personal channel on buddycloud. This channel is all your's and allows you to broadcast to your followers!"
+rls_string r_string_note_mediauploadready "You can now upload your media file at $LINK"
+rls_string r_string_note_userkickedfromgroup "$USER is niet meer in de channel"
+rls_string r_string_note_userbannedfromgroup "$USER is verboden van dit channel"
+rls_string r_string_dialog_kickconfirmation "Deze persoon van de channel uitgooien? (ze kunnen wel terugkomen bij de volgende login)"
+rls_string r_string_dialog_banconfirmation "Weiger deze persoon van de channel voor goed?"
+rls_string r_string_item_banfromgroup "Verwijderen van de channel"
+rls_string r_string_item_kickfromgroup "Van de channel eruit gooien"
+rls_string r_string_item_changerole "Functie wijzigen"
+rls_string r_string_list_changerole_title "Functie wijzigen als:"
+rls_string r_string_changerole_itemlist_moderator "Moderator"
+rls_string r_string_changerole_itemlist_contributor "Aanhangers"
+rls_string r_string_changerole_itemlist_visitor "Bezoeker "
+rls_string r_string_note_changerolefailed "You don't have permission to change this person's role"
+
+// Settings Item List
+rls_string r_string_settings_account_title "Account"
+rls_string r_string_settings_itemlist_fullname "Naam"
+rls_string r_string_settings_itemlist_fullname_hint "Uw naam"
+rls_string r_string_settings_itemlist_email "E-mail adres"
+rls_string r_string_settings_itemlist_email_hint "Uw e-mail adres"
+rls_string r_string_settings_itemlist_phonenumber "Telefoon nummer"
+rls_string r_string_settings_itemlist_phonenumber_hint "Uw telefoonnummer"
+rls_string r_string_settings_itemlist_username "Gebruikersnaam"
+rls_string r_string_settings_itemlist_username_hint "buddycloud username"
+rls_string r_string_settings_itemlist_password "Wachtwoord"
+rls_string r_string_settings_itemlist_password_hint "buddycloud password"
+
+rls_string r_string_settings_itemlist_language "Taal"
+rls_string r_string_settings_itemlist_showname "Namen in channel weergeven"
+rls_string r_string_settings_itemlist_accesspoint "Te gebruiken access point"
+rls_string r_string_settings_itemlist_accesspointuserdefined "Gebruikergedefinieerd "
+rls_string r_string_settings_itemlist_accesspointalwaysask "Altijd vragen"
+rls_string r_string_settings_itemlist_testserver "Verbinden met beta server"
+rls_string r_string_settings_itemlist_autostart "Programma starten met de opstart van de toestel?"
+rls_string r_string_settings_itemlist_showcontacts "Show phone Contacts"
+
+rls_string r_string_settings_notifications_title "Aankondiging"
+rls_string r_string_settings_itemlist_groupnotification "Meldt berichten in de channel"
+rls_string r_string_settings_itemlist_groupnever "Nooit melden"
+rls_string r_string_settings_itemlist_groupfirstonly "Alleen de eerste post "
+rls_string r_string_settings_itemlist_groupallmessages "Alle berichten"
+rls_string r_string_settings_itemlist_notifyreply "Meld mijn @antwoord:"
+rls_string r_string_settings_itemlist_privatemessagetone "Persoonlijke bericht toon"
+rls_string r_string_settings_itemlist_channelposttone "Channel bericht toon"
+rls_string r_string_settings_itemlist_directreplytone "Mijn @replies toon"
+rls_string r_string_settings_itemlist_tonenone "Stil"
+rls_string r_string_settings_itemlist_tonedefault "Default toon"
+
+rls_string r_string_settings_beacons_title "Positionering"
+rls_string r_string_settings_itemlist_cell "Telefoonmasten"
+rls_string r_string_settings_itemlist_wlan "WIFI"
+rls_string r_string_settings_itemlist_bt "Bluetooth"
+rls_string r_string_settings_itemlist_gps "GPS"
+rls_string r_string_settings_itemlist_on "Aan"
+rls_string r_string_settings_itemlist_off "Uit"
+
+// Communities
+rls_string r_string_settings_facebook_text "You will now be taken to http://apps.facebook.com/buddycloud the application page of buddycloud. Please add the application, login and grant access to it."
+rls_string r_string_settings_credentials_success "Update gelukt"
+rls_string r_string_settings_credentials_fail "Update mislukt. Gaarne uw instellingen nakijken en probeer opnieuw."
+
+// Edit Place List
+rls_string r_string_newplace_title "Nieuw plaatsnaam"
+rls_string r_string_editplace_title "Wijzig plaats"
+rls_string r_string_updatefailed_title "Update mislukt"
+
+rls_string r_string_editplace_itemlist_name "Naam"
+rls_string r_string_editplace_itemlist_name_hint "e.g. 'Home' or 'Starbucks'"
+rls_string r_string_editplace_itemlist_street "Street"
+rls_string r_string_editplace_itemlist_street_hint "e.g. '171 Piccadilly'"
+rls_string r_string_editplace_itemlist_area "Buurt"
+rls_string r_string_editplace_itemlist_area_hint "e.g. 'Mayfair'"
+rls_string r_string_editplace_itemlist_city "Stad"
+rls_string r_string_editplace_itemlist_city_hint "e.g. 'London'"
+rls_string r_string_editplace_itemlist_postcode "Postcode"
+rls_string r_string_editplace_itemlist_postcode_hint "e.g. 'W1J 9EJ'"
+rls_string r_string_editplace_itemlist_region "Regio"
+rls_string r_string_editplace_itemlist_region_hint "e.g. 'Greater London'"
+rls_string r_string_editplace_itemlist_country "Land"
+rls_string r_string_editplace_itemlist_country_hint "e.g. 'United Kingdom'"
+rls_string r_string_editplace_itemlist_visibility "Kan anderen ook hier zich bevinden?"
+rls_string r_string_editplace_itemlist_visibility_public "Gedeeld"
+rls_string r_string_editplace_itemlist_visibility_private "Persoonlijk"
+
+// Following & Invitations
+rls_string r_string_followingrequest_title "Aanhang verzoek"
+rls_string r_string_followerrequest_text "$USER wilt je volgen in buddycloud.\n* Je aanwezigheid & status tonen\n* Je persoonlijke channel tonen\n* Je plaatsen tonen"
+
+rls_string r_string_channelinvite_title "Channel uitnodiging"
+
+// Create channel
+rls_string r_string_dialog_createchannelname "Channel naam:"
+rls_string r_string_dialog_createchanneldescription "Korte omschrijving:"
+rls_string r_string_channelfollowing_text "De channel '$CHANNEL' bestaat al. Volgt de channel?"
+
+// Exit Confirmation
+rls_string r_string_exit_title "Afsluiting bevestigen"
+rls_string r_string_exit_text "Afsluiten en uitloggen van buddycloud. Weet u het zeker?"
+
+// Authorization Error
+rls_string r_string_autherror_title "Registratie mislukt"
+rls_string r_string_autherror_text "De gebruikersnaam is al in gebruik. Aub. uw Account Instellingen aanpassen."
+
+// Delete Item Message
+rls_string r_string_deleteitem_title "Verwijdering bevestigen"
+rls_string r_string_deleteitem_text "Weet u zeker dat u dit wilt verwijderen?"
+
+// Sms/Email Messages
+rls_string r_string_invitemessage_title "Meld je aan op buddycloud!"
+rls_string r_string_invitemessage_text "buddycloud gives you a new way to broadcast your awesomeness to your followers! Visit http://m.buddycloud.com to get it now!"
+rls_string r_string_sendplacemessage_title "Where I am"
+rls_string r_string_sendplacemessage_text "Ik ben nu in $PLACE. http://m.buddycloud.com/place.php?id=$ID voor details. "
+
+// Did You Mean?
+rls_string r_string_didyoumean_title "Bedoel je soms...?"
+
+// Dialog
+rls_string r_string_dialog_setmood "Status instellen:"
+rls_string r_string_dialog_moodis "is "
+rls_string r_string_dialog_setcurrentlocation "Stel mijn positie in:"
+rls_string r_string_dialog_setnextlocation "Volgende bestemming instellen:"
+rls_string r_string_dialog_settopic "Onderwerp instellen:"
+rls_string r_string_dialog_newmessage "Nieuw bericht:"
+rls_string r_string_dialog_addcontact "Buddycloud of JabberID invullen (bijv. test@gtalk.com):"
+
+// Notes
+rls_string r_string_note_connecting "Verbinden..."
+rls_string r_string_note_reconnecting "Verbinding herstellen..."
+rls_string r_string_note_connectingwith "Verbinden met\n$APN..."
+rls_string r_string_note_searching "Zoeken..."
+rls_string r_string_note_updating "Updaten..."
+rls_string r_string_note_online "Online"
+rls_string r_string_note_offline "Offline"
+
+// Call
+rls_string r_string_note_dialling "$USER bellen"
+rls_string r_string_note_talkingto "Praten met $USER"
+rls_string r_string_note_hangingup "Verbinding verbroken"
+
+// Setup 
+rls_string r_string_step2_title "Wordt beroemd!"
+rls_string r_string_step2_text "buddycloud channels geven u een nieuwe wijze om u bekend te maken.\n\nU kunt uw eigen channels aanmaken voor uw unieke kennis aan de wereld te laten zien, kan over een plaats zijn of een bepaald onderwerp, en om een gemeenschap van aanhangers op te bouwen."
+
+rls_string r_string_step3_title "What can you do?"
+rls_string r_string_step3_text "Met buddycloud u kunt een onderwerp channel aanmaken mbt. je experte kennis, of een persoonlijke channel die echt om jou gaat. Buddycloud gaat automatisch je positie delen als een bookmark met je aanhangers, of in de steden-niveau met alle anderen.\n\nHier uw buddycloud gebruikersnaam invullen of kies een nieuwe naam om te beginnen:"
+
+rls_string r_string_step4_title "Uw gewin"
+rls_string r_string_step4_text "buddycloud gives you a new level of interactivity with your followers and shows your channel's rising popularity. Keep going all day at low costs and without depleting your phone's battery, due to buddycloud's low data usage. Share your location continuously, yet in a controlled, safe way.\n\nPlease enter a secure password:"
+
+rls_string r_string_step5_title "Stay in touch"
+rls_string r_string_step5_text "Wilt u op de hoogte gehouden voor updates van dit applicatie?\n\nTyp hieronder uw email adres (optioneel), wij houden dit prive:"
+
+rls_string r_string_step6_title "Gefeliciteerd!"
+rls_string r_string_step6_text "De setup is nu voltooid. U wordt nu verbonden."
+rls_string r_string_step6_question "Wilt u dat buddycloud automatisch opgestart als u uw telefoontoestel aan zet? "
+
+// End of File

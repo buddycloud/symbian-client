@@ -1,0 +1,329 @@
+/*
+============================================================================
+ Name        : Buddycloud.r01
+ Author      : Ross Savage
+ Copyright   : Buddycloud 2008
+ Description : Localisation File : English
+ 
+               Please only translate text between quotations e.g. "Test"
+============================================================================
+*/
+
+// DO NOT TRANSLATE
+CHARACTER_SET UTF8
+
+rls_string r_string_app_caption "buddycloud"
+rls_string r_string_groupinvite_text " invited you to join channel: "
+// DO NOT TRANSLATE
+
+rls_string r_string_langcode "cz"
+rls_string r_string_translatedby "Translated by: wlcik"
+
+rls_string r_string_followingtab_hint "Odebírám"
+rls_string r_string_placestab_hint "Místa"
+rls_string r_string_explorertab_hint "Poblíž"
+rls_string r_string_channelstab_hint "Kanály"
+
+// CBA
+rls_string r_string_options_menu "Volby"
+rls_string r_string_say_menu "Říct"
+rls_string r_string_cancel_menu "Storno"
+rls_string r_string_next_menu "Další"
+rls_string r_string_endcall_menu "End Call"
+rls_string r_string_hide_menu "Hide"
+
+// Item
+rls_string r_string_item_newgroup "Nový kanál..."
+rls_string r_string_item_newplace "Nové místo..."
+
+// Menu: Call
+rls_string r_string_options_loudspeaker "Hlasitý odposlech"
+rls_string r_string_options_handset "Reproduktor telefonu"
+rls_string r_string_options_hold "Držet"
+rls_string r_string_options_resume "Pokračovat"
+rls_string r_string_options_endcall "Ukončit hovor"
+
+// Menu: Settings & Edit place
+rls_string r_string_options_edititem "Změnit"
+rls_string r_string_options_searchplace "Vyhledat detaily"
+
+rls_string r_string_note_noresultsfound "Žádné výsledky"
+rls_string r_string_note_requestsent "Žádost odeslána"
+rls_string r_string_note_messagequeued "Zpráva bude odeslána jakmile budeš online"
+rls_string r_string_note_offlinerequired "Pro provedení této operace musíš být offline"
+
+// Positioning methods
+rls_string r_string_positioning_stationary "Nyní můžeš pro toto místo vytvořit Záložku"
+rls_string r_string_positioning_moving "Právě se pohybuješ. Pokud teď vytvoříš záložku, neručím za pozdější správné zobrazení polohy"
+rls_string r_string_positioning_cell "Učení vzorce buněk může několik minut trvat"
+rls_string r_string_positioning_wifigps "Nalezeny Wifi majáky - nyní můžeš uložit toto místo mezi Záložky"
+rls_string r_string_positioning_bt "Pokud jsou poblíž další uživatelé buddycloud, nasměrujeme Tě k nim"
+rls_string r_string_positioning_none "K dispozici nejsou žádné technologie pro určení polohy. Prosím ověř své nastavení Určení Polohy"
+
+// Menu: Search
+rls_string r_string_options_select "Vybrat"
+rls_string r_string_options_newsearch "Nové hledání"
+rls_string r_string_options_previousresult "Zpět k předchozímu"
+rls_string r_string_options_cancelsearch "Stornovat vyhledávání"
+
+// Menu: Help
+rls_string r_string_options_help "Nápověda"
+rls_string r_string_help_help "buddycloud nápověda"
+rls_string r_string_help_update "Aktualizovat buddycloud"
+rls_string r_string_help_about "O aplikaci"
+
+// Menu: Following
+rls_string r_string_options_exit "Konec"
+rls_string r_string_options_done "Hotovo"
+rls_string r_string_options_connect "Připojit se"
+rls_string r_string_options_disconnect "Odpojit se"
+rls_string r_string_options_itemcontact "Kontakt"
+rls_string r_string_options_itemgroup "Kanál"
+rls_string r_string_options_settings "Nastavení"
+rls_string r_string_item_viewmessages "Zobrazit zprávy"
+rls_string r_string_item_viewchannelmessages "Zobrazit kanál"
+rls_string r_string_item_viewprivatemessages "Zobrazit zprávy"
+rls_string r_string_item_showplacedetails "Zobrazit detaily místa"
+rls_string r_string_item_showchanneldetails "Show channel details"
+rls_string r_string_item_call "Volat kontakt"
+rls_string r_string_item_sendplacebysms "Poslat info o poloze"
+rls_string r_string_item_sendinvite "Pozvat na buddycloud"
+rls_string r_string_item_delete "Odstranit"
+rls_string r_string_item_noticeaccept "Accept"
+rls_string r_string_item_noticeacceptandfollow "Accept and Follow"
+rls_string r_string_item_noticedecline "Decline"
+rls_string r_string_update_setstatus "Aktualizovat status"
+rls_string r_string_options_invite "Odebírat..."
+rls_string r_string_settings_usersettings "Předvolby"
+rls_string r_string_settings_communitysettings "Sdílet online"
+rls_string r_string_settings_clearconnection "Změnit připojení"
+
+rls_string r_string_note_followinglistempty "Neodebíráš žádné položky.\n\nPoužij záložky Kanál a Průzkumník k nalezení obsahu k odběru."
+
+// Menu: Messaging
+rls_string r_string_options_openlink "Otevřít odkaz"
+rls_string r_string_options_postmessage "Post message"
+rls_string r_string_options_postmedia "Post media"
+rls_string r_string_options_replytomessage "Odpovědět"
+rls_string r_string_options_settopic "Nastavit téma"
+rls_string r_string_options_jumptounread "Skoč na nepřečtené"
+rls_string r_string_options_invitetochannel "Pozvat na kanál"
+rls_string r_string_options_invitetootherchannel "Pozvat na jiný kanál"
+rls_string r_string_options_invitefriendtochannel "Pozvat uživatele"
+rls_string r_string_options_notificationon "Zapnout vibrace"
+rls_string r_string_options_notificationoff "Vypnout vibrace"
+
+// Menu: Places
+rls_string r_string_options_setcurrent "Záložka pro nové místo"
+rls_string r_string_options_setnext "Nastavit příští místo"
+rls_string r_string_item_relearnplace "Znovu naučit toto místo"
+rls_string r_string_dialog_relearnplace "Chceš znovu naučit aktuální místo?"
+rls_string r_string_item_setnext "Nastavit jako příští místo"
+rls_string r_string_item_editplace "Upravit detaily"
+rls_string r_string_item_deleteplace "Odstranit místo"
+
+rls_string r_string_note_placelastseen "Viděn"
+rls_string r_string_note_placevisits "Návštěvy"
+rls_string r_string_note_placepopulation "Populace"
+rls_string r_string_note_learningplace "Učím se místo"
+rls_string r_string_note_updatingplace "Aktualizace místa..."
+rls_string r_string_note_noplaceaddress "Adresa nezadána"
+rls_string r_string_note_placeslistempty "Tvé záložky neobsahují žádná místa.\n\nPro naučení tohoto místa použij\n'Volby > Záložka pro nové místo'"
+
+// Menu: Nearby
+rls_string r_string_options_refresh "Obnovit"
+rls_string r_string_item_placeinfo "Detaily místa"
+rls_string r_string_item_personinfo "Údaje o osobě"
+rls_string r_string_item_setcurrent "Nastavit jako toto místo"
+rls_string r_string_item_subscribe "Přidat k mým Místům"
+
+// Menu: Explorer
+rls_string r_string_options_explore "Prozkoumat"
+rls_string r_string_item_seefollowers "Zobrazit odebírající"
+rls_string r_string_item_seeplaces "Zobrazit místa"
+rls_string r_string_item_seefollowing "Zobrazit odebírané"
+rls_string r_string_item_seeproducing "Zobrazit vytvořené"
+rls_string r_string_item_seenearby "Zobrazit okolí"
+rls_string r_string_item_seebeenhere "Kdo tu byl"
+rls_string r_string_item_seegoinghere "Kdo sem jde"
+
+rls_string r_string_title_isfollowing "$USER odebírá"
+rls_string r_string_title_followedby "Odběratelé $OBJECT"
+rls_string r_string_title_isproducing "$USER vytváří"
+rls_string r_string_title_nearbyto "V blízkosti $OBJECT"
+rls_string r_string_title_whosbeento "Kdo byl na/u $PLACE"
+rls_string r_string_title_whosgoingto "Kdo jde k $PLACE"
+
+rls_string r_string_note_requesting "Odesílám žádost..."
+rls_string r_string_note_channelrank "Žebříček"
+
+// Menu: Channels
+rls_string r_string_list_featuredchannels "Doporučené kanály"
+rls_string r_string_list_channelsyoumightlike "Kanály které se Ti mohou líbit"
+rls_string r_string_list_followersfavourites "Oblíbené kanály odběratelů"
+rls_string r_string_list_mostpopularchannels "Nejpopulárnější kanály"
+rls_string r_string_list_channelsneartoyou "Kanály v okolí"
+
+rls_string r_string_item_open "Otevřít"
+rls_string r_string_item_follow "Odebírat"
+rls_string r_string_item_unfollow "Zrušit odběr"
+
+// Channel: Settings & Configuration
+rls_string r_string_note_personalchannelcreated "Vítej na buddycloud channels $USER!\n\nToto je Tvůj osobní kanál, na kterém se můžeš s ostatními podělit o vše co uznáš za vhodné!"
+rls_string r_string_note_mediauploadready "You can now upload your media file at $LINK"
+rls_string r_string_note_userkickedfromgroup "$USER byl vykopnut z kanálu."
+rls_string r_string_note_userbannedfromgroup "$USER byl zakázán vstup na kanál."
+rls_string r_string_dialog_kickconfirmation "Vykopnout tohoto uživatele z kanálu (vrátí se po příštím přihlášení)?"
+rls_string r_string_dialog_banconfirmation "Zakázat této osobě vstup na kanál?"
+rls_string r_string_item_banfromgroup "Zakázat vstup na kanál"
+rls_string r_string_item_kickfromgroup "Vykopnout z kanálu"
+rls_string r_string_item_changerole "Změnit roli"
+rls_string r_string_list_changerole_title "Změnit roli na:"
+rls_string r_string_changerole_itemlist_moderator "Moderátor"
+rls_string r_string_changerole_itemlist_contributor "Odběratel"
+rls_string r_string_changerole_itemlist_visitor "Návštěvník"
+rls_string r_string_note_changerolefailed "Nemáš oprávnění pro změnu role této osoby"
+
+// Settings Item List
+rls_string r_string_settings_account_title "Účet"
+rls_string r_string_settings_itemlist_fullname "Jméno a příjmení"
+rls_string r_string_settings_itemlist_fullname_hint "Tvé úplné jméno"
+rls_string r_string_settings_itemlist_email "E-mail"
+rls_string r_string_settings_itemlist_email_hint "Tvůj e-mail"
+rls_string r_string_settings_itemlist_phonenumber "Telefonní číslo"
+rls_string r_string_settings_itemlist_phonenumber_hint "Tvé primární tel.číslo"
+rls_string r_string_settings_itemlist_username "Uživatelské jméno"
+rls_string r_string_settings_itemlist_username_hint "buddycloud uživatel"
+rls_string r_string_settings_itemlist_password "Heslo"
+rls_string r_string_settings_itemlist_password_hint "buddycloud heslo"
+
+rls_string r_string_settings_itemlist_language "Použitý jazyk"
+rls_string r_string_settings_itemlist_showname "Zobrazit v kanálech jména"
+rls_string r_string_settings_itemlist_accesspoint "Použít přístupový bod"
+rls_string r_string_settings_itemlist_accesspointuserdefined "Nastaveno uživatelem"
+rls_string r_string_settings_itemlist_accesspointalwaysask "Vždy se zeptat"
+rls_string r_string_settings_itemlist_testserver "Připojit se k beta serveru"
+rls_string r_string_settings_itemlist_autostart "Spustit po startu telefonu"
+rls_string r_string_settings_itemlist_showcontacts "Zobrazit Kontakty z telefonu"
+
+rls_string r_string_settings_notifications_title "Notifications"
+rls_string r_string_settings_itemlist_groupnotification "Upozornění na kanál"
+rls_string r_string_settings_itemlist_groupnever "Nikdy neupozorňovat"
+rls_string r_string_settings_itemlist_groupfirstonly "První nepřečtená zpráva"
+rls_string r_string_settings_itemlist_groupallmessages "Všechny zprávy"
+rls_string r_string_settings_itemlist_notifyreply "Upozornit na odpovědi"
+rls_string r_string_settings_itemlist_privatemessagetone "Private message tone"
+rls_string r_string_settings_itemlist_channelposttone "Channel post tone"
+rls_string r_string_settings_itemlist_directreplytone "My @Replies tone"
+rls_string r_string_settings_itemlist_tonenone "No tone"
+rls_string r_string_settings_itemlist_tonedefault "Default tone"
+
+rls_string r_string_settings_beacons_title "Určení polohy"
+rls_string r_string_settings_itemlist_cell "Základnová stanice"
+rls_string r_string_settings_itemlist_wlan "WIFI"
+rls_string r_string_settings_itemlist_bt "Bluetooth"
+rls_string r_string_settings_itemlist_gps "GPS"
+rls_string r_string_settings_itemlist_on "Zapnuto"
+rls_string r_string_settings_itemlist_off "Vypnuto"
+
+// Communities
+rls_string r_string_settings_facebook_text "Nyní budeš přesměrován na http://apps.facebook.com/buddycloud - stránku aplikace buddycloud. Prosím vlož aplikaci, přihlaš se a povol jí přístup."
+rls_string r_string_settings_credentials_success "Aktualizace byla úspěšná"
+rls_string r_string_settings_credentials_fail "Aktualizace selhala.\nProsím zkontroluj své přihlašovací údaje a zkus to znovu"
+
+// Edit Place List
+rls_string r_string_newplace_title "Nové místo"
+rls_string r_string_editplace_title "Upravit místo"
+rls_string r_string_updatefailed_title "Aktualizace selhala"
+
+rls_string r_string_editplace_itemlist_name "Jméno"
+rls_string r_string_editplace_itemlist_name_hint "např. 'Doma' nebo 'Starbucks'"
+rls_string r_string_editplace_itemlist_street "Ulice"
+rls_string r_string_editplace_itemlist_street_hint "např. 'Slévačská 11'"
+rls_string r_string_editplace_itemlist_area "Sousedství"
+rls_string r_string_editplace_itemlist_area_hint "např. 'Hloubětín'"
+rls_string r_string_editplace_itemlist_city "Město"
+rls_string r_string_editplace_itemlist_city_hint "např. 'Praha'"
+rls_string r_string_editplace_itemlist_postcode "PSČ"
+rls_string r_string_editplace_itemlist_postcode_hint "např. '198 00'"
+rls_string r_string_editplace_itemlist_region "Region"
+rls_string r_string_editplace_itemlist_region_hint "např. 'Praha' (okres)"
+rls_string r_string_editplace_itemlist_country "Země"
+rls_string r_string_editplace_itemlist_country_hint "např. 'Česká Republika'"
+rls_string r_string_editplace_itemlist_visibility "Mohou sem být umístěni ostatní?"
+rls_string r_string_editplace_itemlist_visibility_public "Sdíleno"
+rls_string r_string_editplace_itemlist_visibility_private "Osobní"
+
+// Following & Invitations
+rls_string r_string_followingrequest_title "Přidat kamaráda"
+rls_string r_string_followerrequest_text "$USER Tě chce následovat na buddycloud.\n* Ukázat Tvou polohu a status\n* Ukázat Tvůj osobní kanál\n* Ukázat Tvá místa"
+
+rls_string r_string_channelinvite_title "Pozvání na kanál"
+
+// Create channel
+rls_string r_string_dialog_createchannelname "Název kanálu:"
+rls_string r_string_dialog_createchanneldescription "Krátký popis kanálu:"
+rls_string r_string_channelfollowing_text "Kanál '$CHANNEL' už existuje. Chceš jej odebírat?"
+
+// Exit Confirmation
+rls_string r_string_exit_title "Potvrď ukončení"
+rls_string r_string_exit_text "Ukončením klienta se odhlásíš z buddycloud. Jsi si jistý?"
+
+// Authorization Error
+rls_string r_string_autherror_title "Registrace se nezdařila"
+rls_string r_string_autherror_text "Toto uživatelské jméno už existuje. Prosím zkontroluj Nastavení Účtu a zkus se připojit znovu."
+
+// Delete Item Message
+rls_string r_string_deleteitem_title "Potvrdit odstranění"
+rls_string r_string_deleteitem_text "Opravdu odstranit?"
+
+// Sms/Email Messages
+rls_string r_string_invitemessage_title "Přidej se k nám na buddycloud!"
+rls_string r_string_invitemessage_text "buddycloud Ti prinasi novou cestu jak sdilet svou uzasnost se svymi odberateli! Stahnes jej na http://m.buddycloud.com !"
+rls_string r_string_sendplacemessage_title "Kde jsem"
+rls_string r_string_sendplacemessage_text "Ted jsem v $PLACE. Pro detaily jdi na http://m.buddycloud.com/place.php?id=$ID."
+
+// Did You Mean?
+rls_string r_string_didyoumean_title "Měl jsi na mysli...?"
+
+// Dialog
+rls_string r_string_dialog_setmood "Nastavit status:"
+rls_string r_string_dialog_moodis "je "
+rls_string r_string_dialog_setcurrentlocation "Moje umístění:"
+rls_string r_string_dialog_setnextlocation "Nastavit příští místo:"
+rls_string r_string_dialog_settopic "Nastavit téma:"
+rls_string r_string_dialog_newmessage "Nová zpráva:"
+rls_string r_string_dialog_addcontact "Zadej buddycloud či Jabber Id (např. test@gtalk.com):"
+
+// Notes
+rls_string r_string_note_connecting "Připojuji se..."
+rls_string r_string_note_reconnecting "Znovu se připojuji..."
+rls_string r_string_note_connectingwith "Připojuji se prostřednictvím\n$APN..."
+rls_string r_string_note_searching "Hledám..."
+rls_string r_string_note_updating "Aktualizuji..."
+rls_string r_string_note_online "Online"
+rls_string r_string_note_offline "Offline"
+
+// Call
+rls_string r_string_note_dialling "Volám $USER"
+rls_string r_string_note_talkingto "Mluvíš s $USER"
+rls_string r_string_note_hangingup "Odpojeno"
+
+// Setup 
+rls_string r_string_step2_title "Buď známý!"
+rls_string r_string_step2_text "buddycloud channels Ti přináší novou možnost jak ukázat svou vyjímečnost ostatním.\n\nS buddycloud channels se můžeš proslavit svou jedinečnou znalostí místa či tématu a vybudovat si komunitu odběratelů."
+
+rls_string r_string_step3_title "Co vše můžeš dělat?"
+rls_string r_string_step3_text "S buddycloud můžeš vytvářet kanály zaměřené na témata o která se zajímáš, nebo si vytvořit svůj osobní kanál týkající se jen Tebe. buddycloud bude automaticky sdílet Tvoji polohu s Tvými odběrateli formou srozumitelných záložek či na úrovni města s kýmkoli dalším.\n\nProsím zvol si své uživatelské jméno:"
+
+rls_string r_string_step4_title "Tvé výhody"
+rls_string r_string_step4_text "buddycloud přináší novou úroveň interakce s odběrateli a můžeš sledovat rostoucí popularitu svého kanálu. To vše při nízkých nárocích na datové přenosy a bez plýtvání energií Tvého telefonu. Můžeš sdílet svou polohu nepřetržitě ale bezpečně. \n\nZvol si bezpečné heslo:"
+
+rls_string r_string_step5_title "Zůstaň v obraze"
+rls_string r_string_step5_text "Buď informován o nových službách buddycloud a nových verzích klienta.\n\nProsím zadej svůj e-mail(volitelně), bude v bezpečí:"
+
+rls_string r_string_step6_title "Gratuluji!"
+rls_string r_string_step6_text "Nastavení je dokončeno. Teď budeš připojen a přihlášen k buddycloud channels."
+rls_string r_string_step6_question "Přeješ si aby se buddycloud od nynějška spouštěl po zapnutí telefonu?"
+
+// End of File

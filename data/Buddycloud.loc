@@ -1,0 +1,117 @@
+/*
+============================================================================
+ Name        : Buddycloud.loc
+ Author      : Ross Savage
+ Copyright   : Buddycloud 2007
+ Description : This file contains all the localization for Buddycloud.
+============================================================================
+*/
+
+#ifndef __BUDDYCLOUD_LOC__
+#define __BUDDYCLOUD_LOC__
+
+#ifdef LANGUAGE_01
+#include "Buddycloud.l01"
+#endif
+
+#ifdef LANGUAGE_02
+#include "Buddycloud.l02"
+#endif
+
+#ifdef LANGUAGE_03
+#include "Buddycloud.l03"
+#endif
+
+#ifdef LANGUAGE_04
+#include "Buddycloud.l04"
+#endif
+
+#ifdef LANGUAGE_05
+#include "Buddycloud.l05"
+#endif
+
+#ifdef LANGUAGE_06
+#include "Buddycloud.l06"
+#endif
+
+#ifdef LANGUAGE_08
+#include "Buddycloud.l08"
+#endif
+
+#ifdef LANGUAGE_09
+#include "Buddycloud.l09"
+#endif
+
+#ifdef LANGUAGE_13
+#include "Buddycloud.l13"
+#endif
+
+#ifdef LANGUAGE_14
+#include "Buddycloud.l14"
+#endif
+
+#ifdef LANGUAGE_16
+#include "Buddycloud.l16"
+#endif
+
+#ifdef LANGUAGE_17
+#include "Buddycloud.l17"
+#endif
+
+#ifdef LANGUAGE_18
+#include "Buddycloud.l18"
+#endif
+
+#ifdef LANGUAGE_25
+#include "Buddycloud.l25"
+#endif
+
+#ifdef LANGUAGE_27
+#include "Buddycloud.l27"
+#endif
+
+#ifdef LANGUAGE_31
+#include "Buddycloud.l31"
+#endif
+
+#ifdef LANGUAGE_33
+#include "Buddycloud.l33"
+#endif
+
+#ifdef LANGUAGE_37
+#include "Buddycloud.l37"
+#endif
+
+#ifdef LANGUAGE_49
+#include "Buddycloud.l49"
+#endif
+
+#ifdef LANGUAGE_54
+#include "Buddycloud.l54"
+#endif
+
+#ifdef LANGUAGE_57
+#include "Buddycloud.l57"
+#endif
+
+#ifdef LANGUAGE_59
+#include "Buddycloud.l59"
+#endif
+
+#ifdef LANGUAGE_65
+#include "Buddycloud.l65"
+#endif
+
+#ifdef LANGUAGE_78
+#include "Buddycloud.l78"
+#endif
+
+#ifdef LANGUAGE_512
+#include "Buddycloud.l512"
+#endif
+
+#ifdef LANGUAGE_513
+#include "Buddycloud.l513"
+#endif
+
+#endif // __BUDDYCLOUD_LOC__

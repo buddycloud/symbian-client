@@ -1,0 +1,329 @@
+/*
+============================================================================
+ Name        : Buddycloud.r01
+ Author      : Ross Savage
+ Copyright   : Buddycloud 2008
+ Description : Localisation File : English
+ 
+               Please only translate text between quotations e.g. "Test"
+============================================================================
+*/
+
+// DO NOT TRANSLATE
+CHARACTER_SET UTF8
+
+rls_string r_string_app_caption "buddycloud"
+rls_string r_string_groupinvite_text " invited you to join channel: "
+// DO NOT TRANSLATE
+
+rls_string r_string_langcode "fi"
+rls_string r_string_translatedby "Translated by: supermurmeli"
+
+rls_string r_string_followingtab_hint "Seurattavat"
+rls_string r_string_placestab_hint "Paikat"
+rls_string r_string_explorertab_hint "Lähellä"
+rls_string r_string_channelstab_hint "Kanavat"
+
+// CBA
+rls_string r_string_options_menu "Vaihtoehdot"
+rls_string r_string_say_menu "Sano"
+rls_string r_string_cancel_menu "Peruuta"
+rls_string r_string_next_menu "Seuraava"
+rls_string r_string_endcall_menu "End Call"
+rls_string r_string_hide_menu "Piilota"
+
+// Item
+rls_string r_string_item_newgroup "Uusi kanava..."
+rls_string r_string_item_newplace "Uusi paikka..."
+
+// Menu: Call
+rls_string r_string_options_loudspeaker "Vaihda kaiuttimeen"
+rls_string r_string_options_handset "Vaihda kuulokkeeseen"
+rls_string r_string_options_hold "Pitoon"
+rls_string r_string_options_resume "Jatka"
+rls_string r_string_options_endcall "Lopeta puhelu"
+
+// Menu: Settings & Edit place
+rls_string r_string_options_edititem "Muuta"
+rls_string r_string_options_searchplace "Etsi lisätietoja"
+
+rls_string r_string_note_noresultsfound "Haku ei tuottanut tulosta"
+rls_string r_string_note_requestsent "Pyyntö lähetetty"
+rls_string r_string_note_messagequeued "Viesti lähetetään kun siirryt online-tilaan"
+rls_string r_string_note_offlinerequired "Sinun täytyy olla katkaista yhteys tehdäksesi tämän"
+
+// Positioning methods
+rls_string r_string_positioning_stationary "Voit nyt kirjanmerkitä tämän paikan"
+rls_string r_string_positioning_moving "Olet liikkeellä. Kirjanmerkin tekeminen nyt ei takaa, että sinut voidaan paikantaa tänne uudestaan."
+rls_string r_string_positioning_cell "Tukiasemien oppiminen voi kestää useita minuutteja"
+rls_string r_string_positioning_wifigps "Voit silti kirjanmerkitä tämän paikan sillä langattomia verkkoja on löytynyt"
+rls_string r_string_positioning_bt "Jos muita buddycloudin käyttäjiä on lähelläsi, napsautamme sinut heidän paikkaansa."
+rls_string r_string_positioning_none "Paikantaminen ei ole juuri nyt mahdollista. Tarkista paikannusasetukset."
+
+// Menu: Search
+rls_string r_string_options_select "Valitse"
+rls_string r_string_options_newsearch "Uusi haku"
+rls_string r_string_options_previousresult "Takaisin edelliseen"
+rls_string r_string_options_cancelsearch "Peruuta haku"
+
+// Menu: Help
+rls_string r_string_options_help "Ohje"
+rls_string r_string_help_help "buddycloud ohje"
+rls_string r_string_help_update "Päivitä buddycloud"
+rls_string r_string_help_about "Tietoja"
+
+// Menu: Following
+rls_string r_string_options_exit "Poistu"
+rls_string r_string_options_done "Valmis"
+rls_string r_string_options_connect "Yhdistä"
+rls_string r_string_options_disconnect "Katkaise yhteys"
+rls_string r_string_options_itemcontact "Yhteystieto"
+rls_string r_string_options_itemgroup "Kanava"
+rls_string r_string_options_settings "Asetukset"
+rls_string r_string_item_viewmessages "Näytä viestit"
+rls_string r_string_item_viewchannelmessages "Näytä kanava"
+rls_string r_string_item_viewprivatemessages "Näytä yksityisviestit"
+rls_string r_string_item_showplacedetails "Näytä paikan tiedot"
+rls_string r_string_item_showchanneldetails "Näytä kanavan tiedot"
+rls_string r_string_item_call "Soita"
+rls_string r_string_item_sendplacebysms "Läh. paikka tekstiviestinä"
+rls_string r_string_item_sendinvite "Kutsu buddycloudiin"
+rls_string r_string_item_delete "Poista"
+rls_string r_string_item_noticeaccept "Hyväksy"
+rls_string r_string_item_noticeacceptandfollow "Hyväksy ja Seuraa"
+rls_string r_string_item_noticedecline "Hylkää"
+rls_string r_string_update_setstatus "Päivitä status"
+rls_string r_string_options_invite "Seuraa..."
+rls_string r_string_settings_usersettings "Ohjelman asetukset"
+rls_string r_string_settings_communitysettings "Jaa verkossa"
+rls_string r_string_settings_clearconnection "Vaihda yhteyttä"
+
+rls_string r_string_note_followinglistempty "Et seuraa vielä mitään.\n\nKäytä Kanavat ja Tutki-välilehtiä löytääksesi seurattavia kohteita."
+
+// Menu: Messaging
+rls_string r_string_options_openlink "Avaa linkki"
+rls_string r_string_options_postmessage "Lähetä viesti"
+rls_string r_string_options_postmedia "Lähetä mediaa"
+rls_string r_string_options_replytomessage "Vastaa"
+rls_string r_string_options_settopic "Aseta aihe"
+rls_string r_string_options_jumptounread "Mene lukemattomiin"
+rls_string r_string_options_invitetochannel "Kutsu kanavalle"
+rls_string r_string_options_invitetootherchannel "Kutsu toiselle kanavalle"
+rls_string r_string_options_invitefriendtochannel "Kutsu seuraaja"
+rls_string r_string_options_notificationon "Aseta värinä päälle"
+rls_string r_string_options_notificationoff "Aseta värinä pois päältä"
+
+// Menu: Places
+rls_string r_string_options_setcurrent "Kirjanmerkitse uusi paikka"
+rls_string r_string_options_setnext "Aseta seuraava paikka"
+rls_string r_string_item_relearnplace "Opeta paikka uudestaan"
+rls_string r_string_dialog_relearnplace "Olet nyt tässä paikassa ja haluat määrittää sen uudelleen?"
+rls_string r_string_item_setnext "Aseta seur. paikaksi"
+rls_string r_string_item_editplace "Muokkaa tietoja"
+rls_string r_string_item_deleteplace "Poista paikka"
+
+rls_string r_string_note_placelastseen "Nähty"
+rls_string r_string_note_placevisits "Vierailut"
+rls_string r_string_note_placepopulation "Väestö"
+rls_string r_string_note_learningplace "Opitaan paikkaa"
+rls_string r_string_note_updatingplace "Päivittää paikkaa..."
+rls_string r_string_note_noplaceaddress "Määrittelemätön osoite"
+rls_string r_string_note_placeslistempty "Sinulla ei ole merkittyjä paikkoja.\n\nMerkitse tämä paikka valitsemalla\n'Valinnat > Merkitse uusi paikka'"
+
+// Menu: Nearby
+rls_string r_string_options_refresh "Päivitä"
+rls_string r_string_item_placeinfo "Paikan tiedot"
+rls_string r_string_item_personinfo "Henkilötiedot"
+rls_string r_string_item_setcurrent "Aseta täksi paikaksi"
+rls_string r_string_item_subscribe "Lisää omiin paikkoihin"
+
+// Menu: Explorer
+rls_string r_string_options_explore "Tutki lisää"
+rls_string r_string_item_seefollowers "Näytä seuraajat"
+rls_string r_string_item_seeplaces "Näytä paikat"
+rls_string r_string_item_seefollowing "Näytä seurattavat"
+rls_string r_string_item_seeproducing "Näytä tuotokset"
+rls_string r_string_item_seenearby "Näytä lähellä olevat"
+rls_string r_string_item_seebeenhere "Kuka on ollut täällä"
+rls_string r_string_item_seegoinghere "Kuka menee tänne"
+
+rls_string r_string_title_isfollowing "$USER seuraa"
+rls_string r_string_title_followedby "$OBJECT seuraajat"
+rls_string r_string_title_isproducing "$USER tuottaa sisältöä"
+rls_string r_string_title_nearbyto "Lähellä kohdetta $OBJECT"
+rls_string r_string_title_whosbeento "Kuka on ollut paikassa $PLACE"
+rls_string r_string_title_whosgoingto "Kuka menee paikkaan $PLACE"
+
+rls_string r_string_note_requesting "Haetaan..."
+rls_string r_string_note_channelrank "Sijoitus"
+
+// Menu: Channels
+rls_string r_string_list_featuredchannels "Poimitut kanavat"
+rls_string r_string_list_channelsyoumightlike "Kanavia joista saatat pitää"
+rls_string r_string_list_followersfavourites "Seuraajien suosikit"
+rls_string r_string_list_mostpopularchannels "Suosituimmat kanavat"
+rls_string r_string_list_channelsneartoyou "Kanavat lähelläsi"
+
+rls_string r_string_item_open "Avaa"
+rls_string r_string_item_follow "Seuraa"
+rls_string r_string_item_unfollow "Lopeta seuraaminen"
+
+// Channel: Settings & Configuration
+rls_string r_string_note_personalchannelcreated "Tervetuloa buddycloud-kanaville $USER!\n\nTämä on henkilökohtainen kanavasi buddycloudissa. Kanava on täysin sinun omasi ja mahdollistaa viestittämisen seuraajillesi!"
+rls_string r_string_note_mediauploadready "Voit nyt ladata tiedoston $LINK"
+rls_string r_string_note_userkickedfromgroup "$USER on potkaistu kanavalta."
+rls_string r_string_note_userbannedfromgroup "$USER on kielletty kanavalta."
+rls_string r_string_dialog_kickconfirmation "Potkaise tämä henkilö kanavalta (palaa seuraavan kirjautumisen yhteydessä)?"
+rls_string r_string_dialog_banconfirmation "Estä henkilöä katsomasta kanavaa"
+rls_string r_string_item_banfromgroup "Estä pääsy kanavalle"
+rls_string r_string_item_kickfromgroup "Potkaise kanavalta"
+rls_string r_string_item_changerole "Muuta roolia"
+rls_string r_string_list_changerole_title "Muuta rooli:"
+rls_string r_string_changerole_itemlist_moderator "Moderaattori"
+rls_string r_string_changerole_itemlist_contributor "Seuraaja"
+rls_string r_string_changerole_itemlist_visitor "Vierailija"
+rls_string r_string_note_changerolefailed "Sinulla ei ole valtuuksia muuttaa tämän henkilön roolia"
+
+// Settings Item List
+rls_string r_string_settings_account_title "Tili"
+rls_string r_string_settings_itemlist_fullname "Koko nimi"
+rls_string r_string_settings_itemlist_fullname_hint "Koko nimesi"
+rls_string r_string_settings_itemlist_email "Sähköpostiosoite"
+rls_string r_string_settings_itemlist_email_hint "Sähköpostiosoitteesi"
+rls_string r_string_settings_itemlist_phonenumber "Puhelinnumero"
+rls_string r_string_settings_itemlist_phonenumber_hint "Puhelinnumerosi"
+rls_string r_string_settings_itemlist_username "Käyttäjätunnus"
+rls_string r_string_settings_itemlist_username_hint "buddycloud käyttäjätunnus"
+rls_string r_string_settings_itemlist_password "Salasana"
+rls_string r_string_settings_itemlist_password_hint "buddycloud salasana"
+
+rls_string r_string_settings_itemlist_language "Käyttöliittymän kieli"
+rls_string r_string_settings_itemlist_showname "Näytä nimet kanavalla"
+rls_string r_string_settings_itemlist_accesspoint "Käytettävä yhteys"
+rls_string r_string_settings_itemlist_accesspointuserdefined "Käyttäjän määrittämä"
+rls_string r_string_settings_itemlist_accesspointalwaysask "Kysy aina"
+rls_string r_string_settings_itemlist_testserver "Yhdistä beta-palvelimeen"
+rls_string r_string_settings_itemlist_autostart "Aloita puhelimen käynnistyessä"
+rls_string r_string_settings_itemlist_showcontacts "Näytä puhelimen yhteystiedot"
+
+rls_string r_string_settings_notifications_title "Ilmoitukset"
+rls_string r_string_settings_itemlist_groupnotification "Ilmoita kanavan viesteistä"
+rls_string r_string_settings_itemlist_groupnever "Älä koskaan ilmoita"
+rls_string r_string_settings_itemlist_groupfirstonly "Vain ensimäinen viesti"
+rls_string r_string_settings_itemlist_groupallmessages "Kaikki viestit"
+rls_string r_string_settings_itemlist_notifyreply "Ilmoita @Reply-viesteistä:"
+rls_string r_string_settings_itemlist_privatemessagetone "Yksityisviestin ääni"
+rls_string r_string_settings_itemlist_channelposttone "Kanavan ääniviesti"
+rls_string r_string_settings_itemlist_directreplytone "Minun @Replies ääni"
+rls_string r_string_settings_itemlist_tonenone "Äänetön"
+rls_string r_string_settings_itemlist_tonedefault "Oletus ääni"
+
+rls_string r_string_settings_beacons_title "Paikannus"
+rls_string r_string_settings_itemlist_cell "Tukiasema"
+rls_string r_string_settings_itemlist_wlan "WIFI"
+rls_string r_string_settings_itemlist_bt "Bluetooth"
+rls_string r_string_settings_itemlist_gps "GPS"
+rls_string r_string_settings_itemlist_on "Päällä"
+rls_string r_string_settings_itemlist_off "Pois päältä"
+
+// Communities
+rls_string r_string_settings_facebook_text "Sinut ohjataan nyt buddycloud-sovelluksen sivulle Facebookissa (http://apps.facebook.com/buddycloud). Ole hyvä ja lisää sovellus, kirjaudu sisään ja anna sovellukselle lupa."
+rls_string r_string_settings_credentials_success "Päivitys onnistui"
+rls_string r_string_settings_credentials_fail "Päivitys epäonnistui. Tarkista tietosi ja yritä uudestaan."
+
+// Edit Place List
+rls_string r_string_newplace_title "Uusi paikka"
+rls_string r_string_editplace_title "Muokkaa paikkaa"
+rls_string r_string_updatefailed_title "Päivitys epäonnistui"
+
+rls_string r_string_editplace_itemlist_name "Nimi"
+rls_string r_string_editplace_itemlist_name_hint "esim. 'Koti' tai 'Mäkkäri'"
+rls_string r_string_editplace_itemlist_street "Katu"
+rls_string r_string_editplace_itemlist_street_hint "esim. '15 Mannerheimintie'"
+rls_string r_string_editplace_itemlist_area "Lähiseutu"
+rls_string r_string_editplace_itemlist_area_hint "esim. 'Töölö'"
+rls_string r_string_editplace_itemlist_city "Kaupunki"
+rls_string r_string_editplace_itemlist_city_hint "esim. 'Helsinki'"
+rls_string r_string_editplace_itemlist_postcode "Postinumero"
+rls_string r_string_editplace_itemlist_postcode_hint "esim. '00420'"
+rls_string r_string_editplace_itemlist_region "Seutu"
+rls_string r_string_editplace_itemlist_region_hint "esim. 'Etelä-Suomen lääni'"
+rls_string r_string_editplace_itemlist_country "Maa"
+rls_string r_string_editplace_itemlist_country_hint "esim. 'Suomi'"
+rls_string r_string_editplace_itemlist_visibility "Paikan tyyppi"
+rls_string r_string_editplace_itemlist_visibility_public "Jaettu"
+rls_string r_string_editplace_itemlist_visibility_private "Henkilökohtainen"
+
+// Following & Invitations
+rls_string r_string_followingrequest_title "Seuraamislupapyyntö"
+rls_string r_string_followerrequest_text "$USER haluaisi seurata sinua buddycloudissa.\n* Näytä tila & status\n* Näytä henkilökohtainen kanavasi\n* Näytä omat paikkasi"
+
+rls_string r_string_channelinvite_title "Kanavakutsu"
+
+// Create channel
+rls_string r_string_dialog_createchannelname "Kanavan nimi:"
+rls_string r_string_dialog_createchanneldescription "Kanavan lyhyt kuvaus:"
+rls_string r_string_channelfollowing_text "Kanava '$CHANNEL' on jo olemassa. Haluatko seurata tätä kanavaa?"
+
+// Exit Confirmation
+rls_string r_string_exit_title "Poistumisen varmistus"
+rls_string r_string_exit_text "Poistuminen kirjaa sinut ulos buddycloudista.\n\nOletko varma?"
+
+// Authorization Error
+rls_string r_string_autherror_title "Rekisteröityminen epäonnistui"
+rls_string r_string_autherror_text "Käyttäjänimi on jo olemassa. Tarkista tiliasetukset ja yritä uudelleen."
+
+// Delete Item Message
+rls_string r_string_deleteitem_title "Vahvista poisto"
+rls_string r_string_deleteitem_text "Haluatko varmasti poistaa tämän?"
+
+// Sms/Email Messages
+rls_string r_string_invitemessage_title "Liity meihin buddycloudissa!"
+rls_string r_string_invitemessage_text "buddycloud tarjoaa uuden tavan tuoda julki mahtavasti seuraajillesi! Vieraile http://m.buddycloud.com Hae se nyt!"
+rls_string r_string_sendplacemessage_title "Missä minä olen"
+rls_string r_string_sendplacemessage_text "Sijaintini nyt $PLACE. Lisätietoja: http://m.buddycloud.com/place.php?id=$ID"
+
+// Did You Mean?
+rls_string r_string_didyoumean_title "Tarkoititko...?"
+
+// Dialog
+rls_string r_string_dialog_setmood "Aseta status:"
+rls_string r_string_dialog_moodis "on "
+rls_string r_string_dialog_setcurrentlocation "Aseta oma paikka:"
+rls_string r_string_dialog_setnextlocation "Aseta seuraava paikka:"
+rls_string r_string_dialog_settopic "Aseta aihe:"
+rls_string r_string_dialog_newmessage "Uusi viesti:"
+rls_string r_string_dialog_addcontact "Anna buddycloud tai Jabber ID (esim. test@gtalk.com):"
+
+// Notes
+rls_string r_string_note_connecting "Yhdistää..."
+rls_string r_string_note_reconnecting "Yhdistetään uudelleen..."
+rls_string r_string_note_connectingwith "Yhdistetään\n$APN..."
+rls_string r_string_note_searching "Etsii..."
+rls_string r_string_note_updating "Päivitetään..."
+rls_string r_string_note_online "Online"
+rls_string r_string_note_offline "Offline"
+
+// Call
+rls_string r_string_note_dialling "Soitetaan $USER"
+rls_string r_string_note_talkingto "Keskustelussa $USER"
+rls_string r_string_note_hangingup "Yhteys katkennut"
+
+// Setup 
+rls_string r_string_step2_title "Ole kuuluisa!"
+rls_string r_string_step2_text "buddycloudin kanavat antavat mahdollisuuden jakaa mahtavuutesi seuraajiesi kanssa.\n\nbuddycloudin kanavat voivat tehdä sinusta kuuluisan vaikkapa ainutlaatuisen paikkaan tai aiheeseen liittyvän tietämyksesi johdosta. Voit myös koota seuraajistasi yhteisön."
+
+rls_string r_string_step3_title "Mitä voit tehdä?"
+rls_string r_string_step3_text "Buddycloudilla voit luoda kanavan jonkin sinulle läheisen aiheen ympärille tai henkilökohtaisen kanavan pelkästään sinusta.\n\nBuddycloud jakaa automaattisesti nykyisen sijaintisi seuraajillesi paikkamerkkinä ja muille kaupunkitasolla:"
+
+rls_string r_string_step4_title "Etusi"
+rls_string r_string_step4_text "Buddycloud antaa sinulle uuden vuorovaikutteisuuden seuraajiesi kanssa ja näyttää kanavan kasvavan suosion. Jatka koko päivä alhaisin kustannuksin ja ilman puhelimen akun liiallista tyhjenemistä, koska buddycloud käyttää hyvin vähän dataa. Jaa sijainti jatkuvasti, mutta hallitusti sekä turvallisesti.\n\nAnna turvallinen salasana:"
+
+rls_string r_string_step5_title "Pysy yhteydessä"
+rls_string r_string_step5_text "Ole hyvä ja anna meille sähköpostiosoitteesi (vapaaehtoinen) saadaksesi tietoa buddycloudin uusista palveluista ja ohjelmaversioista.\n\nPidämme osoitteen turvassa:"
+
+rls_string r_string_step6_title "Onnittelut!"
+rls_string r_string_step6_text "Asennus on nyt valmis. Seuraavaksi sinut yhdistetään ja kirjataan buddycloudin kanaville."
+rls_string r_string_step6_question "Haluatko jatkossa aloittaa buddycloudin automaattisesti puhelimen käynnistyessä?"
+
+// End of File

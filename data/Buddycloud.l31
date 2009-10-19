@@ -1,0 +1,329 @@
+/*
+============================================================================
+ Name        : Buddycloud.r01
+ Author      : Ross Savage
+ Copyright   : Buddycloud 2008
+ Description : Localisation File : English
+ 
+               Please only translate text between quotations e.g. "Test"
+============================================================================
+*/
+
+// DO NOT TRANSLATE
+CHARACTER_SET UTF8
+
+rls_string r_string_app_caption "buddycloud"
+rls_string r_string_groupinvite_text " invited you to join channel: "
+// DO NOT TRANSLATE
+
+rls_string r_string_langcode "cn"
+rls_string r_string_translatedby "翻译: Dim Yu（余凌云）"
+
+rls_string r_string_followingtab_hint "追随者及频道"
+rls_string r_string_placestab_hint "地点"
+rls_string r_string_explorertab_hint "在附近的"
+rls_string r_string_channelstab_hint "频道"
+
+// CBA
+rls_string r_string_options_menu "选项"
+rls_string r_string_say_menu "发送"
+rls_string r_string_cancel_menu "取消"
+rls_string r_string_next_menu "下一步"
+rls_string r_string_endcall_menu "End Call"
+rls_string r_string_hide_menu "隐藏"
+
+// Item
+rls_string r_string_item_newgroup "新的频道"
+rls_string r_string_item_newplace "新的地点"
+
+// Menu: Call
+rls_string r_string_options_loudspeaker "切换到"
+rls_string r_string_options_handset "打开话筒"
+rls_string r_string_options_hold "保持"
+rls_string r_string_options_resume "恢复"
+rls_string r_string_options_endcall "结束呼叫"
+
+// Menu: Settings & Edit place
+rls_string r_string_options_edititem "更改"
+rls_string r_string_options_searchplace "查找详情"
+
+rls_string r_string_note_noresultsfound "没有找到结果"
+rls_string r_string_note_requestsent "请求送出"
+rls_string r_string_note_messagequeued "信息将在你上线后发送"
+rls_string r_string_note_offlinerequired "你必须在离线时操作"
+
+// Positioning methods
+rls_string r_string_positioning_stationary "你现在可以标记此地点"
+rls_string r_string_positioning_moving "你目前正在移动，标记此地点将不能保证你再次在这定位"
+rls_string r_string_positioning_cell "加载可能会花费些时间"
+rls_string r_string_positioning_wifigps "当发现WiFi信号后，你任可以在此定位"
+rls_string r_string_positioning_bt "若其他buddycloud 使用者在你的附近, 我們会快速將你与他們连接起来"
+rls_string r_string_positioning_none "没用准确的位置可用，请检查你的定位设置"
+
+// Menu: Search
+rls_string r_string_options_select "选择"
+rls_string r_string_options_newsearch "新的搜索"
+rls_string r_string_options_previousresult "返回"
+rls_string r_string_options_cancelsearch "取消搜索"
+
+// Menu: Help
+rls_string r_string_options_help "帮助"
+rls_string r_string_help_help "buddycloud帮助"
+rls_string r_string_help_update "更新buddycloud"
+rls_string r_string_help_about "关于"
+
+// Menu: Following
+rls_string r_string_options_exit "退出"
+rls_string r_string_options_done "完成"
+rls_string r_string_options_connect "上线"
+rls_string r_string_options_disconnect "离线"
+rls_string r_string_options_itemcontact "联系人"
+rls_string r_string_options_itemgroup "频道"
+rls_string r_string_options_settings "设置"
+rls_string r_string_item_viewmessages "查看信息"
+rls_string r_string_item_viewchannelmessages "查看频道"
+rls_string r_string_item_viewprivatemessages "查看私人信息"
+rls_string r_string_item_showplacedetails "查看地点详情"
+rls_string r_string_item_showchanneldetails "显示频道详情"
+rls_string r_string_item_call "呼叫联系人"
+rls_string r_string_item_sendplacebysms "通过短信发送所在位置"
+rls_string r_string_item_sendinvite "邀请加入buddycloud"
+rls_string r_string_item_delete "删除"
+rls_string r_string_item_noticeaccept "接受"
+rls_string r_string_item_noticeacceptandfollow "同意并跟随"
+rls_string r_string_item_noticedecline "拒绝"
+rls_string r_string_update_setstatus "更新心情状态"
+rls_string r_string_options_invite "加入..."
+rls_string r_string_settings_usersettings "使用设定"
+rls_string r_string_settings_communitysettings "在线共享"
+rls_string r_string_settings_clearconnection "更改连接"
+
+rls_string r_string_note_followinglistempty "您没有添加任何人。请使用频道和探索选项来搜索并添加追随者"
+
+// Menu: Messaging
+rls_string r_string_options_openlink "打开链接"
+rls_string r_string_options_postmessage "发表信息"
+rls_string r_string_options_postmedia "发表多媒体"
+rls_string r_string_options_replytomessage "回复"
+rls_string r_string_options_settopic "更改话题"
+rls_string r_string_options_jumptounread "转到未读消息"
+rls_string r_string_options_invitetochannel "邀请到频道"
+rls_string r_string_options_invitetootherchannel "邀请到其他频道"
+rls_string r_string_options_invitefriendtochannel "邀请追随者加入"
+rls_string r_string_options_notificationon "打开震动"
+rls_string r_string_options_notificationoff "关闭震动"
+
+// Menu: Places
+rls_string r_string_options_setcurrent "标记新地点"
+rls_string r_string_options_setnext "设置下一个地点"
+rls_string r_string_item_relearnplace "重新载入地点"
+rls_string r_string_dialog_relearnplace "您是否在这个地点并重新读取这个地点？"
+rls_string r_string_item_setnext "设置成为下一个地点"
+rls_string r_string_item_editplace "编辑详情"
+rls_string r_string_item_deleteplace "删除地点"
+
+rls_string r_string_note_placelastseen "登陆时间"
+rls_string r_string_note_placevisits "浏览"
+rls_string r_string_note_placepopulation "人数"
+rls_string r_string_note_learningplace "正在查询此地点"
+rls_string r_string_note_updatingplace "正在更新地点"
+rls_string r_string_note_noplaceaddress "没有找到地址"
+rls_string r_string_note_placeslistempty "您还未标记地点.请点击选项‘设置 >标记新地点’"
+
+// Menu: Nearby
+rls_string r_string_options_refresh "刷新"
+rls_string r_string_item_placeinfo "地点详情"
+rls_string r_string_item_personinfo "个人信息"
+rls_string r_string_item_setcurrent "设置成这个地点"
+rls_string r_string_item_subscribe "添加到我的地点"
+
+// Menu: Explorer
+rls_string r_string_options_explore "探索"
+rls_string r_string_item_seefollowers "查看追随者"
+rls_string r_string_item_seeplaces "查看地点"
+rls_string r_string_item_seefollowing "查看我所追随的"
+rls_string r_string_item_seeproducing "查看我所创造的"
+rls_string r_string_item_seenearby "查看附近用户"
+rls_string r_string_item_seebeenhere "谁到过这"
+rls_string r_string_item_seegoinghere "谁要到这"
+
+rls_string r_string_title_isfollowing "$USER加入了"
+rls_string r_string_title_followedby "$OBJECT的跟随者"
+rls_string r_string_title_isproducing "$USER创造的频道"
+rls_string r_string_title_nearbyto "在$OBJECT附近"
+rls_string r_string_title_whosbeento "谁到过$PLACE"
+rls_string r_string_title_whosgoingto "谁要到$PLACE"
+
+rls_string r_string_note_requesting "正在请求..."
+rls_string r_string_note_channelrank "等级"
+
+// Menu: Channels
+rls_string r_string_list_featuredchannels "精选频道"
+rls_string r_string_list_channelsyoumightlike "你可能喜欢的频道"
+rls_string r_string_list_followersfavourites "追随者的最爱"
+rls_string r_string_list_mostpopularchannels "最受欢迎的频道"
+rls_string r_string_list_channelsneartoyou "在你附近的频道"
+
+rls_string r_string_item_open "打开"
+rls_string r_string_item_follow "加入"
+rls_string r_string_item_unfollow "删除"
+
+// Channel: Settings & Configuration
+rls_string r_string_note_personalchannelcreated "$USER，欢迎来到buddycloud！这是你在buddycloud上的个人频道。这个频道是属于你的并且可以让你对频道内所有的追随者进行广播！"
+rls_string r_string_note_mediauploadready "你可以在此链接上传你的多媒体文件 $LINK"
+rls_string r_string_note_userkickedfromgroup "$USER已经被踢出这个频道"
+rls_string r_string_note_userbannedfromgroup "$USER被禁止进入这个频道"
+rls_string r_string_dialog_kickconfirmation "把这个人从频道踢出（他将会在下次登陆后重新加入)?"
+rls_string r_string_dialog_banconfirmation "是否禁止这个用户浏览这个频道？"
+rls_string r_string_item_banfromgroup "禁止这个频道"
+rls_string r_string_item_kickfromgroup "从频道踢出"
+rls_string r_string_item_changerole "改变角色"
+rls_string r_string_list_changerole_title "改变角色到："
+rls_string r_string_changerole_itemlist_moderator "版主"
+rls_string r_string_changerole_itemlist_contributor "追随者"
+rls_string r_string_changerole_itemlist_visitor "游客"
+rls_string r_string_note_changerolefailed "你不被允许改变这个人的角色"
+
+// Settings Item List
+rls_string r_string_settings_account_title "账号"
+rls_string r_string_settings_itemlist_fullname "全名"
+rls_string r_string_settings_itemlist_fullname_hint "您的全名"
+rls_string r_string_settings_itemlist_email "E-mail地址"
+rls_string r_string_settings_itemlist_email_hint "你的e-mail地址"
+rls_string r_string_settings_itemlist_phonenumber "电话号码"
+rls_string r_string_settings_itemlist_phonenumber_hint "你的电话号码"
+rls_string r_string_settings_itemlist_username "用户名"
+rls_string r_string_settings_itemlist_username_hint "buddycloud用户名"
+rls_string r_string_settings_itemlist_password "密码"
+rls_string r_string_settings_itemlist_password_hint "buddycloud密码"
+
+rls_string r_string_settings_itemlist_language "语言"
+rls_string r_string_settings_itemlist_showname "在频道显示姓名"
+rls_string r_string_settings_itemlist_accesspoint "可用接入点"
+rls_string r_string_settings_itemlist_accesspointuserdefined "用户确定"
+rls_string r_string_settings_itemlist_accesspointalwaysask "经常询问"
+rls_string r_string_settings_itemlist_testserver "连接到测试服务器"
+rls_string r_string_settings_itemlist_autostart "开机后自动启动"
+rls_string r_string_settings_itemlist_showcontacts "显示电话簿"
+
+rls_string r_string_settings_notifications_title "通知"
+rls_string r_string_settings_itemlist_groupnotification "频道帖子通知"
+rls_string r_string_settings_itemlist_groupnever "永远不通知"
+rls_string r_string_settings_itemlist_groupfirstonly "只限第一张帖子"
+rls_string r_string_settings_itemlist_groupallmessages "所有贴子"
+rls_string r_string_settings_itemlist_notifyreply "回复提示:"
+rls_string r_string_settings_itemlist_privatemessagetone "私人信息铃声"
+rls_string r_string_settings_itemlist_channelposttone "频道中有新消息时的铃声"
+rls_string r_string_settings_itemlist_directreplytone "我的@reply回复铃声"
+rls_string r_string_settings_itemlist_tonenone "静音"
+rls_string r_string_settings_itemlist_tonedefault "默认铃声"
+
+rls_string r_string_settings_beacons_title "当前位置"
+rls_string r_string_settings_itemlist_cell "信号发射器"
+rls_string r_string_settings_itemlist_wlan "WIFI"
+rls_string r_string_settings_itemlist_bt "蓝牙"
+rls_string r_string_settings_itemlist_gps "GPS"
+rls_string r_string_settings_itemlist_on "开"
+rls_string r_string_settings_itemlist_off "关"
+
+// Communities
+rls_string r_string_settings_facebook_text "你将会前往buddycloud在Facebook上的组件页面http://apps.facebook.com/buddycloud。请添加这个组件，登陆并同意运行这个组件"
+rls_string r_string_settings_credentials_success "更新成功"
+rls_string r_string_settings_credentials_fail "更新失败。请检查你的证书然后重试"
+
+// Edit Place List
+rls_string r_string_newplace_title "新的地点"
+rls_string r_string_editplace_title "编辑地点"
+rls_string r_string_updatefailed_title "更新失败"
+
+rls_string r_string_editplace_itemlist_name "名字"
+rls_string r_string_editplace_itemlist_name_hint "例如'家'或'星巴克'"
+rls_string r_string_editplace_itemlist_street "街道"
+rls_string r_string_editplace_itemlist_street_hint "例如'燕成路21号'"
+rls_string r_string_editplace_itemlist_area "社区"
+rls_string r_string_editplace_itemlist_area_hint "例如'竹韵山庄'"
+rls_string r_string_editplace_itemlist_city "城市"
+rls_string r_string_editplace_itemlist_city_hint "例如'广州'"
+rls_string r_string_editplace_itemlist_postcode "邮政编码"
+rls_string r_string_editplace_itemlist_postcode_hint "例如'510500'"
+rls_string r_string_editplace_itemlist_region "地区"
+rls_string r_string_editplace_itemlist_region_hint "例如'广州市天河区'"
+rls_string r_string_editplace_itemlist_country "国家"
+rls_string r_string_editplace_itemlist_country_hint "例如'中国'"
+rls_string r_string_editplace_itemlist_visibility "其他用户是否可以在此标记？"
+rls_string r_string_editplace_itemlist_visibility_public "分享"
+rls_string r_string_editplace_itemlist_visibility_private "个人的"
+
+// Following & Invitations
+rls_string r_string_followingrequest_title "追随请求"
+rls_string r_string_followerrequest_text "$USER愿意加你到他的buddycloud。\n*显示你的是否在线&心情状态\n*显示你的频道\n*显示你的位置"
+
+rls_string r_string_channelinvite_title "频道邀请"
+
+// Create channel
+rls_string r_string_dialog_createchannelname "频道名称"
+rls_string r_string_dialog_createchanneldescription "显示频道介绍"
+rls_string r_string_channelfollowing_text "'$CHANNEL'这个频道已经存在。您愿意加入这个频道吗？"
+
+// Exit Confirmation
+rls_string r_string_exit_title "退出确认"
+rls_string r_string_exit_text "退出将会登出你的buddycloud账号.\n\n你确定？"
+
+// Authorization Error
+rls_string r_string_autherror_title "注册失败"
+rls_string r_string_autherror_text "用户名已经存在，请检查你的账号设定，然后重新连接"
+
+// Delete Item Message
+rls_string r_string_deleteitem_title "确认删除"
+rls_string r_string_deleteitem_text "你真的确定要删除吗？"
+
+// Sms/Email Messages
+rls_string r_string_invitemessage_title "加入我们吧！"
+rls_string r_string_invitemessage_text "buddycloud提供了一种全新的方式来与你的追随者分享有趣事情的方式！就请现在浏览http://m.buddycloud.com 来获取客户端！"
+rls_string r_string_sendplacemessage_title "我在哪儿？"
+rls_string r_string_sendplacemessage_text "我现在的位置是$PLACE. http://m.buddycloud.com/place.php?id=$ID 获取详情"
+
+// Did You Mean?
+rls_string r_string_didyoumean_title "你的意思是...？"
+
+// Dialog
+rls_string r_string_dialog_setmood "设置心情状态"
+rls_string r_string_dialog_moodis "是"
+rls_string r_string_dialog_setcurrentlocation "设置我的地点："
+rls_string r_string_dialog_setnextlocation "设置下个地点："
+rls_string r_string_dialog_settopic "更改话题："
+rls_string r_string_dialog_newmessage "新消息"
+rls_string r_string_dialog_addcontact "输入buddycloud或者jabber的账号（例如：test@gtalk.com):"
+
+// Notes
+rls_string r_string_note_connecting "正在连接"
+rls_string r_string_note_reconnecting "正在重新连接"
+rls_string r_string_note_connectingwith "正在用\n$APN连接"
+rls_string r_string_note_searching "正在搜索"
+rls_string r_string_note_updating "正在更新"
+rls_string r_string_note_online "在线"
+rls_string r_string_note_offline "离线"
+
+// Call
+rls_string r_string_note_dialling "呼叫 $USER"
+rls_string r_string_note_talkingto "向 $USER发起会话"
+rls_string r_string_note_hangingup "断开连接"
+
+// Setup 
+rls_string r_string_step2_title "欢迎加入buddycloud!"
+rls_string r_string_step2_text "buddycloud频道给予你以一种全新的方式来对你频道的追随者讲述你身边奇妙事情的机会。buddycloud频道赋予你因了解一个地方或一个话题，并为你频道的追随者建立一个网络社区而成名的能力。"
+
+rls_string r_string_step3_title "你可以干什么？"
+rls_string r_string_step3_text "在buddycloud上面，你可以创造一个以你所擅长的话题的频道，或者是一个关于你的个人频道。buddycloud会自动把你的准确坐标以一个书签的形式与你的跟随这分享,或者与城市的其他人分享。请选择一个独一无二的用户名，然后开始旅程:"
+
+rls_string r_string_step4_title "你的利益"
+rls_string r_string_step4_text "buddycloud既为你和你的追随者们提供了新一级的互动体验，也展示了你的频道蒸蒸日上的知名度。buddycloud占用较少内存,使用能耗低,就算终日不断电也不会耗尽电池电量。buddycloud还能安全,可控地与人即时共享你的地理位置\n\n请输入密码:"
+
+rls_string r_string_step5_title "保持联系"
+rls_string r_string_step5_text "为接收buddycloud的服务信息和新版本信息的通知。请留下你的电子邮箱地址（可选），我们会确保你的邮箱地址的信息安全："
+
+rls_string r_string_step6_title "恭喜！"
+rls_string r_string_step6_text "设定完成。现在连接并登录到buddycloud频道"
+rls_string r_string_step6_question "你愿意从现在开始在手机启动时自动运行buddycloud吗？"
+
+// End of File

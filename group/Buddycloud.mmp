@@ -1,0 +1,97 @@
+/*
+============================================================================
+ Name        : Buddycloud.mmp
+ Author      : Ross Savage
+ Copyright   : Buddycloud 2007
+ Description : This is the project specification file for Buddycloud.
+============================================================================
+*/
+
+#include <blddef.h>
+
+TARGET            Buddycloud.exe
+TARGETTYPE        exe
+UID		          0x0 0x2000C4A4
+
+EPOCSTACKSIZE     0x14000
+EPOCHEAPSIZE      0x1000 0x800000
+
+SOURCEPATH        ..\src
+SOURCE            Buddycloud.cpp
+SOURCE            BuddycloudApplication.cpp
+SOURCE            BuddycloudAppUi.cpp
+SOURCE            BuddycloudDocument.cpp
+
+SOURCEPATH        ..\data
+
+START RESOURCE    Buddycloud.rss
+HEADER
+TARGETPATH        resource\apps
+END
+
+START RESOURCE    Buddycloud_reg.rss
+TARGETPATH 	      \private\10003a3f\apps
+END
+
+START RESOURCE    Buddycloud_loc.rss
+TARGETPATH        resource\apps
+END
+
+START RESOURCE    Buddycloud_lang.rss
+HEADER
+TARGETPATH        resource\apps
+LANG              01 02 03 04 05 06 08 09 13 14 16 17 18 25 27 31 33 37 49 54 57 59 65 78 512 513
+END
+
+START RESOURCE    2000C4A4.rss
+END
+
+SOURCEPATH        ..\help
+DOCUMENT          Buddycloud.cshlp
+DOCUMENT          Buddycloud.rtf
+DOCUMENT          custom.xml
+
+USERINCLUDE       ..\inc
+SYSTEMINCLUDE     \epoc32\include
+SYSTEMINCLUDE     \epoc32\include\mmf\plugin
+
+LIBRARY           hlplch.lib euser.lib apparc.lib cone.lib eikcoctl.lib eikcore.lib eikdlg.lib avkon.lib eikctl.lib
+LIBRARY           commonengine.lib efsrv.lib estor.lib gdi.lib cntmodel.lib pbkeng.lib ws32.lib bafl.lib fbscli.lib
+LIBRARY           esock.lib insock.lib imut.lib etel3rdparty.lib bluetooth.lib connmon.lib lbs.lib ecom.lib ezlib.lib
+LIBRARY           apgrfx.lib commdb.lib bitgdi.lib imageconversion.lib aknskins.lib aknicon.lib etext.lib form.lib
+LIBRARY           hwrmvibraclient.lib mediaclientaudio.lib centralrepository.lib charconv.lib flogger.lib sendui.lib
+
+#ifndef __3_2_ONWARDS__
+LIBRARY           bteng.lib
+#else
+LIBRARY           btengsettings.lib
+LIBRARY           cmmanager.lib
+#endif
+
+#ifdef __SERIES60_40__
+LIBRARY           touchfeedback.lib
+#endif
+
+VENDORID          0
+SECUREID          0x2000C4A4
+CAPABILITY        Location LocalServices NetworkServices ReadDeviceData WriteDeviceData ReadUserData WriteUserData SwEvent
+
+SOURCEPATH ..\src
+SOURCE            BuddycloudLogic.cpp WlanDataHandler.cpp CellTowerDataHandler.cpp BtDataHandler.cpp 
+SOURCE            DataHander.cpp GpsDataHandler.cpp LocationEngine.cpp SignalStrengthDataHandler.cpp 
+SOURCE            TcpIpEngine.cpp Timer.cpp XmlParser.cpp XmppEngine.cpp ConnectionMonitor.cpp BuddycloudMessagingView.cpp 
+SOURCE            BuddycloudMessagingContainer.cpp TimeCoder.cpp NotificationEngine.cpp AvatarRepository.cpp 
+SOURCE            BuddycloudAccountSettingsView.cpp BuddycloudAccountSettingsList.cpp AutoSelectTextQueryDialog.cpp BuddycloudPlaces.cpp 
+SOURCE            BuddycloudPlacesView.cpp BuddycloudPlacesContainer.cpp BuddycloudEditPlaceView.cpp BuddycloudEditPlaceList.cpp
+SOURCE            BrowserLauncher.cpp BuddycloudNearby.cpp BuddycloudExplorerContainer.cpp BuddycloudExplorerView.cpp
+SOURCE            BuddycloudContactStreamer.cpp CellTowerDataSimulation.cpp BuddycloudListComponent.cpp
+SOURCE            CompressionEngine.cpp EZStreamCompressor.cpp EZStreamDecompressor.cpp TelephonyEngine.cpp 
+SOURCE            BuddycloudSetupView.cpp BuddycloudSetupContainer.cpp BuddycloudBeaconSettingsView.cpp BuddycloudBeaconSettingsList.cpp 
+SOURCE            SearchResultMessageQueryDialog.cpp TextUtilities.cpp PhoneUtilities.cpp FontUtilities.cpp FileUtilities.cpp 
+SOURCE            BuddycloudChannelsContainer.cpp BuddycloudChannelsView.cpp BuddycloudExplorer.cpp 
+SOURCE            BuddycloudPreferencesSettingsView.cpp BuddycloudPreferencesSettingsList.cpp BuddycloudContactSearcher.cpp 
+SOURCE            BuddycloudCommunitiesView.cpp BuddycloudCommunitiesContainer.cpp BuddycloudFollowing.cpp 
+SOURCE            BuddycloudFollowingContainer.cpp BuddycloudFollowingView.cpp MessagingManager.cpp MessagingParticipants.cpp
+SOURCE            XmppOutbox.cpp BuddycloudNotificationsSettingsView.cpp BuddycloudNotificationsSettingsList.cpp AudioPlayer.cpp 
+
+// End of File

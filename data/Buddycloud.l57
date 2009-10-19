@@ -1,0 +1,329 @@
+/*
+============================================================================
+ Name        : Buddycloud.r01
+ Author      : Ross Savage
+ Copyright   : Buddycloud 2008
+ Description : Localisation File : English
+ 
+               Please only translate text between quotations e.g. "Test"
+============================================================================
+*/
+
+// DO NOT TRANSLATE
+CHARACTER_SET UTF8
+
+rls_string r_string_app_caption "buddycloud"
+rls_string r_string_groupinvite_text " invited you to join channel: "
+// DO NOT TRANSLATE
+
+rls_string r_string_langcode "il"
+rls_string r_string_translatedby "heidelberg תורגם על ידי אנטון דוידוב "
+
+rls_string r_string_followingtab_hint "עוקב"
+rls_string r_string_placestab_hint "מקומות"
+rls_string r_string_explorertab_hint "בקרבת מקום"
+rls_string r_string_channelstab_hint "ערוצים"
+
+// CBA
+rls_string r_string_options_menu "הגדרות"
+rls_string r_string_say_menu "שלח"
+rls_string r_string_cancel_menu "לבטל"
+rls_string r_string_next_menu "הבא"
+rls_string r_string_endcall_menu "End Call"
+rls_string r_string_hide_menu "הסתר"
+
+// Item
+rls_string r_string_item_newgroup "ערוץ חדש"
+rls_string r_string_item_newplace "...מקום חדש"
+
+// Menu: Call
+rls_string r_string_options_loudspeaker "החלף לדיבורית"
+rls_string r_string_options_handset "החלף לשפופרת טלפון"
+rls_string r_string_options_hold "המתן"
+rls_string r_string_options_resume "המשך"
+rls_string r_string_options_endcall "לסיים שיחה"
+
+// Menu: Settings & Edit place
+rls_string r_string_options_edititem "להחליף"
+rls_string r_string_options_searchplace "לחפש פרטים"
+
+rls_string r_string_note_noresultsfound "שום דבר לא נמצא"
+rls_string r_string_note_requestsent "בקשה נשלחה"
+rls_string r_string_note_messagequeued "הודעה תישלח כשתתחבר למערכת"
+rls_string r_string_note_offlinerequired "הינך חייב להיות מנותק בשביל זה"
+
+// Positioning methods
+rls_string r_string_positioning_stationary "ניתן להוסיף מקום זה לרשימה"
+rls_string r_string_positioning_moving "הינך נמצא בתנועה כעת. אין אחריות לכך שתמוקם כאן אוטומטית שוב"
+rls_string r_string_positioning_cell "למידת תבנית אנטנות סלולריות יכולה לקחת כמה דקות"
+rls_string r_string_positioning_wifigps "עדיין ניתן לשמור מקום זה, כי שדרני אלחוט ניתנים לקריאה"
+rls_string r_string_positioning_bt "אם משתמש אחר נמצא בקרבתך, נוסיף אותך למקום שלו"
+rls_string r_string_positioning_none "לא ניתן למקם. בבקשה בדוק את הגדרות המיקום"
+
+// Menu: Search
+rls_string r_string_options_select "לבחור"
+rls_string r_string_options_newsearch "חיפוש חדש"
+rls_string r_string_options_previousresult "לחזור לקודם"
+rls_string r_string_options_cancelsearch "לבטל חיפוש"
+
+// Menu: Help
+rls_string r_string_options_help "עזרה"
+rls_string r_string_help_help "עזרה"
+rls_string r_string_help_update "להוריד עידכון לבאדיקלאוד"
+rls_string r_string_help_about "הודות"
+
+// Menu: Following
+rls_string r_string_options_exit "לסיים"
+rls_string r_string_options_done "לשמור"
+rls_string r_string_options_connect "להתחבר למערכת"
+rls_string r_string_options_disconnect "להתנתק מהמערכת"
+rls_string r_string_options_itemcontact "איש קשר"
+rls_string r_string_options_itemgroup "ערוץ"
+rls_string r_string_options_settings "הגדרות"
+rls_string r_string_item_viewmessages "הצג הודעות"
+rls_string r_string_item_viewchannelmessages "הצג ערוץ"
+rls_string r_string_item_viewprivatemessages "הצג הודעות פרטיות"
+rls_string r_string_item_showplacedetails "הצג פרטיי מקום"
+rls_string r_string_item_showchanneldetails "הצג את פרטי הערוץ"
+rls_string r_string_item_call "להתקשר לאיש קשר"
+rls_string r_string_item_sendplacebysms "שלח מיקום דרך הודעה קצרה"
+rls_string r_string_item_sendinvite "הזמן לבאדיקלאוד"
+rls_string r_string_item_delete "הסר"
+rls_string r_string_item_noticeaccept "לקבל הזמנה"
+rls_string r_string_item_noticeacceptandfollow "לקבל הזמנה ולעקוב אחריו"
+rls_string r_string_item_noticedecline "לסרב"
+rls_string r_string_update_setstatus "עדכן סטטוס"
+rls_string r_string_options_invite "עקוב..."
+rls_string r_string_settings_usersettings "הגדרות"
+rls_string r_string_settings_communitysettings "להתחלק און ליין"
+rls_string r_string_settings_clearconnection "להחליף חיבור"
+
+rls_string r_string_note_followinglistempty "אינך עוקב אחרי משהו. השתמת בסרגלים 'ערוצים' ו'סביבה' בשביל להוסיף דברים לעקוב אחריהם"
+
+// Menu: Messaging
+rls_string r_string_options_openlink "לפתוח לינק"
+rls_string r_string_options_postmessage "העברת מסר"
+rls_string r_string_options_postmedia "להעלות קובץ"
+rls_string r_string_options_replytomessage "להשיב ל"
+rls_string r_string_options_settopic "קבע נושא"
+rls_string r_string_options_jumptounread "לקפוץ לרשומות שלא נקראו"
+rls_string r_string_options_invitetochannel "להזמין לערוץ"
+rls_string r_string_options_invitetootherchannel "להזמין לערוץ אחר"
+rls_string r_string_options_invitefriendtochannel "הזמן לעקוב אחריך"
+rls_string r_string_options_notificationon "להפעיל ריטוט"
+rls_string r_string_options_notificationoff "לכבות ריטוט"
+
+// Menu: Places
+rls_string r_string_options_setcurrent "לשמור מקום חדש"
+rls_string r_string_options_setnext "לקבוע מקום הבא"
+rls_string r_string_item_relearnplace "למד מקום זה מחדש"
+rls_string r_string_dialog_relearnplace "?אתה נמצא כעת במקום זה ורוצה ללמוד אותו שוב"
+rls_string r_string_item_setnext "לקבוע כמקום הבא"
+rls_string r_string_item_editplace "לערוך פרטים"
+rls_string r_string_item_deleteplace "הסר מקום"
+
+rls_string r_string_note_placelastseen "ביקור אחרון"
+rls_string r_string_note_placevisits "ביקורים"
+rls_string r_string_note_placepopulation "מבקרים"
+rls_string r_string_note_learningplace "למידת מקום"
+rls_string r_string_note_updatingplace "מקום יעודכן"
+rls_string r_string_note_noplaceaddress "כתובת לא מוגדרת"
+rls_string r_string_note_placeslistempty "לא שמרת מקומות. לחץ 'אפשרויות > הוסף מקום חדש' בשביל ללמוד מקום זה "
+
+// Menu: Nearby
+rls_string r_string_options_refresh "טען מחדש"
+rls_string r_string_item_placeinfo "פרטי מקום"
+rls_string r_string_item_personinfo "פרטים אודות אדם זה"
+rls_string r_string_item_setcurrent "לקבוע כמקום זה"
+rls_string r_string_item_subscribe "להוסיף לחשבון שלי"
+
+// Menu: Explorer
+rls_string r_string_options_explore "למד סביבה"
+rls_string r_string_item_seefollowers "לראות אנשים שעוקבים"
+rls_string r_string_item_seeplaces "ראה מקומות"
+rls_string r_string_item_seefollowing "אני עוקב אחרי"
+rls_string r_string_item_seeproducing "ערוצים שפתח"
+rls_string r_string_item_seenearby "מי בסביבה"
+rls_string r_string_item_seebeenhere "מי היה כאן"
+rls_string r_string_item_seegoinghere "מי הולך לבוא לכאן"
+
+rls_string r_string_title_isfollowing "$USER עוקב"
+rls_string r_string_title_followedby "$OBJECT עוקבים אחרי"
+rls_string r_string_title_isproducing "$USER יצר ערוצים"
+rls_string r_string_title_nearbyto "$OBJECT קרוב ל "
+rls_string r_string_title_whosbeento "$PLACE מי היה ב"
+rls_string r_string_title_whosgoingto " $PLACE מי הולך ל"
+
+rls_string r_string_note_requesting "...בטעינה"
+rls_string r_string_note_channelrank "מקום"
+
+// Menu: Channels
+rls_string r_string_list_featuredchannels "ערוצים מובחרים"
+rls_string r_string_list_channelsyoumightlike "ערוצים שאולי תאהב"
+rls_string r_string_list_followersfavourites "ערוצים הנעקבים ביותר"
+rls_string r_string_list_mostpopularchannels "ערוצים הכי פופולריים"
+rls_string r_string_list_channelsneartoyou "ערוצים בסביבתך"
+
+rls_string r_string_item_open "לפתוח"
+rls_string r_string_item_follow "עקב"
+rls_string r_string_item_unfollow "להפסיק לעקוב"
+
+// Channel: Settings & Configuration
+rls_string r_string_note_personalchannelcreated "!ברוך הבא לערוצים של באדיקלאוד $USER\n זהו ערוץ אישי שלך בבאדיקלאוד. ערוץ זה כולו שלך ונותן לך אפשר להתכבת\n עם אנשים שעוקבים אחריך"
+rls_string r_string_note_mediauploadready " $LINK באפשרותך להעלות את הקובץ שלך לכתובת זאת "
+rls_string r_string_note_userkickedfromgroup "$USER נזרק מהערוץ"
+rls_string r_string_note_userbannedfromgroup "$USER גורש מהערוץ"
+rls_string r_string_dialog_kickconfirmation "לזרוק אותו מהערוץ? הוא יוכל לחזור בחיבור הבא"
+rls_string r_string_dialog_banconfirmation "למנוע מן המשתמש מלצפות בארוץ זה?"
+rls_string r_string_item_banfromgroup "להטיל חרם"
+rls_string r_string_item_kickfromgroup "לזרוק מערוץ"
+rls_string r_string_item_changerole "להחליף תפקיד"
+rls_string r_string_list_changerole_title ":להחליף תפקיד ל"
+rls_string r_string_changerole_itemlist_moderator "מנהל ערוץ"
+rls_string r_string_changerole_itemlist_contributor "עוקב"
+rls_string r_string_changerole_itemlist_visitor "מבקר"
+rls_string r_string_note_changerolefailed "אינך רשאי לשנות תפקיד למשתמש זה"
+
+// Settings Item List
+rls_string r_string_settings_account_title "חשבון"
+rls_string r_string_settings_itemlist_fullname "שם מלא"
+rls_string r_string_settings_itemlist_fullname_hint "שמך המלא"
+rls_string r_string_settings_itemlist_email "כתובת אלקטרונית"
+rls_string r_string_settings_itemlist_email_hint "כתובת אלקטרונית שלך"
+rls_string r_string_settings_itemlist_phonenumber "מספר טלפון"
+rls_string r_string_settings_itemlist_phonenumber_hint "מספר טלפון עיקרי שלך"
+rls_string r_string_settings_itemlist_username "שם משתמש"
+rls_string r_string_settings_itemlist_username_hint "שם משתמש בבאדיקלאוד"
+rls_string r_string_settings_itemlist_password "סיסמא"
+rls_string r_string_settings_itemlist_password_hint "סיסמא לבאדיקלאוד"
+
+rls_string r_string_settings_itemlist_language "הגדר שפה"
+rls_string r_string_settings_itemlist_showname "הצג שמות בתוך ערוצים"
+rls_string r_string_settings_itemlist_accesspoint "נקודת גישה בשביל שימוש בתוכנה"
+rls_string r_string_settings_itemlist_accesspointuserdefined "מוגדר על ידי משתמש"
+rls_string r_string_settings_itemlist_accesspointalwaysask "תמיד לשאול"
+rls_string r_string_settings_itemlist_testserver "להתחבר לשרת בטא"
+rls_string r_string_settings_itemlist_autostart "הפעל בעת הפעלת הפלאפון"
+rls_string r_string_settings_itemlist_showcontacts "הצג אנשי קשר מספר טלפונים"
+
+rls_string r_string_settings_notifications_title "הודעות"
+rls_string r_string_settings_itemlist_groupnotification "להודיע על רשומות חדשות של ערוץ"
+rls_string r_string_settings_itemlist_groupnever "לא להודיע פעם הבא"
+rls_string r_string_settings_itemlist_groupfirstonly "רשומה חדשה בלבד"
+rls_string r_string_settings_itemlist_groupallmessages "כל ההודעות"
+rls_string r_string_settings_itemlist_notifyreply "להודיע על @תשובות"
+rls_string r_string_settings_itemlist_privatemessagetone "צליל קבלת מסר פרטי"
+rls_string r_string_settings_itemlist_channelposttone "צליל קבלת הודעה חדשה"
+rls_string r_string_settings_itemlist_directreplytone "צליל קבלת תשובה"
+rls_string r_string_settings_itemlist_tonenone "ללא כל צליל"
+rls_string r_string_settings_itemlist_tonedefault "צליל ברירת המחדל"
+
+rls_string r_string_settings_beacons_title "איתור מקום"
+rls_string r_string_settings_itemlist_cell "תא סלולרי"
+rls_string r_string_settings_itemlist_wlan "WIFI"
+rls_string r_string_settings_itemlist_bt "Bluetooth"
+rls_string r_string_settings_itemlist_gps "GPS"
+rls_string r_string_settings_itemlist_on "דלוק"
+rls_string r_string_settings_itemlist_off "כבוי"
+
+// Communities
+rls_string r_string_settings_facebook_text "אתה מופנה כעת לאתר של באדיקלאוד. הנא הוסף את התוכנה, התחבר ואפשר לה גישה"
+rls_string r_string_settings_credentials_success "עידכון צלח"
+rls_string r_string_settings_credentials_fail "עידכון נכשל. הנה בדוק פרטי חיבור ונסה שנית"
+
+// Edit Place List
+rls_string r_string_newplace_title "מקום חדש"
+rls_string r_string_editplace_title "לערוך מקום"
+rls_string r_string_updatefailed_title "עידכון נכשל"
+
+rls_string r_string_editplace_itemlist_name "שם"
+rls_string r_string_editplace_itemlist_name_hint "'Home' : לשמל"
+rls_string r_string_editplace_itemlist_street "רחוב"
+rls_string r_string_editplace_itemlist_street_hint "'171 Piccadilly' :למשל"
+rls_string r_string_editplace_itemlist_area "סביבה"
+rls_string r_string_editplace_itemlist_area_hint "'Mayfair' :למשל"
+rls_string r_string_editplace_itemlist_city "עיר"
+rls_string r_string_editplace_itemlist_city_hint "'London' :למשל"
+rls_string r_string_editplace_itemlist_postcode "מקוד"
+rls_string r_string_editplace_itemlist_postcode_hint "'W1J 9EJ' :למשל"
+rls_string r_string_editplace_itemlist_region "איזור"
+rls_string r_string_editplace_itemlist_region_hint " 'Greater London' :למשל "
+rls_string r_string_editplace_itemlist_country "מדינה"
+rls_string r_string_editplace_itemlist_country_hint "'United Kingdom' :למשל"
+rls_string r_string_editplace_itemlist_visibility "?נגיש לכולם"
+rls_string r_string_editplace_itemlist_visibility_public "נגיש און ליין"
+rls_string r_string_editplace_itemlist_visibility_private "אישי"
+
+// Following & Invitations
+rls_string r_string_followingrequest_title "מישהו רוצה לעקוב אחריך"
+rls_string r_string_followerrequest_text "$USER רוצה לעקוב אחריך. מיקום וסטטוס שלך יהיו נגישים בשבילו"
+
+rls_string r_string_channelinvite_title "הזמנה לערוץ"
+
+// Create channel
+rls_string r_string_dialog_createchannelname ":שם הערוץ"
+rls_string r_string_dialog_createchanneldescription ":תאור קצר של הערוץ"
+rls_string r_string_channelfollowing_text "זה כבר קיים. רוצה לעקוב אחריו '$CHANNEL'?"
+
+// Exit Confirmation
+rls_string r_string_exit_title "אשר יציאה"
+rls_string r_string_exit_text "?יציאה תנתק אותך מהמערכת. להמשיך"
+
+// Authorization Error
+rls_string r_string_autherror_title "הרשמה נכשלה"
+rls_string r_string_autherror_text "שם משתמש זה כבר קיים. הנא בחר שם אחר ונסה שנית"
+
+// Delete Item Message
+rls_string r_string_deleteitem_title "לאשר הסרה"
+rls_string r_string_deleteitem_text "בטוח שאתה רוצה להסיר את זה?"
+
+// Sms/Email Messages
+rls_string r_string_invitemessage_title "!הצטרף אלינו בבאדיקלאוד"
+rls_string r_string_invitemessage_text "http://m.buddycloud.com באדיקלאוד פותח בפנייך דרכים חדשות להתקשר עם אוהדיך ולהציג כשרונותיך! בקר ב\nבשביל להוריד אותה עכשיו"
+rls_string r_string_sendplacemessage_title "איפה אני"
+rls_string r_string_sendplacemessage_text "לפרטים http://m.buddycloud.com/place.php?id=$ID $PLACE אני כרגע ב  "
+
+// Did You Mean?
+rls_string r_string_didyoumean_title "?...התכוונת"
+
+// Dialog
+rls_string r_string_dialog_setmood ":קבע סטטוס"
+rls_string r_string_dialog_moodis "is "
+rls_string r_string_dialog_setcurrentlocation ":לקבוע מיקום שלי"
+rls_string r_string_dialog_setnextlocation ":לקבוע מקום הבא"
+rls_string r_string_dialog_settopic ":לקבוע נושא"
+rls_string r_string_dialog_newmessage ":הודעה חדשה"
+rls_string r_string_dialog_addcontact "הכנס שם משתמש או זיהוי"
+
+// Notes
+rls_string r_string_note_connecting "...מחבר"
+rls_string r_string_note_reconnecting "מתחבר שוב..."
+rls_string r_string_note_connectingwith "מחבר ל\n...$APN"
+rls_string r_string_note_searching "...מחפש"
+rls_string r_string_note_updating "...מעדכן"
+rls_string r_string_note_online "מחובר"
+rls_string r_string_note_offline "מנותק"
+
+// Call
+rls_string r_string_note_dialling "מתקשר ל $USER"
+rls_string r_string_note_talkingto "מדבר עם $USER"
+rls_string r_string_note_hangingup "מנותק"
+
+// Setup 
+rls_string r_string_step2_title "!היה מפורסם"
+rls_string r_string_step2_text "באדיקלאוד נותן לך דרך תקשורת חדשה להתקשר עם אנשים שעוקבים אחריך. באדיקלאוד נותן לך הזדמנות להתפרסם בזכות ידע שלך על נושא או מקום מסויים וליצור קהילה של אוהדים"
+
+rls_string r_string_step3_title "?מה אתה יכול לעשות"
+rls_string r_string_step3_text "עם באדיקלאוד ניתן ליצור ערוצים לפי עניין או ערוצים אישיים. באדיקלאוד יעדכן את מיקומך אוטומטית עם אנשים שעוקבים אחריך, או ברמת עיר עם כולם. הנא בחר שם יחודי בשביל הרשמה"
+
+rls_string r_string_step4_title "יתרונות שלך"
+rls_string r_string_step4_text "באדיקלאוד פותח בפנייך רמת אִינְטֶרְאַקְטִיבִיות חדשה עם אוהדך ומראה פופולריות של ערוציך. היה מחובר במשך כל היום בעלויות נמוכות וללא לחרוש על סוללה בזכות ניהול חכם של התוכנה. שתף אחרים במיקומך בצורה מבוקרת. הנא הכנס סיסמא בטוחה"
+
+rls_string r_string_step5_title "הישאר בקשר"
+rls_string r_string_step5_text "היה מעודכן לגבי שירותים חדשים וגרסאות חדשות של תוכנה זו. הנא השאיר כתובת אלקטרונית (אופציונלי) לא נעביר אותה לגורם שלישי:"
+
+rls_string r_string_step6_title "!ברכות"
+rls_string r_string_step6_text "התקנה הושלמה. כעת יתבצע חיבור לתוכנה"
+rls_string r_string_step6_question "?להריץ תוכנה בעת הפעלת טלפון"
+
+// End of File

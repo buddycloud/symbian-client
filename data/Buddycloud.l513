@@ -1,0 +1,329 @@
+/*
+============================================================================
+ Name        : Buddycloud.r01
+ Author      : Ross Savage
+ Copyright   : Buddycloud 2008
+ Description : Localisation File : English
+ 
+               Please only translate text between quotations e.g. "Test"
+============================================================================
+*/
+
+// DO NOT TRANSLATE
+CHARACTER_SET UTF8
+
+rls_string r_string_app_caption "buddycloud"
+rls_string r_string_groupinvite_text " invited you to join channel: "
+// DO NOT TRANSLATE
+
+rls_string r_string_langcode "de"
+rls_string r_string_translatedby "Translated by: gulli"
+
+rls_string r_string_followingtab_hint "Foigt"
+rls_string r_string_placestab_hint "Platzl"
+rls_string r_string_explorertab_hint "Ned weid weg ned"
+rls_string r_string_channelstab_hint "Tschännls"
+
+// CBA
+rls_string r_string_options_menu "Optionen"
+rls_string r_string_say_menu "Sog"
+rls_string r_string_cancel_menu "Obbrecha"
+rls_string r_string_next_menu "Weita"
+rls_string r_string_endcall_menu "End Call"
+rls_string r_string_hide_menu "Vastecka"
+
+// Item
+rls_string r_string_item_newgroup "Neia Tschännl..."
+rls_string r_string_item_newplace "Neis Platzl..."
+
+// Menu: Call
+rls_string r_string_options_loudspeaker "Zum Lautsprecha wexln"
+rls_string r_string_options_handset "Zum Handset wexln"
+rls_string r_string_options_hold "Auf d'Schleif'n leg'n"
+rls_string r_string_options_resume "Fortfahr'n"
+rls_string r_string_options_endcall "Aufhänga"
+
+// Menu: Settings & Edit place
+rls_string r_string_options_edititem "Ummodl'n"
+rls_string r_string_options_searchplace "Suach Details"
+
+rls_string r_string_note_noresultsfound "Hamma ned"
+rls_string r_string_note_requestsent "Anfrage g'schickt"
+rls_string r_string_note_messagequeued "Werd g'schickt, wenns'D wieda online bist"
+rls_string r_string_note_offlinerequired "Muaßt dafia offline geh'n"
+
+// Positioning methods
+rls_string r_string_positioning_stationary "Jetza kos'D des Platzl speichan"
+rls_string r_string_positioning_moving "Hoit hoit staad. Wennst jetzt speichast werd des fei nix G'scheits!"
+rls_string r_string_positioning_cell "Is am Lerna - des dauert a weng"
+rls_string r_string_positioning_wifigps "Kost scho speichan, weil's a WIFI hot."
+rls_string r_string_positioning_bt "Hot's andane buddycloud usa in da Nähe, schwoabds Di voiautomatisch bei Dene ins Platzl nei "
+rls_string r_string_positioning_none "Kennan Di ned positionier'n. Bittschön geh aweng 'Rumschoit'n."
+
+// Menu: Search
+rls_string r_string_options_select "Ausweih'n"
+rls_string r_string_options_newsearch "Neie Suche"
+rls_string r_string_options_previousresult "Arschlings z'ruck "
+rls_string r_string_options_cancelsearch "Loß bleib'm des Suacha"
+
+// Menu: Help
+rls_string r_string_options_help "Hilfe"
+rls_string r_string_help_help "buddycloud huif ma"
+rls_string r_string_help_update "buddycloud updat'n"
+rls_string r_string_help_about "Üba"
+
+// Menu: Following
+rls_string r_string_options_exit "'Naus"
+rls_string r_string_options_done "Basst scho"
+rls_string r_string_options_connect "Online geh'n"
+rls_string r_string_options_disconnect "Offline geh'n"
+rls_string r_string_options_itemcontact "Kontakt"
+rls_string r_string_options_itemgroup "Tschännl"
+rls_string r_string_options_settings "'Rumschoit'n"
+rls_string r_string_item_viewmessages "Nachrichten oschaug'n"
+rls_string r_string_item_viewchannelmessages "In Tschännl neischaug'n"
+rls_string r_string_item_viewprivatemessages "PeäM oschaug'n"
+rls_string r_string_item_showplacedetails "Wo genau"
+rls_string r_string_item_showchanneldetails "Tschännl Info"
+rls_string r_string_item_call "Kontakt o'ruaffa"
+rls_string r_string_item_sendplacebysms "Schick mei Platzl ois SMS"
+rls_string r_string_item_sendinvite "Eilod'n fia buddycloud"
+rls_string r_string_item_delete "Weg damit"
+rls_string r_string_item_noticeaccept "Freili"
+rls_string r_string_item_noticeacceptandfollow "Freili und mog scho aa foig'n"
+rls_string r_string_item_noticedecline "Oba scho glei wirkli ned"
+rls_string r_string_update_setstatus "Status updat'n"
+rls_string r_string_options_invite "Foig..."
+rls_string r_string_settings_usersettings "So hob I's am liabst'n"
+rls_string r_string_settings_communitysettings "Uuii! Schaug!"
+rls_string r_string_settings_clearconnection "Vabindung wäxln"
+
+rls_string r_string_note_followinglistempty "Du foigst gar nermd/nix im Moment.\n\nSchau a moi ins Tschännl menü, do werst na scho wos find'n."
+
+// Menu: Messaging
+rls_string r_string_options_openlink "Link aufmacha"
+rls_string r_string_options_postmessage "Zuatexten"
+rls_string r_string_options_postmedia "Zuabuidl'n"
+rls_string r_string_options_replytomessage "Antwort'n"
+rls_string r_string_options_settopic "Neis Thema"
+rls_string r_string_options_jumptounread "Tschamp zua de no ned G'lesenen"
+rls_string r_string_options_invitetochannel "Eilod'n zum Tschännl"
+rls_string r_string_options_invitetootherchannel "Eilod'n zua am andan Tschännl"
+rls_string r_string_options_invitefriendtochannel "Ohänga eilod'n"
+rls_string r_string_options_notificationon "Loß' vibrier'n"
+rls_string r_string_options_notificationoff "Mog koa Vibrier'n ned"
+
+// Menu: Places
+rls_string r_string_options_setcurrent "Neis Platzl speichan"
+rls_string r_string_options_setnext "Nechst's Platzl"
+rls_string r_string_item_relearnplace "Des Platzl nei lerna"
+rls_string r_string_dialog_relearnplace "Du bist grad do und wuillst des Platzl nei lerna?"
+rls_string r_string_item_setnext "Do bin I ois nächst's"
+rls_string r_string_item_editplace "Genaua"
+rls_string r_string_item_deleteplace "Weg mit dem Platzl"
+
+rls_string r_string_note_placelastseen "'S letzte moi do"
+rls_string r_string_note_placevisits "Do g'wehn"
+rls_string r_string_note_placepopulation "Grod do"
+rls_string r_string_note_learningplace "Plaztl wird g'lernt"
+rls_string r_string_note_updatingplace "Wart a biß'l..."
+rls_string r_string_note_noplaceaddress "Adresse no a weng zweng"
+rls_string r_string_note_placeslistempty "Du host no koana Platzl g'speichat.\n\nUm Dei jetziges Platzl zum Speichan, druckst\n'Optionen > Neis Platzl'"
+
+// Menu: Nearby
+rls_string r_string_options_refresh "No amoi nei"
+rls_string r_string_item_placeinfo "Platldetails"
+rls_string r_string_item_personinfo "Info vo dera Person"
+rls_string r_string_item_setcurrent "Dua so ois wenn I do war"
+rls_string r_string_item_subscribe "Des is aa mei Platzl"
+
+// Menu: Explorer
+rls_string r_string_options_explore "'rumschniffe'n"
+rls_string r_string_item_seefollowers "Ohänga"
+rls_string r_string_item_seeplaces "Platzl"
+rls_string r_string_item_seefollowing "Foigt"
+rls_string r_string_item_seeproducing "Eing'richtete Tschännl"
+rls_string r_string_item_seenearby "Ned weid weg ned"
+rls_string r_string_item_seebeenhere "Wer war scho do?"
+rls_string r_string_item_seegoinghere "Wer kimmt do her"
+
+rls_string r_string_title_isfollowing "$USER foigt"
+rls_string r_string_title_followedby "$OBJECT's Ohänga"
+rls_string r_string_title_isproducing "$USER hot eig'richt"
+rls_string r_string_title_nearbyto "Ned weid weg vo $OBJECT"
+rls_string r_string_title_whosbeento "Wer war scho dort: $PLACE"
+rls_string r_string_title_whosgoingto "Wer geht do hi: $PLACE"
+
+rls_string r_string_note_requesting "Wart a biß'l..."
+rls_string r_string_note_channelrank "Rang"
+
+// Menu: Channels
+rls_string r_string_list_featuredchannels "B'sondanne Tschännl"
+rls_string r_string_list_channelsyoumightlike "Tschännl di Da g'foin kannten"
+rls_string r_string_list_followersfavourites "Ohänga's Favorit'n"
+rls_string r_string_list_mostpopularchannels "Vui meg'n di Tschännl"
+rls_string r_string_list_channelsneartoyou "Tschännl in Deina Dunstwoikn"
+
+rls_string r_string_item_open "Aufmacha"
+rls_string r_string_item_follow "Foig"
+rls_string r_string_item_unfollow "Mia g'langt's!"
+
+// Channel: Settings & Configuration
+rls_string r_string_note_personalchannelcreated "Servus nachat und Herzlich Willkommen bei de buddycloud Tschännl $USER! Do host a glei amoi Dein eigana Tschännl bei buddycloud. Der g´hert Da ganz alloa und do drin kost Deine Ohänga g'scheit zuatext'n!"
+rls_string r_string_note_mediauploadready "Schick fei koan Schmarrn ned $LINK"
+rls_string r_string_note_userkickedfromgroup "$USER is aussi g'schmiß'n worn"
+rls_string r_string_note_userbannedfromgroup "$USER derf nimma kemma der Zipfeklatscha der"
+rls_string r_string_dialog_kickconfirmation "Tret erm aussi (beim nächst'n moi derf a wieda kemma)?"
+rls_string r_string_dialog_banconfirmation "Mogst'n wirkli nimma in Deim Tschännl hom?"
+rls_string r_string_item_banfromgroup "vabanna vom Tschännl"
+rls_string r_string_item_kickfromgroup "Tret erm aussi"
+rls_string r_string_item_changerole "Wos derf'a macha?"
+rls_string r_string_list_changerole_title "Ummodl'n auf:"
+rls_string r_string_changerole_itemlist_moderator "Platzhiarsch"
+rls_string r_string_changerole_itemlist_contributor "Ohänga"
+rls_string r_string_changerole_itemlist_visitor "Zuagroasta"
+rls_string r_string_note_changerolefailed "Du, des derfst fei ned, Bazi! Mei liaba Schiaba!"
+
+// Settings Item List
+rls_string r_string_settings_account_title "Konto"
+rls_string r_string_settings_itemlist_fullname "Volla Name"
+rls_string r_string_settings_itemlist_fullname_hint "Voller Name"
+rls_string r_string_settings_itemlist_email "E-mail Adress"
+rls_string r_string_settings_itemlist_email_hint "Dei E-mail Adress'"
+rls_string r_string_settings_itemlist_phonenumber "Telefonnumma"
+rls_string r_string_settings_itemlist_phonenumber_hint "Dei Händynumma"
+rls_string r_string_settings_itemlist_username "Usanama"
+rls_string r_string_settings_itemlist_username_hint "buddycloud Usanama"
+rls_string r_string_settings_itemlist_password "Passwort"
+rls_string r_string_settings_itemlist_password_hint "buddycloud Passwort"
+
+rls_string r_string_settings_itemlist_language "Mia red'n"
+rls_string r_string_settings_itemlist_showname "Zoag Nama in de Tschännl"
+rls_string r_string_settings_itemlist_accesspoint "Wia mogst na online geh'n?"
+rls_string r_string_settings_itemlist_accesspointuserdefined "So wia I sog"
+rls_string r_string_settings_itemlist_accesspointalwaysask "Frog mi oiwei"
+rls_string r_string_settings_itemlist_testserver "Mit'm beta-server vabind'n"
+rls_string r_string_settings_itemlist_autostart "Mit'm Händy start'n"
+rls_string r_string_settings_itemlist_showcontacts "Telefonbuach o'zoag'n"
+
+rls_string r_string_settings_notifications_title "Do spuit d'Musi"
+rls_string r_string_settings_itemlist_groupnotification "Tschännl Alaam"
+rls_string r_string_settings_itemlist_groupnever "Loß ma mei Ruah"
+rls_string r_string_settings_itemlist_groupfirstonly "Nua's erste moi"
+rls_string r_string_settings_itemlist_groupallmessages "Oiwei"
+rls_string r_string_settings_itemlist_notifyreply "Alaam bei @Antwort'n"
+rls_string r_string_settings_itemlist_privatemessagetone "PeäM Musi"
+rls_string r_string_settings_itemlist_channelposttone "Tschännl Musi"
+rls_string r_string_settings_itemlist_directreplytone "@Antwort'n Musi"
+rls_string r_string_settings_itemlist_tonenone "Hoit's Mei!"
+rls_string r_string_settings_itemlist_tonedefault "Vegl'n"
+
+rls_string r_string_settings_beacons_title "Positionierung"
+rls_string r_string_settings_itemlist_cell "Händy Mast"
+rls_string r_string_settings_itemlist_wlan "WIFI"
+rls_string r_string_settings_itemlist_bt "Blauzahn"
+rls_string r_string_settings_itemlist_gps "GPS"
+rls_string r_string_settings_itemlist_on "Scho"
+rls_string r_string_settings_itemlist_off "Naaa"
+
+// Communities
+rls_string r_string_settings_facebook_text "Mia schiackan Di jetzad auf http://apps.facebook.com/buddycloud zum omeit'n fia buddycloud. Geh fuills bittschön aus, login und loß uns eini."
+rls_string r_string_settings_credentials_success "Update hot g'funzt"
+rls_string r_string_settings_credentials_fail "Des update hot ned hig'haut. Check bittschön Deine Eingaben und probier's no a moi"
+
+// Edit Place List
+rls_string r_string_newplace_title "Neis Platzl"
+rls_string r_string_editplace_title "Genaua"
+rls_string r_string_updatefailed_title "Des update hot ned hig'haut"
+
+rls_string r_string_editplace_itemlist_name "Nama"
+rls_string r_string_editplace_itemlist_name_hint "z.B. 'Dahoam' oda 'Wiatshaus'"
+rls_string r_string_editplace_itemlist_street "Straß'n"
+rls_string r_string_editplace_itemlist_street_hint "z.B. 'König Ludwig Allee 1'"
+rls_string r_string_editplace_itemlist_area "Stodtteil"
+rls_string r_string_editplace_itemlist_area_hint "z.B. 'Schwabing'"
+rls_string r_string_editplace_itemlist_city "Stodt"
+rls_string r_string_editplace_itemlist_city_hint "z.B. 'München'"
+rls_string r_string_editplace_itemlist_postcode "PLZ"
+rls_string r_string_editplace_itemlist_postcode_hint "z.B. '81677'"
+rls_string r_string_editplace_itemlist_region "Bundesland"
+rls_string r_string_editplace_itemlist_region_hint "z.B. 'Freistaat Bayern'"
+rls_string r_string_editplace_itemlist_country "Land"
+rls_string r_string_editplace_itemlist_country_hint "z.B. 'Germany'"
+rls_string r_string_editplace_itemlist_visibility "Derfan andane aa do her?"
+rls_string r_string_editplace_itemlist_visibility_public "Fir olle"
+rls_string r_string_editplace_itemlist_visibility_private "Persönlich"
+
+// Following & Invitations
+rls_string r_string_followingrequest_title "Anfrage zum Foign"
+rls_string r_string_followerrequest_text "$USER mehat Da auf buddycloud foign.\n* Loß'n seign wo's'D grod bist & wos'D grod machst\n* Loß'n in Dein eigana Tschännl nei\n* Loß'n Deine Platzl seign "
+
+rls_string r_string_channelinvite_title "Einladung zum Tschännl"
+
+// Create channel
+rls_string r_string_dialog_createchannelname "Nama vom Tschännl"
+rls_string r_string_dialog_createchanneldescription "Worum geht's nachat in dem Tschännl?"
+rls_string r_string_channelfollowing_text "Den Tschännl '$CHANNEL' hamma scho. Mogst a Ohänga wern?"
+
+// Exit Confirmation
+rls_string r_string_exit_title "Bestätigung"
+rls_string r_string_exit_text "Mogst wirkli 'naus? Werst fei ausg'loggt vo buddycloud, woaßt scho?"
+
+// Authorization Error
+rls_string r_string_autherror_title "Registrier'n hot ned g'funzt"
+rls_string r_string_autherror_text "Den Usernama hamma scho. Bittschön dua aweng 'Rumschoit'n und probier's no amoi."
+
+// Delete Item Message
+rls_string r_string_deleteitem_title "Bestätigung"
+rls_string r_string_deleteitem_text "Mogs'D des wirkli ausmerz'n?"
+
+// Sms/Email Messages
+rls_string r_string_invitemessage_title "Do sitz' Di zuawa bei buddycloud!"
+rls_string r_string_invitemessage_text "Mit buddycloud kost'D Deine Ohänga g'scheid zuatexten und zoag'n wos fira coola Hund daß'D bist! Schau glei nei und download auf http://m.buddycloud.com ! "
+rls_string r_string_sendplacemessage_title "Wo I na bin"
+rls_string r_string_sendplacemessage_text "Treib mi do rum: $PLACE. http://m.buddycloud.com/place.php?id=$ID wenns D'as g'nau wiss'n mechst."
+
+// Did You Mean?
+rls_string r_string_didyoumean_title "Moanst Du...?"
+
+// Dialog
+rls_string r_string_dialog_setmood "Mach grad:"
+rls_string r_string_dialog_moodis "is "
+rls_string r_string_dialog_setcurrentlocation "Platzl festleg'n:"
+rls_string r_string_dialog_setnextlocation "Nechst's Platzl:"
+rls_string r_string_dialog_settopic "Neis Thema:"
+rls_string r_string_dialog_newmessage "Neie Nachricht:"
+rls_string r_string_dialog_addcontact "Gib buddycloud or Jabber Id (eg. test@gtalk.com) ei:"
+
+// Notes
+rls_string r_string_note_connecting "Am Vabind'n..."
+rls_string r_string_note_reconnecting "Wart a biß'l..."
+rls_string r_string_note_connectingwith "Am Vabind'n mit'm\n$APN..."
+rls_string r_string_note_searching "Wart a biß'l..."
+rls_string r_string_note_updating "Wart a biß'l..."
+rls_string r_string_note_online "Online"
+rls_string r_string_note_offline "Offline"
+
+// Call
+rls_string r_string_note_dialling "$USER o'ruaffa"
+rls_string r_string_note_talkingto "Ratsch'n mit $USER"
+rls_string r_string_note_hangingup "Koa Vabindung ned"
+
+// Setup 
+rls_string r_string_step2_title "Werd bekannt wiara bunta Hund!"
+rls_string r_string_step2_text "Loß' nua olle wiss'n wos fiara Hund daß'D bist. buddycloud Tschännls macht's meglich. Organisier' Da a Ohängaschaft de si seig'n loß'n ko und dann zoag earna wo da Bartl an Most hoilt.   "
+
+rls_string r_string_step3_title "Wos kost'D damit na ofanga?"
+rls_string r_string_step3_text "Moch wos'D wuillst bei buddycloud. Richt an Tschännl zu am bestimmt'n Thema ei oda werd zum Voinarzist'n in Deim eigena Tschännl. buddycloud zoagt Deine Ohänga an welcham g'speichat'n Platzl das'D bist. D'andern seign nua d'Stodt, wo's'D bist. Gib Dein Usanama ei oda suach da an g'scheid'n Usanama aus dann kost a scho losleg'n:"
+
+rls_string r_string_step4_title "Des host davo"
+rls_string r_string_step4_text "Mit buddycloud werst interaktiv vom andan Stern mit Deine Ohaenga und im Ranking kost na seig'n wias Di so schlogst. Mia ham an minimalen Datenvakehr, oiso loß buddycloud am besten imma laffa, weil's ned vui kost und a an akku ned vui auszuzelt. So kost dann a imma olle wiss'n loß'n wos'D bist ohne daß'D dabei d'Hos'n owiloßt.\nSuach da bittschön a Passwort aus: "
+
+rls_string r_string_step5_title "Loß' Di oschaug'n"
+rls_string r_string_step5_text "Mia datten Di gern informier'n, wenn's neie Dienste oda Versionen vo buddycloud hot. Gib uns hoit bittschön Dei E-mail, mia passen a g'scheit d'rauf auf (muaßt oba ned):"
+
+rls_string r_string_step6_title "Gratuliere nachat!"
+rls_string r_string_step6_text "Adelheid glei is soweit!\nMia vabid'n und meid'n Di jetzda pfei'grod bei buddycloud Tschännls o."
+rls_string r_string_step6_question "Mogst, daß buddycloud automatisch start, wennst Dei Händy o'schoitst?"
+
+// End of File

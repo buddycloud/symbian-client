@@ -1,0 +1,329 @@
+/*
+============================================================================
+ Name        : Buddycloud.r01
+ Author      : Ross Savage
+ Copyright   : Buddycloud 2008
+ Description : Localisation File : English
+ 
+               Please only translate text between quotations e.g. "Test"
+============================================================================
+*/
+
+// DO NOT TRANSLATE
+CHARACTER_SET UTF8
+
+rls_string r_string_app_caption "buddycloud"
+rls_string r_string_groupinvite_text " invited you to join channel: "
+// DO NOT TRANSLATE
+
+rls_string r_string_langcode "th"
+rls_string r_string_translatedby "แปลโดย : buddycloud สาวไทย"
+
+rls_string r_string_followingtab_hint "ติดตาม"
+rls_string r_string_placestab_hint "สถานที่"
+rls_string r_string_explorertab_hint "เพื่อนๆใกล้เคียง"
+rls_string r_string_channelstab_hint "สถานี"
+
+// CBA
+rls_string r_string_options_menu "ตัวเลือก"
+rls_string r_string_say_menu "พิมพ์ข้อความ"
+rls_string r_string_cancel_menu "ยกเลิก"
+rls_string r_string_next_menu "ถัดไป"
+rls_string r_string_endcall_menu "End Call"
+rls_string r_string_hide_menu "ซ่อน"
+
+// Item
+rls_string r_string_item_newgroup "สถานีใหม่..."
+rls_string r_string_item_newplace "สถานที่ใหม่..."
+
+// Menu: Call
+rls_string r_string_options_loudspeaker "เปลี่ยนเป็นลำโพง"
+rls_string r_string_options_handset "เปลี่ยนเป็นหูฟัง"
+rls_string r_string_options_hold "รอสาย"
+rls_string r_string_options_resume "ทำต่อ"
+rls_string r_string_options_endcall "จบการสนทนา"
+
+// Menu: Settings & Edit place
+rls_string r_string_options_edititem "เปลี่ยน"
+rls_string r_string_options_searchplace "ค้นหารายละเอียด"
+
+rls_string r_string_note_noresultsfound "ไม่พบข้อมูล"
+rls_string r_string_note_requestsent "คำขอถูกส่งแล้ว"
+rls_string r_string_note_messagequeued "ข้อความจะถูกส่งเมื่อคุณออนไลน์"
+rls_string r_string_note_offlinerequired "คุณต้องออกจากระบบก่อนจึงจะทำได้"
+
+// Positioning methods
+rls_string r_string_positioning_stationary "คุณบุคมาร์คสถานที่นี้ได้"
+rls_string r_string_positioning_moving "คุณกำลังเดินทางอยู่ การบุคมาร์คไม่สามารถบอกได้ว่าคุณจะกลับมาสถานที่นี้อีก"
+rls_string r_string_positioning_cell "กำลังค้นหาข้อมูลจากเสาส่งสัญญาณโทรศัพท์ อาจจะใช้เวลาหลายนาที"
+rls_string r_string_positioning_wifigps "คุณบุคมาร์คสถานที่นี้ได้ตราบใดที่ยังพบ Wifi"
+rls_string r_string_positioning_bt "ถ้ามีสมาชิก buddycloud ท่านอื่นอยู่ใกล้ๆคุณ เราจะใช้สถานที่เดียวกันกับพวกเขา"
+rls_string r_string_positioning_none "ไม่พบตำแหน่งใดๆ กรุณาตรวจสอบการตั้งค่าตำแหน่งของคุณ"
+
+// Menu: Search
+rls_string r_string_options_select "เลือก"
+rls_string r_string_options_newsearch "ค้นหาใหม่"
+rls_string r_string_options_previousresult "กลับไปก่อนหน้านี้"
+rls_string r_string_options_cancelsearch "ยกเลิกการค้นหา"
+
+// Menu: Help
+rls_string r_string_options_help "ช่วยเหลือ"
+rls_string r_string_help_help "ช่วยเหลือของ buddycloud"
+rls_string r_string_help_update "อัพเดท buddycloud"
+rls_string r_string_help_about "เกี่ยวกับ"
+
+// Menu: Following
+rls_string r_string_options_exit "ออก"
+rls_string r_string_options_done "ออนไลน์"
+rls_string r_string_options_connect "ออฟไลน์"
+rls_string r_string_options_disconnect "ติดต่อ"
+rls_string r_string_options_itemcontact "ช่อง"
+rls_string r_string_options_itemgroup "อัพเดท"
+rls_string r_string_options_settings "ตั้งค่า"
+rls_string r_string_item_viewmessages "ดูข้อความ"
+rls_string r_string_item_viewchannelmessages "ดูช่อง"
+rls_string r_string_item_viewprivatemessages "ดูข้อความส่วนตัว"
+rls_string r_string_item_showplacedetails "แสดงข้อมูลสถานที่"
+rls_string r_string_item_showchanneldetails "แสดงรายละเอียดของช่อง"
+rls_string r_string_item_call "โทรหาผู้ติดต่อ"
+rls_string r_string_item_sendplacebysms "ส่งสถานที่นี้ทาง sms"
+rls_string r_string_item_sendinvite "เชิญเข้าร่วม buddycloud"
+rls_string r_string_item_delete "ลบออก"
+rls_string r_string_item_noticeaccept "ยอมรับ"
+rls_string r_string_item_noticeacceptandfollow "ยอมรับและติดตาม"
+rls_string r_string_item_noticedecline "ปฏิเสธ"
+rls_string r_string_update_setstatus "อัพเดทสถานะ"
+rls_string r_string_options_invite "ติดตาม..."
+rls_string r_string_settings_usersettings "การตั้งค่า"
+rls_string r_string_settings_communitysettings "แชร์ออนไลน์"
+rls_string r_string_settings_clearconnection "เปลี่ยนแปลงการเชื่อมต่อ"
+
+rls_string r_string_note_followinglistempty "คุณไม่ได้ติดตามใครหรืออะไรอยู่เลย ใช้ ช่อง และ แท็บการค้นหา เพื่อค้นหาสิ่งที่คุณสนใจเพื่อติดตาม"
+
+// Menu: Messaging
+rls_string r_string_options_openlink "เปิดลิงก์"
+rls_string r_string_options_postmessage "โพสต์ข้อความ"
+rls_string r_string_options_postmedia "โพสต์ภาพ,เสียง"
+rls_string r_string_options_replytomessage "ตอบกลับหา"
+rls_string r_string_options_settopic "ตั้งหัวข้อ"
+rls_string r_string_options_jumptounread "ไปยังข้อความที่ยังไม่ได้อ่าน"
+rls_string r_string_options_invitetochannel "เชิญเข้าร่วม สถานี"
+rls_string r_string_options_invitetootherchannel "เชิญเข้าร่วม สถานีอื่นๆ"
+rls_string r_string_options_invitefriendtochannel "เชิญผู้ที่ติดตามคุณ"
+rls_string r_string_options_notificationon "เปิดการสั่นเตือน"
+rls_string r_string_options_notificationoff "ปิดการสั่นเตือน"
+
+// Menu: Places
+rls_string r_string_options_setcurrent "บุคมาร์คสถานที่ใหม่"
+rls_string r_string_options_setnext "ตั้งค่าสถานที่ต่อไป"
+rls_string r_string_item_relearnplace "ศึกษาสถานที่นี้ใหม่อีกครั้ง"
+rls_string r_string_dialog_relearnplace "คุณอยู่ ณ สถานที่นี้อยู่แล้ว และต้องการศึกษาสถานที่อีกครั้ง?"
+rls_string r_string_item_setnext "ตั้งเป็นสถานที่ต่อไป"
+rls_string r_string_item_editplace "แก้ไขรายละเอียด"
+rls_string r_string_item_deleteplace "ลบสถานที่"
+
+rls_string r_string_note_placelastseen "เคยมา"
+rls_string r_string_note_placevisits "จำนวนครั้งที่มา"
+rls_string r_string_note_placepopulation "จำนวนผู้คน ณ สถานที่นี้"
+rls_string r_string_note_learningplace "หาข้อมูลสถานที่"
+rls_string r_string_note_updatingplace "อัพเดทสถานที่..."
+rls_string r_string_note_noplaceaddress "ที่อยู่นี้ไม่มีข้อมูล"
+rls_string r_string_note_placeslistempty "คุณไม่มีสถานที่ไหนบุ๊คมาร์คเอาไว้เลย เพื่อหาข้อมูลของสถานที่ปัจจุบัน ไปยัง 'ตัวเลือก > บุ๊คมาร์คสถานที่ใหม่'"
+
+// Menu: Nearby
+rls_string r_string_options_refresh "รีเฟรช"
+rls_string r_string_item_placeinfo "ข้อมูลที่อยู่"
+rls_string r_string_item_personinfo "ข้อมูลสถานที่"
+rls_string r_string_item_setcurrent "ตั้งเป็นสถานที่นี้"
+rls_string r_string_item_subscribe "เพิ่มเข้าสู่ สถานที่ของฉัน"
+
+// Menu: Explorer
+rls_string r_string_options_explore "สำรวจ "
+rls_string r_string_item_seefollowers "ดูผู้ที่ติดตามคุณ"
+rls_string r_string_item_seeplaces "ดูสถานที่"
+rls_string r_string_item_seefollowing "ดูผู้ที่คุณติดตามอยู่"
+rls_string r_string_item_seeproducing "ดูที่ประมวลผลอยู่"
+rls_string r_string_item_seenearby "ดูเพื่อนบ้านใกล้เคียงคุณ"
+rls_string r_string_item_seebeenhere "ใครเคยมาที่นี่บ้าง"
+rls_string r_string_item_seegoinghere "ใครกำลังมาที่บ้าง"
+
+rls_string r_string_title_isfollowing "$USER กำลังติดตาม"
+rls_string r_string_title_followedby "$OBJECT ผู้ที่ติดตาม"
+rls_string r_string_title_isproducing "$USER กำลังประมวลผล"
+rls_string r_string_title_nearbyto "เป็นเพื่อนบ้านใกล้กับ $OBJECT"
+rls_string r_string_title_whosbeento "ผู้ที่เคยมายังสถานที่ $PLACE"
+rls_string r_string_title_whosgoingto "ผู้ที่จะไปยังสถานที่ $PLACE"
+
+rls_string r_string_note_requesting "กำลังส่งคำร้องขอ..."
+rls_string r_string_note_channelrank "ลำดับ"
+
+// Menu: Channels
+rls_string r_string_list_featuredchannels "สถานีที่โดดเด่น"
+rls_string r_string_list_channelsyoumightlike "สถานีที่คุณอาจจะชอบ"
+rls_string r_string_list_followersfavourites "ผู้ติดตามที่ฮอตที่สุด"
+rls_string r_string_list_mostpopularchannels "สถานีที่ฮอตที่สุด"
+rls_string r_string_list_channelsneartoyou "สถานีที่อยู่ใกล้ๆคุณ"
+
+rls_string r_string_item_open "เปิด"
+rls_string r_string_item_follow "ติดตาม"
+rls_string r_string_item_unfollow "ไม่ติดตาม"
+
+// Channel: Settings & Configuration
+rls_string r_string_note_personalchannelcreated "ยินดีต้อนรับเข้าสู่ช่องของ buddycloud ค่ะ คุณ $USER!\n\nนี่คือช่องส่วนตัวของคุณบน buddycloud เป็นของคุณทั้งหมดเลยและคุณสามารถเผยแพร่สู่ผู้ที่ติดตามคุณได้ด้วย!"
+rls_string r_string_note_mediauploadready "ขณะนี้คุณสามารถอัพโหลดไฟล์ ภาพ,เสียง ได้ที่ $LINK"
+rls_string r_string_note_userkickedfromgroup "$USER โดนเตะออกจากห้องนี้แล้ว"
+rls_string r_string_note_userbannedfromgroup "$USER โดนแบนจากห้องแล้ว"
+rls_string r_string_dialog_kickconfirmation "เตะคนนี้ออกจากสถานีนี้ (เขาจะกลับมาอีกเมื่อล็อกอินครั้งหน้า)?"
+rls_string r_string_dialog_banconfirmation "แบนคนนี้ไม่ให้ดูสถานีนี้ได้อีก?"
+rls_string r_string_item_banfromgroup "แบนจากสถานีนี้"
+rls_string r_string_item_kickfromgroup "เตะออกจากสถานีนี้"
+rls_string r_string_item_changerole "เปลี่ยนบทบาท"
+rls_string r_string_list_changerole_title "เปลี่ยนบทบาทเป็น:"
+rls_string r_string_changerole_itemlist_moderator "ผู้ดูแล"
+rls_string r_string_changerole_itemlist_contributor "ผู้สนับสนุน"
+rls_string r_string_changerole_itemlist_visitor "ผู้เยี่ยมชม"
+rls_string r_string_note_changerolefailed "คุณไม่มีสิทธิ์จะเปลี่ยนบทบาทของคนๆนี้"
+
+// Settings Item List
+rls_string r_string_settings_account_title "นามแฝง"
+rls_string r_string_settings_itemlist_fullname "ชื่อจริง"
+rls_string r_string_settings_itemlist_fullname_hint "ชื่อจริงของคุณ"
+rls_string r_string_settings_itemlist_email "E-mail"
+rls_string r_string_settings_itemlist_email_hint "E-mail ของคุณ"
+rls_string r_string_settings_itemlist_phonenumber "เบอร์โทรศัพท์"
+rls_string r_string_settings_itemlist_phonenumber_hint "เบอร์โทรศัพท์หลัก"
+rls_string r_string_settings_itemlist_username "ชื่อผู้ใช้"
+rls_string r_string_settings_itemlist_username_hint "ชื่อผู้ใช้ ใน buddycloud"
+rls_string r_string_settings_itemlist_password "รหัสผ่าน"
+rls_string r_string_settings_itemlist_password_hint "รหัสผ่าน buddycloud"
+
+rls_string r_string_settings_itemlist_language "ข้อความแจ้งเตือนจากทางสถานี"
+rls_string r_string_settings_itemlist_showname "แสดงชื่อ ในสถานีนี้"
+rls_string r_string_settings_itemlist_accesspoint "จุดเชื่อมต่อที่ใช้ได้"
+rls_string r_string_settings_itemlist_accesspointuserdefined "การกำหนดของผู้ใช้"
+rls_string r_string_settings_itemlist_accesspointalwaysask "ถามทุกครั้ง"
+rls_string r_string_settings_itemlist_testserver "เชื่อมต่อไปยัง beta server"
+rls_string r_string_settings_itemlist_autostart "เริ่มโปรแกรมอัตโนมัติเมื่อเปิดมือถือ"
+rls_string r_string_settings_itemlist_showcontacts "แสดงสมุดรายชื่อของโทรศัพท์"
+
+rls_string r_string_settings_notifications_title "การแจ้งเตือน"
+rls_string r_string_settings_itemlist_groupnotification "ข้อความแจ้งเตือนจากทางสถานี"
+rls_string r_string_settings_itemlist_groupnever "ไม่ต้องแจ้งเตือน"
+rls_string r_string_settings_itemlist_groupfirstonly "เฉพาะข้อความแรก"
+rls_string r_string_settings_itemlist_groupallmessages "ทุกข้อความ"
+rls_string r_string_settings_itemlist_notifyreply "ตอบกลับ@ข้อความแจ้งเตือน:"
+rls_string r_string_settings_itemlist_privatemessagetone "เสียงเตือนเมื่อได้รับข้อความส่วนตัว"
+rls_string r_string_settings_itemlist_channelposttone "โทนเสียงเตือนเมื่อมีผู้โพสต์ลงในช่อง"
+rls_string r_string_settings_itemlist_directreplytone "ฉัน @ตอบกลับ เสียงเตือน"
+rls_string r_string_settings_itemlist_tonenone "ไม่มีเสียง"
+rls_string r_string_settings_itemlist_tonedefault "โทนเสียงตั้งต้น"
+
+rls_string r_string_settings_beacons_title "ตำแหน่ง"
+rls_string r_string_settings_itemlist_cell "เสาส่งสัญญาณ"
+rls_string r_string_settings_itemlist_wlan "WIFI"
+rls_string r_string_settings_itemlist_bt "Bluetooth"
+rls_string r_string_settings_itemlist_gps "GPS"
+rls_string r_string_settings_itemlist_on "เปิด"
+rls_string r_string_settings_itemlist_off "ปิด"
+
+// Communities
+rls_string r_string_settings_facebook_text "คุณกำลังเข้าสู่เว็บ http://apps.facebook.com/buddycloud ของ buddycloud กรุณาแอดไว้ ล็อกอินเพื่อเข้าถึง"
+rls_string r_string_settings_credentials_success "อัพเดทเสร็จเรียบร้อยแล้ว"
+rls_string r_string_settings_credentials_fail "อัพเดทไม่สำเร็จ\nโปรดตรวจเช็คและลองใหม่อีกครั้ง"
+
+// Edit Place List
+rls_string r_string_newplace_title "สถานที่ใหม่"
+rls_string r_string_editplace_title "แก้ไขสถานที่"
+rls_string r_string_updatefailed_title "การอัพเดตล้มเหลว"
+
+rls_string r_string_editplace_itemlist_name "ชื่อ"
+rls_string r_string_editplace_itemlist_name_hint "ตัวอย่างเช่น 'บ้าน' หรือ 'สตาร์บัคส์'"
+rls_string r_string_editplace_itemlist_street "ถนน"
+rls_string r_string_editplace_itemlist_street_hint "ตัวอย่างเช่น ถ.รัชดา'"
+rls_string r_string_editplace_itemlist_area "เพื่อนบ้าน(สถานที่ใกล้เคียง)"
+rls_string r_string_editplace_itemlist_area_hint "เช่น มาบุญครอง"
+rls_string r_string_editplace_itemlist_city "เมือง"
+rls_string r_string_editplace_itemlist_city_hint "เช่น กรุงเทพฯ"
+rls_string r_string_editplace_itemlist_postcode "รหัสไปรษณีย์"
+rls_string r_string_editplace_itemlist_postcode_hint "เช่น 10400"
+rls_string r_string_editplace_itemlist_region "ภาค"
+rls_string r_string_editplace_itemlist_region_hint "เช่น ภาคอีสาน"
+rls_string r_string_editplace_itemlist_country "ประเทศ"
+rls_string r_string_editplace_itemlist_country_hint "เช่น ไทย"
+rls_string r_string_editplace_itemlist_visibility "คนอื่นๆใช้สถานที่นี้ได้ไหม?"
+rls_string r_string_editplace_itemlist_visibility_public "แชร์"
+rls_string r_string_editplace_itemlist_visibility_private "ส่วนตัว"
+
+// Following & Invitations
+rls_string r_string_followingrequest_title "มีผู้ต้องการติดตาม"
+rls_string r_string_followerrequest_text "$USER ต้องการติดตามคุณบน buddycloud\n* แสดงสถานะของคุณ\n* แสดงสถานีส่วนตัวของคุณ\n* แสดงสถานที่ของคุณ"
+
+rls_string r_string_channelinvite_title "คำเชิญจากสถานี"
+
+// Create channel
+rls_string r_string_dialog_createchannelname "ชื่อสถานี"
+rls_string r_string_dialog_createchanneldescription "ข้อมูลสั้นๆเกี่ยวกับสถานีนี้:"
+rls_string r_string_channelfollowing_text "สถานีชื่อ '$CHANNEL' มีอยู่แล้ว ต้องการจะติดตามสถานีนี้หรือไม่?"
+
+// Exit Confirmation
+rls_string r_string_exit_title "ยืนยัน ต้องการออก"
+rls_string r_string_exit_text "คุณกำลังจะออกจากระบบ buddycloud.\n\nคุณแน่ใจหรือไม่คะ?"
+
+// Authorization Error
+rls_string r_string_autherror_title "การสมัครเข้าใช้ ล้มเหลว"
+rls_string r_string_autherror_text "ชื่อนี้มีคนใช้อยู่แล้ว เช็คการตั้งค่าของคุณแล้วเชื่อมต่อใหม่"
+
+// Delete Item Message
+rls_string r_string_deleteitem_title "ยืนยันการลบออก"
+rls_string r_string_deleteitem_text "แน่ใจหรือว่าต้องการลบออก?"
+
+// Sms/Email Messages
+rls_string r_string_invitemessage_title "สนุกกับเราที่ buddycloud!"
+rls_string r_string_invitemessage_text "สนุกกับเราใช้โปรแกรม buddycloud ฟรี ที่ http://m.buddycloud.com"
+rls_string r_string_sendplacemessage_title "ฉันอยู่ที่นี่"
+rls_string r_string_sendplacemessage_text "ฉันอยู่ที่นี่ $PLACE. http://m.buddycloud.com/place.php?id=$ID คลิกที่นี่เพื่อดูข้อมูล"
+
+// Did You Mean?
+rls_string r_string_didyoumean_title "คุณหมายถึง...?"
+
+// Dialog
+rls_string r_string_dialog_setmood "ตั้งค่าสถานะ"
+rls_string r_string_dialog_moodis "คือ "
+rls_string r_string_dialog_setcurrentlocation "ตั้งค่าสถานที่ของฉัน"
+rls_string r_string_dialog_setnextlocation "ตั้งค่าสถานที่ต่อไป"
+rls_string r_string_dialog_settopic "ตั้งค่าหัวข้อ"
+rls_string r_string_dialog_newmessage "ข้อความใหม่"
+rls_string r_string_dialog_addcontact "ใส่ชื่อผู้ใช้บน buddycloud หรือ Jabber (ตัวอย่าง test@gtalk.com):"
+
+// Notes
+rls_string r_string_note_connecting "กำลังเชื่อมต่อ.."
+rls_string r_string_note_reconnecting "กำลังเชื่อมต่อใหม่อีกครั้ง..."
+rls_string r_string_note_connectingwith "กำลังเชื่อมต่อกับ\n$APN..."
+rls_string r_string_note_searching "กำลังค้นหา.."
+rls_string r_string_note_updating "กำลังอัพเดท..."
+rls_string r_string_note_online "ออนไลน์"
+rls_string r_string_note_offline "ออฟไลน์"
+
+// Call
+rls_string r_string_note_dialling "กำลังโทรหา $USER"
+rls_string r_string_note_talkingto "กำลังคุยกับ $USER"
+rls_string r_string_note_hangingup "การเชื่อมต่อถูกตัด"
+
+// Setup 
+rls_string r_string_step2_title "ขอให้เป็นคนดังนะ!"
+rls_string r_string_step2_text "ช่องต่างๆของ buddycloud ทำให้คุณสามารถเผยแพร่สิ่งต่างๆให้กับผู้ติดตามของคุณได้ สุดยอด ทำให้คุณกลายเป็นคนดังด้วยสิ่งที่คุณมี สถานที่ต่างๆ หรือสร้างชุมชนการพูดคุยกันขึ้นมาเอง"
+
+rls_string r_string_step3_title "คุณจะทำอะไรได้บ้าง?"
+rls_string r_string_step3_text "ด้วย buddycloud คุณสามารถสร้างหัวข้อใหม่ๆในช่องที่คุณชอบ หรือช่องส่วนตัวของคุณก็ได้\n\nbuddycloud  จะแชร์ข้อมูลสถานที่ๆคุณอยู่ ณ ปัจจุบัน ในฐานะของสถานที่ๆมีความหมาย ที่ถูกบุ๊คมาร์คไว้ ให้ผู้ติดตามของคุณได้ดู หรือผู้คนทั้งหลายในเมือง\n\nกรุณาใส่ชื่อผู้ใช้ของคุณแล้วเริ่มได้เลย"
+
+rls_string r_string_step4_title "ผลประโยชน์ที่คุณจะได้รับ"
+rls_string r_string_step4_text "buddycloud เป็นมิติใหม่ที่ทำให้คุณติดต่อสื่อสารกับเพื่อนๆ ผู้ติดตาม และโชว์ว่าช่องของคุณจะโด่งดังมีชื่อเสียงแค่ไหน โดยที่ไม่เปลืองแบตเตอรี่ของโทรศัพท์คุณ ขึ้นอยู่กับว่าข้อมูลมากแค่ไหน\nแชร์ แลกเปลี่ยนข้อมูลสถานที่ๆคุณอยู่โดยที่คุณควบคุมได้ และปลอดภัย\n\nกรุณาใส่พาสเวิร์ด"
+
+rls_string r_string_step5_title "ติดต่อ ติดตาม เอาไว้"
+rls_string r_string_step5_text "รับการแจ้งเตือนบริการใหม่ๆและเวอร์ชันใหม่ๆจาก buddycloud กรุณาให้ email ของคุณไว้ เราจะเก็บรักษาไว้เป็นความลับ"
+
+rls_string r_string_step6_title "ยินดีด้วย!"
+rls_string r_string_step6_text "การเซ็ตอัพเสร็จสิ้นแล้ว ขณะนี้คุณจะถูกเชื่อมต่อและลงทะเบียนเข้าใช้ช่องต่างๆของ buddycloud"
+rls_string r_string_step6_question "คุณต้องการให้ buddycloud เปิดอัตโนมัติเมื่อคุณเปิดเครื่องโทรศัพท์หรือไม่?"
+
+// End of File

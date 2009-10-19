@@ -1,0 +1,92 @@
+; Installation file for Buddycloud application
+;
+; This is an auto-generated PKG file by Carbide.
+; This file uses variables specific to Carbide builds that will not work
+; on command-line builds. If you want to use this generated PKG file from the
+; command-line tools you will need to modify the variables with the appropriate
+; values: $(EPOCROOT), $(PLATFORM), $(TARGET)
+;
+;Language - standard language definitions
+&EN
+;
+; standard SIS file header
+#{"Buddycloud"},(0x2000C4A4),0,4,26
+;
+;Localised Vendor name
+%{"buddycloud"}
+;
+;Unique Vendor name
+:"buddycloud"
+;
+;Supports Series 60 v 3.0
+[0x101F7961], 0, 0, 0, {"Series60ProductID"}
+;
+;Svg/mif files
+"$(EPOCROOT)Epoc32\data\z\resource\apps\Buddycloud.mif"                 -"!:\resource\apps\Buddycloud.mif"
+"$(EPOCROOT)Epoc32\data\z\resource\apps\Buddycloud_Setup.mif"           -"!:\resource\apps\Buddycloud_Setup.mif"
+"$(EPOCROOT)Epoc32\data\z\resource\apps\Buddycloud_Tab.mif"             -"!:\resource\apps\Buddycloud_Tab.mif"
+"$(EPOCROOT)Epoc32\data\z\resource\apps\Buddycloud_List.mif"            -"!:\resource\apps\Buddycloud_List.mif"
+"$(EPOCROOT)Epoc32\data\z\resource\apps\Buddycloud_Arrow.mif"           -"!:\resource\apps\Buddycloud_Arrow.mif"
+"$(EPOCROOT)Epoc32\data\z\resource\apps\Buddycloud_Toolbar.mif"         -"!:\resource\apps\Buddycloud_Toolbar.mif"
+
+;Main resources
+"$(EPOCROOT)Epoc32\data\z\resource\apps\Buddycloud.rsc"                 -"!:\resource\apps\Buddycloud.rsc"   
+"$(EPOCROOT)Epoc32\data\z\resource\apps\Buddycloud_loc.rsc"             -"!:\resource\apps\Buddycloud_loc.rsc"   
+"$(EPOCROOT)Epoc32\data\z\private\10003a3f\apps\Buddycloud_reg.rsc"     -"!:\private\10003a3f\import\apps\Buddycloud_reg.rsc"
+"$(EPOCROOT)Epoc32\data\2000C4A4.rsc"                                   -"c:\private\101f875a\import\[2000C4A4].rsc"
+"..\help\releases\Buddycloud.hlp"                                       -"!:\resource\help\Buddycloud.hlp"
+
+;Language files
+"$(EPOCROOT)Epoc32\data\z\resource\apps\Buddycloud_lang.r01"            -"!:\resource\apps\Buddycloud_lang.r01"
+"$(EPOCROOT)Epoc32\data\z\resource\apps\Buddycloud_lang.r02"            -"!:\resource\apps\Buddycloud_lang.r02"
+"$(EPOCROOT)Epoc32\data\z\resource\apps\Buddycloud_lang.r03"            -"!:\resource\apps\Buddycloud_lang.r03"
+"$(EPOCROOT)Epoc32\data\z\resource\apps\Buddycloud_lang.r04"            -"!:\resource\apps\Buddycloud_lang.r04"
+"$(EPOCROOT)Epoc32\data\z\resource\apps\Buddycloud_lang.r05"            -"!:\resource\apps\Buddycloud_lang.r05"
+;"$(EPOCROOT)Epoc32\data\z\resource\apps\Buddycloud_lang.r06"            -"!:\resource\apps\Buddycloud_lang.r06"
+;"$(EPOCROOT)Epoc32\data\z\resource\apps\Buddycloud_lang.r08"            -"!:\resource\apps\Buddycloud_lang.r08"
+"$(EPOCROOT)Epoc32\data\z\resource\apps\Buddycloud_lang.r09"            -"!:\resource\apps\Buddycloud_lang.r09"
+"$(EPOCROOT)Epoc32\data\z\resource\apps\Buddycloud_lang.r13"            -"!:\resource\apps\Buddycloud_lang.r13"
+"$(EPOCROOT)Epoc32\data\z\resource\apps\Buddycloud_lang.r14"            -"!:\resource\apps\Buddycloud_lang.r14"
+"$(EPOCROOT)Epoc32\data\z\resource\apps\Buddycloud_lang.r16"            -"!:\resource\apps\Buddycloud_lang.r16"
+"$(EPOCROOT)Epoc32\data\z\resource\apps\Buddycloud_lang.r17"            -"!:\resource\apps\Buddycloud_lang.r17"
+"$(EPOCROOT)Epoc32\data\z\resource\apps\Buddycloud_lang.r18"            -"!:\resource\apps\Buddycloud_lang.r18"
+"$(EPOCROOT)Epoc32\data\z\resource\apps\Buddycloud_lang.r25"            -"!:\resource\apps\Buddycloud_lang.r25"
+"$(EPOCROOT)Epoc32\data\z\resource\apps\Buddycloud_lang.r27"            -"!:\resource\apps\Buddycloud_lang.r27"
+"$(EPOCROOT)Epoc32\data\z\resource\apps\Buddycloud_lang.r31"            -"!:\resource\apps\Buddycloud_lang.r31"
+"$(EPOCROOT)Epoc32\data\z\resource\apps\Buddycloud_lang.r33"            -"!:\resource\apps\Buddycloud_lang.r33"
+"$(EPOCROOT)Epoc32\data\z\resource\apps\Buddycloud_lang.r37"            -"!:\resource\apps\Buddycloud_lang.r37"
+"$(EPOCROOT)Epoc32\data\z\resource\apps\Buddycloud_lang.r49"            -"!:\resource\apps\Buddycloud_lang.r49"
+"$(EPOCROOT)Epoc32\data\z\resource\apps\Buddycloud_lang.r54"            -"!:\resource\apps\Buddycloud_lang.r54"
+"$(EPOCROOT)Epoc32\data\z\resource\apps\Buddycloud_lang.r57"            -"!:\resource\apps\Buddycloud_lang.r57"
+"$(EPOCROOT)Epoc32\data\z\resource\apps\Buddycloud_lang.r59"            -"!:\resource\apps\Buddycloud_lang.r59"
+"$(EPOCROOT)Epoc32\data\z\resource\apps\Buddycloud_lang.r65"            -"!:\resource\apps\Buddycloud_lang.r65"
+"$(EPOCROOT)Epoc32\data\z\resource\apps\Buddycloud_lang.r78"            -"!:\resource\apps\Buddycloud_lang.r78"
+"$(EPOCROOT)Epoc32\data\z\resource\apps\Buddycloud_lang.r512"           -"!:\resource\apps\Buddycloud_lang.r512"
+
+;Images
+"..\data\IconRepository.xml"                                            -"!:\private\2000C4A4\IconRepository.xml"
+"..\data\pm.wav"                                                        -"!:\private\2000C4A4\pm.wav"
+"..\data\cp.wav"                                                        -"!:\private\2000C4A4\cp.wav"
+"..\data\dr.wav"                                                        -"!:\private\2000C4A4\dr.wav"
+"..\gfx\contact.png"		                                            -"!:\private\2000C4A4\contact.png"
+"..\gfx\channel.png"			                                        -"!:\private\2000C4A4\channel.png"
+"..\gfx\notice.png"			                                            -"!:\private\2000C4A4\notice.png"
+"..\gfx\message1.png"		                                            -"!:\private\2000C4A4\message1.png"
+"..\gfx\message2.png"		                                            -"!:\private\2000C4A4\message2.png"
+"..\gfx\message3.png"		                                            -"!:\private\2000C4A4\message3.png"
+"..\gfx\place.png"			                                            -"!:\private\2000C4A4\place.png"
+"..\gfx\place.png"			                                            -"!:\private\2000C4A4\place.png"
+"..\gfx\positioning1.png"		                                        -"!:\private\2000C4A4\positioning1.png"
+"..\gfx\positioning2.png"		                                        -"!:\private\2000C4A4\positioning2.png"
+"..\gfx\link.png"			                                            -"!:\private\2000C4A4\link.png"
+"..\gfx\typing.png"			                                            -"!:\private\2000C4A4\typing.png"
+"..\gfx\locked.png"			                                            -"!:\private\2000C4A4\locked.png"
+"..\gfx\directory.png"			                                        -"!:\private\2000C4A4\directory.png"
+
+; Add any installation notes if applicable
+;"Buddycloud.txt"			                                            -"!:\private\2000C4A4\Buddycloud.txt"
+
+;required for application to be covered by backup/restore facility 
+"..\sis\backup_registration.xml"		                                -"!:\private\2000C4A4\backup_registration.xml"
+
+"$(EPOCROOT)Epoc32\release\$(PLATFORM)\$(TARGET)\Buddycloud.exe"        -"!:\sys\bin\Buddycloud.exe", FR, RI

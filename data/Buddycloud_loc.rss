@@ -1,0 +1,30 @@
+/*
+============================================================================
+ Name        : Buddycloud_reg.rss
+ Author      : Ross Savage
+ Copyright   : Buddycloud 2007
+ Description : This file contains the application registration resource.
+============================================================================
+*/
+
+#include <AppInfo.rh>
+
+// ---------------------------------------------------------------------------- 
+//
+// r_localisable_app_info
+//
+// ---------------------------------------------------------------------------- 
+//
+RESOURCE LOCALISABLE_APP_INFO r_localisable_app_info
+{
+	short_caption = "buddycloud";
+	caption_and_icon = CAPTION_AND_ICON_INFO
+    {
+		caption = "buddycloud";
+
+		number_of_icons = 1;
+	   	icon_file = "\\resource\\apps\\Buddycloud.mif";
+	};
+}
+
+// End of File

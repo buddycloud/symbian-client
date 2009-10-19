@@ -1,0 +1,20 @@
+/*
+============================================================================
+ Name        : bld.inf
+ Author      : Ross Savage
+ Copyright   : Buddycloud 2007
+ Description : This file provides the information required for building the
+               whole of a Buddycloud.
+============================================================================
+*/
+
+
+PRJ_PLATFORMS
+WINSCW ARMV5 GCCE
+
+PRJ_MMPFILES
+
+gnumakefile icons_scalable_dc.mk
+gnumakefile Help.mk
+
+Buddycloud.mmp

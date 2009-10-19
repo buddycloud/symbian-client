@@ -1,0 +1,329 @@
+/*
+============================================================================
+ Name        : Buddycloud.r01
+ Author      : Ross Savage
+ Copyright   : Buddycloud 2008
+ Description : Localisation File : English
+ 
+               Please only translate text between quotations e.g. "Test"
+============================================================================
+*/
+
+// DO NOT TRANSLATE
+CHARACTER_SET UTF8
+
+rls_string r_string_app_caption "buddycloud"
+rls_string r_string_groupinvite_text " invited you to join channel: "
+// DO NOT TRANSLATE
+
+rls_string r_string_langcode "tr"
+rls_string r_string_translatedby "Çeviri: eaglevision"
+
+rls_string r_string_followingtab_hint "Takip ediyor"
+rls_string r_string_placestab_hint "Mekanlar"
+rls_string r_string_explorertab_hint "Yakındakiler"
+rls_string r_string_channelstab_hint "Kanallar"
+
+// CBA
+rls_string r_string_options_menu "Seçenekler"
+rls_string r_string_say_menu "Söyle"
+rls_string r_string_cancel_menu "İptal"
+rls_string r_string_next_menu "Sonraki"
+rls_string r_string_endcall_menu "End Call"
+rls_string r_string_hide_menu "Hide"
+
+// Item
+rls_string r_string_item_newgroup "Yeni Kanal..."
+rls_string r_string_item_newplace "Yeni Mekan..."
+
+// Menu: Call
+rls_string r_string_options_loudspeaker "Hoparlörü Aç"
+rls_string r_string_options_handset "Kulaklığı Aç"
+rls_string r_string_options_hold "Beklet"
+rls_string r_string_options_resume "Devam"
+rls_string r_string_options_endcall "Aramayı Sonlandır"
+
+// Menu: Settings & Edit place
+rls_string r_string_options_edititem "Değiştir"
+rls_string r_string_options_searchplace "Detaylı Ara"
+
+rls_string r_string_note_noresultsfound "Hiç sonuç bulunamadı"
+rls_string r_string_note_requestsent "İstek gönderildi"
+rls_string r_string_note_messagequeued "Mesaj, çevrimiçi olduğunuzda gönderilecek"
+rls_string r_string_note_offlinerequired "Bu işlemi yapabilmek için çevrimdışı olmalısınız"
+
+// Positioning methods
+rls_string r_string_positioning_stationary "Bu mekanı artık yer imlerine ekleyebilirsiniz"
+rls_string r_string_positioning_moving "Şu an hareket halindesiniz. Yer imlerine eklemek, buraya yerleştirileceğinizi garanti etmez"
+rls_string r_string_positioning_cell "Şebeke yer belirlemesi bir kaç dakika sürebilir"
+rls_string r_string_positioning_wifigps "Wifi işareti alndığından, artık bu mekanı yer imlerine ekleyebilirsiniz"
+rls_string r_string_positioning_bt "Eğer yakınınızda diğer bir buddycloud kullanıcısı varsa, size yerini resimle bildireceğiz"
+rls_string r_string_positioning_none "Şu an pozisyonlama kullanılamamakta. Lütfen pozisyon ayarlarını kontrol edin"
+
+// Menu: Search
+rls_string r_string_options_select "Seçim"
+rls_string r_string_options_newsearch "Yeni arama"
+rls_string r_string_options_previousresult "Öncekine dön"
+rls_string r_string_options_cancelsearch "Aramayı iptal et"
+
+// Menu: Help
+rls_string r_string_options_help "Yardım"
+rls_string r_string_help_help "buddyclodu yardımı"
+rls_string r_string_help_update "buddycloud güncelleştir"
+rls_string r_string_help_about "Hakkında"
+
+// Menu: Following
+rls_string r_string_options_exit "Çıkış"
+rls_string r_string_options_done "Bitti"
+rls_string r_string_options_connect "Çevrimiçi ol"
+rls_string r_string_options_disconnect "Çevrimdışı ol"
+rls_string r_string_options_itemcontact "Bağlantı"
+rls_string r_string_options_itemgroup "Kanal"
+rls_string r_string_options_settings "Ayarlar"
+rls_string r_string_item_viewmessages "Mesajları göster"
+rls_string r_string_item_viewchannelmessages "Kanalı göster"
+rls_string r_string_item_viewprivatemessages "Özel mesajları göster"
+rls_string r_string_item_showplacedetails "Mekan detaylarını göster"
+rls_string r_string_item_showchanneldetails "Show channel details"
+rls_string r_string_item_call "Bağlantıyı ara"
+rls_string r_string_item_sendplacebysms "Mekanı SMS ile gönder"
+rls_string r_string_item_sendinvite "buddycloud'a davet et"
+rls_string r_string_item_delete "Kaldır"
+rls_string r_string_item_noticeaccept "Accept"
+rls_string r_string_item_noticeacceptandfollow "Accept and Follow"
+rls_string r_string_item_noticedecline "Decline"
+rls_string r_string_update_setstatus "Durum güncelle"
+rls_string r_string_options_invite "Takip et..."
+rls_string r_string_settings_usersettings "Tercihler"
+rls_string r_string_settings_communitysettings "Çevrimiçi paylaş"
+rls_string r_string_settings_clearconnection "Bağlantı değiştir"
+
+rls_string r_string_note_followinglistempty "Hiçbirşey takip etmiyorsunuz.\n\nTakip edecek şeyler bulmak için Kanal ve Explorer sekmelerini kullanın."
+
+// Menu: Messaging
+rls_string r_string_options_openlink "Bağlantıyı aç"
+rls_string r_string_options_postmessage "Post message"
+rls_string r_string_options_postmedia "Post media"
+rls_string r_string_options_replytomessage "Cevapla"
+rls_string r_string_options_settopic "Konu belirle"
+rls_string r_string_options_jumptounread "Okunmamışlara geç"
+rls_string r_string_options_invitetochannel "Kanala davet et"
+rls_string r_string_options_invitetootherchannel "Başka kanala davet et"
+rls_string r_string_options_invitefriendtochannel "Takipçiyi davet et"
+rls_string r_string_options_notificationon "Titreşimi aç"
+rls_string r_string_options_notificationoff "Titreşimi kapat"
+
+// Menu: Places
+rls_string r_string_options_setcurrent "Yer imlerine yeni mekan ekle"
+rls_string r_string_options_setnext "Bir sonraki mekan belirle"
+rls_string r_string_item_relearnplace "Bu mekanı yeniden öğren"
+rls_string r_string_dialog_relearnplace "Şu an bu mekandasınız, yeniden öğrenmek istiyormusunuz?"
+rls_string r_string_item_setnext "Sonraki mekan olarak belirle"
+rls_string r_string_item_editplace "Detayları düzenle"
+rls_string r_string_item_deleteplace "Mekanı kaldır"
+
+rls_string r_string_note_placelastseen "Görünen"
+rls_string r_string_note_placevisits "Ziyaretler"
+rls_string r_string_note_placepopulation "Nüfus"
+rls_string r_string_note_learningplace "Öğrenme mekanı"
+rls_string r_string_note_updatingplace "Mekan güncelleniyor..."
+rls_string r_string_note_noplaceaddress "Adres belirtilmemiş"
+rls_string r_string_note_placeslistempty "Yer imlerine eklenmiş mekanınız yok.\n\nBu mekanı öğrenmek için\n'Seçenekler > Yeni yer ekle' ye gidin."
+
+// Menu: Nearby
+rls_string r_string_options_refresh "Yenile"
+rls_string r_string_item_placeinfo "Mekan detayları"
+rls_string r_string_item_personinfo "Kişi bilgisi"
+rls_string r_string_item_setcurrent "Bu mekanı belirle"
+rls_string r_string_item_subscribe "Mekanlarıma ekle"
+
+// Menu: Explorer
+rls_string r_string_options_explore "Araştır"
+rls_string r_string_item_seefollowers "Takipçileri gör"
+rls_string r_string_item_seeplaces "Mekanları gör"
+rls_string r_string_item_seefollowing "Kimleri takip ettiğini gör"
+rls_string r_string_item_seeproducing "Ürettiklerini gör"
+rls_string r_string_item_seenearby "Yakındakileri gör"
+rls_string r_string_item_seebeenhere "Daha önce burda bulunanlar"
+rls_string r_string_item_seegoinghere "Buraya kimler gidiyor"
+
+rls_string r_string_title_isfollowing "$USER takip ediyor"
+rls_string r_string_title_followedby "$OBJECT'in takipçileri"
+rls_string r_string_title_isproducing "$USER üretiyor"
+rls_string r_string_title_nearbyto "$OBJECT e yakın"
+rls_string r_string_title_whosbeento "$PLACE da daha önce bulunanlar"
+rls_string r_string_title_whosgoingto "$PLACE a kimler gidiyor"
+
+rls_string r_string_note_requesting "İstek gönderiliyor..."
+rls_string r_string_note_channelrank "Sıralama"
+
+// Menu: Channels
+rls_string r_string_list_featuredchannels "İlgili kanallar"
+rls_string r_string_list_channelsyoumightlike "Sevebileceğiniz kanallar"
+rls_string r_string_list_followersfavourites "Takipçilerin Favorileri"
+rls_string r_string_list_mostpopularchannels "En Popüler Kanallar"
+rls_string r_string_list_channelsneartoyou "Yakınınızdaki Kanallar"
+
+rls_string r_string_item_open "Aç"
+rls_string r_string_item_follow "Takip et"
+rls_string r_string_item_unfollow "Takibi bırak"
+
+// Channel: Settings & Configuration
+rls_string r_string_note_personalchannelcreated "buddycloud kanallarına hoşgeldin $USER!\n\nBurası sizin buddycloud özel kanalınız. Bu kanal tamamen sizindir ve takipçilerinize yayın yapmanızı sağlar!"
+rls_string r_string_note_mediauploadready "You can now upload your media file at $LINK"
+rls_string r_string_note_userkickedfromgroup "$USER kanaldan atıldı."
+rls_string r_string_note_userbannedfromgroup "$USER kanaldan banlandı"
+rls_string r_string_dialog_kickconfirmation "Bu kişiyi kanaldan at (sonraki girişte geri gönecek)?"
+rls_string r_string_dialog_banconfirmation "Bu kişiyi kanalı görüntülememesi için banla?"
+rls_string r_string_item_banfromgroup "Kanaldan banla"
+rls_string r_string_item_kickfromgroup "Kanaldan at"
+rls_string r_string_item_changerole "Rol değiştir"
+rls_string r_string_list_changerole_title "Rolü şuna dönüştür:"
+rls_string r_string_changerole_itemlist_moderator "Yönetici"
+rls_string r_string_changerole_itemlist_contributor "Takipçi"
+rls_string r_string_changerole_itemlist_visitor "Ziyaretçi"
+rls_string r_string_note_changerolefailed "Bu kişinin rolünü değiştirmeye izniniz bulunmamaktadır"
+
+// Settings Item List
+rls_string r_string_settings_account_title "Hesap"
+rls_string r_string_settings_itemlist_fullname "Tam ad"
+rls_string r_string_settings_itemlist_fullname_hint "Tam adınız"
+rls_string r_string_settings_itemlist_email "E-posta adresi"
+rls_string r_string_settings_itemlist_email_hint "E-posta adresiniz"
+rls_string r_string_settings_itemlist_phonenumber "Telefon numarası"
+rls_string r_string_settings_itemlist_phonenumber_hint "Telefon numaranız"
+rls_string r_string_settings_itemlist_username "Kulanıcı adı"
+rls_string r_string_settings_itemlist_username_hint "buddycloud kullanıcı adı"
+rls_string r_string_settings_itemlist_password "Şifre"
+rls_string r_string_settings_itemlist_password_hint "buddycloud şifresi"
+
+rls_string r_string_settings_itemlist_language "Görüntü lisanı"
+rls_string r_string_settings_itemlist_showname "Kanaldakilerin isimlerini göster"
+rls_string r_string_settings_itemlist_accesspoint "Kullanılacak erişim noktası"
+rls_string r_string_settings_itemlist_accesspointuserdefined "Kullanıcı tanımlı"
+rls_string r_string_settings_itemlist_accesspointalwaysask "Daima sor"
+rls_string r_string_settings_itemlist_testserver "Beta servera bağlan"
+rls_string r_string_settings_itemlist_autostart "Telefon açıldığında başlat"
+rls_string r_string_settings_itemlist_showcontacts "Telefon kayıtlarını göster"
+
+rls_string r_string_settings_notifications_title "Notifications"
+rls_string r_string_settings_itemlist_groupnotification "Kanal gönderilerini bildir"
+rls_string r_string_settings_itemlist_groupnever "Asla bildirme"
+rls_string r_string_settings_itemlist_groupfirstonly "Yalnızca ilk gönderi"
+rls_string r_string_settings_itemlist_groupallmessages "Tüm gönderiler"
+rls_string r_string_settings_itemlist_notifyreply "Gönderilerimi bildir:"
+rls_string r_string_settings_itemlist_privatemessagetone "Private message tone"
+rls_string r_string_settings_itemlist_channelposttone "Channel post tone"
+rls_string r_string_settings_itemlist_directreplytone "My @Replies tone"
+rls_string r_string_settings_itemlist_tonenone "No tone"
+rls_string r_string_settings_itemlist_tonedefault "Default tone"
+
+rls_string r_string_settings_beacons_title "Pozisyon belirleniyor"
+rls_string r_string_settings_itemlist_cell "Baz istasyonu"
+rls_string r_string_settings_itemlist_wlan "WI-FI"
+rls_string r_string_settings_itemlist_bt "Bluetooth"
+rls_string r_string_settings_itemlist_gps "GPS"
+rls_string r_string_settings_itemlist_on "Açık"
+rls_string r_string_settings_itemlist_off "Kapalı"
+
+// Communities
+rls_string r_string_settings_facebook_text "Yönlendirildiğiniz yer: http://apps.facebook.com/buddycloud buddycloud uygulama sayfası. Lütfen uygulamayı ekleyin, giriş yapın ve erişim izni verin."
+rls_string r_string_settings_credentials_success "Güncelleme başarılı"
+rls_string r_string_settings_credentials_fail "Güncelleme başarısız.\nLütfen belgenizi kontrol edip tekrar deneyin"
+
+// Edit Place List
+rls_string r_string_newplace_title "Yeni mekan"
+rls_string r_string_editplace_title "Mekanı düzenle"
+rls_string r_string_updatefailed_title "Güncelleme başarısız"
+
+rls_string r_string_editplace_itemlist_name "Ad"
+rls_string r_string_editplace_itemlist_name_hint "örneğin 'Ev' yada 'Sturbucks'"
+rls_string r_string_editplace_itemlist_street "Sokak"
+rls_string r_string_editplace_itemlist_street_hint "örneğin '171 Sokak'"
+rls_string r_string_editplace_itemlist_area "Mahalle"
+rls_string r_string_editplace_itemlist_area_hint "örneğin 'Bahçelievler'"
+rls_string r_string_editplace_itemlist_city "Şehir"
+rls_string r_string_editplace_itemlist_city_hint "örneğin 'Antalya'"
+rls_string r_string_editplace_itemlist_postcode "Posta kodu"
+rls_string r_string_editplace_itemlist_postcode_hint "örneğin '07100'"
+rls_string r_string_editplace_itemlist_region "Bölge"
+rls_string r_string_editplace_itemlist_region_hint "örneğin 'Aşağı Londra'"
+rls_string r_string_editplace_itemlist_country "Ülke"
+rls_string r_string_editplace_itemlist_country_hint "örneğin 'Birleşik Krallık'"
+rls_string r_string_editplace_itemlist_visibility "Başkaları buraya yerleştirilebilir?"
+rls_string r_string_editplace_itemlist_visibility_public "Paylaşılan"
+rls_string r_string_editplace_itemlist_visibility_private "Kişisel"
+
+// Following & Invitations
+rls_string r_string_followingrequest_title "Takip isteği"
+rls_string r_string_followerrequest_text "$USER buddycloud da sizi takip etmk istiyor.\n* Görüntü ve durmunuzu gösterin\n* Kişisel kanalınızı gösterin\n* Mekanlarınızı gösterin"
+
+rls_string r_string_channelinvite_title "Kanal daveti"
+
+// Create channel
+rls_string r_string_dialog_createchannelname "Kanal adı"
+rls_string r_string_dialog_createchanneldescription "Kısa kanal açıklaması:"
+rls_string r_string_channelfollowing_text "'$CHANNEL' kanalı zaten mevcut. Bu kanalı takip etmek istermisiniz?"
+
+// Exit Confirmation
+rls_string r_string_exit_title "Doğrulamadan çık"
+rls_string r_string_exit_text "Çıkış yapmak buddycloud oturumunuzu sonlandırcak.\n\nEmin misiniz?"
+
+// Authorization Error
+rls_string r_string_autherror_title "Kayıt başarısız oldu"
+rls_string r_string_autherror_text "Kullanıcı adı zaten var. Lütfen Hesap Ayarlarınızı kotrol edip tekrar bağlanmayı deneyin"
+
+// Delete Item Message
+rls_string r_string_deleteitem_title "Kaldırma işlemini onayla"
+rls_string r_string_deleteitem_text "Bunu kaldırmak istediğinize emin misiniz?"
+
+// Sms/Email Messages
+rls_string r_string_invitemessage_title "buddycloud da bize katıl!"
+rls_string r_string_invitemessage_text "buddyclous size, takipçilerinize muhteşemliğinizi göstermek için yeni bir yol gösteriyor! http://m.buddycloud.com sayfamızı ziyaret edip indirin!"
+rls_string r_string_sendplacemessage_title "Neredeyim"
+rls_string r_string_sendplacemessage_text "Bulunduğum yer $PLACE. Detaylar için http://m.buddycloud.com/place.php?id=$ID "
+
+// Did You Mean?
+rls_string r_string_didyoumean_title "Şunu mu demek istediniz...?"
+
+// Dialog
+rls_string r_string_dialog_setmood "Durumu ayarla:"
+rls_string r_string_dialog_moodis "şu an "
+rls_string r_string_dialog_setcurrentlocation "Mekanımı ayarla:"
+rls_string r_string_dialog_setnextlocation "Sonraki yeri ayarla:"
+rls_string r_string_dialog_settopic "Konu belirle:"
+rls_string r_string_dialog_newmessage "Yeni mesaj:"
+rls_string r_string_dialog_addcontact "buddycloud yada Jabber kimliğinizi girin (örn; test@gtalk.com):"
+
+// Notes
+rls_string r_string_note_connecting "Bağlanıyor..."
+rls_string r_string_note_reconnecting "Yeniden bağlanıyor..."
+rls_string r_string_note_connectingwith "Şununla bağlanıyor\n$APN..."
+rls_string r_string_note_searching "Arıyor..."
+rls_string r_string_note_updating "Güncelliyor..."
+rls_string r_string_note_online "Çevrimiçi"
+rls_string r_string_note_offline "Çevrimdışı"
+
+// Call
+rls_string r_string_note_dialling "$USER arıyor"
+rls_string r_string_note_talkingto "$USER ile konuşuyor"
+rls_string r_string_note_hangingup "Bağlantı koptu"
+
+// Setup 
+rls_string r_string_step2_title "Ünlü olun!"
+rls_string r_string_step2_text "buddycloud kanalları size, takipçilerinize muhteşemliğinizi kanıtlamak için yeni bir yol gösteriyor.\n\nbuddycloud kanalları bir yer yada konu hakkındaki eşsiz bilgilerinizi takipçilerinizle paylaşarak ünlü olmanızı sağlar."
+
+rls_string r_string_step3_title "Ne yapabilirsin?"
+rls_string r_string_step3_text "buddycloud ile hakkında iyi olduğunuz bir konu ile ilgili kanal veya kendinizle ilgili kişisel kanalınızı oluşturabilirsiniz.\n\nbuddycloud bulunduğunuz yeri otomatik olarak yer imi şeklinde takipçilerinizle ve şehirdeki diğer herkesle paylaşır."
+
+rls_string r_string_step4_title "Kazançlarınız"
+rls_string r_string_step4_text "buddycloud size takipçilerinizle interaktif olarak, kanalınızın yükeselen popülaritesini gösterir. buddycloud'un düşük miktarda veri tüketimi vardır ve bataryanızın ömrünü yemez.\n\nDevamlı, güvenilir ve kontrollü olarak bulunduğunuz yeri paylaşın:"
+
+rls_string r_string_step5_title "İletişimde kalın"
+rls_string r_string_step5_text "Bu ugulumanın yeni versiyonları ve buddycloud servisleri hakkında bilgilendirlin.\n\nLütfen e-posta adresinizi girin (opsiyonel), güvenle saklıyoruz:"
+
+rls_string r_string_step6_title "Tebrikler!"
+rls_string r_string_step6_text "Kurumlum tamamlandı. Artık buddycloud'a bağlanıp kanallara giriş yapabilirsiniz."
+rls_string r_string_step6_question "buddycloud'un telefonunuzu açtığınızda başlamısını ister misiniz?"
+
+// End of File

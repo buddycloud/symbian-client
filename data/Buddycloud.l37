@@ -1,0 +1,329 @@
+/*
+============================================================================
+ Name        : Buddycloud.r01
+ Author      : Ross Savage
+ Copyright   : Buddycloud 2008
+ Description : Localisation File : English
+ 
+               Please only translate text between quotations e.g. "Test"
+============================================================================
+*/
+
+// DO NOT TRANSLATE
+CHARACTER_SET UTF8
+
+rls_string r_string_app_caption "buddycloud"
+rls_string r_string_groupinvite_text " invited you to join channel: "
+// DO NOT TRANSLATE
+
+rls_string r_string_langcode "ar"
+rls_string r_string_translatedby "abduliam : ترجم من قبل"
+
+rls_string r_string_followingtab_hint "تال"
+rls_string r_string_placestab_hint "الأماكن"
+rls_string r_string_explorertab_hint "قريب"
+rls_string r_string_channelstab_hint "قنوات"
+
+// CBA
+rls_string r_string_options_menu "خيارات"
+rls_string r_string_say_menu "يقول"
+rls_string r_string_cancel_menu "إلغاء"
+rls_string r_string_next_menu "التالي"
+rls_string r_string_endcall_menu "End Call"
+rls_string r_string_hide_menu "إخفاء"
+
+// Item
+rls_string r_string_item_newgroup "قناة جديدة"
+rls_string r_string_item_newplace "مكان جديد"
+
+// Menu: Call
+rls_string r_string_options_loudspeaker "التبديل إلى رئيس البرلمان"
+rls_string r_string_options_handset "التبديل إلى السماعة"
+rls_string r_string_options_hold "يمسك"
+rls_string r_string_options_resume "استئناف"
+rls_string r_string_options_endcall "إنهأ المكالمه"
+
+// Menu: Settings & Edit place
+rls_string r_string_options_edititem "تغيير"
+rls_string r_string_options_searchplace "البحث عن تفاصيل"
+
+rls_string r_string_note_noresultsfound "لا توجد نتائج"
+rls_string r_string_note_requestsent "طلب إرسال"
+rls_string r_string_note_messagequeued "سيتم إرسال الرسالة عندما تذهب الانترنت"
+rls_string r_string_note_offlinerequired "تحتاج إلى أن يكون حاليا للقيام بذلك"
+
+// Positioning methods
+rls_string r_string_positioning_stationary "يمكنك الآن احفظ هذا المكان"
+rls_string r_string_positioning_moving "أنت تتحرك حاليا. ارتباطك الآن لا يستطيع أن يضمن لك سيتم وضعها هنا مرة أخرى"
+rls_string r_string_positioning_cell "خلية نمط التعلم قد يستغرق عدة دقائق"
+rls_string r_string_positioning_wifigps "لا يزال بإمكانك احفظ هذا المكان الآن ، كما تعتبر منارات واي فاي"
+rls_string r_string_positioning_bt "اذا كان المستخدمون buddycloud أخرى هي قريبة منك ، فإننا سوف المفاجئة لكنت مكانهم"
+rls_string r_string_positioning_none "ي تحديد المواقع المتاحة حاليا. الرجاء التحقق من إعدادات لتحديد المواقع"
+
+// Menu: Search
+rls_string r_string_options_select "حدد"
+rls_string r_string_options_newsearch "بحث جديد"
+rls_string r_string_options_previousresult "رجوع إلى السابق"
+rls_string r_string_options_cancelsearch "إلغاء البحث"
+
+// Menu: Help
+rls_string r_string_options_help "مساعدة"
+rls_string r_string_help_help "buddycloud مساعدة"
+rls_string r_string_help_update "buddycloud تحديث"
+rls_string r_string_help_about "عن ماذا"
+
+// Menu: Following
+rls_string r_string_options_exit "خروج"
+rls_string r_string_options_done "انتها"
+rls_string r_string_options_connect "الذهاب على الانترنت"
+rls_string r_string_options_disconnect "تذهب حاليا"
+rls_string r_string_options_itemcontact "اتصال"
+rls_string r_string_options_itemgroup "القناة"
+rls_string r_string_options_settings "إعدادات"
+rls_string r_string_item_viewmessages "عرض الرسائل"
+rls_string r_string_item_viewchannelmessages "عرض القناة"
+rls_string r_string_item_viewprivatemessages "عرض الرسائل الخاصة"
+rls_string r_string_item_showplacedetails "وتظهر تفاصيل المكان"
+rls_string r_string_item_showchanneldetails "وتظهر تفاصيل القناة"
+rls_string r_string_item_call "مكالمة الاتصال"
+rls_string r_string_item_sendplacebysms "ارسال مكان عبر الرسائل القصيرة"
+rls_string r_string_item_sendinvite "buddycloud دعوة إلى"
+rls_string r_string_item_delete "يزيل"
+rls_string r_string_item_noticeaccept "قبول"
+rls_string r_string_item_noticeacceptandfollow "تقبل واتبع"
+rls_string r_string_item_noticedecline "انخفاض"
+rls_string r_string_update_setstatus "حالة التحديث"
+rls_string r_string_options_invite "يتبع"
+rls_string r_string_settings_usersettings "التفضيلات"
+rls_string r_string_settings_communitysettings "مشاركة على الانترنت"
+rls_string r_string_settings_clearconnection "تغيير اتصال"
+
+rls_string r_string_note_followinglistempty "انك لم تقم بعد بأي شيء. استخدام القنوات ومستكشف للبحث عن علامات لمتابعة الامور."
+
+// Menu: Messaging
+rls_string r_string_options_openlink "فتح الرابط"
+rls_string r_string_options_postmessage "نشر رسالة"
+rls_string r_string_options_postmedia "يقدم الوسائط المتعددة"
+rls_string r_string_options_replytomessage "الرد على"
+rls_string r_string_options_settopic "تعيين الموضوع"
+rls_string r_string_options_jumptounread "القفز الى غير المقروءة"
+rls_string r_string_options_invitetochannel "دعوة إلى قناة"
+rls_string r_string_options_invitetootherchannel "دعوة إلى قناة أخرى"
+rls_string r_string_options_invitefriendtochannel "دعوة أتباع"
+rls_string r_string_options_notificationon "بدوره على شرب حتى الثمالة"
+rls_string r_string_options_notificationoff "بدوره بهرب"
+
+// Menu: Places
+rls_string r_string_options_setcurrent "تحديد مكان جديد"
+rls_string r_string_options_setnext "تعيين مكان المقبل"
+rls_string r_string_item_relearnplace "تتعلم هذا المكان"
+rls_string r_string_dialog_relearnplace "أنت الآن في هذا المكان ، وأنها تريد أن تتعلم؟"
+rls_string r_string_item_setnext "تعيين مكان المقبل"
+rls_string r_string_item_editplace "إظافه تفاصيل"
+rls_string r_string_item_deleteplace "إزالة مكان"
+
+rls_string r_string_note_placelastseen "المشاهدة"
+rls_string r_string_note_placevisits "الزيارات"
+rls_string r_string_note_placepopulation "السكان"
+rls_string r_string_note_learningplace "تعلم مكان"
+rls_string r_string_note_updatingplace "تحديث مكان"
+rls_string r_string_note_noplaceaddress "العنوان غير معرووف"
+rls_string r_string_note_placeslistempty "لا يوجد لديك إشارة مرجعية الأماكن. لمعرفة مكان هذه الصحافة 'خيارا > احفظ مكان جديد'"
+
+// Menu: Nearby
+rls_string r_string_options_refresh "تحديث"
+rls_string r_string_item_placeinfo "تفاصيل المكان"
+rls_string r_string_item_personinfo "معلومات الشخص"
+rls_string r_string_item_setcurrent "تعيين هذا المكان"
+rls_string r_string_item_subscribe "ظيف إلى مكاني"
+
+// Menu: Explorer
+rls_string r_string_options_explore "استكشاف"
+rls_string r_string_item_seefollowers "انظر أتباع"
+rls_string r_string_item_seeplaces "انظر الأماكن"
+rls_string r_string_item_seefollowing " انظر إتباع"
+rls_string r_string_item_seeproducing "انظر المنتجة"
+rls_string r_string_item_seenearby "انظر قريب"
+rls_string r_string_item_seebeenhere "من كان هنا"
+rls_string r_string_item_seegoinghere "وهو ذاهب الى هناك"
+
+rls_string r_string_title_isfollowing "يتبع $USER"
+rls_string r_string_title_followedby "$OBJECT's أتباع"
+rls_string r_string_title_isproducing "ينتج $USER"
+rls_string r_string_title_nearbyto "$OBJECT القريبة"
+rls_string r_string_title_whosbeento "$PLACE الذي تم في"
+rls_string r_string_title_whosgoingto "$PLACE الذي يذهب إلى"
+
+rls_string r_string_note_requesting "الطالبة"
+rls_string r_string_note_channelrank "رتبة"
+
+// Menu: Channels
+rls_string r_string_list_featuredchannels "قنوات المميز"
+rls_string r_string_list_channelsyoumightlike "القنوات قد ترغب في"
+rls_string r_string_list_followersfavourites "أتباع 'المفضلة"
+rls_string r_string_list_mostpopularchannels "الأكثر شعبية قنوات"
+rls_string r_string_list_channelsneartoyou "القنوات بالقرب من أنت"
+
+rls_string r_string_item_open "يفتح"
+rls_string r_string_item_follow "يتبع"
+rls_string r_string_item_unfollow "فولو"
+
+// Channel: Settings & Configuration
+rls_string r_string_note_personalchannelcreated "مرحبا بكم في buddycloud القنوات !$USER هذا هو حسابك الخاص جدا قناة الشخصية على buddycloud. هذه القناة هي كل ما تبذلونه من ويسمح لك لبثت أن أتباعك!"
+rls_string r_string_note_mediauploadready "يمكنك الآن تحميل الملف وسائط بمبلغ $LINK"
+rls_string r_string_note_userkickedfromgroup "تم طردة من القناه $USER"
+rls_string r_string_note_userbannedfromgroup "تم  منعة من القناه $USER"
+rls_string r_string_dialog_kickconfirmation "طرد هذا الشخص من قناة (أنهم سيعودون في الدخول القادم)؟"
+rls_string r_string_dialog_banconfirmation "منع هذا الشخص من رؤيه القناة؟"
+rls_string r_string_item_banfromgroup "منع من القناه"
+rls_string r_string_item_kickfromgroup "من ركلة قناة"
+rls_string r_string_item_changerole "تغير دور"
+rls_string r_string_list_changerole_title ":تغيير دور إلى"
+rls_string r_string_changerole_itemlist_moderator "وسيط"
+rls_string r_string_changerole_itemlist_contributor "أتباع"
+rls_string r_string_changerole_itemlist_visitor "زائر"
+rls_string r_string_note_changerolefailed "ليس لديك الإذن لتغيير هذا الشخص دور"
+
+// Settings Item List
+rls_string r_string_settings_account_title "الحساب"
+rls_string r_string_settings_itemlist_fullname "الاسم الكامل"
+rls_string r_string_settings_itemlist_fullname_hint "اسمك الكامل"
+rls_string r_string_settings_itemlist_email "عنوانك الألكتروني"
+rls_string r_string_settings_itemlist_email_hint "لديك عنوان بريد إلكتروني"
+rls_string r_string_settings_itemlist_phonenumber "رقم الهاتف"
+rls_string r_string_settings_itemlist_phonenumber_hint "رقم الهاتف الخاص بك"
+rls_string r_string_settings_itemlist_username "اسم المستخدم"
+rls_string r_string_settings_itemlist_username_hint "اسم المستخدم buddycloud"
+rls_string r_string_settings_itemlist_password "كلمة السر"
+rls_string r_string_settings_itemlist_password_hint "كلمة السر buddycloud"
+
+rls_string r_string_settings_itemlist_language "اظهار اللغة"
+rls_string r_string_settings_itemlist_showname "وتظهر أسماء في القنوات"
+rls_string r_string_settings_itemlist_accesspoint "نقطة وصول لاستخدام"
+rls_string r_string_settings_itemlist_accesspointuserdefined "الحساب المنشأ"
+rls_string r_string_settings_itemlist_accesspointalwaysask "داما اسئل"
+rls_string r_string_settings_itemlist_testserver "الاتصال بخادم بيتا"
+rls_string r_string_settings_itemlist_autostart "في بداية إطلاق الهاتف"
+rls_string r_string_settings_itemlist_showcontacts "وتظهر الأسماء الهاتف"
+
+rls_string r_string_settings_notifications_title "الإخطارات"
+rls_string r_string_settings_itemlist_groupnotification "تخطر قناة الوظائف"
+rls_string r_string_settings_itemlist_groupnever "لم يخطر"
+rls_string r_string_settings_itemlist_groupfirstonly "أول وظيفة فقط"
+rls_string r_string_settings_itemlist_groupallmessages "جميع الملصقات"
+rls_string r_string_settings_itemlist_notifyreply ":يخطر لي @الردود"
+rls_string r_string_settings_itemlist_privatemessagetone "رسالة خاصة لهجة"
+rls_string r_string_settings_itemlist_channelposttone "قناة بعد لهجة"
+rls_string r_string_settings_itemlist_directreplytone "@reply أصوات"
+rls_string r_string_settings_itemlist_tonenone "أي لهجة"
+rls_string r_string_settings_itemlist_tonedefault "النغمة الافتراضية"
+
+rls_string r_string_settings_beacons_title "المواقع"
+rls_string r_string_settings_itemlist_cell "برج الجوال"
+rls_string r_string_settings_itemlist_wlan "واي فاي"
+rls_string r_string_settings_itemlist_bt "بلوتوث"
+rls_string r_string_settings_itemlist_gps "(GPS) نظام تحديد المواقع"
+rls_string r_string_settings_itemlist_on "على"
+rls_string r_string_settings_itemlist_off "بعيدا"
+
+// Communities
+rls_string r_string_settings_facebook_text "سيكون لديك الآن يجب اتخاذها ل http://apps.facebook.com/buddycloud صفحة تطبيق buddycloud. الرجاء إضافة التطبيق ، لتسجيل الدخول ومنح حق الوصول إليها."
+rls_string r_string_settings_credentials_success "التحديث الناجحة"
+rls_string r_string_settings_credentials_fail "فشل التحديث. الرجاء التحقق من أوراق الاعتماد وحاول مرة أخرى"
+
+// Edit Place List
+rls_string r_string_newplace_title "مكان جديد"
+rls_string r_string_editplace_title "إظافه مكان"
+rls_string r_string_updatefailed_title "فشل التحديث"
+
+rls_string r_string_editplace_itemlist_name "اسم"
+rls_string r_string_editplace_itemlist_name_hint "'على سبيل المثال 'البداية' أو 'ستاربكس"
+rls_string r_string_editplace_itemlist_street "الشارع"
+rls_string r_string_editplace_itemlist_street_hint "'171 Piccadilly' المثال"
+rls_string r_string_editplace_itemlist_area "حي"
+rls_string r_string_editplace_itemlist_area_hint "'East Side' المثال"
+rls_string r_string_editplace_itemlist_city "المدينة"
+rls_string r_string_editplace_itemlist_city_hint "'مثل 'القاهرة"
+rls_string r_string_editplace_itemlist_postcode "الرمز البريدي"
+rls_string r_string_editplace_itemlist_postcode_hint "'W1J 9EJ' المثال"
+rls_string r_string_editplace_itemlist_region "المنطقة"
+rls_string r_string_editplace_itemlist_region_hint "'مثل 'لندن الكبرى"
+rls_string r_string_editplace_itemlist_country "الدولة"
+rls_string r_string_editplace_itemlist_country_hint "'مثل 'المملكة المتحدة"
+rls_string r_string_editplace_itemlist_visibility "اخرى يمكن وضعها هنا؟"
+rls_string r_string_editplace_itemlist_visibility_public "مشترك"
+rls_string r_string_editplace_itemlist_visibility_private "الشخصية"
+
+// Following & Invitations
+rls_string r_string_followingrequest_title "في أعقاب طلب"
+rls_string r_string_followerrequest_text "$USER\nأود أن أضيف لكم\n* اظهر حالتك\n* اظهر قناتك الشخصية\n* اظهر اماكنك"
+
+rls_string r_string_channelinvite_title "دعوة قناة"
+
+// Create channel
+rls_string r_string_dialog_createchannelname ":اسم القناة"
+rls_string r_string_dialog_createchanneldescription ":باختصار وصف القناة"
+rls_string r_string_channelfollowing_text "قناة '$CHANNEL' موجود مسبقا. هل ترغب في متابعة هذه القناة؟"
+
+// Exit Confirmation
+rls_string r_string_exit_title "التأكد من الخروج"
+rls_string r_string_exit_text "وسوف تغادر سجل خروجك. هل أنت متأكد؟"
+
+// Authorization Error
+rls_string r_string_autherror_title "فشل تسجيل"
+rls_string r_string_autherror_text ".اسم المستخدم هذا موجود بالفعل. الرجاء التحقق من إعدادات الحساب ومحاولة إعادة الاتصال"
+
+// Delete Item Message
+rls_string r_string_deleteitem_title "تاكد من الإزالة"
+rls_string r_string_deleteitem_text "هل انت متاكد من انك تريد انتزيل هذه؟"
+
+// Sms/Email Messages
+rls_string r_string_invitemessage_title "buddycloud على الانضمام إلينا!"
+rls_string r_string_invitemessage_text "buddycloud يتيح لك طريقة جديدة للبث بك الذهول لأتباعك! http://m.buddycloud.com زيارة للحصول عليه الآن!"
+rls_string r_string_sendplacemessage_title "أين أنا"
+rls_string r_string_sendplacemessage_text "$PLACE وأنا الآن بمبلغ مكان. http://m.buddycloud.com/place.php?id=$ID وأنا الآن بمبلغ"
+
+// Did You Mean?
+rls_string r_string_didyoumean_title "هل عنيت؟"
+
+// Dialog
+rls_string r_string_dialog_setmood ":مجموعة المركز"
+rls_string r_string_dialog_moodis "يكون"
+rls_string r_string_dialog_setcurrentlocation ":تعيين مكاني"
+rls_string r_string_dialog_setnextlocation "حيث يقول أذهب المقبل"
+rls_string r_string_dialog_settopic ":تعيين الموضوع"
+rls_string r_string_dialog_newmessage ":رسالة جديدة"
+rls_string r_string_dialog_addcontact "ادخل حسابك في البدي كلاود او جابر "
+
+// Notes
+rls_string r_string_note_connecting "يجري التصال"
+rls_string r_string_note_reconnecting "إعادة الاتصال"
+rls_string r_string_note_connectingwith "التواصل مع\n...$APN"
+rls_string r_string_note_searching "تبحث"
+rls_string r_string_note_updating "تحديث"
+rls_string r_string_note_online "على الانترنت"
+rls_string r_string_note_offline "متواجد حاليا"
+
+// Call
+rls_string r_string_note_dialling "$USER استدعاء"
+rls_string r_string_note_talkingto "$USER الحديث مع"
+rls_string r_string_note_hangingup "انقطع التصال"
+
+// Setup 
+rls_string r_string_step2_title "كن مشهور!"
+rls_string r_string_step2_text "قنوات buddycloud يتيح لك طريقة جديدة للبث بك الذهول لأتباعك. قنوات buddycloud تمكنك من أن تصبح مشهورة لعلمك فريدة من نوعها حول مكان أو موضوع ، وعلى بناء المجتمع من أتباعه."
+
+rls_string r_string_step3_title "ماذا يمكنك ان تفعل؟"
+rls_string r_string_step3_text "مع buddycloud يمكنك إنشاء قناة موضوع حول ما كنت عند حسن ، أو قناة شخصية كل عنك. buddycloud تلقائيا حصة موقعك الحالية كعلامة ذات مغزى المكان الخاص بك مع أتباعه ، أو على مستوى المدينة مع شخص آخر. buddycloud من فضلك أدخل اسم المستخدم أو اختيار اسم مستخدم جديد لبدء العمل :"
+
+rls_string r_string_step4_title "المنافع الخاصة بك"
+rls_string r_string_step4_text "buddycloud يمنحك مستوى جديد من التفاعل مع أتباعك ويبين قناتك في ارتفاع شعبيته. تستمر طوال اليوم وبتكلفة منخفضة ودون استنفاد طاقة بطارية الهاتف الخاص بك ، وذلك بسبب انخفاض buddycloud لبيانات الاستخدام. حصة موقعك بشكل مستمر ، ولكن في الخاضعة للرقابة ، طريقة آمنة. الرجاء إدخال كلمة مرور آمنة :"
+
+rls_string r_string_step5_title "البقاء على اتصال"
+rls_string r_string_step5_text "الحصول على إخطار buddycloud خدمات جديدة وإصدارات جديدة من هذه الوكالة. يرجى ترك لنا عنوان بريدك الالكتروني (اختياري) ، وسنقوم إبقائها آمنة :"
+
+rls_string r_string_step6_title "مبرووك"
+rls_string r_string_step6_text "الإعداد اكتملت الآن. أنت الآن سوف تكون متصلة وقعت على buddycloud القنوات."
+rls_string r_string_step6_question "هل ترغب في بدء buddycloud عند تشغيل الهاتف من الآن فصاعدا؟"
+
+// End of File

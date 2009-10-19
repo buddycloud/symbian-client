@@ -1,0 +1,329 @@
+/*
+============================================================================
+ Name        : Buddycloud.r01
+ Author      : Ross Savage
+ Copyright   : Buddycloud 2008
+ Description : Localisation File : English
+ 
+               Please only translate text between quotations e.g. "Test"
+============================================================================
+*/
+
+// DO NOT TRANSLATE
+CHARACTER_SET UTF8
+
+rls_string r_string_app_caption "buddycloud"
+rls_string r_string_groupinvite_text " invited you to join channel: "
+// DO NOT TRANSLATE
+
+rls_string r_string_langcode "gr"
+rls_string r_string_translatedby "Translated by: venduza"
+
+rls_string r_string_followingtab_hint "Επόμενο"
+rls_string r_string_placestab_hint "Τοποθεσίες"
+rls_string r_string_explorertab_hint "Κοντά"
+rls_string r_string_channelstab_hint "Κανάλια"
+
+// CBA
+rls_string r_string_options_menu "Επιλογές"
+rls_string r_string_say_menu "Πες"
+rls_string r_string_cancel_menu "Ακυρο"
+rls_string r_string_next_menu "Επόμενο"
+rls_string r_string_endcall_menu "End Call"
+rls_string r_string_hide_menu "Hide"
+
+// Item
+rls_string r_string_item_newgroup "Νέο καναλι..."
+rls_string r_string_item_newplace "Νέα τοποθεσία..."
+
+// Menu: Call
+rls_string r_string_options_loudspeaker "Μετάβαση σε μεγάφωνο"
+rls_string r_string_options_handset "Μετάβαση σε ακουστικό"
+rls_string r_string_options_hold "Κράτηση"
+rls_string r_string_options_resume "Επανάληψη"
+rls_string r_string_options_endcall "Τερματισμός κλήσης"
+
+// Menu: Settings & Edit place
+rls_string r_string_options_edititem "Αλλαγή"
+rls_string r_string_options_searchplace "Αναζήτηση λεπτομερειών"
+
+rls_string r_string_note_noresultsfound "Δεν βρέθηκαν αποτελέσματα"
+rls_string r_string_note_requestsent "Αίτηση εστάλθη"
+rls_string r_string_note_messagequeued "Το μήνυμα θα σταλεί όταν είσαι online"
+rls_string r_string_note_offlinerequired "Θα πρέπει να είσαι offline για να γίνει αυτό"
+
+// Positioning methods
+rls_string r_string_positioning_stationary "Τώρα μπορείς να μαρκάρεις αυτό το μέρος"
+rls_string r_string_positioning_moving "Αυτή τη στιγμή κινήσε. Μαρκάροντας τώρα δεν είναι σίγουρο ότι θα ξαναβρεθείς εδώ"
+rls_string r_string_positioning_cell "Το δικτυακό μοντέλο μάθησης μπορεί να διαρκέσει αρκετά λεπτά"
+rls_string r_string_positioning_wifigps "Μπορείς ακόμα να μαρκάρεις αυτό το μέρος τώρα που υπάρχει ασύρματο WiFi δικτυο"
+rls_string r_string_positioning_bt "Εάν άλλοι χρήστες buddycloud είναι κοντά σου, θα σε μεταβιβάσουμε στο μέρος τους"
+rls_string r_string_positioning_none "Ο εντοπισμός θέσης δεν είναι διαθέσιμος. Παρακαλώ ελέγξε τις ρυθμίσεις εντοπισμού θέσης"
+
+// Menu: Search
+rls_string r_string_options_select "Επέλεξε"
+rls_string r_string_options_newsearch "Νέα αναζήτηση"
+rls_string r_string_options_previousresult "Επιστροφή στο προηγούμενο"
+rls_string r_string_options_cancelsearch "Ακύρωση αναζήτησης"
+
+// Menu: Help
+rls_string r_string_options_help "Βοήθεια"
+rls_string r_string_help_help "Βοήθεια από buddycloud"
+rls_string r_string_help_update "Ενημέρωση buddycloud"
+rls_string r_string_help_about "Περί"
+
+// Menu: Following
+rls_string r_string_options_exit "Εξοδος"
+rls_string r_string_options_done "Τέλος"
+rls_string r_string_options_connect "Πήγαινε online"
+rls_string r_string_options_disconnect "Πήγαινε offline"
+rls_string r_string_options_itemcontact "Επαφή"
+rls_string r_string_options_itemgroup "Κανάλι"
+rls_string r_string_options_settings "Ρυθμίσεις"
+rls_string r_string_item_viewmessages "Βλέπε μηνυματα"
+rls_string r_string_item_viewchannelmessages "Βλέπε κανάλι"
+rls_string r_string_item_viewprivatemessages "Βλέπε προσωπικά μηνυματα"
+rls_string r_string_item_showplacedetails "Δείξε λεπτομέρειες τοποθεσίας"
+rls_string r_string_item_showchanneldetails "Show channel details"
+rls_string r_string_item_call "Κάλεσε επαφή"
+rls_string r_string_item_sendplacebysms "Στείλε τοποθεσία μέσω SMS"
+rls_string r_string_item_sendinvite "Προσκάλεσε στο buddycloud"
+rls_string r_string_item_delete "Μετακίνησε"
+rls_string r_string_item_noticeaccept "Accept"
+rls_string r_string_item_noticeacceptandfollow "Accept and Follow"
+rls_string r_string_item_noticedecline "Decline"
+rls_string r_string_update_setstatus "Ενημέρωσε κατάσταση"
+rls_string r_string_options_invite "Ακολούθα..."
+rls_string r_string_settings_usersettings "Προτιμήσεις"
+rls_string r_string_settings_communitysettings "Μοίρασε online"
+rls_string r_string_settings_clearconnection "Αλλαγή σύνδεσης"
+
+rls_string r_string_note_followinglistempty "Δεν ακολουθάς τίποτα.\n\nΧρησιμοποιήσε τα κανάλια και τα Explorer tabs για αναζήτηση αντικειμένων για ακολουθία."
+
+// Menu: Messaging
+rls_string r_string_options_openlink "’νοιξε σύνδεσμο"
+rls_string r_string_options_postmessage "Post message"
+rls_string r_string_options_postmedia "Post media"
+rls_string r_string_options_replytomessage "Απάντηση σε"
+rls_string r_string_options_settopic "Ορισε θέμα"
+rls_string r_string_options_jumptounread "Μετάβαση στα αδιάβαστα"
+rls_string r_string_options_invitetochannel "Προσκάλασε σε κανάλι"
+rls_string r_string_options_invitetootherchannel "Προσκάλασε σε άλλο κανάλι"
+rls_string r_string_options_invitefriendtochannel "Προσκάλασε ακόλουθο"
+rls_string r_string_options_notificationon "Ενεργοποίηση δόνησης"
+rls_string r_string_options_notificationoff "Απενεργοποίηση δόνησης"
+
+// Menu: Places
+rls_string r_string_options_setcurrent "Μάρκαρε νέα τοποθεσία"
+rls_string r_string_options_setnext "Ορισμός νέας τοποθεσίας"
+rls_string r_string_item_relearnplace "Ξαναμάθε αυτή τη τοποθεσία"
+rls_string r_string_dialog_relearnplace "Είσαι σε αυτή τη τοποθεσία και θέλεις να τη ξαναμάθεις?"
+rls_string r_string_item_setnext "Ορισμός ως επόμενης τοποθεσίας"
+rls_string r_string_item_editplace "Επεξεργασία στοιχείων"
+rls_string r_string_item_deleteplace "Αφαιρέση τοποθεσίας"
+
+rls_string r_string_note_placelastseen "Ορατά"
+rls_string r_string_note_placevisits "Επισκέψεις"
+rls_string r_string_note_placepopulation "Πληθυσμός"
+rls_string r_string_note_learningplace "Μάθηση τοποθεσίας"
+rls_string r_string_note_updatingplace "Ενημέρωση τοποθεσίας..."
+rls_string r_string_note_noplaceaddress "Απροσδιόριστη διεύθυνση"
+rls_string r_string_note_placeslistempty "Δεν έχεις μαρκαρισμένες τοποθεσίες.\n\nΓια να μάθεις αυτή τη τοποθεσία πάτησε\n'Επιλογές > Μάρκαρε νέα τοποθεσία'"
+
+// Menu: Nearby
+rls_string r_string_options_refresh "Ανανέωση"
+rls_string r_string_item_placeinfo "Θέσε λεπτομέρειες"
+rls_string r_string_item_personinfo "Πληροφορίες προσώπου"
+rls_string r_string_item_setcurrent "Ορισμός ως αυτής της τοποθεσίας"
+rls_string r_string_item_subscribe "Πρόσθεσε στις τοποθεσίες μου"
+
+// Menu: Explorer
+rls_string r_string_options_explore "Εξερεύνησε"
+rls_string r_string_item_seefollowers "Βλέπε ακόλουθους"
+rls_string r_string_item_seeplaces "Βλέπε τοποθεσίες"
+rls_string r_string_item_seefollowing "Βλέπε παρακάτω"
+rls_string r_string_item_seeproducing "Βλέπε παραγωγή"
+rls_string r_string_item_seenearby "Δες εδώ κοντά"
+rls_string r_string_item_seebeenhere "Ποιος ήταν εδώ"
+rls_string r_string_item_seegoinghere "Ποιος πηγαίνει εδω"
+
+rls_string r_string_title_isfollowing "$USER ακολουθά"
+rls_string r_string_title_followedby "$OBJECT's οπαδών"
+rls_string r_string_title_isproducing "$USER is producing"
+rls_string r_string_title_nearbyto "Κοντά στο $OBJECT"
+rls_string r_string_title_whosbeento "Ποιος ήταν στο $PLACE"
+rls_string r_string_title_whosgoingto "Ποιος πηγαίνει στο $PLACE"
+
+rls_string r_string_note_requesting "Αίτηση..."
+rls_string r_string_note_channelrank "Βαθμός"
+
+// Menu: Channels
+rls_string r_string_list_featuredchannels "Προτεινόμενα κανάλια"
+rls_string r_string_list_channelsyoumightlike "Κανάλια που μπορεί να σου αρέσουν"
+rls_string r_string_list_followersfavourites "Οπαδοί' Αγαπημένα"
+rls_string r_string_list_mostpopularchannels "Πιο δημοφιλή κανάλια"
+rls_string r_string_list_channelsneartoyou "Κανάλια κοντά σου"
+
+rls_string r_string_item_open "Ανοιξε"
+rls_string r_string_item_follow "Ακολούθα"
+rls_string r_string_item_unfollow "Μην ακολουθάς"
+
+// Channel: Settings & Configuration
+rls_string r_string_note_personalchannelcreated "Καλώς ήλθατε στα κανάλια buddycloud $USER!\n\nΑυτό είναι το δικό σας προσωπικό κανάλι στο buddycloud. Αυτό το κανάλι είναι όλο δικό σας και σας επιτρέπει να μεταδίδεται στους οπαδούς σας!"
+rls_string r_string_note_mediauploadready "You can now upload your media file at $LINK"
+rls_string r_string_note_userkickedfromgroup "$USER διώχτηκε από το κανάλι."
+rls_string r_string_note_userbannedfromgroup "$USER απαγορεύτηκε από το κανάλι."
+rls_string r_string_dialog_kickconfirmation "Διώξε αυτό το άτομο από το κανάλι (να επιστρέψουν στην επόμενη σύνδεση)?"
+rls_string r_string_dialog_banconfirmation "Απαγόρευσε στο άτομο αυτό ωα δει το κανάλι?"
+rls_string r_string_item_banfromgroup "Απαγόρευσε από κανάλι"
+rls_string r_string_item_kickfromgroup "Διώξε από κανάλι"
+rls_string r_string_item_changerole "Αλλαξε ρόλο"
+rls_string r_string_list_changerole_title "Αλλαξε ρόλο σε"
+rls_string r_string_changerole_itemlist_moderator "Συντονιστής"
+rls_string r_string_changerole_itemlist_contributor "Οπαδός"
+rls_string r_string_changerole_itemlist_visitor "Επισκέπτης"
+rls_string r_string_note_changerolefailed "Δεν έχεις δικαίωμα να αλλάξεις το ρόλο αυτού του ατόμου"
+
+// Settings Item List
+rls_string r_string_settings_account_title "Λογαριασμός"
+rls_string r_string_settings_itemlist_fullname "Πλήρες όνομα"
+rls_string r_string_settings_itemlist_fullname_hint "Το πλήρες όνομα σας"
+rls_string r_string_settings_itemlist_email "Διεύθυνση e-mail"
+rls_string r_string_settings_itemlist_email_hint "Η διεύθυνση e-mail σας"
+rls_string r_string_settings_itemlist_phonenumber "Αριθμός τηλεφώνου"
+rls_string r_string_settings_itemlist_phonenumber_hint "Ο βασικός σας αριθμός τηλεφώνου"
+rls_string r_string_settings_itemlist_username "Ονομα χρήστη"
+rls_string r_string_settings_itemlist_username_hint "Ονομα χρήστη buddycloud"
+rls_string r_string_settings_itemlist_password "Κωδικός"
+rls_string r_string_settings_itemlist_password_hint "Κωδικός buddycloud"
+
+rls_string r_string_settings_itemlist_language "Προβολή γλώσσας"
+rls_string r_string_settings_itemlist_showname "Δες ονόματα στα κανάλια"
+rls_string r_string_settings_itemlist_accesspoint "Σημείο πρόσβασης για να χρησιμοποιήσεις"
+rls_string r_string_settings_itemlist_accesspointuserdefined "Χρήστης ορίζεται"
+rls_string r_string_settings_itemlist_accesspointalwaysask "Ερώτηση πάντα"
+rls_string r_string_settings_itemlist_testserver "Σύνδεση με το beta διακομιστή"
+rls_string r_string_settings_itemlist_autostart "Εκκίνηση με το άνοιγμα τηλεφώνου"
+rls_string r_string_settings_itemlist_showcontacts "Δες επαφές τηλεφώνου"
+
+rls_string r_string_settings_notifications_title "Notifications"
+rls_string r_string_settings_itemlist_groupnotification "Ειδοποίησε για μηνύματα καναλιών"
+rls_string r_string_settings_itemlist_groupnever "Ποτέ μην ειδοποιείς"
+rls_string r_string_settings_itemlist_groupfirstonly "Πρώτο μηνύμα μόνο"
+rls_string r_string_settings_itemlist_groupallmessages "Ολα τα μηνήματα"
+rls_string r_string_settings_itemlist_notifyreply "Ειδοποίησε για τις @Απαντήσεις:"
+rls_string r_string_settings_itemlist_privatemessagetone "Private message tone"
+rls_string r_string_settings_itemlist_channelposttone "Channel post tone"
+rls_string r_string_settings_itemlist_directreplytone "My @Replies tone"
+rls_string r_string_settings_itemlist_tonenone "No tone"
+rls_string r_string_settings_itemlist_tonedefault "Default tone"
+
+rls_string r_string_settings_beacons_title "Εντοπισμός θέσης"
+rls_string r_string_settings_itemlist_cell "Κεραία δικτύου"
+rls_string r_string_settings_itemlist_wlan "WIFI"
+rls_string r_string_settings_itemlist_bt "Bluetooth"
+rls_string r_string_settings_itemlist_gps "GPS"
+rls_string r_string_settings_itemlist_on "Σε λειτουργία"
+rls_string r_string_settings_itemlist_off "Εκτός λειτουργίας"
+
+// Communities
+rls_string r_string_settings_facebook_text "Τώρα θα μεταβείς στη http://apps.facebook.com/buddycloud σελίδα της εφαρμογής buddycloud. Παρακαλώ προσθέστε στην εφαρμογή, κωδικό πρόσβασης και πρόσβαση σε αυτή."
+rls_string r_string_settings_credentials_success "Ενημέρωση επιτυχής"
+rls_string r_string_settings_credentials_fail "Η ενημέρωση απέτυχε.\nΠαρακαλώ ελεγξτε τις πιστοποιήσεις σας και προσπαθήστε ξανά"
+
+// Edit Place List
+rls_string r_string_newplace_title "Νεα τοποθεσία"
+rls_string r_string_editplace_title "Επεξεργασία τοποθεσίας"
+rls_string r_string_updatefailed_title "Η ενημέρωση απέτυχε"
+
+rls_string r_string_editplace_itemlist_name "Ονομα"
+rls_string r_string_editplace_itemlist_name_hint "π.χ. 'Σπίτι' or 'Starbucks'"
+rls_string r_string_editplace_itemlist_street "Οδός"
+rls_string r_string_editplace_itemlist_street_hint "π.χ. '171 Piccadilly'"
+rls_string r_string_editplace_itemlist_area "Γειτονιά"
+rls_string r_string_editplace_itemlist_area_hint "π.χ. 'Mayfair'"
+rls_string r_string_editplace_itemlist_city "Πόλη"
+rls_string r_string_editplace_itemlist_city_hint "π.χ. 'London'"
+rls_string r_string_editplace_itemlist_postcode "Ταχυδρομικός κώδικας"
+rls_string r_string_editplace_itemlist_postcode_hint "π.χ. 'W1J 9EJ'"
+rls_string r_string_editplace_itemlist_region "Περιφέρεια"
+rls_string r_string_editplace_itemlist_region_hint "π.χ. 'Greater London'"
+rls_string r_string_editplace_itemlist_country "Χώρα"
+rls_string r_string_editplace_itemlist_country_hint "π.χ. 'Μεγάλη Βρετανία'"
+rls_string r_string_editplace_itemlist_visibility "’λλοι μπορούν να τοποθετηθούν εδώ"
+rls_string r_string_editplace_itemlist_visibility_public "Μοιρασμένα"
+rls_string r_string_editplace_itemlist_visibility_private "Προσωπικά"
+
+// Following & Invitations
+rls_string r_string_followingrequest_title "Μετά από αίτημα"
+rls_string r_string_followerrequest_text "$USER θα ήθελες να σε ακολουθήσει στο buddycloud.\n* Δείξε την παρουσία σου και τη κατάστασή σου\n* Δείξε το προσωπικό σου κανάλι\n* Δείξε τις τοποθεσίες σου"
+
+rls_string r_string_channelinvite_title "Πρόσκληση σε κανάλι"
+
+// Create channel
+rls_string r_string_dialog_createchannelname "Ονομα καναλιού"
+rls_string r_string_dialog_createchanneldescription "Σύντομη περιγραφή καναλιού:"
+rls_string r_string_channelfollowing_text "Το κανάλι '$CHANNEL' υπάρχει ήδη. Θα θέλατε να ακολουθήσετε αυτό το κανάλι?"
+
+// Exit Confirmation
+rls_string r_string_exit_title "Έξοδος από επιβεβαίωση"
+rls_string r_string_exit_text "Βγαίνοντας θα αποσυνδεθείτε από το buddycloud.\n\nΕίστε σίγουρος?"
+
+// Authorization Error
+rls_string r_string_autherror_title "Η εγγραφή απέτυχε"
+rls_string r_string_autherror_text "Αυτό το όνομα χρήστη υπάρχει ήδη. Παρακαλώ ελέγξτε τις ρυθμίσεις του λογαριασμού σας και προσπαθήστε να επανασυνδεθείτε."
+
+// Delete Item Message
+rls_string r_string_deleteitem_title "Επιβεβαίωση αφαίρεσης"
+rls_string r_string_deleteitem_text "Είστε σίγουρος ότι θέλετε να το καταργήσετε?"
+
+// Sms/Email Messages
+rls_string r_string_invitemessage_title "Βρείτε μας στο buddycloud!"
+rls_string r_string_invitemessage_text "Το buddycloud σας παρέχει ένα νέο τρόπο να μεταδόσετε την επιβλητικότητά σας στους οπαδούς σας! Επισκεπτείτε τη http://m.buddycloud.com και αποκτήστε το τώρα!"
+rls_string r_string_sendplacemessage_title "Που είμαι"
+rls_string r_string_sendplacemessage_text "Τώρα είμαι στο $PLACE. http://m.buddycloud.com/place.php?id=$ID για λεπτομέρειες."
+
+// Did You Mean?
+rls_string r_string_didyoumean_title "Εννοεις οτι...?"
+
+// Dialog
+rls_string r_string_dialog_setmood "Ορισμός κατάστασης:"
+rls_string r_string_dialog_moodis "είναι "
+rls_string r_string_dialog_setcurrentlocation "Ορισμός θέσης μου:"
+rls_string r_string_dialog_setnextlocation "Ορισμός επόμενης θέσης:"
+rls_string r_string_dialog_settopic "Ορισμός θέματος:"
+rls_string r_string_dialog_newmessage "Νεο μήνυμα:"
+rls_string r_string_dialog_addcontact "Εισάγετε buddycloud ή Jabber Id (π.χ. test@gtalk.com):"
+
+// Notes
+rls_string r_string_note_connecting "Σύνδεση..."
+rls_string r_string_note_reconnecting "Επανασύνδεση..."
+rls_string r_string_note_connectingwith "Σύνδεση με\n$APN..."
+rls_string r_string_note_searching "Αναζήτηση..."
+rls_string r_string_note_updating "Ενημέρωση..."
+rls_string r_string_note_online "Συνδεδεμένος"
+rls_string r_string_note_offline "Αποσυνδεδεμένος"
+
+// Call
+rls_string r_string_note_dialling "Κλήση $USER"
+rls_string r_string_note_talkingto "Ομιλία στον $USER"
+rls_string r_string_note_hangingup "Αποσυνδέθηκε"
+
+// Setup 
+rls_string r_string_step2_title "Γίνε διάσημος!"
+rls_string r_string_step2_text "Τα καναλια του buddycloud σας δίνουν ένα νέο τρόπο μεταδόσης της επιβλητικότητά σας στους οπαδούς σας.\n\nΤα καναλια του buddycloud σας επιτρέπει να γίνετε γνωστός για τη μοναδική σας γνώση πάνω σε μία τοποθεσία ή ένα θέμα και να δημιουργήσετε μια κοινότητα των οπαδών."
+
+rls_string r_string_step3_title "Τι μπορείς να κάνεις?"
+rls_string r_string_step3_text "Με το buddycloud μπορείτε να δημιουργήσετε ένα κανάλι πάνω σε αυτό που είστε καλοί, ή ένα προσωπικό κανάλι σχετικά με εσάς. Το buddycloud θα μοιράζεται αυτόματα την τρέχουσα θέση σας ως σημαντική τοποθεσία μαρκαρισμένη με τους οπαδούς σας, ή σε επίπεδο πόλεως με όλους τους άλλους.\n\nΠαρακαλώ επιλέξτε ένα μοναδικό όνομα χρήστη για να ξεκινήσετε:"
+
+rls_string r_string_step4_title "Τα οφέλη σου"
+rls_string r_string_step4_text "Το buddycloud σας παρέχει ένα νέο επίπεδο αλληλεπίδρασης με τους οπαδούς σας και δείχνει την αυξανόμενη δημοτικότητα του καναλιού σας. Συνεχίστε όλη την ημέρα με χαμηλό κόστος και με χαμηλή εξάντληση της μπαταρίας του τηλεφώνου σας, λόγω του χαμηλού buddycloud δεδομένων χρήσης. Μοιραστείτε συνεχώς τη θέση σας, αλλά με ελεγχόμενο, ασφαλή τρόπο.\n\nΠαρακαλώ εισάγετε έναν ασφαλή κωδικό πρόσβασης:"
+
+rls_string r_string_step5_title "Μείνε σε επαφή"
+rls_string r_string_step5_text "Λάβετε ειδοποιήσεις για νέες υπηρεσίες buddycloud και νέες εκδόσεις της εφαρμογής.\n\nΑφήστε μας την ηλεκτρονική σας διεύθυνση (προαιρετικό), θα τη κρατήσουμε ασφαλή:"
+
+rls_string r_string_step6_title "Συγχαρητήρια!"
+rls_string r_string_step6_text "Η εγκατάσταση ολοκληρώθηκε. Τώρα θα συνδεθείτε και θα εγγραφτείτε στα κανάλια buddycloud."
+rls_string r_string_step6_question "Θέλετε να ξεκινάει το buddycloud όταν ενεργοποιείτε το τηλέφωνό σας από τώρα και στο εξής?"
+
+// End of File

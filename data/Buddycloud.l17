@@ -1,0 +1,329 @@
+/*
+============================================================================
+ Name        : Buddycloud.r01
+ Author      : Ross Savage
+ Copyright   : Buddycloud 2008
+ Description : Localisation File : English
+ 
+               Please only translate text between quotations e.g. "Test"
+============================================================================
+*/
+
+// DO NOT TRANSLATE
+CHARACTER_SET UTF8
+
+rls_string r_string_app_caption "buddycloud"
+rls_string r_string_groupinvite_text " invited you to join channel: "
+// DO NOT TRANSLATE
+
+rls_string r_string_langcode "hu"
+rls_string r_string_translatedby "Fordítás: bkos"
+
+rls_string r_string_followingtab_hint "Ismerősök/Csatornák"
+rls_string r_string_placestab_hint "Helyek"
+rls_string r_string_explorertab_hint "Közelben"
+rls_string r_string_channelstab_hint "Csatornák"
+
+// CBA
+rls_string r_string_options_menu "Opciók"
+rls_string r_string_say_menu "Hozzászól"
+rls_string r_string_cancel_menu "Mégse"
+rls_string r_string_next_menu "Következő"
+rls_string r_string_endcall_menu "End Call"
+rls_string r_string_hide_menu "Elrejt"
+
+// Item
+rls_string r_string_item_newgroup "Új csatorna..."
+rls_string r_string_item_newplace "Új hely..."
+
+// Menu: Call
+rls_string r_string_options_loudspeaker "Kihangosítás"
+rls_string r_string_options_handset "Kézibeszéd"
+rls_string r_string_options_hold "Tart"
+rls_string r_string_options_resume "Folytatás"
+rls_string r_string_options_endcall "Hívás befejezése"
+
+// Menu: Settings & Edit place
+rls_string r_string_options_edititem "Változtat"
+rls_string r_string_options_searchplace "Részletek keresése"
+
+rls_string r_string_note_noresultsfound "Nincsen keresési eredmény"
+rls_string r_string_note_requestsent "Kérés elküldve"
+rls_string r_string_note_messagequeued "Üzenet következős kapcsolódáskor lesz elküldve"
+rls_string r_string_note_offlinerequired "Ezt csak offline módban csinálhatod"
+
+// Positioning methods
+rls_string r_string_positioning_stationary "Most rögzítheted ezt a helyet"
+rls_string r_string_positioning_moving "Jelenleg mozgásban vagy. A hely rögzítése nem garantálja, hogy legközelebb is ide leszel elhelyezve"
+rls_string r_string_positioning_cell "GSM-séma tanulása igénybe vehet néhány percet"
+rls_string r_string_positioning_wifigps "Rögzítheted azt a helyet mert Wifi jelek hatótávolságában vagy"
+rls_string r_string_positioning_bt "Ha más buddycloud felhasználó a közeledben van, akkor az ő helyükre helyezünk"
+rls_string r_string_positioning_none "Helymeghatározás lehetetlen. Kérlek nézd át a Helymeghatározási Beállításokat"
+
+// Menu: Search
+rls_string r_string_options_select "Kiválaszt"
+rls_string r_string_options_newsearch "Új keresés"
+rls_string r_string_options_previousresult "Vissza az előzőhöz"
+rls_string r_string_options_cancelsearch "Keresés megszakítása"
+
+// Menu: Help
+rls_string r_string_options_help "Segítség"
+rls_string r_string_help_help "buddycloud segítség"
+rls_string r_string_help_update "buddycloud frissítése"
+rls_string r_string_help_about "Névjegy"
+
+// Menu: Following
+rls_string r_string_options_exit "Kilépés"
+rls_string r_string_options_done "Kész"
+rls_string r_string_options_connect "Csatlakozás"
+rls_string r_string_options_disconnect "Kapcsolat bontása"
+rls_string r_string_options_itemcontact "Ismerős"
+rls_string r_string_options_itemgroup "Csatorna"
+rls_string r_string_options_settings "Beállítások"
+rls_string r_string_item_viewmessages "Üzenet megtekintése"
+rls_string r_string_item_viewchannelmessages "Csatorna megtekintése"
+rls_string r_string_item_viewprivatemessages "Személyes üzenetek"
+rls_string r_string_item_showplacedetails "Hely részletei"
+rls_string r_string_item_showchanneldetails "Csatorna részletei"
+rls_string r_string_item_call "Ismerős hívása"
+rls_string r_string_item_sendplacebysms "Hely küldése sms-ben"
+rls_string r_string_item_sendinvite "Meghívás buddycloudra"
+rls_string r_string_item_delete "Eltávolítás"
+rls_string r_string_item_noticeaccept "Elfogad"
+rls_string r_string_item_noticeacceptandfollow "Elfogad és Követ"
+rls_string r_string_item_noticedecline "Visszautasít"
+rls_string r_string_update_setstatus "Állapot frissítése"
+rls_string r_string_options_invite "Kövesd..."
+rls_string r_string_settings_usersettings "Beállítások"
+rls_string r_string_settings_communitysettings "Online megosztás"
+rls_string r_string_settings_clearconnection "Kapcsolat változtatása"
+
+rls_string r_string_note_followinglistempty "Nem követsz semmit.\n\nHasználd a Csatorna és Böngésző füleket követendő személyek és csatornák találásához."
+
+// Menu: Messaging
+rls_string r_string_options_openlink "Link megnyitása"
+rls_string r_string_options_postmessage "Üzenet írása"
+rls_string r_string_options_postmedia "Média közzététele"
+rls_string r_string_options_replytomessage "Válasz"
+rls_string r_string_options_settopic "Téma beállítása"
+rls_string r_string_options_jumptounread "Ugrás az olvasatlanokhoz"
+rls_string r_string_options_invitetochannel "Meghívás csatornába"
+rls_string r_string_options_invitetootherchannel "Meghívás más csatornába"
+rls_string r_string_options_invitefriendtochannel "Követő meghívása"
+rls_string r_string_options_notificationon "Figyelmeztetés bekapcs."
+rls_string r_string_options_notificationoff "Figyelmeztetés kikapcs."
+
+// Menu: Places
+rls_string r_string_options_setcurrent "Új hely rögzítése"
+rls_string r_string_options_setnext "Következő hely beállítása"
+rls_string r_string_item_relearnplace "Hely újratanulása"
+rls_string r_string_dialog_relearnplace "Jelenleg ezen a helyen tartózkodsz és újra szeretnéd tanulni?"
+rls_string r_string_item_setnext "Beállítás következőnek"
+rls_string r_string_item_editplace "Részletek szerkesztése"
+rls_string r_string_item_deleteplace "Hely eltávolítása"
+
+rls_string r_string_note_placelastseen "Látott"
+rls_string r_string_note_placevisits "Látogatások"
+rls_string r_string_note_placepopulation "Látogatók"
+rls_string r_string_note_learningplace "Hely tanulása"
+rls_string r_string_note_updatingplace "Hely frissítése..."
+rls_string r_string_note_noplaceaddress "Cím nincs megadva"
+rls_string r_string_note_placeslistempty "Nincsen rögzített helyed.\n\nHa ezt a helyet rögzíteni szeretnéd, válaszd az \n'Opciók > Hely rögzítése'-t a menüben."
+
+// Menu: Nearby
+rls_string r_string_options_refresh "Frissítés"
+rls_string r_string_item_placeinfo "Hely leírása"
+rls_string r_string_item_personinfo "Személy adatai"
+rls_string r_string_item_setcurrent "Beállítás e helyként"
+rls_string r_string_item_subscribe "Hozzáadás a Helyeimhez"
+
+// Menu: Explorer
+rls_string r_string_options_explore "Böngészés"
+rls_string r_string_item_seefollowers "Követői"
+rls_string r_string_item_seeplaces "Helyek mutatása"
+rls_string r_string_item_seefollowing "Követett csatornák"
+rls_string r_string_item_seeproducing "Létrehozott csatornák"
+rls_string r_string_item_seenearby "Mi van a környékén?"
+rls_string r_string_item_seebeenhere "Ki volt itt?"
+rls_string r_string_item_seegoinghere "Ki jön ide"
+
+rls_string r_string_title_isfollowing "$USER követ"
+rls_string r_string_title_followedby "$OBJECT követői"
+rls_string r_string_title_isproducing "$USER csatornái"
+rls_string r_string_title_nearbyto "$OBJECT közelében"
+rls_string r_string_title_whosbeento "Ki volt a $PLACE helyen"
+rls_string r_string_title_whosgoingto "Ki tart a $PLACE helyre"
+
+rls_string r_string_note_requesting "Kérés..."
+rls_string r_string_note_channelrank "Helyezés"
+
+// Menu: Channels
+rls_string r_string_list_featuredchannels "Kiemelt csatornák"
+rls_string r_string_list_channelsyoumightlike "Számodra érdekes csatornák"
+rls_string r_string_list_followersfavourites "Követők kedvencei"
+rls_string r_string_list_mostpopularchannels "Legnépszerűbb csatornák"
+rls_string r_string_list_channelsneartoyou "Közeli csatornák"
+
+rls_string r_string_item_open "Megnyit"
+rls_string r_string_item_follow "Kövesd..."
+rls_string r_string_item_unfollow "Követés megszüntetése"
+
+// Channel: Settings & Configuration
+rls_string r_string_note_personalchannelcreated "$USER, üdvözlünk a buddycloud csatornákban.\n\nEz a személyes csatornád a buddycloudon belül. Ez a csatorna csak a tiéd amelyen keresztül üzenhetsz követőidnek!"
+rls_string r_string_note_mediauploadready "Erre kattintva feltöltheted a médiát: $LINK"
+rls_string r_string_note_userkickedfromgroup "$USER ki lett rúgva a csatornából."
+rls_string r_string_note_userbannedfromgroup "$USER ki lett tiltva a csatornából."
+rls_string r_string_dialog_kickconfirmation "Személy kirúgása a szobából (következő bejelntkezéskor visszatér)?"
+rls_string r_string_dialog_banconfirmation "Megtiltja ennek a személynek, hogy belépjen ebbe a csatornába?"
+rls_string r_string_item_banfromgroup "Tiltás a csatornáról"
+rls_string r_string_item_kickfromgroup "Kirúgás csatornából"
+rls_string r_string_item_changerole "Szerep változtatása"
+rls_string r_string_list_changerole_title "Szerep változtatása:"
+rls_string r_string_changerole_itemlist_moderator "Moderátor"
+rls_string r_string_changerole_itemlist_contributor "Követő"
+rls_string r_string_changerole_itemlist_visitor "Látogató"
+rls_string r_string_note_changerolefailed "Nincs engedélyed arra, hogy ennek a személynek a szerepkörét megváltoztasd"
+
+// Settings Item List
+rls_string r_string_settings_account_title "Fiók"
+rls_string r_string_settings_itemlist_fullname "Teljes név"
+rls_string r_string_settings_itemlist_fullname_hint "Teljes neved"
+rls_string r_string_settings_itemlist_email "E-mail cím"
+rls_string r_string_settings_itemlist_email_hint "Az e-mail címed"
+rls_string r_string_settings_itemlist_phonenumber "Telefonszám"
+rls_string r_string_settings_itemlist_phonenumber_hint "Elsődleges telefonszámod"
+rls_string r_string_settings_itemlist_username "Felhasználónév"
+rls_string r_string_settings_itemlist_username_hint "buddycloud felhasználónév"
+rls_string r_string_settings_itemlist_password "Jelszó"
+rls_string r_string_settings_itemlist_password_hint "buddycloud jelszó"
+
+rls_string r_string_settings_itemlist_language "Nyelv kijelzése"
+rls_string r_string_settings_itemlist_showname "Nevek mutatása a csatornákban"
+rls_string r_string_settings_itemlist_accesspoint "Használandó Hozzáférési Pont"
+rls_string r_string_settings_itemlist_accesspointuserdefined "Felhasználó által kiválasztva"
+rls_string r_string_settings_itemlist_accesspointalwaysask "Mindig kérdezzen rá"
+rls_string r_string_settings_itemlist_testserver "Kapcsolódás a beta-szerverhez"
+rls_string r_string_settings_itemlist_autostart "Indítás a telefon bekapcsolásakor"
+rls_string r_string_settings_itemlist_showcontacts "Telefon-névjegyzék mutatása"
+
+rls_string r_string_settings_notifications_title "Figyelmeztetések"
+rls_string r_string_settings_itemlist_groupnotification "Értesítés csatorna-üzenetekről "
+rls_string r_string_settings_itemlist_groupnever "Sose figyelmeztessen"
+rls_string r_string_settings_itemlist_groupfirstonly "Csak az első hozzászólást"
+rls_string r_string_settings_itemlist_groupallmessages "Minden hozzászólás"
+rls_string r_string_settings_itemlist_notifyreply "Értesítsd @ válaszaimat"
+rls_string r_string_settings_itemlist_privatemessagetone "Személyes üzenethang"
+rls_string r_string_settings_itemlist_channelposttone "Csatorna figyelmeztetőhang"
+rls_string r_string_settings_itemlist_directreplytone "A @válaszaim üzenethang"
+rls_string r_string_settings_itemlist_tonenone "Néma"
+rls_string r_string_settings_itemlist_tonedefault "Alapértelmezett hang"
+
+rls_string r_string_settings_beacons_title "Helyezés"
+rls_string r_string_settings_itemlist_cell "GSM-torony"
+rls_string r_string_settings_itemlist_wlan "WIFI"
+rls_string r_string_settings_itemlist_bt "Bluetooth"
+rls_string r_string_settings_itemlist_gps "GPS"
+rls_string r_string_settings_itemlist_on "Be"
+rls_string r_string_settings_itemlist_off "Ki"
+
+// Communities
+rls_string r_string_settings_facebook_text "Továbbítunk a http://apps.facebook.com/buddycloud weboldalra, amely a buddycloud alkalmazás oldala. Kérlek lépj be és engedélyezd az alkalmazást."
+rls_string r_string_settings_credentials_success "Frissítés sikeres"
+rls_string r_string_settings_credentials_fail "Frissítés nem sikerült.\nKérlek nézd át a beállításaidat és próbáld újra"
+
+// Edit Place List
+rls_string r_string_newplace_title "Új hely"
+rls_string r_string_editplace_title "Hely szerkesztése"
+rls_string r_string_updatefailed_title "Frissítés nem sikerült"
+
+rls_string r_string_editplace_itemlist_name "Név"
+rls_string r_string_editplace_itemlist_name_hint "pl. 'Otthon' vagy 'Mozi'"
+rls_string r_string_editplace_itemlist_street "Utca"
+rls_string r_string_editplace_itemlist_street_hint "pl. 'Váci u. 13'"
+rls_string r_string_editplace_itemlist_area "Környék"
+rls_string r_string_editplace_itemlist_area_hint "pl. 'Krisztinaváros'"
+rls_string r_string_editplace_itemlist_city "Város"
+rls_string r_string_editplace_itemlist_city_hint "pl. 'Budapest'"
+rls_string r_string_editplace_itemlist_postcode "Irányítószám"
+rls_string r_string_editplace_itemlist_postcode_hint "pl. '1111'"
+rls_string r_string_editplace_itemlist_region "Megye"
+rls_string r_string_editplace_itemlist_region_hint "pl. 'Pest megye'"
+rls_string r_string_editplace_itemlist_country "Ország"
+rls_string r_string_editplace_itemlist_country_hint "pl. 'Magyarország'"
+rls_string r_string_editplace_itemlist_visibility "Mások ide helyezhetők?"
+rls_string r_string_editplace_itemlist_visibility_public "Nyilvános"
+rls_string r_string_editplace_itemlist_visibility_private "Személyes"
+
+// Following & Invitations
+rls_string r_string_followingrequest_title "Követési felkérés"
+rls_string r_string_followerrequest_text "$USER követni szeretne a buddycloudon.\n* Mutasd a helyszínedet és állapotodat\n* Mutasd a személyes csatornádat\n* Mutasd a helyeidet"
+
+rls_string r_string_channelinvite_title "Meghívó Csatornába"
+
+// Create channel
+rls_string r_string_dialog_createchannelname "Csatorna neve:"
+rls_string r_string_dialog_createchanneldescription "Rövid csatornaleírás:"
+rls_string r_string_channelfollowing_text "A '$CHANNEL' nevű szoba már létezik. Szeretnéd követni ezt a szobát?"
+
+// Exit Confirmation
+rls_string r_string_exit_title "Kilépés megerősítése"
+rls_string r_string_exit_text "Kilépéssel a buddycloud csatlakozásod is megszűnok. Biztosan ezt szeretnéd?"
+
+// Authorization Error
+rls_string r_string_autherror_title "Regisztráció nem sikerült"
+rls_string r_string_autherror_text "Ez a felhasználónév már létezik. Kérlek nézd át a Fiókbeállításaidat és próbáld újra."
+
+// Delete Item Message
+rls_string r_string_deleteitem_title "Eltávolítás megerősítése"
+rls_string r_string_deleteitem_text "Biztos, hogy el szeretnéd távolítani?"
+
+// Sms/Email Messages
+rls_string r_string_invitemessage_title "Csatlakozz a buddycloudhoz!"
+rls_string r_string_invitemessage_text "A buddycloud új lehetőséget nyújt saját tartalmad közlésére követőiddel. Látogass a http://m.buddycloud.com oldalra és töltsd le most!"
+rls_string r_string_sendplacemessage_title "Ahol vagyok"
+rls_string r_string_sendplacemessage_text "Jelenleg a(z) $PLACE helyen vagyok. Részletekért menj a http://m.buddycloud.com/place.php?id=$ID oldalra."
+
+// Did You Mean?
+rls_string r_string_didyoumean_title "Erre gondoltál...?"
+
+// Dialog
+rls_string r_string_dialog_setmood "Állapot beállítása:"
+rls_string r_string_dialog_moodis "van "
+rls_string r_string_dialog_setcurrentlocation "Helyem beállítása:"
+rls_string r_string_dialog_setnextlocation "Következő hely beállítása:"
+rls_string r_string_dialog_settopic "Téma beállítása:"
+rls_string r_string_dialog_newmessage "Új üzenet:"
+rls_string r_string_dialog_addcontact "Add meg a buddycloud vagy Jabber felhasználónevedet (pl. teszt@gtalk.com):"
+
+// Notes
+rls_string r_string_note_connecting "Csatlakozás..."
+rls_string r_string_note_reconnecting "Újracsatlakozás..."
+rls_string r_string_note_connectingwith "Csatlakozás\n$APN..."
+rls_string r_string_note_searching "Keresés..."
+rls_string r_string_note_updating "Frissítés..."
+rls_string r_string_note_online "Online"
+rls_string r_string_note_offline "Offline"
+
+// Call
+rls_string r_string_note_dialling "$USER hívása"
+rls_string r_string_note_talkingto "Beszéd folyamatban $USER felhasználóval"
+rls_string r_string_note_hangingup "Kapcsolat bontva"
+
+// Setup 
+rls_string r_string_step2_title "Legyél híres!"
+rls_string r_string_step2_text "A buddycloud csatornák új lehetőséget nyújtanak saját tartalmad közlésére követőiddel. A buddycloud csatornák segítségével híres lehetsz ismereteiddel egyedi helyszínekről és témákról és egy saját társaságot alakíthastz ki a követőiddel."
+
+rls_string r_string_step3_title "Mit tehetsz?"
+rls_string r_string_step3_text "A buddyclouddal létre hozhatsz különleges témájú csatornákat vagy egy személyes csatornát, amely rólad szól. A buddycloud automatikusan megosztja a jelenlegi pozíciódat, egy értelmezett helyként, a követőiddel illetve városi szinten mindenki mással is.\n\nKérlek add meg a buddycloud felhasználónevedet vagy ha nem rendelkezel ilyennel, válassz egy új felhasználónevet: "
+
+rls_string r_string_step4_title "Az előnyeid"
+rls_string r_string_step4_text "A buddycloud új lehetőségeket nyújt a követőiddel való kapcsolattartásban és jelzi a csatornád növekvő népszerűségét. A kevés adatforgalomnak köszönhetően egész nap használhatod kis költség és hosszú akkumulátor élettartam mellett. Folyamatosan megoszthatód helyszínedet ellenőrzött és biztonságos módon.\n\nKérlek adj meg egy biztonságos jelszót:"
+
+rls_string r_string_step5_title "Maradj kapcsolatban"
+rls_string r_string_step5_text "Ha szeretnéd, hogy figyelmeztessünk új buddycloud szolgáltatások és új verziók esetén, akkor add meg az e-mail címedet(nem kötelező), bizalmasan kezeljük."
+
+rls_string r_string_step6_title "Gratulálunk!"
+rls_string r_string_step6_text "A beállítás befejeződött. Most csatlakozol és bejelentkezel a buddycloud csatornákba."
+rls_string r_string_step6_question "Szeretnéd, hogy mostantól a buddycloud automatikusan induljon a telefon bekapcsolásakor?"
+
+// End of File

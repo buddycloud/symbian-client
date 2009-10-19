@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1 Tiny//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11-tiny.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" baseProfile="tiny" height="50" version="1.0" viewBox="0 0 50 50" width="50">
+<path d="M 24.96875,3.96875 C 19.73125,3.96875 15.5,8.2 15.5,13.4375 C 15.50001,17.45126 17.97875,20.865 21.5,22.25 C 13.87772,23.65756 7.87179,29.63081 6.375,37.21875 C 10.84796,42.59921 17.58119,46.03125 25.125,46.03125 C 27.741657,46.031513 30.21688,45.595175 32.5625,44.8125 L 24.90625,37.1875 L 36.40625,25.75 C 34.107069,24.008307 31.388443,22.794936 28.4375,22.25 C 31.95876,20.86499 34.46875,17.45125 34.46875,13.4375 C 34.46876,8.20001 30.205,3.96875 24.96875,3.96875 z M 38.75,27.90625 L 38.75,31.5 L 41.40625,31.46875 C 40.662885,30.174059 39.766601,28.985604 38.75,27.90625 z" style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-opacity:0.47058824"/>
+<path d="M 47.787,33.77663 L 36.441691,33.77663 L 36.441691,29.17663 L 28.268456,37.22663 L 36.441691,45.27663 L 36.441691,40.67663 L 47.787,40.67663 L 47.787,33.77663 z" style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:0.47058824"/>
+</svg>

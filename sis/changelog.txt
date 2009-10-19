@@ -1,0 +1,204 @@
+Change Log
+==========
+
+0.04.26
+
+* Release Candidate 3
+- Fix memory leak causing password to be displayed as APN
+- Change AudioPlayer to not queue up audio notifications if tone is already being played
+- Add an AuthenticationFailed event to BuddycloudLogic
+- Adapt AccountSettingsList to allow any item to be selected on activation
+- Adapt AppUi to show AccountSettingList (selecting username) on AuthenticationFailed event
+- Fix Bidi display of 'Next' softkey label in Setup
+
+0.04.25
+
+* Release Candidate 2
+- Update from 99translations (arabic only)
+- Only allow Notices to be responded to when online
+- Fix a settings loading syntax error
+- Fix bug setting the wrong connection mode (when Always Ask)
+
+0.04.24
+
+* Release Candidate 1
+- Update from 99translations (arabic only)
+- Minor code cleanup
+
+0.04.23
+
+- Update from 99translations (arabic only)
+- Add affiliation to personal channel when none/subscribe presence is pushed (from other resource)
+- Adjust the highlighted link colour to average link & text colour
+
+0.04.22
+
+- Update from 99translations
+- Added Arabic language
+- Fix rendering in case of right-to-left mirrored scrollbars
+- Improve accuracy of direct reply username comparisons
+- Only collect users PEP data if subscription is to/both
+- When unfollowing a channel, send unavailable after affiliation change (to none)
+- Remove own affiliation to requesters channel if following request only accepted or declined
+
+0.04.21
+
+- Update from 99translations
+- Added Portuguese and Dutch languages
+- Fix bug not stopping presence sending during a reconnect (can cause channel unconnectivity)
+- Add location update event, trigger explorer nearby request on first connection
+- Change place edit from SendAndForgetXmppStanza to SendAndAcknowledgeXmppStanza
+- Make beacon logs high priority stanzas
+- Set channel topic off description of channel creation
+- Destroy channel on cancel of setting channel description
+- Query server time before requesting roster
+
+0.04.20
+
+- Update from 99translations
+- Doubled maximum allocatable EPOCHEAPSIZE to 8Mb
+- Add ScanDirectoryL and scan for tones on both C:\ and E:\
+- Rework of CAudioPlayer to handle states better
+- Fix bug not vibrating when No Tone is selected
+- Fix bug not loading tones on fresh install
+
+0.04.19
+
+- Update from 99translations
+- Fix bug in messaging toolbar on initial message data loading
+- Fix bug incrementing loop count (and not playing) when no tone is selected
+- Change 'Back' to 'Hide' in Following tab (Symbian Horizons requirement)
+- Add 'User defined' option to tone selection
+- Add SelectCustomToneL which scans '!:\Data\Sounds\' and displays list selection
+- Load custom tone on selection
+
+0.04.18
+
+- Update from 99translations
+- Fix bug not sending presence to channels after a warm-connection (reconnect)
+- Fix bug not initially loading tones on startup
+- Fix bug not synchronizing audio tone to vibration
+- Fix bug not playing tone after switch from silent profile state
+- Fix bug notifying first new message in discussion when notification is switched off
+
+0.04.17
+
+- Removal of SendGlobalChannelPresenceL
+- Add timer event ETimerSendPresence
+- Slice sending of channel presence into slots of 5
+- Remove any urn:xmpp:archive xep references
+- Store/load of tone notification settings
+- Move NotificationEngine from BuddycloudAppUi to BuddycloudLogic
+- Extend NotificationEngine to include audio tone management
+- Implementation of AudioPlayer to play a single loaded tone
+
+0.04.16
+
+- Add Notifications Tab into Settings
+- Move notify settings into Notifications tab
+- Add tone settings for each message event type
+- Add notification tab icon
+- Modification of message topic change text & icon formatting
+- Update translations
+
+0.04.15
+
+- Fix 'Show channel details' rank bug (+-1)
+- Store unread direct reply count in CDiscussion
+- Add message observer event for unread direct reply read
+- Rework of GetBubbleToPosition to include direct replies & optimizations
+- Add rendering of direct reply icon in CBuddycloudFollowingContainer
+
+0.04.14
+
+- Implementation of Media posting requester
+- Add events for BuddycloudLogic startup and shutdown
+- Fix bug not cancelling Explorer Xmpp observer requests
+- Increase Xmpp queue posting interval
+
+0.04.13
+
+- Improved @ and # tagged word parsing
+- Add rank and rank delta in CFollowingChannelItem
+- Collect latest channel rank data from maitred
+- Add 'Show channel details' dialog
+
+0.04.12
+
+- Added type to CMessageLinkPosition for Webpage, Username & Channel link types
+- Parse message bodies for @ and # tagged words
+- Rewrite MessagingContainer initialization flow (allow dynamic view swapping)
+- Add menu in MessagingContainer to handle following & viewing of linked items
+- Implementation of following & view link selection
+- Improvements to message link rendering
+- Add menu item 'Post media' (function not yet implemented)
+- Fix bug that caused MessagingContainer to render twice on key press
+
+0.04.11
+
+- Filter end/red button events
+- Only collect own personal channel members after channel presence returned
+- Change bubbling to post activity rather than unread ordered
+- Do not bubble presence of contacts
+- Rework of own personal channel membership affiliation on presence subscription
+
+0.04.10
+
+- Start in Explorer Tab when not following anything
+- Add connectivity change events
+- Re-request nearby objects on connectivity event change to online
+- Add bitwise item selecting options when looking for subscribed objects
+- Implement Notice item
+- Add storage of Notice items
+- Rework RosterSubscriptionL to add Notice item instead of dialog
+- Rework HandleIncomingMessageL to add Notice item for channel invitation
+- Handle Notice menu items & response to notices
+
+0.04.08
+
+- Added Turkish translation
+- Fix bug not displaying channel invite sender if they have no full name set
+- Display broad location in following requests
+- Display place query errors when editing or creating a place
+- Rework of channel notification logic
+- Rework of @reply inclusion and message formatting
+- Allow unfollowing of someone who only follows you (removes their subscription)
+
+0.04.07
+
+- Added French translation, updates to other translations
+
+0.04.06
+
+- Added Hebrew translation, updated Chinese & Hungarian
+- Fix Bi-directional layout in Places & Explorer tabs
+
+0.04.05
+
+- Added Greek, Chinese & Hungarian translations
+
+0.04.04
+
+- Added Russian & Polish translations
+
+0.04.03
+
+- Limit menu text length of context item in Messaging view
+- Add Korean language
+
+0.04.02
+
+- Make Active Objects more robust (possible connectivity crash fix)
+- Updated translations
+
+0.04.01
+
+- Ignore incoming messages from unknown channels (non-followed)
+- Fix bug when doing 'Search for details' and selecting an existing place
+- Fix rewrapping of text after removing all places from Places tab
+
+0.04.00
+
+* Symbian Signed
+- Bluetooth scanning now off as default
+- Auto-start off as default (Symbian Test Criteria)

@@ -1,0 +1,162 @@
+/*
+============================================================================
+ Name        : Buddycloud.hrh
+ Author      : Ross Savage
+ Copyright   : Buddycloud 2007
+ Description : This file contains declarations for constants of Buddycloud.
+               The file can be included in C++ or resource file.
+============================================================================
+*/
+#ifndef __BUDDYCLOUD_HRH__
+#define __BUDDYCLOUD_HRH__
+
+#define APPUID 0x2000C4A4
+#define HLPUID 0x2001018F
+
+#define EApplicationExit 100
+
+// Tab Ids
+enum TDefaultTabs {
+	ETabFollowing = 1, 
+	ETabPlaces, 
+	ETabChannels,
+	ETabExplorer
+};
+
+enum TSettingsTabs {
+	ETabAccount, 
+	ETabPreferences,
+	ETabNotifications,
+	ETabBeacons
+};
+
+// Menu Commands
+#define EMenuExitCommand 200
+#define EMenuConnectCommand 201
+#define EMenuDisconnectCommand 202
+#define EMenuOptionsSettingsCommand 203
+#define EMenuSetStatusCommand 204
+#define EMenuBookmarkPlaceCommand 205
+#define EMenuSetAsPlaceCommand 206
+#define EMenuSetNextPlaceCommand 207
+#define EMenuSetAsNextPlaceCommand 208
+#define EMenuCallCommand 209
+#define EMenuSendPlaceBySmsCommand 210
+#define EMenuMessagesCommand 211
+#define EMenuPrivateMessagesCommand 212
+#define EMenuChannelMessagesCommand 213
+#define EMenuInviteCommand 214
+#define EMenuSelectCommand 215
+#define EMenuNewSearchCommand 216
+#define EMenuPreviousCommand 217
+#define EMenuJoinGroupCommand 218
+#define EMenuUnfollowCommand 219
+#define EMenuPostMessageCommand 220
+#define EMenuReplyToMessageCommand 221
+#define EMenuSetTopicCommand 222
+#define EMenuJumpToUnreadCommand 223
+#define EMenuDeleteCommand 224
+#define EMenuUserSettingsCommand 225
+#define EMenuCommunitySettingsCommand 226
+#define EMenuClearConnectionCommand 227
+#define EMenuHelpCommand 228
+#define EMenuUpdateCommand 229
+#define EMenuAboutCommand 230
+#define EMenuGroupMembersCommand 231
+#define EMenuInviteToGroupCommand 232
+#define EMenuEditItemCommand 233
+#define EMenuInviteToBuddycloudCommand 234
+#define EMenuFollowCommand 235
+#define EMenuFollowLinkCommand 236
+#define EMenuDeletePlaceCommand 237
+#define EMenuEditPlaceCommand 238
+#define EMenuPostMediaCommand 239
+#define EMenuRefreshCommand 240
+#define EMenuGetPlaceInfoCommand 241
+#define EMenuGetPersonInfoCommand 242
+#define EMenuNotificationOnCommand 243
+#define EMenuNotificationOffCommand 244
+
+#define EMenuOptionsItemCommand 245
+#define EMenuOptionsUpdateCommand 246
+#define EMenuOptionsAddCommand 247
+#define EMenuOptionsHelpCommand 248
+#define EMenuOptionsGroupCommand 249
+#define EMenuOptionsExploreCommand 250
+
+#define EMenuLoudspeakerCommand 251
+#define EMenuHandsetCommand 252
+#define EMenuHoldCallCommand 253
+#define EMenuResumeCallCommand 254
+#define EMenuEndCallCommand 255
+
+#define EMenuBanCommand 256
+#define EMenuKickCommand 257
+#define EMenuChangeRoleCommand 258
+
+#define EMenuSeeFollowersCommand 259
+#define EMenuSeePlacesCommand 260
+#define EMenuSeeFollowingCommand 261
+#define EMenuSeeProducingCommand 262
+#define EMenuSeeNearbyCommand 263
+#define EMenuSeeBeenHereCommand 264
+#define EMenuSeeGoingHereCommand 265
+
+#define EMenuAcceptCommand 266
+#define EMenuAcceptAndFollowCommand 267
+#define EMenuDeclineCommand 268
+
+#define EMenuGetChannelInfoCommand 269
+
+// Settings
+enum TSettingsAccountItems {
+	ESettingAccountFullName = 1, 
+	ESettingAccountEmailAddress,
+	ESettingAccountPhoneNumber,
+	ESettingAccountUsername, 
+	ESettingAccountPassword
+};
+
+enum TSettingsPreferencesItems {
+	ESettingPreferencesLanguage = 1,
+	ESettingPreferencesAutoStart,
+	ESettingPreferencesAccessPoint,
+	ESettingPreferencesShowContacts,
+	ESettingPreferencesShowName,
+	ESettingPreferencesTestServer
+};
+
+enum TSettingsNotificationsItems {
+	ESettingNotificationsGroupNotification = 1,
+	ESettingNotificationsNotifyReplyTo,	
+	ESettingNotificationsPrivateMessageTone,	
+	ESettingNotificationsChannelPostTone,	
+	ESettingNotificationsDirectReplyTone
+};
+
+enum TSettingsPositioningItems {
+	ESettingPositioningCellOn = 1, 
+	ESettingPositioningWifiOn, 
+	ESettingPositioningBtOn, 
+	ESettingPositioningGpsOn
+};
+
+// Edit Place
+enum TEditPlaceItems {
+	EEditPlaceItemVisibility = 1,
+	EEditPlaceItemName, 
+	EEditPlaceItemStreet, 
+	EEditPlaceItemArea, 
+	EEditPlaceItemCity,
+	EEditPlaceItemPostcode,
+	EEditPlaceItemRegion,
+	EEditPlaceItemCountry
+};
+
+// Communities
+enum TCommunityItems {
+	ECommunityFacebook,
+	ECommunityTwitter
+};
+
+#endif // __BUDDYCLOUD_HRH__

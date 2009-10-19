@@ -1,0 +1,329 @@
+/*
+============================================================================
+ Name        : Buddycloud.r01
+ Author      : Ross Savage
+ Copyright   : Buddycloud 2008
+ Description : Localisation File : English
+ 
+               Please only translate text between quotations e.g. "Test"
+============================================================================
+*/
+
+// DO NOT TRANSLATE
+CHARACTER_SET UTF8
+
+rls_string r_string_app_caption "buddycloud"
+rls_string r_string_groupinvite_text " invited you to join channel: "
+// DO NOT TRANSLATE
+
+rls_string r_string_langcode "id"
+rls_string r_string_translatedby "Translated by: vic. vicaerith@gmail.com"
+
+rls_string r_string_followingtab_hint "Mengikuti"
+rls_string r_string_placestab_hint "Tempat"
+rls_string r_string_explorertab_hint "Dekat"
+rls_string r_string_channelstab_hint "saluran-saluran"
+
+// CBA
+rls_string r_string_options_menu "Pilihan"
+rls_string r_string_say_menu "Katakan"
+rls_string r_string_cancel_menu "Membatalkan"
+rls_string r_string_next_menu "Selanjutnya"
+rls_string r_string_endcall_menu "End Call"
+rls_string r_string_hide_menu "Hide"
+
+// Item
+rls_string r_string_item_newgroup "Saluran baru..."
+rls_string r_string_item_newplace "Tempat baru..."
+
+// Menu: Call
+rls_string r_string_options_loudspeaker "Pindah ke speaker"
+rls_string r_string_options_handset "Pindah ke handset"
+rls_string r_string_options_hold "Menunggu"
+rls_string r_string_options_resume "Lanjutkan"
+rls_string r_string_options_endcall "Akhiri Panggilan"
+
+// Menu: Settings & Edit place
+rls_string r_string_options_edititem "Ubah"
+rls_string r_string_options_searchplace "Mencari perincian"
+
+rls_string r_string_note_noresultsfound "Tidak ada hasil ditemukan"
+rls_string r_string_note_requestsent "Permintaan pengiriman"
+rls_string r_string_note_messagequeued "Pesan akan dikirim ketika kamu online"
+rls_string r_string_note_offlinerequired "Kamu harus offline untuk melakukan ini"
+
+// Positioning methods
+rls_string r_string_positioning_stationary "Sekarang anda bisa menandai dan menyimpan tempat ini"
+rls_string r_string_positioning_moving "Kamu sekarang sedang bergerak. Menandai sekarang tidak menjamin anda akan ditempatkan disini kembali"
+rls_string r_string_positioning_cell "Pembelajaran pola selular mungkin membutuhkan waktu beberapa menit"
+rls_string r_string_positioning_wifigps "Anda tetap bisa menandai tempat ini selama tanda wifi terlihat"
+rls_string r_string_positioning_bt "Jika ada pengguna buddycloud di dekatmu,kami akan mengarahkan anda ke tempat mereka"
+rls_string r_string_positioning_none "Penempatan tidak tersedia sekarang. Silahkan periksa pengaturan penempatan/posisi"
+
+// Menu: Search
+rls_string r_string_options_select "Pilih"
+rls_string r_string_options_newsearch "Pencarian baru"
+rls_string r_string_options_previousresult "Kembali ke sebelumnya"
+rls_string r_string_options_cancelsearch "Membatalkan pencarian"
+
+// Menu: Help
+rls_string r_string_options_help "Bantuan"
+rls_string r_string_help_help "Bantuan buddycloud"
+rls_string r_string_help_update "Update buddycloud"
+rls_string r_string_help_about "Informasi buddycloud"
+
+// Menu: Following
+rls_string r_string_options_exit "Keluar"
+rls_string r_string_options_done "Selesai"
+rls_string r_string_options_connect "Go online"
+rls_string r_string_options_disconnect "Go offline"
+rls_string r_string_options_itemcontact "Kontak"
+rls_string r_string_options_itemgroup "Saluran"
+rls_string r_string_options_settings "Pengaturan"
+rls_string r_string_item_viewmessages "Lihat pesan"
+rls_string r_string_item_viewchannelmessages "lihat saluran"
+rls_string r_string_item_viewprivatemessages "Lihat pesan pribadi"
+rls_string r_string_item_showplacedetails "Tunjukan perincian tempat"
+rls_string r_string_item_showchanneldetails "Tunjukan keterangan saluran"
+rls_string r_string_item_call "Memanggil kontak"
+rls_string r_string_item_sendplacebysms "Kirim tempat melalui sms"
+rls_string r_string_item_sendinvite "Undang ke buddycloud"
+rls_string r_string_item_delete "Menghapus"
+rls_string r_string_item_noticeaccept "Terima"
+rls_string r_string_item_noticeacceptandfollow "Terima dan Ikuti"
+rls_string r_string_item_noticedecline "Tolak"
+rls_string r_string_update_setstatus "Memperbaharui status"
+rls_string r_string_options_invite "Ikuti..."
+rls_string r_string_settings_usersettings "Preferensi"
+rls_string r_string_settings_communitysettings "bagi online"
+rls_string r_string_settings_clearconnection "Ubah koneksi"
+
+rls_string r_string_note_followinglistempty "Kamu sekarang tidak sedang mengikuti siapapun.\n\nGunakan Tempat tempat dan jelajah tabel untuk mencari seseorang untuk diikuti."
+
+// Menu: Messaging
+rls_string r_string_options_openlink "Buka link"
+rls_string r_string_options_postmessage "Post pesan"
+rls_string r_string_options_postmedia "Post Media"
+rls_string r_string_options_replytomessage "Balas ke"
+rls_string r_string_options_settopic "Atur topic"
+rls_string r_string_options_jumptounread "Loncat ke belum terbaca"
+rls_string r_string_options_invitetochannel "Undang ke saluran"
+rls_string r_string_options_invitetootherchannel "Undang ke saluran yang lain"
+rls_string r_string_options_invitefriendtochannel "Mengundang pengikut"
+rls_string r_string_options_notificationon "Hidupkan getar"
+rls_string r_string_options_notificationoff "Matikan getar"
+
+// Menu: Places
+rls_string r_string_options_setcurrent "Tandai tempat baru"
+rls_string r_string_options_setnext "Atur tujuan berikut"
+rls_string r_string_item_relearnplace "Pelajari kembali tempat ini"
+rls_string r_string_dialog_relearnplace "Anda sekarang berada di tempat ini? Mau mempelajari kembali?"
+rls_string r_string_item_setnext "Atur sebagai tujuan berikut"
+rls_string r_string_item_editplace "Menambah rincian"
+rls_string r_string_item_deleteplace "Menghapus tempat"
+
+rls_string r_string_note_placelastseen "Melihat"
+rls_string r_string_note_placevisits "Mengunjungi"
+rls_string r_string_note_placepopulation "Populasi"
+rls_string r_string_note_learningplace "Mempelajari tempat"
+rls_string r_string_note_updatingplace "Memperbaharui tempat..."
+rls_string r_string_note_noplaceaddress "Alamat tidak diketahui"
+rls_string r_string_note_placeslistempty "Anda tidak mempunyai tempat yang ditandai.\n\nUntuk mempelajari kembali tekan\n'Pilihan > Tandai tempat baru'"
+
+// Menu: Nearby
+rls_string r_string_options_refresh "Refresh"
+rls_string r_string_item_placeinfo "Keterangan tempat"
+rls_string r_string_item_personinfo "Person info"
+rls_string r_string_item_setcurrent "Atur sebagai tempat"
+rls_string r_string_item_subscribe "Tambahkan ke tempat-tempat saya"
+
+// Menu: Explorer
+rls_string r_string_options_explore "Jelajahi"
+rls_string r_string_item_seefollowers "Lihat pengikut"
+rls_string r_string_item_seeplaces "Lihat tempat"
+rls_string r_string_item_seefollowing "Lihat yang mengikuti"
+rls_string r_string_item_seeproducing "Lihat menghasilkan"
+rls_string r_string_item_seenearby "Lihat di sekitar"
+rls_string r_string_item_seebeenhere "Siapa saja yang pernah disini"
+rls_string r_string_item_seegoinghere "Siapa saja yang kesini"
+
+rls_string r_string_title_isfollowing "$USER sedang mengikuti"
+rls_string r_string_title_followedby "Pengikut $OBJECT"
+rls_string r_string_title_isproducing "$USER sedang membuat"
+rls_string r_string_title_nearbyto "Di sekitar $OBJECT"
+rls_string r_string_title_whosbeento "Siapa saja yang pernah ke $PLACE"
+rls_string r_string_title_whosgoingto "Siapa saja yang ke $PLACE"
+
+rls_string r_string_note_requesting "Permintaan..."
+rls_string r_string_note_channelrank "Ranking"
+
+// Menu: Channels
+rls_string r_string_list_featuredchannels "Saluran utama"
+rls_string r_string_list_channelsyoumightlike "Saluran yang mungkin kamu suka"
+rls_string r_string_list_followersfavourites "Favorit pengikut"
+rls_string r_string_list_mostpopularchannels "Saluran Paling Populer"
+rls_string r_string_list_channelsneartoyou "Saluran di dekatmu"
+
+rls_string r_string_item_open "Buka"
+rls_string r_string_item_follow "Ikuti"
+rls_string r_string_item_unfollow "Berhenti mengikuti"
+
+// Channel: Settings & Configuration
+rls_string r_string_note_personalchannelcreated "Selamat datang di saluran buddycloud $USER!\n\nIni adalah saluran pribadimu di buddycloud. Channel ini milikmu dan mempersilahkanmu untuk menyiarkan ke seluruh pengikutmu!"
+rls_string r_string_note_mediauploadready "Silahkan mulai upload file media mu di $LINK"
+rls_string r_string_note_userkickedfromgroup "$USER telah ditendang dari saluran ini."
+rls_string r_string_note_userbannedfromgroup "$USER telah dilarang memasuki saluran ini."
+rls_string r_string_dialog_kickconfirmation "Tendang orang ini dari saluran(mereka akan kembali saat login berikutnya)?"
+rls_string r_string_dialog_banconfirmation "Larang orang ini untuk melihat saluran ini?"
+rls_string r_string_item_banfromgroup "Larang dari saluran"
+rls_string r_string_item_kickfromgroup "Tendang dari saluran"
+rls_string r_string_item_changerole "Ubah peran"
+rls_string r_string_list_changerole_title "Ubah peran ke:"
+rls_string r_string_changerole_itemlist_moderator "Moderator"
+rls_string r_string_changerole_itemlist_contributor "Pengikut"
+rls_string r_string_changerole_itemlist_visitor "Pengunjung"
+rls_string r_string_note_changerolefailed "Anda tidak mempunyai izin untuk merubah peranan orang ini"
+
+// Settings Item List
+rls_string r_string_settings_account_title "Akun"
+rls_string r_string_settings_itemlist_fullname "Nama lengkap"
+rls_string r_string_settings_itemlist_fullname_hint "Nama lengkap anda"
+rls_string r_string_settings_itemlist_email "Alamat E-mail"
+rls_string r_string_settings_itemlist_email_hint "Alamat E-mail anda"
+rls_string r_string_settings_itemlist_phonenumber "Nomor telepon"
+rls_string r_string_settings_itemlist_phonenumber_hint "Nomor telepon utama anda"
+rls_string r_string_settings_itemlist_username "Nama penguna"
+rls_string r_string_settings_itemlist_username_hint "Nama pengguna buddycloud"
+rls_string r_string_settings_itemlist_password "Kata sandi"
+rls_string r_string_settings_itemlist_password_hint "Kata sandi buddycloud"
+
+rls_string r_string_settings_itemlist_language "Bahasa digunakan"
+rls_string r_string_settings_itemlist_showname "Tunjukkan nama di saluran"
+rls_string r_string_settings_itemlist_accesspoint "Akses point yang akan digunakan"
+rls_string r_string_settings_itemlist_accesspointuserdefined "Tetapkan Pengguna"
+rls_string r_string_settings_itemlist_accesspointalwaysask "Selalu bertanya"
+rls_string r_string_settings_itemlist_testserver "Hubungkan ke beta server"
+rls_string r_string_settings_itemlist_autostart "Buka saat telepon dihidupkan"
+rls_string r_string_settings_itemlist_showcontacts "Tunjukkan kontak telepon"
+
+rls_string r_string_settings_notifications_title "Notifications"
+rls_string r_string_settings_itemlist_groupnotification "Pemberitahuan saluran"
+rls_string r_string_settings_itemlist_groupnever "Tak pernah beritahukan"
+rls_string r_string_settings_itemlist_groupfirstonly "Pesan pertama yang belum terbaca"
+rls_string r_string_settings_itemlist_groupallmessages "Semua pesan"
+rls_string r_string_settings_itemlist_notifyreply "Memberitahukan @Balasan:"
+rls_string r_string_settings_itemlist_privatemessagetone "Private message tone"
+rls_string r_string_settings_itemlist_channelposttone "Channel post tone"
+rls_string r_string_settings_itemlist_directreplytone "My @Replies tone"
+rls_string r_string_settings_itemlist_tonenone "No tone"
+rls_string r_string_settings_itemlist_tonedefault "Default tone"
+
+rls_string r_string_settings_beacons_title "Penempatan"
+rls_string r_string_settings_itemlist_cell "Menara selular"
+rls_string r_string_settings_itemlist_wlan "WIFI"
+rls_string r_string_settings_itemlist_bt "Bluetooth"
+rls_string r_string_settings_itemlist_gps "GPS"
+rls_string r_string_settings_itemlist_on "On"
+rls_string r_string_settings_itemlist_off "Off"
+
+// Communities
+rls_string r_string_settings_facebook_text "Kamu akan diarahkan ke http://apps.facebook.com/buddycloud halaman aplikasi dari buddycloud. Silahkan masukkan aplikasi,login,dan dapatkan aksesnya."
+rls_string r_string_settings_credentials_success "Memperbaharui berhasil"
+rls_string r_string_settings_credentials_fail "Memperbaharui gagal.\nPeriksa kembali dan coba ulangi lagi"
+
+// Edit Place List
+rls_string r_string_newplace_title "Tempat baru"
+rls_string r_string_editplace_title "Menambah tempat"
+rls_string r_string_updatefailed_title "Memperbaharui gagal"
+
+rls_string r_string_editplace_itemlist_name "Nama"
+rls_string r_string_editplace_itemlist_name_hint "e.g. 'Home' atau 'Starbucks'"
+rls_string r_string_editplace_itemlist_street "Jalan"
+rls_string r_string_editplace_itemlist_street_hint "e.g. '171 Piccadilly'"
+rls_string r_string_editplace_itemlist_area "Tetangga sekitar"
+rls_string r_string_editplace_itemlist_area_hint "e.g. 'Mayfair'"
+rls_string r_string_editplace_itemlist_city "Kota"
+rls_string r_string_editplace_itemlist_city_hint "e.g. 'London'"
+rls_string r_string_editplace_itemlist_postcode "Kode pos"
+rls_string r_string_editplace_itemlist_postcode_hint "e.g. 'W1J 9EJ'"
+rls_string r_string_editplace_itemlist_region "Wilayah"
+rls_string r_string_editplace_itemlist_region_hint "e.g. 'Greater London'"
+rls_string r_string_editplace_itemlist_country "Negara"
+rls_string r_string_editplace_itemlist_country_hint "e.g. 'United Kingdom'"
+rls_string r_string_editplace_itemlist_visibility "Yang lain bisa ditempatkan disini?"
+rls_string r_string_editplace_itemlist_visibility_public "Berbagi"
+rls_string r_string_editplace_itemlist_visibility_private "Pribadi"
+
+// Following & Invitations
+rls_string r_string_followingrequest_title "Permintaan mengikuti"
+rls_string r_string_followerrequest_text "$USER mau mengikutimu di buddycloud.\n* Perlihatkan kehadiran & statusmu\n* Perlihatkan saluran pribadimu\n* Perlihatkan tempatmu"
+
+rls_string r_string_channelinvite_title "udangan untuk saluran"
+
+// Create channel
+rls_string r_string_dialog_createchannelname "Nama saluran:"
+rls_string r_string_dialog_createchanneldescription "Deskripsi saluran pendek:"
+rls_string r_string_channelfollowing_text "Saluran '$CHANNEL' sudah ada. Apakah anda mau mengikuti saluran ini?"
+
+// Exit Confirmation
+rls_string r_string_exit_title "Konfirmasi untuk keluar"
+rls_string r_string_exit_text "Keluar akan log out dari buddycloud.\n\nApakah kamu yakin?"
+
+// Authorization Error
+rls_string r_string_autherror_title "Pendaftaran gagal"
+rls_string r_string_autherror_text "Nama pengguna ini sudah digunakan. Silahkan periksa pengaturan akun dan coba hubungkan kembali."
+
+// Delete Item Message
+rls_string r_string_deleteitem_title "Konfirmasi penghapusan"
+rls_string r_string_deleteitem_text "Kamu yakin mau menghapus ini ?"
+
+// Sms/Email Messages
+rls_string r_string_invitemessage_title "Bergabung bersama kami di buddycloud!"
+rls_string r_string_invitemessage_text "buddycloud memberikan cara baru untuk menyiarkan kehebatanmu ke para pengikutmu! Kunjungi http://m.buddycloud.com untuk mendapatkannya sekarang!"
+rls_string r_string_sendplacemessage_title "Dimanakah saya"
+rls_string r_string_sendplacemessage_text "Aku sekarang berada di $PLACE. http://buddycloud.com/place.php?id=$ID for details."
+
+// Did You Mean?
+rls_string r_string_didyoumean_title "Maksud kamu...?"
+
+// Dialog
+rls_string r_string_dialog_setmood "Atur status:"
+rls_string r_string_dialog_moodis "sedang "
+rls_string r_string_dialog_setcurrentlocation "Atur tempat saya:"
+rls_string r_string_dialog_setnextlocation "Atur tujuan berikut:"
+rls_string r_string_dialog_settopic "Atur topic:"
+rls_string r_string_dialog_newmessage "Pesan baru:"
+rls_string r_string_dialog_addcontact "Masukkan Buddycloud or Jabber Id (eg. test@gtalk.com):"
+
+// Notes
+rls_string r_string_note_connecting "Menghubungkan..."
+rls_string r_string_note_reconnecting "Menghubungkan ulang..."
+rls_string r_string_note_connectingwith "Menghubungkan ke\n$APN..."
+rls_string r_string_note_searching "Mencari..."
+rls_string r_string_note_updating "Memperbaharui..."
+rls_string r_string_note_online "Online"
+rls_string r_string_note_offline "Offline"
+
+// Call
+rls_string r_string_note_dialling "Memanggil $USER"
+rls_string r_string_note_talkingto "Berbicara kepada $USER"
+rls_string r_string_note_hangingup "Hubungan terputus"
+
+// Setup 
+rls_string r_string_step2_title "Jadilah Terkenal!"
+rls_string r_string_step2_text "Saluran2 buddycloud memberikan cara baru untuk menyiarkan kehebatanmu ke pengikutmu.\n\nSaluran2 buddycloud bisa membuatmu terkenal atas pengetahuan unikmu mengenai tempat,topik,dan membangun komunitas dari pengikutmu."
+
+rls_string r_string_step3_title "Apa yg bisa kamu lakukan?"
+rls_string r_string_step3_text "Dengan BC kamu bisa membuat saluran/channel topic yang kamu kuasai. Atau apapun mengenai kamu di saluran/channel pribadi. BC secara otomatis akan membagi/share lokasimu berada sebagai penanda tempat yg berarti bersama pengikutmu,atau dalam satu daerah dengan orang lain.\n\nSilahkan masukan username atau username baru untuk memulai:"
+
+rls_string r_string_step4_title "Keuntungan kamu"
+rls_string r_string_step4_text "Buddycloud memberikan tingkatan selanjutnya dari pergaulanmu dengan pengikutmu dan memperlihatkan kepopuleran saluranmu. Online seharian tanpa khawatir kehabisan pulsa atau bateraimu. Berbagi lokasi tapi tetap terjaga dengan cara aman.\n\nSilahkan masukkan kata sandi yang aman:"
+
+rls_string r_string_step5_title "Tetap terhubung"
+rls_string r_string_step5_text "Dapatkan pemberitahuan dari layanan terbaru dan versi terbaru dari aplikasi buddycloud.\n\nMohon masukkan e-mail anda (optional),kami akan merahasiakannya:"
+
+rls_string r_string_step6_title "Selamat!"
+rls_string r_string_step6_text "Pengaturan selesai. Kamu sekarang akan terhubung dan terdaftar di saluran buddycloud."
+rls_string r_string_step6_question "Apakah kamu mau memulai buddycloud sejak telepon dihidupkan dari sekarang?"
+
+// End of File

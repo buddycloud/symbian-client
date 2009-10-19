@@ -1,0 +1,32 @@
+/*
+============================================================================
+ Name        : Buddycloud_reg.rss
+ Author      : Ross Savage
+ Copyright   : Buddycloud 2007
+ Description : This file contains the application registration resource.
+============================================================================
+*/
+
+#include "Buddycloud.hrh"
+#include <appinfo.rh>
+#include <uikon.rh>
+
+UID2 KUidAppRegistrationResourceFile
+UID3 APPUID
+
+RESOURCE APP_REGISTRATION_INFO
+{
+	app_file = "Buddycloud";
+	localisable_resource_file = "\\resource\\apps\\Buddycloud_loc";
+
+	embeddability = KAppNotEmbeddable;
+	newfile = KAppDoesNotSupportNewFile;
+	launch = KAppLaunchInBackground;
+	opaque_data = r_startup_data;
+}
+
+RESOURCE NUMBER_INT8 r_startup_data
+{
+	value = 1;
+}
+     

@@ -1,0 +1,329 @@
+/*
+============================================================================
+ Name        : Buddycloud.r01
+ Author      : Ross Savage
+ Copyright   : Buddycloud 2008
+ Description : Localisation File : English
+ 
+               Please only translate text between quotations e.g. "Test"
+============================================================================
+*/
+
+// DO NOT TRANSLATE
+CHARACTER_SET UTF8
+
+rls_string r_string_app_caption "buddycloud"
+rls_string r_string_groupinvite_text " invited you to join channel: "
+// DO NOT TRANSLATE
+
+rls_string r_string_langcode "ru"
+rls_string r_string_translatedby "Переведено: Lamaca, Letsko"
+
+rls_string r_string_followingtab_hint "Following"
+rls_string r_string_placestab_hint "Места"
+rls_string r_string_explorertab_hint "Поблизости"
+rls_string r_string_channelstab_hint "Каналы"
+
+// CBA
+rls_string r_string_options_menu "Опции"
+rls_string r_string_say_menu "Сказать"
+rls_string r_string_cancel_menu "Отмена"
+rls_string r_string_next_menu "Дальше"
+rls_string r_string_endcall_menu "End Call"
+rls_string r_string_hide_menu "Скрыть"
+
+// Item
+rls_string r_string_item_newgroup "Новый канал..."
+rls_string r_string_item_newplace "Новое место..."
+
+// Menu: Call
+rls_string r_string_options_loudspeaker "Переключиться на громкую связь"
+rls_string r_string_options_handset "Переключиться на телефон"
+rls_string r_string_options_hold "Удержать"
+rls_string r_string_options_resume "Продолжить"
+rls_string r_string_options_endcall "Завершить звонок"
+
+// Menu: Settings & Edit place
+rls_string r_string_options_edititem "Изменить"
+rls_string r_string_options_searchplace "Поиск по данным"
+
+rls_string r_string_note_noresultsfound "Не найдено"
+rls_string r_string_note_requestsent "Запрос отправлен"
+rls_string r_string_note_messagequeued "Сообщение будет отправлено, как только Вы подключитесь к сети"
+rls_string r_string_note_offlinerequired "Для изменения, отключитесь от сети"
+
+// Positioning methods
+rls_string r_string_positioning_stationary "Сейчас вы можете отметить это место"
+rls_string r_string_positioning_moving "Вы в движении, не гарантируется точное местоположение при создании места"
+rls_string r_string_positioning_cell "Опрос БС может занять несколько минут"
+rls_string r_string_positioning_wifigps "Сейчас вы все еще можете отметить это место, поскольку обнаружено пристутствие WI-FI точек"
+rls_string r_string_positioning_bt "Если другие Buddycloud пользователи будут около вас, то мы будем делать привязку к отмеченному ими месту"
+rls_string r_string_positioning_none "Ни одно из устройст позиционирования сейчас не доступно. Пожалуйста, проверьте ваши настройки позиционирования"
+
+// Menu: Search
+rls_string r_string_options_select "Выбрать"
+rls_string r_string_options_newsearch "Новый поиск"
+rls_string r_string_options_previousresult "К предыдущему"
+rls_string r_string_options_cancelsearch "Отменить поиск"
+
+// Menu: Help
+rls_string r_string_options_help "Справка"
+rls_string r_string_help_help "Справка Buddycloud"
+rls_string r_string_help_update "Обновить Buddycloud"
+rls_string r_string_help_about "О программе"
+
+// Menu: Following
+rls_string r_string_options_exit "Выход"
+rls_string r_string_options_done "Завершить"
+rls_string r_string_options_connect "Подключиться"
+rls_string r_string_options_disconnect "Отключиться"
+rls_string r_string_options_itemcontact "Контакт"
+rls_string r_string_options_itemgroup "Канал"
+rls_string r_string_options_settings "Настройки"
+rls_string r_string_item_viewmessages "Просмотреть сообщения"
+rls_string r_string_item_viewchannelmessages "Просмотр канала"
+rls_string r_string_item_viewprivatemessages "Просмотреть личные сообщения"
+rls_string r_string_item_showplacedetails "Подробности места"
+rls_string r_string_item_showchanneldetails "Информация о канале"
+rls_string r_string_item_call "Вызвать контакт"
+rls_string r_string_item_sendplacebysms "Отправить координаты по СМС"
+rls_string r_string_item_sendinvite "Пригласить в Buddycloud"
+rls_string r_string_item_delete "Удалить"
+rls_string r_string_item_noticeaccept "Принять"
+rls_string r_string_item_noticeacceptandfollow "Принять и последующей"
+rls_string r_string_item_noticedecline "Закат"
+rls_string r_string_update_setstatus "Обновить статус"
+rls_string r_string_options_invite "Подписаться..."
+rls_string r_string_settings_usersettings "Параметры"
+rls_string r_string_settings_communitysettings "Опубликовать в Online"
+rls_string r_string_settings_clearconnection "Изменить подлкючение"
+
+rls_string r_string_note_followinglistempty "Вы ни на кого не подписаны.\n\nИспользуйте каналы и пункт меню Обзор для поиска интересующей вас информации."
+
+// Menu: Messaging
+rls_string r_string_options_openlink "Перейти по ссылке"
+rls_string r_string_options_postmessage "Опубликовать сообщение"
+rls_string r_string_options_postmedia "Закачать медиа-файл"
+rls_string r_string_options_replytomessage "Ответить"
+rls_string r_string_options_settopic "Задать тему"
+rls_string r_string_options_jumptounread "Перейти к непрочитанному"
+rls_string r_string_options_invitetochannel "Пригласить на канал"
+rls_string r_string_options_invitetootherchannel "Пригласить на другой канал"
+rls_string r_string_options_invitefriendtochannel "Пригласить подписчика"
+rls_string r_string_options_notificationon "Включить оповещания"
+rls_string r_string_options_notificationoff "Отключить оповещания"
+
+// Menu: Places
+rls_string r_string_options_setcurrent "Отметить новое место"
+rls_string r_string_options_setnext "Задать следующее место"
+rls_string r_string_item_relearnplace "Повторить обзор места"
+rls_string r_string_dialog_relearnplace "Вы сейчас в этом месте и хотите пересмотреть его?"
+rls_string r_string_item_setnext "Задать как место назначения"
+rls_string r_string_item_editplace "Редактировать"
+rls_string r_string_item_deleteplace "Удалить место"
+
+rls_string r_string_note_placelastseen "Был"
+rls_string r_string_note_placevisits "Посещений"
+rls_string r_string_note_placepopulation "Кол-во людей"
+rls_string r_string_note_learningplace "Обзор места"
+rls_string r_string_note_updatingplace "Обновление места..."
+rls_string r_string_note_noplaceaddress "Адрес не указан"
+rls_string r_string_note_placeslistempty "У вас нет не одного отмеченного места.\nЧтобы отметить это место нажимите\n'Опции > Создать новое место'"
+
+// Menu: Nearby
+rls_string r_string_options_refresh "Обновить"
+rls_string r_string_item_placeinfo "Информация о месте"
+rls_string r_string_item_personinfo "Личные данные"
+rls_string r_string_item_setcurrent "Задать как данное место"
+rls_string r_string_item_subscribe "Добавить в мои места"
+
+// Menu: Explorer
+rls_string r_string_options_explore "Обзор"
+rls_string r_string_item_seefollowers "Просмотр на кого подписан"
+rls_string r_string_item_seeplaces "Просмотр мест"
+rls_string r_string_item_seefollowing "Просмотр подписчиков"
+rls_string r_string_item_seeproducing "Смотреть создателей"
+rls_string r_string_item_seenearby "Посмотреть кто рядом"
+rls_string r_string_item_seebeenhere "Кто здесь был"
+rls_string r_string_item_seegoinghere "Кто сюда собирается"
+
+rls_string r_string_title_isfollowing "$USER ваш подписчик"
+rls_string r_string_title_followedby "$OBJECT's подписанны"
+rls_string r_string_title_isproducing "Создатель $USER"
+rls_string r_string_title_nearbyto "Поблизости от $OBJECT"
+rls_string r_string_title_whosbeento "Кто побывал на $PLACE"
+rls_string r_string_title_whosgoingto "Кто собирается на $PLACE"
+
+rls_string r_string_note_requesting "Передача запроса..."
+rls_string r_string_note_channelrank "Рейтинг"
+
+// Menu: Channels
+rls_string r_string_list_featuredchannels "Схожие каналы"
+rls_string r_string_list_channelsyoumightlike "Каналы, возможно интересные Вам"
+rls_string r_string_list_followersfavourites "Followers' Favourites"
+rls_string r_string_list_mostpopularchannels "Популярные каналы"
+rls_string r_string_list_channelsneartoyou "Каналы по соседству"
+
+rls_string r_string_item_open "Открыть"
+rls_string r_string_item_follow "Подписаться"
+rls_string r_string_item_unfollow "Отписаться"
+
+// Channel: Settings & Configuration
+rls_string r_string_note_personalchannelcreated "$USER, приветствуем Вас на каналах Buddycloud!\n\nЭто - Ваш персональный канал на Buddycloud, он позволяет оставлять сообщения тем, на кого вы подписаны и вашим подписчикам! "
+rls_string r_string_note_mediauploadready "Вы можете закачать медиа-файл по ссылке $LINK"
+rls_string r_string_note_userkickedfromgroup "$USER временно заблокирован этим каналом."
+rls_string r_string_note_userbannedfromgroup "$USER заблокирован в этом канале."
+rls_string r_string_dialog_kickconfirmation "Выгнать его с канала до следующего подключения?"
+rls_string r_string_dialog_banconfirmation "Запретить пользователю просмотр канала?"
+rls_string r_string_item_banfromgroup "Заблокирован каналом"
+rls_string r_string_item_kickfromgroup "Выгнать с канала"
+rls_string r_string_item_changerole "Изменить роль"
+rls_string r_string_list_changerole_title "Изменить роль на:"
+rls_string r_string_changerole_itemlist_moderator "Модератор"
+rls_string r_string_changerole_itemlist_contributor "Подписан на"
+rls_string r_string_changerole_itemlist_visitor "Гости"
+rls_string r_string_note_changerolefailed "У Вас нет привилегий для изменения значимости этого пользователя"
+
+// Settings Item List
+rls_string r_string_settings_account_title "Учётная запись"
+rls_string r_string_settings_itemlist_fullname "Полное имя"
+rls_string r_string_settings_itemlist_fullname_hint "Ваше полное имя"
+rls_string r_string_settings_itemlist_email "E-mail"
+rls_string r_string_settings_itemlist_email_hint "Ваш E-Mail"
+rls_string r_string_settings_itemlist_phonenumber "Номер телефона"
+rls_string r_string_settings_itemlist_phonenumber_hint "Ваш основной телефонный номер"
+rls_string r_string_settings_itemlist_username "Имя пользователя"
+rls_string r_string_settings_itemlist_username_hint "Имя пользователя на Buddycloud"
+rls_string r_string_settings_itemlist_password "Пароль"
+rls_string r_string_settings_itemlist_password_hint "Пароль на Buddycloud"
+
+rls_string r_string_settings_itemlist_language "Язык интерфейса"
+rls_string r_string_settings_itemlist_showname "Отображать имена в канале"
+rls_string r_string_settings_itemlist_accesspoint "Точка доступа"
+rls_string r_string_settings_itemlist_accesspointuserdefined "Определено пользователем"
+rls_string r_string_settings_itemlist_accesspointalwaysask "Всегда спрашивать"
+rls_string r_string_settings_itemlist_testserver "Соединение с бета-сервером"
+rls_string r_string_settings_itemlist_autostart "Запускать вместе с телефоном"
+rls_string r_string_settings_itemlist_showcontacts "Показывать контакты телефона"
+
+rls_string r_string_settings_notifications_title "Уведомления"
+rls_string r_string_settings_itemlist_groupnotification "Сообщать об обновлениях на канале"
+rls_string r_string_settings_itemlist_groupnever "Никогда не напоминать"
+rls_string r_string_settings_itemlist_groupfirstonly "Только первый пост"
+rls_string r_string_settings_itemlist_groupallmessages "Все посты"
+rls_string r_string_settings_itemlist_notifyreply "Оповещать о моих @Replies:"
+rls_string r_string_settings_itemlist_privatemessagetone "Частные тон сообщения"
+rls_string r_string_settings_itemlist_channelposttone "Звук каналовых постов"
+rls_string r_string_settings_itemlist_directreplytone "Мои @ответы тон"
+rls_string r_string_settings_itemlist_tonenone "Отключить звук"
+rls_string r_string_settings_itemlist_tonedefault "Звук по умолчанию"
+
+rls_string r_string_settings_beacons_title "Позиционирование"
+rls_string r_string_settings_itemlist_cell "Базовая Станция"
+rls_string r_string_settings_itemlist_wlan "WI-FI"
+rls_string r_string_settings_itemlist_bt "Bluetooth"
+rls_string r_string_settings_itemlist_gps "GPS"
+rls_string r_string_settings_itemlist_on "Вкл."
+rls_string r_string_settings_itemlist_off "Выкл."
+
+// Communities
+rls_string r_string_settings_facebook_text "Вам необходимо добавить приложение Buddycloud, размещенное по адресу http://apps.facebook.com/buddycloud. Пожалуйста, добавьте это приложение, авторизируйтесь на сайте и получите полноценный доступ к сервису."
+rls_string r_string_settings_credentials_success "Обновление успешно завершено"
+rls_string r_string_settings_credentials_fail "Ошибка обновления.\nПожалуйста проверьте ваши полномочия и повторите попытку"
+
+// Edit Place List
+rls_string r_string_newplace_title "Новое место"
+rls_string r_string_editplace_title "Редактировать местоположение"
+rls_string r_string_updatefailed_title "Ошибка обновления"
+
+rls_string r_string_editplace_itemlist_name "Имя"
+rls_string r_string_editplace_itemlist_name_hint "например 'Дом' или 'Кафе Океан'"
+rls_string r_string_editplace_itemlist_street "Улица"
+rls_string r_string_editplace_itemlist_street_hint "например 'ул. Ленина 123'"
+rls_string r_string_editplace_itemlist_area "Район"
+rls_string r_string_editplace_itemlist_area_hint "Например 'Рублевка'"
+rls_string r_string_editplace_itemlist_city "Город"
+rls_string r_string_editplace_itemlist_city_hint "Например 'Южно-Сахалинск'"
+rls_string r_string_editplace_itemlist_postcode "Почтовый индекс"
+rls_string r_string_editplace_itemlist_postcode_hint "Например '693000'"
+rls_string r_string_editplace_itemlist_region "Область"
+rls_string r_string_editplace_itemlist_region_hint "например 'Владивосток'"
+rls_string r_string_editplace_itemlist_country "Страна"
+rls_string r_string_editplace_itemlist_country_hint "например 'Россия'"
+rls_string r_string_editplace_itemlist_visibility "Могут ли другие посещать это место?"
+rls_string r_string_editplace_itemlist_visibility_public "Общее"
+rls_string r_string_editplace_itemlist_visibility_private "Приватное"
+
+// Following & Invitations
+rls_string r_string_followingrequest_title "Запрос подписки"
+rls_string r_string_followerrequest_text "$USER хотел бы стать вашим пописчиком на Buddycloud.\n* Показывать Ваше присутствие и статус\n* Показывать Ваш личный канал\n* Показывать Ваши места"
+
+rls_string r_string_channelinvite_title "Приглашение канала"
+
+// Create channel
+rls_string r_string_dialog_createchannelname "Название канала:"
+rls_string r_string_dialog_createchanneldescription "Краткое описание канала:"
+rls_string r_string_channelfollowing_text "Канал '$CHANNEL' уже существует. Вы хотите подписаться на этот канал?"
+
+// Exit Confirmation
+rls_string r_string_exit_title "Подтверждение выхода"
+rls_string r_string_exit_text "Отключиться от сети и закрыть Buddycloud.\nВы уверенны?"
+
+// Authorization Error
+rls_string r_string_autherror_title "Ошибка регистрации"
+rls_string r_string_autherror_text "Пользователь с таким именем уже существует. Пожалуйста, проверьте настройки учетной записи и переподключитесь."
+
+// Delete Item Message
+rls_string r_string_deleteitem_title "Подтвердить удаление"
+rls_string r_string_deleteitem_text "Вы действительно хотите удалить?"
+
+// Sms/Email Messages
+rls_string r_string_invitemessage_title "Присоединяйся к нам на Buddycloud!"
+rls_string r_string_invitemessage_text "Buddycloud даёт возможность вашим подписчикам увидеть вас в совершенно новом качестве. Посетив сайт http://m.buddycloud.com, вы можете получить Buddycloud уже сейчас!"
+rls_string r_string_sendplacemessage_title "Где Я"
+rls_string r_string_sendplacemessage_text "Я сейчас на $PLACE. Подробнее: http://m.buddycloud.com/place.php?id=$ID"
+
+// Did You Mean?
+rls_string r_string_didyoumean_title "Что это значит...?"
+
+// Dialog
+rls_string r_string_dialog_setmood "Задать статус:"
+rls_string r_string_dialog_moodis "есть "
+rls_string r_string_dialog_setcurrentlocation "Указать мое место:"
+rls_string r_string_dialog_setnextlocation "Задать следующее место:"
+rls_string r_string_dialog_settopic "Задать тему:"
+rls_string r_string_dialog_newmessage "Новое сообщение:"
+rls_string r_string_dialog_addcontact "Введите Buddycloud аккаунт или Jabber ID (например test@gtalk.com):"
+
+// Notes
+rls_string r_string_note_connecting "Соединение..."
+rls_string r_string_note_reconnecting "Переподключение..."
+rls_string r_string_note_connectingwith "Соединение с\n$APN..."
+rls_string r_string_note_searching "Идет поиск..."
+rls_string r_string_note_updating "Обновление..."
+rls_string r_string_note_online "Подключено"
+rls_string r_string_note_offline "Отключено"
+
+// Call
+rls_string r_string_note_dialling "Звоним $USER"
+rls_string r_string_note_talkingto "Сказать $USER"
+rls_string r_string_note_hangingup "Отключено"
+
+// Setup 
+rls_string r_string_step2_title "Стань известным!"
+rls_string r_string_step2_text "Каналы Buddycloud дают возможность вашим подписчикам увидеть вас в совершенно новом качестве.\n\nBuddycloud позволяет показать себя отличным знатоком местности или какой-либо темы и окружить себя обществом единомышленников."
+
+rls_string r_string_step3_title "Что вы можете сделать?"
+rls_string r_string_step3_text "С Buddycloud Вы можете создать каналы на интересующие Вас темы или ваш персональный канал. Buddycloud автоматически определит Ваше местоположение относительно отмеченных вами мест, ваших подписчиков или любого пользователя в вашем городе.\n\nЧтобы начать, укажите имя пользователя:"
+
+rls_string r_string_step4_title "Ваши привилегии"
+rls_string r_string_step4_text "Buddycloud дает Вам выйти на новый уровень отношений с вашими подписчиками, что позволит увеличить популярность Вашего канала. Низкий расход трафика и заряда батареи вашего телефона позволит вам постоянно оставаться на связи. Отмечайте свой путь непрерывно, легким и безопасным способом.\n\nПожалуйста, введите пароль:"
+
+rls_string r_string_step5_title "Поддержать отношения"
+rls_string r_string_step5_text "Хотите получать уведомления о новых сервисах и обновлениях Buddycloud.\n\nПожалуйста укажите ваш E-Mail:"
+
+rls_string r_string_step6_title "Поздравляем!"
+rls_string r_string_step6_text "Установка завершена. Вы сейчас будете подлючены и авторизованы на каналах Buddycloud."
+rls_string r_string_step6_question "Хотели бы Вы запускать Buddycloud при включении телефона?"
+
+// End of File

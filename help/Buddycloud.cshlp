@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml:stylesheet href="C:\Symbian\SDKs\S60\S60_3rd_MR\epoc32\tools\cshlpcmp\xsl\CSHproj.xsl" title="CS-Help project" type="text/xsl"?>
+<!DOCTYPE cshproj SYSTEM "C:\Symbian\SDKs\S60\S60_3rd_MR\epoc32\tools\cshlpcmp\dtd\cshproj.dtd">
+
+<cshproj>
+  <helpfileUID>0x2000C4A4</helpfileUID>
+  <directories>
+    <input></input>
+    <output>releases/</output>
+    <graphics></graphics>
+    <working>temp/</working>
+  </directories>
+  <files>
+    <source>
+      <file>Buddycloud.rtf</file>
+    </source>
+    <destination>Buddycloud.hlp</destination>
+	<customization>custom.xml</customization>
+  </files>
+</cshproj>
+

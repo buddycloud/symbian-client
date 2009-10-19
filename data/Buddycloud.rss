@@ -1,0 +1,337 @@
+/*
+============================================================================
+ Name        : Buddycloud.rss
+ Author      : Ross Savage
+ Copyright   : Buddycloud 2007
+ Description : This file contains all the resources for the Buddycloud.
+============================================================================
+*/
+//  RESOURCE IDENTIFIER
+NAME BUDD    // 4 letter ID
+
+//  INCLUDES
+#include <eikon.rh>
+#include <avkon.rh>
+#include <avkon.rsg>
+#include <avkon.hrh>
+#include <appinfo.rh>
+#include "Buddycloud.hrh"
+#include "TabIconIds.h"
+#include "ListIconIds.h"
+
+CHARACTER_SET UTF8
+
+//  RESOURCE DEFINITIONS
+
+RESOURCE RSS_SIGNATURE {}
+
+RESOURCE TBUF r_default_document_name
+{
+	buf = "HEWB";
+}
+
+RESOURCE EIK_APP_INFO {}
+
+RESOURCE TBUF r_string_appversion 
+{
+	buf = "S60_9_0.04.26"; 
+}
+
+rls_string r_string_about_text "©2008 buddycloud\nVersion: 0.04.26\nhttp://www.buddycloud.com\n\nData Sent: %dKB\nData Received: %dKB" 
+
+RESOURCE TBUF r_localized_string_about_text { buf = r_string_about_text; }
+
+// -----------------------------------------------------------------------------
+//
+//    Tabs
+//
+// -----------------------------------------------------------------------------
+//
+RESOURCE NAVI_DECORATOR r_default_navi_decorator
+{
+	type = ENaviDecoratorControlTabGroup;
+	control = TAB_GROUP
+	{
+		tab_width = EAknTabWidthWithFourTabs;
+		active = ETabFollowing;
+		tabs =
+		{
+			TAB
+			{
+				id = ETabFollowing;
+			    bmpfile = "\\resource\\apps\\Buddycloud_Tab.mif";
+			    bmpid = EMbmTabiconidsTabcontact;
+			    bmpmask = EMbmTabiconidsTabcontact;
+			},
+			TAB
+			{
+				id = ETabPlaces;
+			    bmpfile = "\\resource\\apps\\Buddycloud_Tab.mif";
+			    bmpid = EMbmTabiconidsTabplace;
+			    bmpmask = EMbmTabiconidsTabplace;
+			},
+			TAB
+			{
+				id = ETabChannels;
+			    bmpfile = "\\resource\\apps\\Buddycloud_Tab.mif";
+			    bmpid = EMbmTabiconidsTabchannel;
+			    bmpmask = EMbmTabiconidsTabchannel;
+			},
+			TAB
+			{
+				id = ETabExplorer;
+			    bmpfile = "\\resource\\apps\\Buddycloud_Tab.mif";
+			    bmpid = EMbmTabiconidsTabexplore;
+			    bmpmask = EMbmTabiconidsTabexplore;
+			}
+		};
+	};
+}
+
+RESOURCE NAVI_DECORATOR r_settings_navi_decorator
+{
+	type = ENaviDecoratorControlTabGroup;
+	control = TAB_GROUP
+	{
+		tab_width = EAknTabWidthWithFourTabs;
+		active = ETabAccount;
+		tabs =
+		{
+			TAB
+			{
+				id = ETabAccount;
+			    bmpfile = "\\resource\\apps\\Buddycloud_Tab.mif";
+			    bmpid = EMbmTabiconidsTabaccount;
+			    bmpmask = EMbmTabiconidsTabaccount;
+			},
+			TAB
+			{
+				id = ETabPreferences;
+			    bmpfile = "\\resource\\apps\\Buddycloud_Tab.mif";
+			    bmpid = EMbmTabiconidsTabpreferences;
+			    bmpmask = EMbmTabiconidsTabpreferences;
+			},
+			TAB
+			{
+				id = ETabNotifications;
+			    bmpfile = "\\resource\\apps\\Buddycloud_Tab.mif";
+			    bmpid = EMbmTabiconidsTabnotifications;
+			    bmpmask = EMbmTabiconidsTabnotifications;
+			},
+			TAB
+			{
+				id = ETabBeacons;
+			    bmpfile = "\\resource\\apps\\Buddycloud_Tab.mif";
+			    bmpid = EMbmTabiconidsTabbeacons;
+			    bmpmask = EMbmTabiconidsTabbeacons;
+			}
+		};
+	};
+}
+
+RESOURCE AKN_ICON_ARRAY r_icons_list
+{
+	type = EAknIconArraySimple;
+	bmpfile = "\\resource\\apps\\Buddycloud_List.mif";
+	icons =
+    {
+		AKN_ICON
+		{
+			iconId = EMbmListiconidsPhone;
+			maskId = EMbmListiconidsPhone;
+		},
+		AKN_ICON
+		{
+			iconId = EMbmListiconidsLetter;
+			maskId = EMbmListiconidsLetter;
+		},
+		AKN_ICON
+		{
+			iconId = EMbmListiconidsListcontact;
+			maskId = EMbmListiconidsListcontact;
+		},
+		AKN_ICON
+		{
+			iconId = EMbmListiconidsListchannel;
+			maskId = EMbmListiconidsListchannel;
+		},
+		AKN_ICON
+		{
+			iconId = EMbmListiconidsListplace;
+			maskId = EMbmListiconidsListplace;
+		},
+		AKN_ICON
+		{
+			iconId = EMbmListiconidsFacebook;
+			maskId = EMbmListiconidsFacebook;
+		},
+		AKN_ICON
+		{
+			iconId = EMbmListiconidsTwitter;
+			maskId = EMbmListiconidsTwitter;
+		}
+    };
+}
+
+// -----------------------------------------------------------------------------
+//   
+// Define language association and texts (non-localised)
+//   
+// -----------------------------------------------------------------------------
+RESOURCE AVKON_POPUP_SETTING_TEXTS r_settings_item_language_assoc
+{
+	flags = 0;
+	setting_texts_resource = r_settings_item_language_texts;
+}
+
+RESOURCE ARRAY r_settings_item_language_texts
+{
+	items =
+        {
+    	AVKON_ENUMERATED_TEXT
+    	{
+    		value = -1;
+    		text = "Automatic";
+    	},
+    	AVKON_ENUMERATED_TEXT
+    	{
+    		value = 1;
+    		text = "English";
+    	},
+		AVKON_ENUMERATED_TEXT
+		{
+			value = 2;
+			text = "Français";
+		},
+		AVKON_ENUMERATED_TEXT
+		{
+			value = 3;
+			text = "Deutsch";
+		},
+		AVKON_ENUMERATED_TEXT
+		{
+			value = 4;
+			text = "Español";
+		},
+		AVKON_ENUMERATED_TEXT
+		{
+			value = 5;
+			text = "Italiano";
+		},
+		AVKON_ENUMERATED_TEXT
+		{
+			value = 9;
+			text = "Suomi";
+		},
+		AVKON_ENUMERATED_TEXT
+		{
+			value = 14;
+			text = "Türkçe";
+		},
+		AVKON_ENUMERATED_TEXT
+		{
+			value = 13;
+			text = "Português";
+		},
+		AVKON_ENUMERATED_TEXT
+		{
+			value = 16;
+			text = "Русский";
+		},
+		AVKON_ENUMERATED_TEXT
+		{
+			value = 17;
+			text = "Magyar";
+		},
+		AVKON_ENUMERATED_TEXT
+		{
+			value = 18;
+			text = "Nederlands";
+		},
+		AVKON_ENUMERATED_TEXT
+		{
+			value = 25;
+			text = "Čeština";
+		},
+		AVKON_ENUMERATED_TEXT
+		{
+			value = 27;
+			text = "Polski";
+		},
+		AVKON_ENUMERATED_TEXT
+		{
+			value = 31;
+			text = "简化字";
+		},
+		AVKON_ENUMERATED_TEXT
+		{
+			value = 33;
+			text = "ภาษาไทย";
+		},
+		AVKON_ENUMERATED_TEXT
+		{
+			value = 37;
+			text = "العربية";
+		},
+		AVKON_ENUMERATED_TEXT
+		{
+			value = 49;
+			text = "Eesti";
+		},
+		AVKON_ENUMERATED_TEXT
+		{
+			value = 54;
+			text = "Ελληνικά";
+		},
+		AVKON_ENUMERATED_TEXT
+		{
+			value = 57;
+			text = "עברית";
+		},
+		AVKON_ENUMERATED_TEXT
+		{
+			value = 59;
+			text = "Bahasa Indonesia";
+		},
+		AVKON_ENUMERATED_TEXT
+		{
+			value = 65;
+			text = "Korean";
+		},
+		AVKON_ENUMERATED_TEXT
+		{
+			value = 78;
+			text = "Limba Română";
+		},
+		AVKON_ENUMERATED_TEXT
+		{
+			value = 512;
+			text = "Pirate";
+		},
+		AVKON_ENUMERATED_TEXT
+		{
+			value = 513;
+			text = "Boarisch";
+		}
+	};
+}
+
+RESOURCE AVKON_LIST_QUERY r_selecttone_query
+{
+	flags = EGeneralQueryFlags;
+	softkeys = R_AVKON_SOFTKEYS_OK_CANCEL;
+	items =
+	{
+		AVKON_LIST_QUERY_DLG_LINE 
+		{
+			control = AVKON_LIST_QUERY_CONTROL
+			{
+				listtype = EAknCtSinglePopupMenuListBox;
+				listbox = AVKON_LIST_QUERY_LIST;
+				heading = "";
+			};
+		}
+	};
+}
+
+// End of file

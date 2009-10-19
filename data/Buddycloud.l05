@@ -1,0 +1,329 @@
+/*
+============================================================================
+ Name        : Buddycloud.r01
+ Author      : Ross Savage
+ Copyright   : Buddycloud 2008
+ Description : Localisation File : English
+ 
+               Please only translate text between quotations e.g. "Test"
+============================================================================
+*/
+
+// DO NOT TRANSLATE
+CHARACTER_SET UTF8
+
+rls_string r_string_app_caption "buddycloud"
+rls_string r_string_groupinvite_text " invited you to join channel: "
+// DO NOT TRANSLATE
+
+rls_string r_string_langcode "it"
+rls_string r_string_translatedby "Translated by: Elisa"
+
+rls_string r_string_followingtab_hint "Sta seguendo"
+rls_string r_string_placestab_hint "Locazioni"
+rls_string r_string_explorertab_hint "Vicini"
+rls_string r_string_channelstab_hint "Canali"
+
+// CBA
+rls_string r_string_options_menu "Opzioni"
+rls_string r_string_say_menu "Spedisci"
+rls_string r_string_cancel_menu "Annulla"
+rls_string r_string_next_menu "Successivo"
+rls_string r_string_endcall_menu "End Call"
+rls_string r_string_hide_menu "Nascondi"
+
+// Item
+rls_string r_string_item_newgroup "Nuovo canale..."
+rls_string r_string_item_newplace "Nuova locazione..."
+
+// Menu: Call
+rls_string r_string_options_loudspeaker "Passa al vivavoce"
+rls_string r_string_options_handset "Passa al cellulare"
+rls_string r_string_options_hold "Aspetta"
+rls_string r_string_options_resume "Riprendi"
+rls_string r_string_options_endcall "Termina la chiamata"
+
+// Menu: Settings & Edit place
+rls_string r_string_options_edititem "Cambia"
+rls_string r_string_options_searchplace "Cerca i dettagli"
+
+rls_string r_string_note_noresultsfound "Nessun risultato trovato"
+rls_string r_string_note_requestsent "Richiesta spedita"
+rls_string r_string_note_messagequeued "Il messaggio verrà spedito quando vai online"
+rls_string r_string_note_offlinerequired "Hai bisogno di essere disconnesso per farlo"
+
+// Positioning methods
+rls_string r_string_positioning_stationary "Ora puoi salvare questo posto"
+rls_string r_string_positioning_moving "Ti stai muovendo. Salvare adesso potrebbe non garantire che sarai posizionato/a qui di nuovo"
+rls_string r_string_positioning_cell "L'apprendimento dell'associazione alla cella potrebbe durare diversi minuti"
+rls_string r_string_positioning_wifigps "Puoi ancora salvare questo posto poichè il WiFi è visibile"
+rls_string r_string_positioning_bt "Se altri utenti di buddycloud sono vicini a te puoi fare un salto nella loro locazione!"
+rls_string r_string_positioning_none "Il servizio di posizionamento non è disponibile al momento. Per favore, controlla i tuoi Settaggi Posizionamento"
+
+// Menu: Search
+rls_string r_string_options_select "Seleziona"
+rls_string r_string_options_newsearch "Nuova ricerca"
+rls_string r_string_options_previousresult "Torna al precedente"
+rls_string r_string_options_cancelsearch "Annulla la ricerca"
+
+// Menu: Help
+rls_string r_string_options_help "Aiuto"
+rls_string r_string_help_help "buddycloud aiuto"
+rls_string r_string_help_update "Aggiorna buddycloud"
+rls_string r_string_help_about "Informazioni"
+
+// Menu: Following
+rls_string r_string_options_exit "Esci"
+rls_string r_string_options_done "Fatto"
+rls_string r_string_options_connect "Connettiti"
+rls_string r_string_options_disconnect "Disconnettiti"
+rls_string r_string_options_itemcontact "Contatta"
+rls_string r_string_options_itemgroup "Canale"
+rls_string r_string_options_settings "Settaggi"
+rls_string r_string_item_viewmessages "Guarda i messaggi"
+rls_string r_string_item_viewchannelmessages "Guarda il canale"
+rls_string r_string_item_viewprivatemessages "Guarda i messaggi privati"
+rls_string r_string_item_showplacedetails "Mostra i dettagli della locazione"
+rls_string r_string_item_showchanneldetails "Mostra i dettagli del canale"
+rls_string r_string_item_call "Chiama il contatto"
+rls_string r_string_item_sendplacebysms "Spedisci la locazione via SMS"
+rls_string r_string_item_sendinvite "Invita a buddycloud"
+rls_string r_string_item_delete "Elimina"
+rls_string r_string_item_noticeaccept "Accetta"
+rls_string r_string_item_noticeacceptandfollow "Accetta e segui"
+rls_string r_string_item_noticedecline "Rifiuta"
+rls_string r_string_update_setstatus "Aggiorna lo stato"
+rls_string r_string_options_invite "Segui..."
+rls_string r_string_settings_usersettings "Preferenze"
+rls_string r_string_settings_communitysettings "Condividi online"
+rls_string r_string_settings_clearconnection "Cambia connessione"
+
+rls_string r_string_note_followinglistempty "Non stai seguendo nulla.\n\nUsa i canali ed i tab Explorer per cercare cose da seguire "
+
+// Menu: Messaging
+rls_string r_string_options_openlink "Apri il link"
+rls_string r_string_options_postmessage "Pubblica un messaggio"
+rls_string r_string_options_postmedia "pubblica un media"
+rls_string r_string_options_replytomessage "Rispondi a"
+rls_string r_string_options_settopic "Imposta un argomento"
+rls_string r_string_options_jumptounread "Passa ai non letti"
+rls_string r_string_options_invitetochannel "Invita al canale"
+rls_string r_string_options_invitetootherchannel "Invita ad un altro canale"
+rls_string r_string_options_invitefriendtochannel "Invita il seguace"
+rls_string r_string_options_notificationon "Attiva la vibrazione"
+rls_string r_string_options_notificationoff "Disattiva la vibrazione"
+
+// Menu: Places
+rls_string r_string_options_setcurrent "Aggiungi la nuova locazione"
+rls_string r_string_options_setnext "Definisci la locazione successiva"
+rls_string r_string_item_relearnplace "Registra questa locazione di nuovo"
+rls_string r_string_dialog_relearnplace "Sei ora in questo posto e lo vuoi riassegnare?"
+rls_string r_string_item_setnext "Metti come locazione successiva"
+rls_string r_string_item_editplace "Modifica i dettagli"
+rls_string r_string_item_deleteplace "Elimina la posizione"
+
+rls_string r_string_note_placelastseen "Visto"
+rls_string r_string_note_placevisits "Visite"
+rls_string r_string_note_placepopulation "Popolazione"
+rls_string r_string_note_learningplace "Sta imparando la locazione"
+rls_string r_string_note_updatingplace "Sta aggiornando la locazione..."
+rls_string r_string_note_noplaceaddress "Indirizzo non definito"
+rls_string r_string_note_placeslistempty "Non hai nessuna locazione salvata.\n\nPer registrare questa locazione seleziona 'Opzioni > Aggiungi la nuova locazione'"
+
+// Menu: Nearby
+rls_string r_string_options_refresh "Ricarica"
+rls_string r_string_item_placeinfo "Dettagli sulla locazione"
+rls_string r_string_item_personinfo "Informazioni sulla persona"
+rls_string r_string_item_setcurrent "Metti come locazione corrente"
+rls_string r_string_item_subscribe "Aggiungi alle mie locazioni"
+
+// Menu: Explorer
+rls_string r_string_options_explore "Esplora"
+rls_string r_string_item_seefollowers "Guarda seguaci"
+rls_string r_string_item_seeplaces "Guarda le locazioni"
+rls_string r_string_item_seefollowing "Guarda cosa sta seguendo"
+rls_string r_string_item_seeproducing "Guarda cosa produce"
+rls_string r_string_item_seenearby "Guarda vicini"
+rls_string r_string_item_seebeenhere "Chi è stato/a qui"
+rls_string r_string_item_seegoinghere "Chi sta andando qui"
+
+rls_string r_string_title_isfollowing "$USER sta seguendo"
+rls_string r_string_title_followedby "I seguaci di $OBJECT"
+rls_string r_string_title_isproducing "$USER sta producendo"
+rls_string r_string_title_nearbyto "Vicini a $OBJECT"
+rls_string r_string_title_whosbeento "Chi è stato/a a $PLACE"
+rls_string r_string_title_whosgoingto "Chi sta andando a $PLACE"
+
+rls_string r_string_note_requesting "Sta richiedendo..."
+rls_string r_string_note_channelrank "Grado"
+
+// Menu: Channels
+rls_string r_string_list_featuredchannels "Canali in vista"
+rls_string r_string_list_channelsyoumightlike "Canali che potrebbero piacerti"
+rls_string r_string_list_followersfavourites "Preferiti dei tuoi Seguaci"
+rls_string r_string_list_mostpopularchannels "Canali più popolari"
+rls_string r_string_list_channelsneartoyou "Canali vicini a te"
+
+rls_string r_string_item_open "Apri"
+rls_string r_string_item_follow "Segui"
+rls_string r_string_item_unfollow "Non seguire più"
+
+// Channel: Settings & Configuration
+rls_string r_string_note_personalchannelcreated "Benvenuto/a ai canali di buddycloud $USER! Questo e il tuo canale strettamente personale su buddycloud. Questo canale è tutto tuo e ti permette di comunicare con i tuoi seguaci!"
+rls_string r_string_note_mediauploadready "Ora puoi caricare il tuo file media a $LINK"
+rls_string r_string_note_userkickedfromgroup "$USER è stato cacciato dal canale."
+rls_string r_string_note_userbannedfromgroup "A $USER è stato proibito l'accesso al canale"
+rls_string r_string_dialog_kickconfirmation "Caccia questa persona dal canale(potrà tornare alla prossima connessione)?"
+rls_string r_string_dialog_banconfirmation "Proibisci a questa persona di vedere il canale?"
+rls_string r_string_item_banfromgroup "Proibisci l'accesso al canale"
+rls_string r_string_item_kickfromgroup "Caccia dal canale"
+rls_string r_string_item_changerole "Cambia ruolo"
+rls_string r_string_list_changerole_title "Cambia ruolo a:"
+rls_string r_string_changerole_itemlist_moderator "Moderatore"
+rls_string r_string_changerole_itemlist_contributor "Seguace"
+rls_string r_string_changerole_itemlist_visitor "Visitatore"
+rls_string r_string_note_changerolefailed "Non hai il permesso di cambiare il ruolo di questa persona"
+
+// Settings Item List
+rls_string r_string_settings_account_title "Registrazione"
+rls_string r_string_settings_itemlist_fullname "Nome completo"
+rls_string r_string_settings_itemlist_fullname_hint "Il tuo nome completo"
+rls_string r_string_settings_itemlist_email "Indirizzo e-mail"
+rls_string r_string_settings_itemlist_email_hint "La tua e-mail"
+rls_string r_string_settings_itemlist_phonenumber "Numero di telefono"
+rls_string r_string_settings_itemlist_phonenumber_hint "Il tuo numero di cellulare principale"
+rls_string r_string_settings_itemlist_username "Nome utente"
+rls_string r_string_settings_itemlist_username_hint "buddycloud nome utente"
+rls_string r_string_settings_itemlist_password "Password"
+rls_string r_string_settings_itemlist_password_hint "Password di buddycloud"
+
+rls_string r_string_settings_itemlist_language "Visualizza la lingua"
+rls_string r_string_settings_itemlist_showname "Mostra i nomi nei canali"
+rls_string r_string_settings_itemlist_accesspoint "Punto d'accesso da usare"
+rls_string r_string_settings_itemlist_accesspointuserdefined "Definito dall'utente"
+rls_string r_string_settings_itemlist_accesspointalwaysask "Chiedi sempre"
+rls_string r_string_settings_itemlist_testserver "Connetti al server beta"
+rls_string r_string_settings_itemlist_autostart "Fai partire all'accensione del telefono"
+rls_string r_string_settings_itemlist_showcontacts "Mostra i contatti del telefono"
+
+rls_string r_string_settings_notifications_title "Notifiche"
+rls_string r_string_settings_itemlist_groupnotification "Notifica i messaggi del canale"
+rls_string r_string_settings_itemlist_groupnever "Non notificare mai"
+rls_string r_string_settings_itemlist_groupfirstonly "Solo il primo messaggio"
+rls_string r_string_settings_itemlist_groupallmessages "Tutti i messaggi"
+rls_string r_string_settings_itemlist_notifyreply "Notifica le @Risposte per me:"
+rls_string r_string_settings_itemlist_privatemessagetone "Tono messaggio privato"
+rls_string r_string_settings_itemlist_channelposttone "Tono messaggio del canale"
+rls_string r_string_settings_itemlist_directreplytone "Tono @Risposte per me"
+rls_string r_string_settings_itemlist_tonenone "Nessun tono"
+rls_string r_string_settings_itemlist_tonedefault "Tono di default"
+
+rls_string r_string_settings_beacons_title "Posizionamento"
+rls_string r_string_settings_itemlist_cell "Cella"
+rls_string r_string_settings_itemlist_wlan "WIFI"
+rls_string r_string_settings_itemlist_bt "Bluetooth"
+rls_string r_string_settings_itemlist_gps "GPS"
+rls_string r_string_settings_itemlist_on "Attivo"
+rls_string r_string_settings_itemlist_off "Non attivo"
+
+// Communities
+rls_string r_string_settings_facebook_text "Ora verrai rediretto a http://apps.facebook.com/buddycloud, la pagina per l'applicazione di buddycloud. Per favore, aggiungi l'applicazione, accedivi e permetti l'accesso ad essa."
+rls_string r_string_settings_credentials_success "Aggiornamento avvenuto con successo"
+rls_string r_string_settings_credentials_fail "Aggiornamento fallito. Per favore, controlla le tue credenziali e riprova"
+
+// Edit Place List
+rls_string r_string_newplace_title "Nuova locazione"
+rls_string r_string_editplace_title "Modifica dettagli locazione"
+rls_string r_string_updatefailed_title "Aggiornamento fallito"
+
+rls_string r_string_editplace_itemlist_name "Nome"
+rls_string r_string_editplace_itemlist_name_hint "es. 'Casa' o 'La Scala'"
+rls_string r_string_editplace_itemlist_street "Via/Viale"
+rls_string r_string_editplace_itemlist_street_hint "es. 'Via Rossi 1'"
+rls_string r_string_editplace_itemlist_area "Quartiere"
+rls_string r_string_editplace_itemlist_area_hint "es. 'Dorsoduro'"
+rls_string r_string_editplace_itemlist_city "Città"
+rls_string r_string_editplace_itemlist_city_hint "es. 'Venezia'"
+rls_string r_string_editplace_itemlist_postcode "Codice postale"
+rls_string r_string_editplace_itemlist_postcode_hint "es. '35100'"
+rls_string r_string_editplace_itemlist_region "Regione"
+rls_string r_string_editplace_itemlist_region_hint "es. 'Veneto'"
+rls_string r_string_editplace_itemlist_country "Stato"
+rls_string r_string_editplace_itemlist_country_hint "es. 'Italia'"
+rls_string r_string_editplace_itemlist_visibility "Altri possono posizionarsi qui?"
+rls_string r_string_editplace_itemlist_visibility_public "Condiviso"
+rls_string r_string_editplace_itemlist_visibility_private "Personale"
+
+// Following & Invitations
+rls_string r_string_followingrequest_title "Richiesta di seguire"
+rls_string r_string_followerrequest_text "$USER vorrebbe seguirti su buddycloud. * Mostra la tua presenza & il tuo stato * Mostra il tuo canale personale * Mostra le tue locazioni"
+
+rls_string r_string_channelinvite_title "Invito al canale"
+
+// Create channel
+rls_string r_string_dialog_createchannelname "Nome del canale:"
+rls_string r_string_dialog_createchanneldescription "Descrizione breve del canale:"
+rls_string r_string_channelfollowing_text "Il canale '$CHANNEL' esiste già. Vuoi seguire questo canale?"
+
+// Exit Confirmation
+rls_string r_string_exit_title "Conferma l'uscita"
+rls_string r_string_exit_text "Uscendo sarai disconnesso da buddycloud.\n\nSei sicuro?"
+
+// Authorization Error
+rls_string r_string_autherror_title "Registrazione fallita"
+rls_string r_string_autherror_text "Il nome utente esiste già. Per favore, controlla i tuoi Settaggi Registrazione e prova a riconnetterti."
+
+// Delete Item Message
+rls_string r_string_deleteitem_title "Conferma l'eliminazione"
+rls_string r_string_deleteitem_text "Sei sicuro/a di volerlo eliminare?"
+
+// Sms/Email Messages
+rls_string r_string_invitemessage_title "Unisciti a noi su buddycloud!"
+rls_string r_string_invitemessage_text "Buddycloud ti da un nuovo modo si diffondere le tue impressioni ai tuoi seguaci! Visita http://m.buddycloud.com per averlo adesso!"
+rls_string r_string_sendplacemessage_title "Dove mi trovo"
+rls_string r_string_sendplacemessage_text "Ora sono a $PLACE. http://m.buddycloud.com/place.php?id=$ID per i dettagli."
+
+// Did You Mean?
+rls_string r_string_didyoumean_title "Intendevi... ?"
+
+// Dialog
+rls_string r_string_dialog_setmood "Definisci lo stato:"
+rls_string r_string_dialog_moodis "è"
+rls_string r_string_dialog_setcurrentlocation "Definisci la mia locazione:"
+rls_string r_string_dialog_setnextlocation "Definisci la locazione successiva:"
+rls_string r_string_dialog_settopic "Imposta l'argomento:"
+rls_string r_string_dialog_newmessage "Nuovo messaggio:"
+rls_string r_string_dialog_addcontact "Inserisci l'ID di buddycloud o di Jabber (es. test@gtalk.com):"
+
+// Notes
+rls_string r_string_note_connecting "Si sta connettendo ..."
+rls_string r_string_note_reconnecting "Si sta riconnettendo..."
+rls_string r_string_note_connectingwith "Si sta connettendo con\n$APN..."
+rls_string r_string_note_searching "Sta cercando..."
+rls_string r_string_note_updating "Sta aggiornando..."
+rls_string r_string_note_online "Connesso"
+rls_string r_string_note_offline "Disconnesso"
+
+// Call
+rls_string r_string_note_dialling "Stai chiamando $USER"
+rls_string r_string_note_talkingto "Stai parlando con $USER"
+rls_string r_string_note_hangingup "Disconnesso"
+
+// Setup 
+rls_string r_string_step2_title "Diventa famoso!"
+rls_string r_string_step2_text "I canali di buddycloud ti danno un modo nuovo di diffondere le tue impressioni ai tuoi seguaci.\n\nI canali di buddycloud ti permettono di diventare famoso per la tua conoscenza unica a riguardo di una locazione o di un argomento e di costruire una comunità di seguaci."
+
+rls_string r_string_step3_title "Cosa puoi fare?"
+rls_string r_string_step3_text "Con buddycloud puoi creare canali su argomenti che ti appassionano, o un canale personale che parla di te. Buddycloud condividerà con i tuoi seguaci la tua locazione corrente come locazione significativa, o a livello di città, con chiunque altro.\n\nInserisci il tuo nome utente di buddycloud o scegli un nuovo nome utente per cominciare:"
+
+rls_string r_string_step4_title "I tuoi vantaggi"
+rls_string r_string_step4_text "Buddycloud ti da un nuovo livello di interattività con i tuoi seguaci e mostra la crescita di popolarità dei tuoi canali. Funziona tutto il giorno a basso costo, senza esaurire la batteria del tuo telefono, grazie al basso utilizzo di dati di buddycloud. Continua a condividere la tua locazione, ancora in modo controllato e sicuro.\n\nPer favore, inserisci una password sicura:"
+
+rls_string r_string_step5_title "Resta in contatto"
+rls_string r_string_step5_text "Ricevi le notifiche sui nuovi servizi di buddycloud e sulle nuove versioni di questa applicazione.\n\nLascia il tuo indirizzo email(opzionale), lo terremo al sicuro:"
+
+rls_string r_string_step6_title "Congratulazioni!"
+rls_string r_string_step6_text "Il setup è ora completo. Adesso sarai connesso e iscritto ai canali di buddycloud"
+rls_string r_string_step6_question "Vuoi avviare buddycloud all'accensione del tuo telefono d'ora in poi?"
+
+// End of File
