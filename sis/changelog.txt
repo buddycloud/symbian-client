@@ -1,6 +1,14 @@
 Change Log
 ==========
 
+0.05.00
+
+* Symbian Signed
+- Update help files
+- Fix toolbar label for create message
+- Fix bug not sending place id in media request
+- Fix bug not sending new channel configuration stanza
+
 0.04.26
 
 * Release Candidate 3

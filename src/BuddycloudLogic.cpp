@@ -390,7 +390,7 @@ void CBuddycloudLogic::SendPresenceL() {
 	CTextUtilities* aTextUtilities = CTextUtilities::NewLC();
 	TPtrC8 aEncBroadLocationText(aTextUtilities->UnicodeToUtf8L(*iBroadLocationText));
 	
-	_LIT8(KPresenceStanza, "<presence><priority>10</priority><status></status><c xmlns='http://jabber.org/protocol/caps' node='http://buddycloud.com/caps' ver='s60-0.4.00'/></presence>\r\n");
+	_LIT8(KPresenceStanza, "<presence><priority>10</priority><status></status><c xmlns='http://jabber.org/protocol/caps' node='http://buddycloud.com/caps' ver='s60-0.5.00'/></presence>\r\n");
 	HBufC8* aPresenceStanza = HBufC8::NewLC(KPresenceStanza().Length() + aEncBroadLocationText.Length());
 	TPtr8 pPresenceStanza(aPresenceStanza->Des());
 	pPresenceStanza.Copy(KPresenceStanza);
@@ -1886,7 +1886,7 @@ void CBuddycloudLogic::SendChannelPresenceL(TDesC& aJid, const TDesC8& aHistory)
 		pNickElement.Insert(46, pEncFullName);
 	}
 	
-	_LIT8(KStanza, "<presence to='/'><c xmlns='http://jabber.org/protocol/caps' node='http://buddycloud.com/caps' ver='s60-0.4.00'/><x xmlns='http://jabber.org/protocol/muc'></x></presence>\r\n");
+	_LIT8(KStanza, "<presence to='/'><c xmlns='http://jabber.org/protocol/caps' node='http://buddycloud.com/caps' ver='s60-0.5.00'/><x xmlns='http://jabber.org/protocol/muc'></x></presence>\r\n");
 	HBufC8* aStanza = HBufC8::NewLC(KStanza().Length() + pEncUsername.Length() + pEncJid.Length() + pNickElement.Length() + aHistory.Length());
 	TPtr8 pStanza(aStanza->Des());
 	pStanza.Copy(KStanza);
@@ -4092,7 +4092,7 @@ void CBuddycloudLogic::MediaPostRequestL(const TDesC& aJid) {
 			_LIT8(KMediaStanza, "<iq to='media.buddycloud.com' type='set' id='mediareq_'><media xmlns='http://buddycloud.com/media#request'><placeid>%d</placeid><lat>%.6f</lat><lon>%.6f</lon><channeljid></channeljid></media></iq>\r\n");
 			HBufC8* aMediaStanza = HBufC8::NewLC(KMediaStanza().Length() + aLocate + pEncJid.Length() + 32 + 22);
 			TPtr8 pMediaStanza(aMediaStanza->Des());
-			pMediaStanza.Format(KMediaStanza, aPlace->GetPlaceId(), aPlace->GetPlaceLatitude(), aPlace->GetPlaceLongitude());
+			pMediaStanza.Format(KMediaStanza, iStablePlaceId, aPlace->GetPlaceLatitude(), aPlace->GetPlaceLongitude());
 			pMediaStanza.Insert(pMediaStanza.Length() - 28, pEncJid);
 			pMediaStanza.Insert(54, pEncJid.Left(aLocate));
 		
@@ -6639,6 +6639,9 @@ void CBuddycloudLogic::HandleIncomingPresenceL(TDesC& aFrom, const TDesC8& aData
 						
 						if(aDialog->RunLD() != 0) {
 							aItem->SetDescriptionL(aChannelDescription);
+							
+							// Configure new channel
+							SendChannelConfigurationL(aItem->GetItemId());
 							
 							// Set new channel topic
 							SetTopicL(aChannelDescription, pJid, true);

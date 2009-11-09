@@ -282,6 +282,16 @@ void CBuddycloudFollowingContainer::GetHelpContext(TCoeHelpContext& aContext) co
 		if(aItem->GetItemType() == EItemContact) {
 			aContext.iContext = KSendingInvites;			
 		}
+		else if(aItem->GetItemType() == EItemNotice) {
+			CFollowingNoticeItem* aNoticeItem = static_cast <CFollowingNoticeItem*> (aItem);
+
+			if(aNoticeItem->GetJidType() == EJidRoster) {
+				aContext.iContext = KFollowingRequests;	
+			}
+			else {
+				aContext.iContext = KChannelInvites;
+			}
+		}
 		else if(aItem->GetItemType() == EItemRoster) {
 			CFollowingRosterItem* aRosterItem = static_cast <CFollowingRosterItem*> (aItem);
 			
@@ -293,7 +303,12 @@ void CBuddycloudFollowingContainer::GetHelpContext(TCoeHelpContext& aContext) co
 					aContext.iContext = KMyBuddycloud;
 				}
 				else {
-					if(iBuddycloudLogic->GetDiscussion(aRosterItem->GetJid())->GetUnreadMessages() > 0) {
+					CDiscussion* aDiscussion = iBuddycloudLogic->GetDiscussion(aRosterItem->GetJid(EJidChannel));				
+					
+					if(aDiscussion->GetUnreadReplies() > 0) {
+						aContext.iContext = KDirectReplies;
+					}
+					else if(aDiscussion->GetUnreadMessages() > 0) {
 						aContext.iContext = KViewingChannels;
 					}
 					else {
@@ -303,9 +318,13 @@ void CBuddycloudFollowingContainer::GetHelpContext(TCoeHelpContext& aContext) co
 			}
 		}
 		else if(aItem->GetItemType() == EItemChannel) {
-			CFollowingChannelItem* aGroupItem = static_cast <CFollowingChannelItem*> (aItem);
+			CFollowingChannelItem* aChannelItem = static_cast <CFollowingChannelItem*> (aItem);			
+			CDiscussion* aDiscussion = iBuddycloudLogic->GetDiscussion(aChannelItem->GetJid());				
 			
-			if(iBuddycloudLogic->GetDiscussion(aGroupItem->GetJid())->GetUnreadMessages() > 0) {
+			if(aDiscussion->GetUnreadReplies() > 0) {
+				aContext.iContext = KDirectReplies;
+			}
+			else if(aDiscussion->GetUnreadMessages() > 0) {
 				aContext.iContext = KViewingChannels;
 			}
 			else {

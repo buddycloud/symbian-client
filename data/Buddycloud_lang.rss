@@ -251,7 +251,7 @@ RESOURCE AVKON_TOOLBAR r_messaging_toolbar
 				{
 					AVKON_BUTTON_STATE
 					{
-						helptxt = r_string_options_createmessage;
+						helptxt = r_string_options_postmessage;
 					    bmpfile = "\\resource\\apps\\Buddycloud_Toolbar.mif";
 					    bmpid = EMbmToolbariconidsMessage;
 					    bmpmask = EMbmToolbariconidsMessage;

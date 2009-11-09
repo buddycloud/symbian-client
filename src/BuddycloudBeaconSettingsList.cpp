@@ -56,8 +56,8 @@ TKeyResponse CBuddycloudBeaconSettingsList::OfferKeyEventL(const TKeyEvent& aKey
 	TKeyResponse aResult = EKeyWasNotConsumed;
 
 	if(aType == EEventKey) {
-		if(aKeyEvent.iCode == EKeyLeftArrow ) {
-			iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KPreferencesSettingsViewId));
+		if(aKeyEvent.iCode == EKeyLeftArrow) {
+			iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KNotificationsSettingsViewId));
 
 			aResult = EKeyWasConsumed;
 		}

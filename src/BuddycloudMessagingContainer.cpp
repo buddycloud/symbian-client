@@ -274,10 +274,15 @@ void CBuddycloudMessagingContainer::FormatWordWrap(CMessage* aMessageItem, TInt 
 	CleanupStack::Pop(); // aFormattedMessage
 }
 
-void CBuddycloudMessagingContainer::GetHelpContext(TCoeHelpContext& aContext) const {
+void CBuddycloudMessagingContainer::GetHelpContext(TCoeHelpContext& aContext) const {	
+	CMessage* aMessage = iDiscussion->GetMessage(iSelectedItem);
+
 	aContext.iMajor = TUid::Uid(HLPUID);
 		
-	if(iIsChannel) {
+	if(aMessage && aMessage->GetLinkCount() > 0) {
+		aContext.iContext = KLinkedMessages;
+	}
+	else if(iIsChannel) {
 		aContext.iContext = KChannelMessaging;
 	}
 	else {
