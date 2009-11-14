@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1 Tiny//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11-tiny.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" baseProfile="tiny" height="666" version="1.0" viewBox="0 0 250 666" width="250">
+<defs>
+<linearGradient id="linearGradient3136">
+<stop offset="0" style="stop-color:#0d6796;stop-opacity:1"/>
+<stop offset="1" style="stop-color:#0d6796;stop-opacity:0"/>
+</linearGradient>
+<linearGradient gradientUnits="userSpaceOnUse" x1="325.56479" x2="325.56479" xlink:href="#linearGradient3136" y1="683.63409" y2="28.545473"/>
+</defs>
+<path d="M 124.71277,94.01207 C 164.57494,92.690995 199.09293,132.84143 195.4886,175.13373 C 195.42751,340.3671 195.61083,357.60374 195.39685,522.83505 C 209.17509,523.02538 226.18084,522.76773 240.38177,523.05013 C 124.05233,651.04004 240.51651,523.04647 123.54607,651.10825 C 11.971493,522.01719 123.74111,651.31864 12.056504,522.57511 C 26.238094,522.74107 39.149234,522.81165 53.936904,522.81555 C 53.997994,358.48351 53.814684,330.14817 54.028654,165.81818 C 55.209264,126.42152 87.850814,93.253127 124.71277,94.01207 z " style="opacity:1;fill:#00adef;fill-opacity:0.78431373;fill-rule:evenodd;stroke:#000000;stroke-width:10;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"/>
+</svg>

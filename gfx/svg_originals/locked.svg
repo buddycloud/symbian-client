@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   version="1.0"
+   width="50"
+   height="50"
+   viewBox="0 0 50 50"
+   id="svg2"
+   sodipodi:version="0.32"
+   inkscape:version="0.46"
+   sodipodi:docname="locked.svg"
+   inkscape:output_extension="org.inkscape.output.svg.inkscape"
+   inkscape:export-filename="C:\Symbian\Source\S60\Buddycloud\gfx\svg\locked_te.png"
+   inkscape:export-xdpi="14.4"
+   inkscape:export-ydpi="14.4">
+  <metadata
+     id="metadata6">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview
+     inkscape:window-height="667"
+     inkscape:window-width="640"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     guidetolerance="10.0"
+     gridtolerance="10.0"
+     objecttolerance="10.0"
+     borderopacity="1.0"
+     bordercolor="#666666"
+     pagecolor="#ffffff"
+     id="base"
+     showgrid="true"
+     inkscape:zoom="2.39"
+     inkscape:cx="25.053758"
+     inkscape:cy="29.877978"
+     inkscape:window-x="492"
+     inkscape:window-y="32"
+     inkscape:current-layer="svg2">
+    <inkscape:grid
+       type="xygrid"
+       id="grid3156" />
+  </sodipodi:namedview>
+  <defs
+     id="defs19">
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="0 : 25 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="50 : 25 : 1"
+       inkscape:persp3d-origin="25 : 16.666667 : 1"
+       id="perspective8" />
+  </defs>
+  <path
+     style="fill:#d9d7d5;fill-opacity:1;stroke:#959595;stroke-width:1.5;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+     d="M 36.543513,17.683697 L 36.543513,22.025685 L 33.084251,22.025685 L 33.084251,17.683697 C 33.084251,3.5722377 16.941029,3.5722377 16.941029,17.683697 L 16.941029,22.025685 L 13.481767,22.025685 L 13.481767,17.683697 C 13.481767,-0.7697499 36.543513,-0.7697499 36.543513,17.683697 z"
+     id="rect3153"
+     sodipodi:nodetypes="ccccccccc" />
+  <path
+     style="fill:#d9d7d5;fill-opacity:1;stroke:#959595;stroke-width:1.5;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+     d="M 40.002775,20.940188 C 40.012423,25.188915 40.05281,34.060087 40.002775,38.308139 C 39.779148,42.23886 34.957881,45.796736 30.778077,45.906617 C 26.345203,45.915788 23.67936,45.953591 19.247204,45.906617 C 15.071729,45.696099 10.139228,42.242935 10.022505,38.308139 C 10.012859,34.059411 9.9724705,25.188239 10.022505,20.940188 L 40.002775,20.940188 z"
+     id="rect2381"
+     sodipodi:nodetypes="ccccccc" />
+  <g
+     id="g3163"
+     transform="matrix(1.1530873,0,0,1.0854969,-3.8145423,-1.8552468)"
+     style="stroke-width:1.34074403;stroke-miterlimit:4;stroke-dasharray:none">
+    <path
+       transform="matrix(2,0,0,2,-25,-28)"
+       d="M 27,28 A 2,2 0 1 1 23,28 A 2,2 0 1 1 27,28 z"
+       sodipodi:ry="2"
+       sodipodi:rx="2"
+       sodipodi:cy="28"
+       sodipodi:cx="25"
+       id="path3159"
+       style="opacity:1;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.67037201;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       sodipodi:type="arc" />
+    <path
+       id="path3161"
+       d="M 23,31 L 21,40 L 29,40 L 27,31 L 23,31 z"
+       style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1.34074403;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none" />
+  </g>
+</svg>
