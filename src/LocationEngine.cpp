@@ -10,7 +10,6 @@
 
 #include <e32std.h>
 #include "LocationEngine.h"
-#include "TimeCoder.h"
 
 CLocationEngine* CLocationEngine::NewL(MLocationEngineNotification* aEngineObserver) {
 	CLocationEngine* self = NewLC(aEngineObserver);
@@ -74,7 +73,9 @@ CLocationEngine::CLocationEngine() {
 
 void CLocationEngine::ConstructL(MLocationEngineNotification* aEngineObserver) {
 	iEngineObserver = aEngineObserver;
-
+	iXmppInterface = NULL;
+	iTimeInterface = NULL;
+	
 	iLangCode = HBufC8::NewL(0);
 	iLogStanza = HBufC8::NewL(512);
 
@@ -92,8 +93,16 @@ void CLocationEngine::ConstructL(MLocationEngineNotification* aEngineObserver) {
 #endif
 }
 
-void CLocationEngine::SetObserver(MLocationEngineNotification* aEngineObserver) {
+void CLocationEngine::SetEngineObserver(MLocationEngineNotification* aEngineObserver) {
 	iEngineObserver = aEngineObserver;
+}
+
+void CLocationEngine::SetXmppWriteInterface(MXmppWriteInterface* aXmppInterface) {
+	iXmppInterface = aXmppInterface;
+}
+
+void CLocationEngine::SetTimeInterface(MTimeInterface* aTimeInterface) {
+	iTimeInterface = aTimeInterface;
 }
 
 void CLocationEngine::SetLanguageCodeL(TDesC8& aLangCode) {
@@ -201,18 +210,6 @@ void CLocationEngine::SetBtLaunch(TInt aSeconds) {
 	iBtDataHandler->SetLaunch(aSeconds);
 }
 
-void CLocationEngine::PrepareShutdown() {
-	if(iEngineState > ELocationShutdown) {
-		StopEngine();
-		
-		iEngineState = ELocationShutdown;
-		iTimer->After(KShutdownTimeout);
-	}
-	else {
-		iEngineObserver->LocationShutdownComplete();
-	}
-}
-
 void CLocationEngine::TriggerEngine() {
 	if(iCellEnabled && iEngineState == ELocationIdle) {
 #ifndef __WINSCW__
@@ -253,6 +250,18 @@ void CLocationEngine::StopEngine() {
 	}
 }
 
+void CLocationEngine::PrepareShutdown() {
+	if(iEngineState > ELocationShutdown) {
+		StopEngine();
+		
+		iEngineState = ELocationShutdown;
+		iTimer->After(KShutdownTimeout);
+	}
+	else {
+		iEngineObserver->LocationShutdownComplete();
+	}
+}
+
 void CLocationEngine::GetGpsPosition(TReal& aLatitude, TReal& aLongitude) {
 	aLatitude = iGpsLatitude;
 	aLongitude = iGpsLongitude;
@@ -268,6 +277,24 @@ TInt CLocationEngine::GetLastPatternQuality() {
 
 TInt CLocationEngine::GetLastPlaceId() {
 	return iPlaceId;
+}
+
+TFormattedTimeDesc CLocationEngine::GetCurrentTime() {
+	CTimeUtilities* aTimeUtilities = CTimeUtilities::NewLC();
+	TFormattedTimeDesc aResult;
+	TTime aTime;
+
+	if(iTimeInterface) {
+		aTime = iTimeInterface->GetTime();
+	}
+	else {
+		aTime.UniversalTime();
+	}
+	
+	aTimeUtilities->EncodeL(aTime, aResult);
+	CleanupStack::PopAndDestroy(); // aTimeUtilities
+	
+	return aResult;
 }
 
 void CLocationEngine::InsertCellTowerDataL() {	
@@ -294,7 +321,7 @@ void CLocationEngine::InsertSignalStrengthL(TInt32 aSignalStrength) {
 	}
 }
 
-void CLocationEngine::InsertIntoPayload(TInt aPosition, TDesC8& aString, TPtr8& aLogStanza) {
+void CLocationEngine::InsertIntoPayload(TInt aPosition, const TDesC8& aString, TPtr8& aLogStanza) {
 	if(aLogStanza.Length() + aString.Length() > aLogStanza.MaxLength()) {
 		iLogStanza = iLogStanza->ReAlloc(aLogStanza.MaxLength() + aString.Length() + 32);
 		aLogStanza.Set(iLogStanza->Des());
@@ -307,25 +334,20 @@ void CLocationEngine::BuildLocationPayload() {
 	if(!iGpsDataHandler->IsWaiting() && !iWlanDataHandler->IsWaiting() &&
 			!iBtDataHandler->IsWaiting() && !iSignalStrengthDataHandler->IsWaiting()) {
 
-		// Location collection time
-		CTimeCoder* aTimeCoder = CTimeCoder::NewLC();
-		TFormattedTimeDesc aFormattedTime;
-		aTimeCoder->EncodeL(iEngineObserver->GetObserverTime(), aFormattedTime);
-		CleanupStack::PopAndDestroy(); // aTimeCoder
-		
 		TPtr8 pLogStanza(iLogStanza->Des());
-		InsertIntoPayload(128, aFormattedTime, pLogStanza);
+		InsertIntoPayload(128, GetCurrentTime(), pLogStanza);
 		InsertIntoPayload(52, *iLangCode, pLogStanza);
 	
-		iEngineObserver->HandleXmppLocationStanza(pLogStanza, this);
+		if(iXmppInterface) {
+			iXmppInterface->SendAndAcknowledgeXmppStanza(pLogStanza, this, false, EXmppPriorityHigh);
+		}
 
 		iEngineState = ELocationWaitForTimeout;
 		iTimer->After(KIdleTimeout);
 	}
 }
 
-void CLocationEngine::TimerExpired(TInt /*aExpiryId*/) {
-	
+void CLocationEngine::TimerExpired(TInt /*aExpiryId*/) {	
 	switch(iEngineState) {
 		case ELocationShutdown:
 			if(iCellTowerDataHandler->IsConnected() || iGpsDataHandler->IsConnected() ||
@@ -547,7 +569,7 @@ void CLocationEngine::SignalStrengthError(TSignalStrengthError /*aError*/) {
 	SignalStrengthData(0, 0);
 }
 
-void CLocationEngine::XmppStanzaNotificationL(const TDesC8& aStanza, const TDesC8& /*aId*/) {
+void CLocationEngine::XmppStanzaAcknowledgedL(const TDesC8& aStanza, const TDesC8& /*aId*/) {
 	CXmlParser* aXmlParser = CXmlParser::NewLC(aStanza);
 	TPtrC8 aAttributeType = aXmlParser->GetStringAttribute(_L8("type"));
 	

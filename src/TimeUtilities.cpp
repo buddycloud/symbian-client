@@ -1,6 +1,6 @@
 /*
 ============================================================================
- Name        : 	TimeCoder.cpp
+ Name        : 	TimeUtilities.cpp
  Author      : 	Ross Savage
  Copyright   : 	Buddycloud 2008
  Description : 	Encode and Decode formatted time
@@ -11,32 +11,22 @@
 */
 
 #include <e32std.h>
-#include "TimeCoder.h"
+#include "TimeUtilities.h"
 
-CTimeCoder* CTimeCoder::NewL() {
-	CTimeCoder* self = NewLC();
+CTimeUtilities* CTimeUtilities::NewL() {
+	CTimeUtilities* self = NewLC();
 	CleanupStack::Pop(self);
 	return self;
 
 }
 
-CTimeCoder* CTimeCoder::NewLC() {
-	CTimeCoder* self = new (ELeave) CTimeCoder();
+CTimeUtilities* CTimeUtilities::NewLC() {
+	CTimeUtilities* self = new (ELeave) CTimeUtilities();
 	CleanupStack::PushL(self);
-	self->ConstructL();
 	return self;
 }
 
-CTimeCoder::~CTimeCoder() {
-}
-
-CTimeCoder::CTimeCoder() {
-}
-
-void CTimeCoder::ConstructL() {
-}
-
-TTime CTimeCoder::DecodeL(const TDesC8& aFormattedTime) {
+TTime CTimeUtilities::DecodeL(const TDesC8& aFormattedTime) {
 	TTime aTime;
 	aTime.UniversalTime();
 
@@ -104,7 +94,7 @@ TTime CTimeCoder::DecodeL(const TDesC8& aFormattedTime) {
 	return aTime;
 }
 
-void CTimeCoder::EncodeL(TTime aTime, TFormattedTimeDesc& aFormattedTime) {
+void CTimeUtilities::EncodeL(TTime aTime, TFormattedTimeDesc& aFormattedTime) {
 	TBuf<32> aFormattedTime16;
 
 	aTime.FormatL(aFormattedTime16, _L("%F%Y-%M-%DT%H:%T:%SZ"));

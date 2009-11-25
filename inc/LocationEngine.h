@@ -21,7 +21,8 @@
 #include "WlanDataHandler.h"
 #include "BtDataHandler.h"
 #include "SignalStrengthDataHandler.h"
-#include "XmppObservers.h"
+#include "TimeUtilities.h"
+#include "XmppInterfaces.h"
 #include "XmlParser.h"
 
 #ifdef __WINSCW__
@@ -40,6 +41,10 @@ enum TLocationEngineState {
 	ELocationShutdown, ELocationIdle, ELocationWaitForTimeout, ELocationWaitForResources
 };
 
+enum TLocationError {
+	ELocationErrorNone, ELocationErrorNoXmppInterface, ELocationErrorBadQueryResult
+};
+
 enum TLocationMotionState {
 	EMotionStationary, EMotionRestless, EMotionMoving, EMotionUnknown
 };
@@ -54,9 +59,8 @@ enum TLocationMotionState {
 
 class MLocationEngineNotification {
 	public:
-		virtual void HandleXmppLocationStanza(const TDesC8& aStanza, MXmppStanzaObserver* aObserver) = 0;
 		virtual void HandleLocationServerResult(TLocationMotionState aMotionState, TInt aPatternQuality, TInt aPlaceId) = 0;
-		virtual TTime GetObserverTime() = 0;
+
 		virtual void LocationShutdownComplete() = 0;
 };
 
@@ -75,11 +79,15 @@ class CLocationEngine : public CBase, MXmppStanzaObserver, MTimeoutNotification,
 		static CLocationEngine* NewL(MLocationEngineNotification* aEngineObserver);
 		static CLocationEngine* NewLC(MLocationEngineNotification* aEngineObserver);
 		~CLocationEngine();
-
-		void SetObserver(MLocationEngineNotification* aEngineObserver);
+		
 	private:
 		CLocationEngine();
 		void ConstructL(MLocationEngineNotification* aEngineObserver);
+
+	public:
+		void SetEngineObserver(MLocationEngineNotification* aEngineObserver);
+		void SetXmppWriteInterface(MXmppWriteInterface* aXmppInterface);
+		void SetTimeInterface(MTimeInterface* aTimeInterface);
 
 	public: // Setup & Config
 		void SetLanguageCodeL(TDesC8& aLangCode);
@@ -97,10 +105,12 @@ class CLocationEngine : public CBase, MXmppStanzaObserver, MTimeoutNotification,
 		TBool BtDataAvailable();
 		void SetBtLaunch(TInt aSeconds);
 
-		void PrepareShutdown();
-
 		void TriggerEngine();
+		
+	public: // Stop & shutdown
 		void StopEngine();
+		
+		void PrepareShutdown();
 		
 	public: // Access to GPS position
 		void GetGpsPosition(TReal& aLatitude, TReal& aLongitude);
@@ -110,10 +120,13 @@ class CLocationEngine : public CBase, MXmppStanzaObserver, MTimeoutNotification,
 		TInt GetLastPatternQuality();
 		TInt GetLastPlaceId();
 
+	private: 
+		TFormattedTimeDesc GetCurrentTime();
+	
 	private: // Analysis & Transmission
 		void InsertCellTowerDataL();
 		void InsertSignalStrengthL(TInt32 aSignalStrength);
-		void InsertIntoPayload(TInt aPosition, TDesC8& aString, TPtr8& aLogStanza);
+		void InsertIntoPayload(TInt aPosition, const TDesC8& aString, TPtr8& aLogStanza);
 		void BuildLocationPayload();
 
 	public:	// From MTimeoutNotification
@@ -140,7 +153,7 @@ class CLocationEngine : public CBase, MXmppStanzaObserver, MTimeoutNotification,
 		void SignalStrengthError(TSignalStrengthError aError);
 	
 	public: // From MXmppStanzaObserver
-		void XmppStanzaNotificationL(const TDesC8& aStanza, const TDesC8& aId);
+		void XmppStanzaAcknowledgedL(const TDesC8& aStanza, const TDesC8& aId);
 
 	private:
 		static const TInt KIdleTimeout     = 180000000;
@@ -149,6 +162,8 @@ class CLocationEngine : public CBase, MXmppStanzaObserver, MTimeoutNotification,
 
 	private:
 		MLocationEngineNotification* iEngineObserver;
+		MXmppWriteInterface* iXmppInterface;
+		MTimeInterface* iTimeInterface;
 
 		TLocationEngineState iEngineState;
 

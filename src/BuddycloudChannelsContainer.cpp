@@ -25,6 +25,8 @@
 
 CBuddycloudChannelsContainer::CBuddycloudChannelsContainer(MViewAccessorObserver* aViewAccessor, 
 		CBuddycloudLogic* aBuddycloudLogic) : CBuddycloudExplorerContainer(aViewAccessor, aBuddycloudLogic) {
+	
+	iXmppInterface = aBuddycloudLogic->GetXmppInterface();
 }
 
 void CBuddycloudChannelsContainer::ConstructL(const TRect& aRect) {

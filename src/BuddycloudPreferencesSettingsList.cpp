@@ -50,7 +50,7 @@ void CBuddycloudPreferencesSettingsList::EditCurrentItemL() {
 
 void CBuddycloudPreferencesSettingsList::SaveL() {
 	if(iLanguageUsed != iBuddycloudLogic->GetIntSetting(ESettingItemLanguage)) {
-		iBuddycloudLogic->LanguageChanged();
+		iBuddycloudLogic->LanguageSettingChanged();
 	}
 }
 
@@ -116,6 +116,9 @@ CAknSettingItem* CBuddycloudPreferencesSettingsList::CreateSettingItemL (TInt aI
 			iLanguageUsed = iBuddycloudLogic->GetIntSetting(ESettingItemLanguage);
 			aSettingItem = new (ELeave) CAknEnumeratedTextPopupSettingItem(aIdentifier, iBuddycloudLogic->GetIntSetting(ESettingItemLanguage));
 			break;
+		case ESettingPreferencesBlocking:
+			aSettingItem = new (ELeave) CAknBinaryPopupSettingItem(aIdentifier, iBuddycloudLogic->GetBoolSetting(ESettingItemMessageBlocking));
+			break;
 		case ESettingPreferencesAutoStart:
 			aSettingItem = new (ELeave) CAknBinaryPopupSettingItem(aIdentifier, iBuddycloudLogic->GetBoolSetting(ESettingItemAutoStart));
 			break;
@@ -127,12 +130,6 @@ CAknSettingItem* CBuddycloudPreferencesSettingsList::CreateSettingItemL (TInt aI
 			break;
 		case ESettingPreferencesShowName:
 			aSettingItem = new (ELeave) CAknBinaryPopupSettingItem(aIdentifier, iBuddycloudLogic->GetBoolSetting(ESettingItemShowName));
-			break;
-		case ESettingPreferencesTestServer:
-			aSettingItem = new (ELeave) CAknBinaryPopupSettingItem(aIdentifier, iBuddycloudLogic->GetBoolSetting(ESettingItemTestServer));
-#ifndef _DEBUG
-			aSettingItem->SetHidden(true);
-#endif
 			break;
 		default:
 			break;

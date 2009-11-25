@@ -137,6 +137,7 @@ void CCompressionEngine::InflateL(const TDesC8& aData) {
 }
 
 void CCompressionEngine::WriteDebugL() {
+#ifdef _DEBUG
 	if(iOutgoingRaw > 0 && iIncomingRaw > 0) {
 		iObserver->CompressionDebug(_L8("CE    ------------------ Compression Statistics -------------------"));
 		
@@ -150,9 +151,5 @@ void CCompressionEngine::WriteDebugL() {
 		iObserver->CompressionDebug(aMessage);
 		iObserver->CompressionDebug(_L8("CE    -------------------------------------------------------------"));
 	}
-}
-
-void CCompressionEngine::GetDeflatedStatistics(TInt& aDataSent, TInt& aDataReceived) {
-	aDataSent = iOutgoingZip;
-	aDataReceived = iIncomingZip;
+#endif
 }

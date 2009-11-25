@@ -140,6 +140,10 @@ void CGpsDataHandler::ResolveAndConnectL() {
 					if((aResult = iPositioner.SetRequestor(CRequestor::ERequestorService, CRequestor::EFormatApplication, _L("Buddycloud"))) == KErrNone) {
 						iEngineStatus = EGpsReading;
 						
+						TPositionUpdateOptions aOptions;
+						aOptions.SetAcceptPartialUpdates(true);				
+						iPositioner.SetUpdateOptions(aOptions);	
+						
 						iPositioner.NotifyPositionUpdate(iPositionInfo, iStatus);
 						SetActive();
 					}
@@ -398,7 +402,8 @@ void CGpsDataHandler::RunL() {
 					iGpsWarmedUp = true;
 					
 					TPositionUpdateOptions aOptions;
-					aOptions.SetUpdateTimeOut(30000000);						
+					aOptions.SetUpdateTimeOut(30000000);	
+					aOptions.SetAcceptPartialUpdates(true);
 					iPositioner.SetUpdateOptions(aOptions);
 				}
 			}

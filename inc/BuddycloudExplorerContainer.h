@@ -16,7 +16,7 @@
 #include <akntabobserver.h>
 #include "BuddycloudListComponent.h"
 #include "BuddycloudExplorer.h"
-#include "XmppObservers.h"
+#include "XmppInterfaces.h"
 
 /*
 ----------------------------------------------------------------------------
@@ -69,9 +69,11 @@ class CBuddycloudExplorerContainer : public CBuddycloudListComponent, public MAk
 		void TabChangedL(TInt aIndex);
 		
     public: // From MXmppStanzaObserver
-		void XmppStanzaNotificationL(const TDesC8& aStanza, const TDesC8& aId);
+		void XmppStanzaAcknowledgedL(const TDesC8& aStanza, const TDesC8& aId);
 
 	protected: // Variables
+		MXmppWriteInterface* iXmppInterface;
+		
 		// Tabs
 		CAknNavigationControlContainer* iNaviPane;
 		CAknNavigationDecorator* iNaviDecorator;

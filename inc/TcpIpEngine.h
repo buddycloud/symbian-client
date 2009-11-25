@@ -18,6 +18,7 @@
 #include <e32cons.h>
 #include <in_sock.h>
 #include <nifman.h>
+#include <securesocket.h>
 
 #ifdef __3_2_ONWARDS__
 #include <comms-infras/cs_mobility_apiext.h>
@@ -34,13 +35,13 @@
 */
 
 enum TTcpIpEngineState {
-	ETcpIpStart, ETcpIpLookingUp, ETcpIpConnecting, ETcpIpConnected, ETcpIpCarrierChangeReq, ETcpIpCarrierChanging,
-	ETcpIpWriteComplete, ETcpIpDisconnecting, ETcpIpDisconnected
+	ETcpIpStart, ETcpIpLookingUp, ETcpIpConnecting, ETcpIpConnected, ETcpIpSecureConnection, 
+	ETcpIpCarrierChangeReq, ETcpIpCarrierChanging, ETcpIpWriteComplete, ETcpIpDisconnecting, ETcpIpDisconnected
 };
 
 enum TTcpIpEngineError {
-	ETcpIpAlreadyBusy, ETcpIpCancelled, ETcpIpLookUpFailed,
-	ETcpIpAccessPointFailed, ETcpIpConnectFailed, ETcpIpReadWriteError
+	ETcpIpAlreadyBusy, ETcpIpCancelled, ETcpIpLookUpFailed, ETcpIpAccessPointFailed, 
+	ETcpIpConnectFailed, ETcpIpSecureFailed, ETcpIpReadWriteError
 };
 
 enum TTcpIpEngineConnectionMode {
@@ -70,31 +71,43 @@ class MTcpIpEngineNotification {
 /*
 ----------------------------------------------------------------------------
 --
--- CTcpIpRead
+-- CSocketReader
 --
 ----------------------------------------------------------------------------
 */
 
-class CTcpIpRead : public CActive {
+class CSocketReader : public CActive {
+	protected:
+		CSocketReader();
+	
 	public:
-		static CTcpIpRead* NewL(RSocket* aTcpIpSocket, MTcpIpEngineNotification* aEngineObserver);
-		static CTcpIpRead* NewLC(RSocket* aTcpIpSocket, MTcpIpEngineNotification* aEngineObserver);
-		~CTcpIpRead();
+		static CSocketReader* NewL(RSocket* aTcpIpSocket, MTcpIpEngineNotification* aEngineObserver);
+		static CSocketReader* NewLC(RSocket* aTcpIpSocket, MTcpIpEngineNotification* aEngineObserver);
+		
 		void ConstructL(RSocket* aTcpIpSocket, MTcpIpEngineNotification* aEngineObserver);
+		~CSocketReader();
 
+	public:
 		void SetObserver(MTcpIpEngineNotification* aEngineObserver);
+		void SecureSocket(CSecureSocket* aSecureSocket);
+		
 		void IssueRead();
+		void CancelRead();
+		
+	private:
+		void Read();
 
 	public: //Implemented functions from CActive
 		void DoCancel();
 		void RunL();
 
-	protected:
-		CTcpIpRead();
-
 	private:
+		TBool iAllowRead;
 		MTcpIpEngineNotification* iEngineObserver;
+		
 		RSocket* iTcpIpSocket;
+		CSecureSocket* iSecureSocket;
+		
 		TBuf8<32> iBuffer;
 		TSockXfrLength iReadLength;
 };
@@ -102,26 +115,32 @@ class CTcpIpRead : public CActive {
 /*
 ----------------------------------------------------------------------------
 --
--- CTcpIpWrite
+-- CSocketWriter
 --
 ----------------------------------------------------------------------------
 */
 
-class CTcpIpWrite : public CActive/*, public MTimeoutNotification*/ {
+class CSocketWriter : public CActive/*, public MTimeoutNotification*/ {
 	public:
 		enum TWriteState {
 			EWriteIdle, EWriteSending
 		};
 
-	public:
-		static CTcpIpWrite* NewL(RSocket* aTcpIpSocket, MTcpIpEngineNotification* aEngineObserver);
-		static CTcpIpWrite* NewLC(RSocket* aTcpIpSocket, MTcpIpEngineNotification* aEngineObserver);
-		~CTcpIpWrite();
-		void ConstructL(RSocket* aTcpIpSocket, MTcpIpEngineNotification* aEngineObserver);
+	protected:
+		CSocketWriter();
 
-		void SetObserver(MTcpIpEngineNotification* aEngineObserver);
-		void IssueWrite(const TDesC8& aMessage);
+	public:
+		static CSocketWriter* NewL(RSocket* aTcpIpSocket, MTcpIpEngineNotification* aEngineObserver);
+		static CSocketWriter* NewLC(RSocket* aTcpIpSocket, MTcpIpEngineNotification* aEngineObserver);
 		
+		void ConstructL(RSocket* aTcpIpSocket, MTcpIpEngineNotification* aEngineObserver);
+		~CSocketWriter();
+
+	public:
+		void SetObserver(MTcpIpEngineNotification* aEngineObserver);
+		void SecureSocket(CSecureSocket* aSecureSocket);
+		
+		void IssueWrite(const TDesC8& aMessage);	
 		void Reset();
 
 	private:
@@ -131,13 +150,12 @@ class CTcpIpWrite : public CActive/*, public MTimeoutNotification*/ {
 		void DoCancel();
 		void RunL();
 
-	protected:
-		CTcpIpWrite();
-
 	private:
 		TWriteState iWriteStatus;
 		MTcpIpEngineNotification* iEngineObserver;
+		
 		RSocket* iTcpIpSocket;
+		CSecureSocket* iSecureSocket;
 
 		HBufC8* iWaitingBuffer;
 		HBufC8* iSendingBuffer;
@@ -156,13 +174,17 @@ class CTcpIpEngine : public CActive, MMobilityProtocolResp {
 #else
 class CTcpIpEngine : public CActive {
 #endif
-	public:
+	protected:
 		CTcpIpEngine();
+
+	public:
 		static CTcpIpEngine* NewL(MTcpIpEngineNotification* aEngineObserver);
 		static CTcpIpEngine* NewLC(MTcpIpEngineNotification* aEngineObserver);
-		~CTcpIpEngine();
+		
 		void ConstructL(MTcpIpEngineNotification* aEngineObserver);
-
+		~CTcpIpEngine();
+	
+	public:
 		void SetObserver(MTcpIpEngineNotification* aEngineObserver);
 
 	private: // Connection
@@ -170,8 +192,10 @@ class CTcpIpEngine : public CActive {
 		TBool SelectConnectionPrefL();
 #endif
 		void OpenConnectionL();
-		void CloseConnectionL();
-		void ConnectL(TSockAddr aAddr);
+		void CloseConnection();
+		void CloseSocket();
+		
+		void Connect(TSockAddr aAddr);
 		
 	public:
 		void GetConnectionMode(TInt& aMode, TInt& aId);
@@ -183,6 +207,8 @@ class CTcpIpEngine : public CActive {
 
 	public:
 		void ConnectL(const TDesC& aServerName, TInt aPort);
+		void SecureConnectionL(const TDesC& aProtocol);
+		
 		void Disconnect();
 
 	public: // Read/Write
@@ -204,9 +230,12 @@ class CTcpIpEngine : public CActive {
 	private:
 		TTcpIpEngineState iEngineStatus;
 		MTcpIpEngineNotification* iEngineObserver;
-		CTcpIpRead* iTcpIpRead;
-		CTcpIpWrite* iTcpIpWrite;
+		CSocketReader* iSocketReader;
+		CSocketWriter* iSocketWriter;
+		
 		RSocket iTcpIpSocket;
+		CSecureSocket* iSecureSocket;
+		
 		RConnection iConnection;
 #ifdef __3_2_ONWARDS__
 		CActiveCommsMobilityApiExt* iMobility;

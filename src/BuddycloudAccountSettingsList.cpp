@@ -170,6 +170,9 @@ CAknSettingItem* CBuddycloudAccountSettingsList::CreateSettingItemL (TInt aIdent
 		case ESettingAccountPassword:
 			aSettingItem = new (ELeave) CAknPasswordSettingItem(aIdentifier, CAknPasswordSettingItem::EAlpha, iBuddycloudLogic->GetDescSetting(ESettingItemPassword));
 			break;
+		case ESettingAccountServer:
+			aSettingItem = new (ELeave) CAknEnumeratedTextPopupSettingItem(aIdentifier, iBuddycloudLogic->GetIntSetting(ESettingItemServerId));
+			break;
 		default:
 			break;
     }

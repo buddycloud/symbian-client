@@ -1,6 +1,6 @@
 /*
 ============================================================================
- Name        : 	TimeCoder.h
+ Name        : 	TimeUtilities.h
  Author      : 	Ross Savage
  Copyright   : 	Buddycloud 2008
  Description : 	Encode and Decode formatted time
@@ -10,34 +10,42 @@
 ============================================================================
 */
 
-#ifndef TIMECODER_H_
-#define TIMECODER_H_
+#ifndef TIMEUTILITIES_H_
+#define TIMEUTILITIES_H_
 
 #include <e32base.h>
 
 /*
 ----------------------------------------------------------------------------
 --
--- CTimeCoder
+-- Time Interfaces
+--
+----------------------------------------------------------------------------
+*/
+
+class MTimeInterface {
+	public:
+		virtual TTime GetTime() = 0;
+};
+
+/*
+----------------------------------------------------------------------------
+--
+-- CTimeUtilities
 --
 ----------------------------------------------------------------------------
 */
 
 typedef TBuf8<20> TFormattedTimeDesc;
 
-class CTimeCoder : public CBase {
+class CTimeUtilities : public CBase {
 	public:
-		static CTimeCoder* NewL();
-		static CTimeCoder* NewLC();
-		~CTimeCoder();
-
-	private:
-		CTimeCoder();
-		void ConstructL();
+		static CTimeUtilities* NewL();
+		static CTimeUtilities* NewLC();
 
 	public:
 		static TTime DecodeL(const TDesC8& aFormattedTime);
 		static void EncodeL(TTime aTime, TFormattedTimeDesc& aFormatedTime);
 };
 
-#endif /*CHARACTERCODER_H_*/
+#endif /*TIMEUTILITIES_H_*/

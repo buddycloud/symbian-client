@@ -52,8 +52,6 @@ class CCompressionEngine : public CBase {
 		
 	public:
 		void WriteDebugL();
-		
-		void GetDeflatedStatistics(TInt& aDataSent, TInt& aDataReceived);
 
 	private:
 		MCompressionObserver* iObserver;

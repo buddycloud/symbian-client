@@ -93,7 +93,7 @@ void CBuddycloudNotificationsSettingsList::EditItemL(TInt aIndex, TBool aCalledF
 			SelectCustomToneL(iBuddycloudLogic->GetDescSetting(ESettingItemPrivateMessageToneFile));
 		}
 		
-		iBuddycloudLogic->NotificationChanged(ESettingItemPrivateMessageTone);
+		iBuddycloudLogic->NotificationSettingChanged(ESettingItemPrivateMessageTone);
 	}
 	else if(aIdentifier == ESettingNotificationsChannelPostTone) {		
 		iChannelPostTone = iBuddycloudLogic->GetIntSetting(ESettingItemChannelPostTone);
@@ -102,7 +102,7 @@ void CBuddycloudNotificationsSettingsList::EditItemL(TInt aIndex, TBool aCalledF
 			SelectCustomToneL(iBuddycloudLogic->GetDescSetting(ESettingItemChannelPostToneFile));
 		}
 		
-		iBuddycloudLogic->NotificationChanged(ESettingItemChannelPostTone);
+		iBuddycloudLogic->NotificationSettingChanged(ESettingItemChannelPostTone);
 	}
 	else if(aIdentifier == ESettingNotificationsDirectReplyTone) {		
 		iDirectReplyTone = iBuddycloudLogic->GetIntSetting(ESettingItemDirectReplyTone);
@@ -111,7 +111,7 @@ void CBuddycloudNotificationsSettingsList::EditItemL(TInt aIndex, TBool aCalledF
 			SelectCustomToneL(iBuddycloudLogic->GetDescSetting(ESettingItemDirectReplyToneFile));
 		}
 		
-		iBuddycloudLogic->NotificationChanged(ESettingItemDirectReplyTone);
+		iBuddycloudLogic->NotificationSettingChanged(ESettingItemDirectReplyTone);
 	}
 	
 	((*aItemArray)[aIndex])->UpdateListBoxTextL();

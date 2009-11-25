@@ -30,6 +30,8 @@
 
 CBuddycloudExplorerContainer::CBuddycloudExplorerContainer(MViewAccessorObserver* aViewAccessor, 
 		CBuddycloudLogic* aBuddycloudLogic) : CBuddycloudListComponent(aViewAccessor, aBuddycloudLogic) {
+	
+	iXmppInterface = aBuddycloudLogic->GetXmppInterface();
 }
 
 void CBuddycloudExplorerContainer::ConstructL(const TRect& aRect, TExplorerQuery aQuery) {
@@ -83,7 +85,7 @@ void CBuddycloudExplorerContainer::SetPrevView(const TVwsViewId& aViewId, TUid a
 
 CBuddycloudExplorerContainer::~CBuddycloudExplorerContainer() {
 	if(iBuddycloudLogic) {
-		iBuddycloudLogic->CancelXmppStanzaObservation(this);
+		iXmppInterface->CancelXmppStanzaAcknowledge(this);
 	}
 
 	// Tabs
@@ -139,13 +141,13 @@ void CBuddycloudExplorerContainer::ParseAndSendXmppStanzasL(const TDesC8& aStanz
 			iQueryResultSize++;
 	
 			// Send query
-			iBuddycloudLogic->SendXmppStanzaL(aSlicedStanza.Left(aSearchResult), this);		
+			iXmppInterface->SendAndAcknowledgeXmppStanza(aSlicedStanza.Left(aSearchResult), this, true);		
 			aSlicedStanza.Set(aSlicedStanza.Mid(aSearchResult));
 		}
 		
 		if(aSlicedStanza.Length() > 0) {
 			iQueryResultSize++;
-			iBuddycloudLogic->SendXmppStanzaL(aSlicedStanza, this);		
+			iXmppInterface->SendAndAcknowledgeXmppStanza(aSlicedStanza, this, true);		
 		}
 		
 		if(iQueryResultSize == 0) {
@@ -162,7 +164,7 @@ void CBuddycloudExplorerContainer::PushLevelL(const TDesC& aTitle, const TDesC8&
 		}
 		
 		if(iExplorerState == EExplorerRequesting) {
-			iBuddycloudLogic->CancelXmppStanzaObservation(this);
+			iXmppInterface->CancelXmppStanzaAcknowledge(this);
 			iExplorerState = EExplorerIdle;
 		}	
 		
@@ -194,7 +196,7 @@ void CBuddycloudExplorerContainer::PopLevelL() {
 
 	if(aLevel > 0) {
 		if(iExplorerState == EExplorerRequesting) {
-			iBuddycloudLogic->CancelXmppStanzaObservation(this);
+			iXmppInterface->CancelXmppStanzaAcknowledge(this);
 			iExplorerState = EExplorerIdle;
 		}
 	
@@ -760,7 +762,7 @@ void CBuddycloudExplorerContainer::HandleCommandL(TInt aCommand) {
 							CFollowingItem* aItem = iBuddycloudLogic->GetFollowingStore()->GetItemById(aFollowingId);	
 							TMessagingViewObject aObject;			
 													
-							iBuddycloudLogic->CancelXmppStanzaObservation(this);
+							iXmppInterface->CancelXmppStanzaAcknowledge(this);
 							
 							if(aCommand == EMenuPrivateMessagesCommand && aResultItem->GetResultType() == EExplorerItemPerson && aItem->GetItemType() == EItemRoster) {
 								aObject.iFollowerId = aFollowingId;
@@ -870,7 +872,7 @@ void CBuddycloudExplorerContainer::HandleCommandL(TInt aCommand) {
 			PopLevelL();
 		}
 		else {
-			iBuddycloudLogic->CancelXmppStanzaObservation(this);
+			iXmppInterface->CancelXmppStanzaAcknowledge(this);
 			iCoeEnv->AppUi()->ActivateViewL(iPrevViewId, iPrevViewMsgId, _L8(""));
 		}
 	}
@@ -910,7 +912,7 @@ TKeyResponse CBuddycloudExplorerContainer::OfferKeyEventL(const TKeyEvent& aKeyE
 	}
 	else if(aType == EEventKeyDown) {
 		if(aKeyEvent.iScanCode == EStdKeyLeftArrow) {
-			iBuddycloudLogic->CancelXmppStanzaObservation(this);
+			iXmppInterface->CancelXmppStanzaAcknowledge(this);
 			iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KChannelsViewId), TUid::Uid(0), _L8(""));
 			aResult = EKeyWasConsumed;
 		}
@@ -920,11 +922,11 @@ TKeyResponse CBuddycloudExplorerContainer::OfferKeyEventL(const TKeyEvent& aKeyE
 }
 
 void CBuddycloudExplorerContainer::TabChangedL(TInt aIndex) {
-	iBuddycloudLogic->CancelXmppStanzaObservation(this);
+	iXmppInterface->CancelXmppStanzaAcknowledge(this);
 	iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), TUid::Uid(iTabGroup->TabIdFromIndex(aIndex))), TUid::Uid(0), _L8(""));
 }
 
-void CBuddycloudExplorerContainer::XmppStanzaNotificationL(const TDesC8& aStanza, const TDesC8& aId) {
+void CBuddycloudExplorerContainer::XmppStanzaAcknowledgedL(const TDesC8& aStanza, const TDesC8& aId) {
 	TInt aLevel = iExplorerLevels.Count() - 1;
 	
 	CXmlParser* aXmlParser = CXmlParser::NewLC(aStanza);

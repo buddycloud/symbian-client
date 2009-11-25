@@ -14,6 +14,7 @@
 #include <aknutils.h>
 #include <commdbconnpref.h>
 #include <cdbcols.h>
+#include <SecureSocket.h>
 #include "TcpIpEngine.h"
 
 #ifdef __3_2_ONWARDS__
@@ -60,8 +61,9 @@ void CTcpIpEngine::ConstructL(MTcpIpEngineNotification* aEngineObserver) {
 
 	User::LeaveIfError(iSocketServ.Connect());
 
-	iTcpIpRead = CTcpIpRead::NewL(&iTcpIpSocket, iEngineObserver);
-	iTcpIpWrite = CTcpIpWrite::NewL(&iTcpIpSocket, iEngineObserver);
+	iSecureSocket = NULL;
+	iSocketReader = CSocketReader::NewL(&iTcpIpSocket, iEngineObserver);
+	iSocketWriter = CSocketWriter::NewL(&iTcpIpSocket, iEngineObserver);
 }
 
 CTcpIpEngine::~CTcpIpEngine() {
@@ -79,11 +81,14 @@ CTcpIpEngine::~CTcpIpEngine() {
 	if(iConnectionName)
 		delete iConnectionName;
 
-	if(iTcpIpRead)
-		delete iTcpIpRead;
+	if(iSocketReader)
+		delete iSocketReader;
 
-	if(iTcpIpWrite)
-		delete iTcpIpWrite;
+	if(iSocketWriter)
+		delete iSocketWriter;
+	
+	if(iSecureSocket)
+		delete iSecureSocket;
 	
 	iSocketServ.Close();
 }
@@ -91,8 +96,8 @@ CTcpIpEngine::~CTcpIpEngine() {
 void CTcpIpEngine::SetObserver(MTcpIpEngineNotification* aEngineObserver) {
 	iEngineObserver = aEngineObserver;
 
-	iTcpIpRead->SetObserver(iEngineObserver);
-	iTcpIpWrite->SetObserver(iEngineObserver);
+	iSocketReader->SetObserver(iEngineObserver);
+	iSocketWriter->SetObserver(iEngineObserver);
 }
 
 #ifdef __3_2_ONWARDS__
@@ -207,7 +212,7 @@ void CTcpIpEngine::OpenConnectionL() {
 	}
 }
 
-void CTcpIpEngine::CloseConnectionL() {
+void CTcpIpEngine::CloseConnection() {
 #ifdef __3_2_ONWARDS__
 	if(iMobility) {
 		delete iMobility;
@@ -218,7 +223,21 @@ void CTcpIpEngine::CloseConnectionL() {
 	iConnection.Close();
 }
 
-void CTcpIpEngine::ConnectL(TSockAddr aAddr) {
+void CTcpIpEngine::CloseSocket() {
+	if(iSecureSocket) {
+		iSecureSocket->Close();
+		
+		delete iSecureSocket;
+		iSecureSocket = NULL;
+		
+		iSocketReader->SecureSocket(iSecureSocket);
+		iSocketWriter->SecureSocket(iSecureSocket);
+	}
+	
+	iTcpIpSocket.Close();
+}
+
+void CTcpIpEngine::Connect(TSockAddr aAddr) {
 	TInt aErrorCode;
 	
 	if(!IsActive() && (aErrorCode = iTcpIpSocket.Open(iSocketServ, KAfInet, KSockStream, KProtocolInetTcp, iConnection)) == KErrNone) {
@@ -319,10 +338,99 @@ void CTcpIpEngine::ConnectL(const TDesC& aServerName, TInt aPort) {
 	}
 }
 
+void CTcpIpEngine::SecureConnectionL(const TDesC& aProtocol) {
+	iEngineObserver->TcpIpDebug(_L8("TCP   CTcpIpEngine::SecureConnectionL"), iEngineStatus);
+
+	if(!IsActive() && iEngineStatus == ETcpIpConnected) {
+		TPtrC aSockHost(iSockHost->Des());
+
+		// Cancel ongoing socket read
+		iSocketReader->CancelRead();
+		iSocketWriter->Cancel();
+		
+		// Initialize secure socket
+		iSecureSocket = CSecureSocket::NewL(iTcpIpSocket, aProtocol);
+		iSecureSocket->FlushSessionCache();
+		
+		// Set certificate domain
+		HBufC8* aDomainName = HBufC8::NewLC(aSockHost.Length());
+		TPtr8 pDomainName(aDomainName->Des());
+		pDomainName.Copy(aSockHost);
+			
+		iSecureSocket->SetOpt(KSoSSLDomainName, KSolInetSSL, pDomainName);		
+		CleanupStack::PopAndDestroy(); // aDomainName
+		
+		// Start handshake
+		iEngineStatus = ETcpIpSecureConnection;
+		iSecureSocket->StartClientHandshake(iStatus);
+		SetActive();
+	}
+	else {
+		iEngineObserver->Error(ETcpIpAlreadyBusy);
+	}
+}
+
+void CTcpIpEngine::Disconnect() {
+	// Cancel active request
+	Cancel();
+
+	// Disconnect
+	switch (iEngineStatus) {
+		case ETcpIpStart:
+			iConnection.Close();
+			
+			iEngineStatus = ETcpIpDisconnected;
+			iEngineObserver->NotifyEvent(iEngineStatus);
+			break;
+		case ETcpIpLookingUp:
+			iResolver.Close();
+			CloseConnection();
+			
+			iEngineStatus = ETcpIpDisconnected;
+			iEngineObserver->NotifyEvent(iEngineStatus);
+			break;
+		case ETcpIpConnecting:
+		case ETcpIpConnected:
+		case ETcpIpCarrierChangeReq:
+			iTcpIpSocket.Shutdown(RSocket::EImmediate, iStatus);
+			iSocketReader->Cancel();
+			iSocketWriter->Reset();
+			iSocketWriter->Cancel();
+			
+			if(iEngineStatus == ETcpIpCarrierChangeReq) {
+				iEngineObserver->NotifyEvent(iEngineStatus);
+				iEngineStatus = ETcpIpCarrierChanging;
+			}
+			else {
+				iEngineStatus = ETcpIpDisconnecting;
+			}
+			
+			SetActive();
+			break;
+		case ETcpIpCarrierChanging:
+			CloseSocket();
+			CloseConnection();
+			
+			iEngineStatus = ETcpIpDisconnected;
+			iEngineObserver->NotifyEvent(iEngineStatus);
+			break;
+		case ETcpIpDisconnecting:
+			CloseSocket();
+			CloseConnection();
+			
+			iEngineStatus = ETcpIpDisconnected;
+			iEngineObserver->NotifyEvent(iEngineStatus);
+			break;
+		default:
+			iEngineStatus = ETcpIpDisconnected;
+			iEngineObserver->NotifyEvent(iEngineStatus);
+			break;
+	}
+}
+
 void CTcpIpEngine::Write(const TDesC16& aMessage) {
 	HBufC8* aData = HBufC8::NewLC(aMessage.Length());
-	TPtr8 pData(aData->Des());
-	pData.Copy(aMessage);
+	aData->Des().Copy(aMessage);
 
 	Write(*aData);
 
@@ -331,13 +439,30 @@ void CTcpIpEngine::Write(const TDesC16& aMessage) {
 
 void CTcpIpEngine::Write(const TDesC8& aMessage) {
 	if(iEngineStatus == ETcpIpConnected) {
-		iTcpIpWrite->IssueWrite(aMessage);
+		iSocketWriter->IssueWrite(aMessage);
 	}
 }
 
 void CTcpIpEngine::Read() {
-	if ((iEngineStatus == ETcpIpConnected) && !iTcpIpRead->IsActive()) {
-		iTcpIpRead->IssueRead();
+	if (iEngineStatus == ETcpIpConnected && !iSocketReader->IsActive()) {
+		iSocketReader->IssueRead();
+	}
+}
+
+void CTcpIpEngine::DoCancel() {
+	switch (iEngineStatus) {
+		case ETcpIpConnecting:
+		case ETcpIpConnected:
+		case ETcpIpCarrierChangeReq:
+			iTcpIpSocket.CancelAll();
+			break;
+		case ETcpIpSecureConnection:
+			iSecureSocket->CancelAll();
+			break;
+		case ETcpIpLookingUp:
+			iResolver.Cancel();
+			break;
+		default:;
 	}
 }
 
@@ -394,10 +519,10 @@ void CTcpIpEngine::RunL() {
 				// Open socket
 				TSockAddr aSockAddr = iNameEntry().iAddr;
 				aSockAddr.SetPort(iSockPort);
-				ConnectL(aSockAddr);
+				Connect(aSockAddr);
 			}
 			else {
-				CloseConnectionL();
+				CloseConnection();
 
 				iEngineStatus = ETcpIpDisconnected;
 				iEngineObserver->Error(ETcpIpLookUpFailed);
@@ -410,100 +535,42 @@ void CTcpIpEngine::RunL() {
 				iEngineObserver->NotifyEvent(iEngineStatus);
 				
 				GetConnectionInformationL();
-
-				// Start reading data
-				Read();
 			}
 			else {
-				iTcpIpSocket.Close();
-				CloseConnectionL();
+				CloseSocket();
+				CloseConnection();
 
 				iEngineStatus = ETcpIpDisconnected;
 				iEngineObserver->Error(ETcpIpConnectFailed);
 				iEngineObserver->TcpIpDebug(_L8("TCP   RSocket::Connect Error"), iStatus.Int());
 			}
 			break;
-		case ETcpIpCarrierChanging:
-			iTcpIpSocket.Close();
-			break;
-		case ETcpIpDisconnecting:
-			iTcpIpSocket.Close();
-			CloseConnectionL();
-
-			iEngineStatus = ETcpIpDisconnected;
-			iEngineObserver->NotifyEvent(iEngineStatus);
-			break;
-		default:;
-	}
-}
-
-void CTcpIpEngine::Disconnect() {
-	// Cancel active request
-	Cancel();
-
-	// Disconnect
-	switch (iEngineStatus) {
-		case ETcpIpStart:
-			iConnection.Close();
-			
-			iEngineStatus = ETcpIpDisconnected;
-			iEngineObserver->NotifyEvent(iEngineStatus);
-			break;
-		case ETcpIpLookingUp:
-			iResolver.Close();
-			CloseConnectionL();
-			
-			iEngineStatus = ETcpIpDisconnected;
-			iEngineObserver->NotifyEvent(iEngineStatus);
-			break;
-		case ETcpIpConnecting:
-		case ETcpIpConnected:
-		case ETcpIpCarrierChangeReq:
-			iTcpIpSocket.Shutdown(RSocket::EImmediate, iStatus);
-			iTcpIpRead->Cancel();
-			iTcpIpWrite->Reset();
-			iTcpIpWrite->Cancel();
-			
-			if(iEngineStatus == ETcpIpCarrierChangeReq) {
-				iEngineObserver->NotifyEvent(iEngineStatus);
-				iEngineStatus = ETcpIpCarrierChanging;
+		case ETcpIpSecureConnection:
+			if(iStatus == KErrNone) {
+				iSocketReader->SecureSocket(iSecureSocket);
+				iSocketWriter->SecureSocket(iSecureSocket);
+				
+				iEngineStatus = ETcpIpConnected;
+				iEngineObserver->NotifyEvent(ETcpIpSecureConnection);
 			}
 			else {
-				iEngineStatus = ETcpIpDisconnecting;
-			}
-			
-			SetActive();
+				CloseSocket();
+				CloseConnection();
+
+				iEngineStatus = ETcpIpDisconnected;
+				iEngineObserver->Error(ETcpIpSecureFailed);
+				iEngineObserver->TcpIpDebug(_L8("TCP   CSecureSocket::StartClientHandshake Error"), iStatus.Int());
+			}			
 			break;
 		case ETcpIpCarrierChanging:
-			iTcpIpSocket.Close();
-			CloseConnectionL();
-			
-			iEngineStatus = ETcpIpDisconnected;
-			iEngineObserver->NotifyEvent(iEngineStatus);
+			CloseSocket();
 			break;
 		case ETcpIpDisconnecting:
-			iTcpIpSocket.Close();
-			CloseConnectionL();
-			
-			iEngineStatus = ETcpIpDisconnected;
-			iEngineObserver->NotifyEvent(iEngineStatus);
-			break;
-		default:
-			iEngineStatus = ETcpIpDisconnected;
-			iEngineObserver->NotifyEvent(iEngineStatus);
-			break;
-	}
-}
+			CloseSocket();
+			CloseConnection();
 
-void CTcpIpEngine::DoCancel() {
-	switch (iEngineStatus) {
-		case ETcpIpConnecting:
-		case ETcpIpConnected:
-		case ETcpIpCarrierChangeReq:
-			iTcpIpSocket.CancelAll();
-			break;
-		case ETcpIpLookingUp:
-			iResolver.Cancel();
+			iEngineStatus = ETcpIpDisconnected;
+			iEngineObserver->NotifyEvent(iEngineStatus);
 			break;
 		default:;
 	}
@@ -542,7 +609,7 @@ void CTcpIpEngine::NewCarrierActive(TAccessPointInfo /*aNewAp*/, TBool aIsSeamle
 			// Open socket
 			TSockAddr aSockAddr = iNameEntry().iAddr;
 			aSockAddr.SetPort(iSockPort);
-			ConnectL(aSockAddr);
+			Connect(aSockAddr);
 			
 			// Accept new carrier
 			iEngineObserver->TcpIpDebug(_L8("TCP   NewCarrierAccepted"));
@@ -564,96 +631,130 @@ void CTcpIpEngine::Error(TInt aError) {
 /*
 ----------------------------------------------------------------------------
 --
--- CTcpIpRead
+-- CSocketReader
 --
 ----------------------------------------------------------------------------
 */
 
-CTcpIpRead::CTcpIpRead() : CActive(EPriorityStandard) {
+CSocketReader::CSocketReader() : CActive(EPriorityStandard) {
 }
 
-CTcpIpRead* CTcpIpRead::NewL(RSocket* aTcpIpSocket, MTcpIpEngineNotification* aEngineObserver) {
-	CTcpIpRead* self = NewLC(aTcpIpSocket, aEngineObserver);
+CSocketReader* CSocketReader::NewL(RSocket* aTcpIpSocket, MTcpIpEngineNotification* aEngineObserver) {
+	CSocketReader* self = NewLC(aTcpIpSocket, aEngineObserver);
 	CleanupStack::Pop();
 	return self;
 }
 
-CTcpIpRead* CTcpIpRead::NewLC(RSocket* aTcpIpSocket, MTcpIpEngineNotification* aEngineObserver) {
-	CTcpIpRead* self = new(ELeave) CTcpIpRead;
+CSocketReader* CSocketReader::NewLC(RSocket* aTcpIpSocket, MTcpIpEngineNotification* aEngineObserver) {
+	CSocketReader* self = new(ELeave) CSocketReader;
 	CleanupStack::PushL(self);
 	self->ConstructL(aTcpIpSocket, aEngineObserver);
 	return self;
 }
 
-void CTcpIpRead::ConstructL(RSocket* aTcpIpSocket, MTcpIpEngineNotification* aEngineObserver) {
+void CSocketReader::ConstructL(RSocket* aTcpIpSocket, MTcpIpEngineNotification* aEngineObserver) {
 	iTcpIpSocket = aTcpIpSocket;
+	iSecureSocket = NULL;
+
 	iEngineObserver = aEngineObserver;
+	
 	CActiveScheduler::Add(this);
 }
 
-CTcpIpRead::~CTcpIpRead() {
-	Cancel();
+CSocketReader::~CSocketReader() {
+	CancelRead();
 }
 
-void CTcpIpRead::SetObserver(MTcpIpEngineNotification* aEngineObserver) {
+void CSocketReader::SetObserver(MTcpIpEngineNotification* aEngineObserver) {
 	iEngineObserver = aEngineObserver;
 }
 
-void CTcpIpRead::DoCancel() {
-	iTcpIpSocket->CancelRead();
+void CSocketReader::SecureSocket(CSecureSocket* aSecureSocket) {
+	iSecureSocket = aSecureSocket;
 }
 
-void CTcpIpRead::RunL() {
+void CSocketReader::IssueRead() {
+	iAllowRead = true;
+	
+	Read();
+}
+
+void CSocketReader::CancelRead() {
+	iAllowRead = false;
+	
+	Cancel();
+}
+
+void CSocketReader::Read() {	
+	if(iAllowRead && !IsActive()) {
+		iBuffer.Zero();
+		
+		if(iSecureSocket) {
+			iSecureSocket->RecvOneOrMore(iBuffer, iStatus, iReadLength);
+		}
+		else {
+			iTcpIpSocket->RecvOneOrMore(iBuffer, 0, iStatus, iReadLength);
+		}
+		
+		SetActive();
+	}
+}
+
+void CSocketReader::DoCancel() {
+	if(iSecureSocket) {
+		iSecureSocket->CancelRecv();
+	}
+	else {
+		iTcpIpSocket->CancelRecv();
+	}
+}
+
+void CSocketReader::RunL() {
 	switch(iStatus.Int()) {
 		case KErrNone:
 			iEngineObserver->DataRead(iBuffer);
-			IssueRead();
+			
+			Read();
 			break;
 		case KErrEof:
 			iEngineObserver->TcpIpDebug(_L8("TCP   RSocket::Recv EOF"), iStatus.Int());
 			iEngineObserver->Error(ETcpIpReadWriteError);
 			break;
 		case KErrTimedOut:
-			IssueRead();
+			Read();
 			break;
 		default:;			
-	}
-}
-
-void CTcpIpRead::IssueRead() {
-	if (!IsActive()) {
-		iBuffer.Zero();
-		iTcpIpSocket->RecvOneOrMore(iBuffer, 0, iStatus, iReadLength);
-		SetActive();
 	}
 }
 
 /*
 ----------------------------------------------------------------------------
 --
--- CTcpIpWrite
+-- CSocketWriter
 --
 ----------------------------------------------------------------------------
 */
 
-CTcpIpWrite::CTcpIpWrite() : CActive(EPriorityStandard) {
+CSocketWriter::CSocketWriter() : CActive(EPriorityStandard) {
 }
 
-CTcpIpWrite* CTcpIpWrite::NewL(RSocket* aTcpIpSocket, MTcpIpEngineNotification* aEngineObserver) {
-	CTcpIpWrite* self = NewLC(aTcpIpSocket, aEngineObserver);
+CSocketWriter* CSocketWriter::NewL(RSocket* aTcpIpSocket, MTcpIpEngineNotification* aEngineObserver) {
+	CSocketWriter* self = NewLC(aTcpIpSocket, aEngineObserver);
 	CleanupStack::Pop();
 	return self;
 }
 
-CTcpIpWrite* CTcpIpWrite::NewLC(RSocket* aTcpIpSocket, MTcpIpEngineNotification* aEngineObserver) {
-	CTcpIpWrite* self = new(ELeave) CTcpIpWrite;
+CSocketWriter* CSocketWriter::NewLC(RSocket* aTcpIpSocket, MTcpIpEngineNotification* aEngineObserver) {
+	CSocketWriter* self = new(ELeave) CSocketWriter;
 	CleanupStack::PushL(self);
 	self->ConstructL(aTcpIpSocket, aEngineObserver);
 	return self;
 }
 
-void CTcpIpWrite::ConstructL(RSocket* aTcpIpSocket, MTcpIpEngineNotification* aEngineObserver) {
+void CSocketWriter::ConstructL(RSocket* aTcpIpSocket, MTcpIpEngineNotification* aEngineObserver) {
 	iTcpIpSocket = aTcpIpSocket;
+	iSecureSocket = NULL;
+	
 	iEngineObserver = aEngineObserver;
 
 	iSendingBuffer = HBufC8::NewL(256);
@@ -662,7 +763,7 @@ void CTcpIpWrite::ConstructL(RSocket* aTcpIpSocket, MTcpIpEngineNotification* aE
 	CActiveScheduler::Add(this);
 }
 
-CTcpIpWrite::~CTcpIpWrite() {
+CSocketWriter::~CSocketWriter() {
 	Cancel();
 
 	if(iWaitingBuffer)
@@ -672,13 +773,36 @@ CTcpIpWrite::~CTcpIpWrite() {
 		delete iSendingBuffer;
 }
 
-void CTcpIpWrite::SetObserver(MTcpIpEngineNotification* aEngineObserver) {
+void CSocketWriter::SetObserver(MTcpIpEngineNotification* aEngineObserver) {
 	iEngineObserver = aEngineObserver;
 }
 
-TBool CTcpIpWrite::WriteBuffered() {
-	TPtr8 pWaitingBuffer = iWaitingBuffer->Des();
-	TPtr8 pSendingBuffer = iSendingBuffer->Des();
+void CSocketWriter::SecureSocket(CSecureSocket* aSecureSocket) {
+	iSecureSocket = aSecureSocket;
+}
+
+void CSocketWriter::IssueWrite(const TDesC8& aMessage) {
+	TPtr8 pWaitingBuffer(iWaitingBuffer->Des());
+
+	// Buffer Waiting Data
+	if((pWaitingBuffer.Length() + aMessage.Length()) > pWaitingBuffer.MaxLength()) {
+		iWaitingBuffer = iWaitingBuffer->ReAlloc(pWaitingBuffer.MaxLength() + aMessage.Length());
+		pWaitingBuffer.Set(iWaitingBuffer->Des());
+	}
+
+	pWaitingBuffer.Append(aMessage);
+
+	WriteBuffered();
+}
+
+void CSocketWriter::Reset() {
+	TPtr8 pWaitingBuffer(iWaitingBuffer->Des());
+	pWaitingBuffer.Zero();
+}
+
+TBool CSocketWriter::WriteBuffered() {
+	TPtr8 pWaitingBuffer(iWaitingBuffer->Des());
+	TPtr8 pSendingBuffer(iSendingBuffer->Des());
 	TInt aLength = pWaitingBuffer.Length();
 
 	if(!IsActive() && aLength > 0) {
@@ -688,14 +812,19 @@ TBool CTcpIpWrite::WriteBuffered() {
 		}
 
 		// Copy data block
-		pSendingBuffer.Zero();
 		pSendingBuffer.Copy(pWaitingBuffer.Ptr(), aLength);
 
 		// Notify Observer
 		iEngineObserver->DataWritten(pSendingBuffer);
 
 		// Write Buffered Data
-		iTcpIpSocket->Write(*iSendingBuffer, iStatus);
+		if(iSecureSocket) {
+			iSecureSocket->Send(*iSendingBuffer, iStatus);
+		}
+		else {
+			iTcpIpSocket->Write(*iSendingBuffer, iStatus);
+		}
+		
 		SetActive();
 
 		// Delete from waiting buffer
@@ -708,11 +837,16 @@ TBool CTcpIpWrite::WriteBuffered() {
 	}
 }
 
-void CTcpIpWrite::DoCancel() {
-	iTcpIpSocket->CancelWrite();
+void CSocketWriter::DoCancel() {
+	if(iSecureSocket) {
+		iSecureSocket->CancelSend();
+	}
+	else {
+		iTcpIpSocket->CancelWrite();
+	}
 }
 
-void CTcpIpWrite::RunL() {
+void CSocketWriter::RunL() {
 	switch(iStatus.Int()) {
 		case KErrNone:
 			if(WriteBuffered() == false) {
@@ -728,23 +862,4 @@ void CTcpIpWrite::RunL() {
 			iEngineObserver->TcpIpDebug(_L8("TCP   RSocket::Write"), iStatus.Int());
 			break;
 	}
-}
-
-void CTcpIpWrite::IssueWrite(const TDesC8& aMessage) {
-	TPtr8 pWaitingBuffer = iWaitingBuffer->Des();
-
-	// Buffer Waiting Data
-	if(pWaitingBuffer.Length() + aMessage.Length() > pWaitingBuffer.MaxLength()) {
-		iWaitingBuffer = iWaitingBuffer->ReAlloc(pWaitingBuffer.MaxLength()+aMessage.Length());
-		pWaitingBuffer.Set(iWaitingBuffer->Des());
-	}
-
-	pWaitingBuffer.Append(aMessage);
-
-	WriteBuffered();
-}
-
-void CTcpIpWrite::Reset() {
-	TPtr8 pWaitingBuffer = iWaitingBuffer->Des();
-	pWaitingBuffer.Zero();
 }

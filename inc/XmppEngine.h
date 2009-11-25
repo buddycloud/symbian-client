@@ -21,8 +21,18 @@
 #include "Timer.h"
 #include "ConnectionMonitor.h"
 #include "CompressionEngine.h"
-#include "XmppObservers.h"
+#include "XmppInterfaces.h"
 #include "XmppOutbox.h"
+
+/*
+----------------------------------------------------------------------------
+--
+-- Constants
+--
+----------------------------------------------------------------------------
+*/
+
+_LIT(KXmppTLSProtocol, "TLS1.0");
 
 /*
 ----------------------------------------------------------------------------
@@ -38,7 +48,7 @@ enum TXmppEngineState {
 };
 
 enum TXmppEngineError {
-	EXmppNone, EXmppAuthorizationNotDefined, EXmppBadAuthorization, EXmppAlreadyConnected
+	EXmppNone, EXmppAuthorizationNotDefined, EXmppBadAuthorization, EXmppAlreadyConnected, EXmppTlsFailed
 };
 
 enum TXmppPubsubNodeType {
@@ -110,7 +120,8 @@ class CXmppObservedStanza : public CBase {
 */
 
 class CXmppEngine : public CBase, MTcpIpEngineNotification, MConnectionMonitorNotification,
-								MTimeoutNotification, MCompressionObserver, MXmppStanzaObserver {
+								MTimeoutNotification, MCompressionObserver, 
+								MXmppStanzaObserver, MXmppWriteInterface {
 
 	public:
 		static CXmppEngine* NewL(MXmppEngineObserver* aEngineObserver);
@@ -130,8 +141,7 @@ class CXmppEngine : public CBase, MTcpIpEngineNotification, MConnectionMonitorNo
 
 	public: // Connection & Setup
 		void SetAuthorizationDetailsL(TDesC& aUsername, TDesC& aPassword);
-		void SetHostServerL(const TDesC& aServerName, TInt aPort);
-		void SetXmppServerL(const TDesC8& aXmppServer);
+		void SetServerDetailsL(const TDesC& aHostName, TInt aPort);
 		void SetResourceL(const TDesC8& aResource);
 
 		void ConnectL(TBool aConnectionCold);
@@ -144,12 +154,11 @@ class CXmppEngine : public CBase, MTcpIpEngineNotification, MConnectionMonitorNo
 		void GetConnectionStatistics(TInt& aDataSent, TInt& aDataReceived);
 
 		void PrepareShutdown();
-
-	public: // Stanza handling
-		void SendAndForgetXmppStanza(const TDesC8& aStanza, TBool aPersisant, TXmppMessagePriority aPriority = EXmppPriorityNormal);
-		void SendAndAcknowledgeXmppStanza(const TDesC8& aStanza, MXmppStanzaObserver* aObserver, TBool aPersisant = false, TXmppMessagePriority aPriority = EXmppPriorityNormal);
-		void CancelXmppStanzaObservation(MXmppStanzaObserver* aObserver);
 		
+	private:
+		void SetXmppServerL(const TDesC& aXmppServer);
+		
+	public: // Stanza handling
 		void SendQueuedXmppStanzas();
 		CXmppOutbox* GetMessageOutbox();
 		
@@ -157,16 +166,20 @@ class CXmppEngine : public CBase, MTcpIpEngineNotification, MConnectionMonitorNo
 		void AddStanzaObserverL(const TDesC8& aStanzaId, MXmppStanzaObserver* aObserver);
 
 	private:
-		void ValidateDetails();
 		void OpenStream();
 		void QueryServerTimeL();
 		void WriteToStreamL(const TDesC8& aData);
 		void ReadFromStreamL(const TDesC8& aData);
 		void ProcessStanzaInBufferL(TInt aLength);
 		void HandleXmppStanzaL(const TDesC8& aStanza);
+
+	public: // From MXmppWriteInterface
+		void SendAndForgetXmppStanza(const TDesC8& aStanza, TBool aPersisant, TXmppMessagePriority aPriority = EXmppPriorityNormal);
+		void SendAndAcknowledgeXmppStanza(const TDesC8& aStanza, MXmppStanzaObserver* aObserver, TBool aPersisant = false, TXmppMessagePriority aPriority = EXmppPriorityNormal);
+		void CancelXmppStanzaAcknowledge(MXmppStanzaObserver* aObserver);
 		
 	public: // From MXmppStanzaObserver
-		void XmppStanzaNotificationL(const TDesC8& aStanza, const TDesC8& aId);
+		void XmppStanzaAcknowledgedL(const TDesC8& aStanza, const TDesC8& aId);
 		
 	public: // From MCompressionObserver
 		void DataDeflated(const TDesC8& aDeflatedData);
@@ -224,8 +237,13 @@ class CXmppEngine : public CBase, MTcpIpEngineNotification, MConnectionMonitorNo
 		HBufC8* iXmppServer;
 		HBufC8* iResource;
 
+		TBool iNegotiatingSecureConnection;
+		
 		TBool iStreamCompressed;
 		CCompressionEngine* iCompressionEngine;
+		
+		TInt iDataSent;
+		TInt iDataReceived;
 };
 
 #endif // XMPPENGINE_H_

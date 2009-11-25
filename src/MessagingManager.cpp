@@ -16,7 +16,7 @@
 #include "FileUtilities.h"
 #include "MessagingManager.h"
 #include "TextUtilities.h"
-#include "TimeCoder.h"
+#include "TimeUtilities.h"
 #include "XmlParser.h"
 
 /*
@@ -191,42 +191,35 @@ void CMessage::SetBodyL(TDesC& aBody, const TDesC& aUsername, TMessageContentTyp
 			TPtrC pBody(iBody->Des());
 			
 			TInt aGlobalPosition = 0;
-			TInt aLinkSearch = pBody.FindF(_L("http://"));
-			TInt aHttpsSearch = pBody.FindF(_L("https://"));
+			TInt aLinkSearch = pBody.MatchF(_L("*http*://*"));
 			TInt aWwwSearch = pBody.FindF(_L("www."));
 			TInt aAtReplySearch = pBody.Locate('@');
 			TInt aChannelSearch = pBody.Locate('#');
 			
-			while(aLinkSearch != KErrNotFound || aHttpsSearch != KErrNotFound || aWwwSearch != KErrNotFound || 
+			while(aLinkSearch != KErrNotFound || aWwwSearch != KErrNotFound || 
 					aAtReplySearch != KErrNotFound || aChannelSearch != KErrNotFound) {	
 				
 				TMessageLinkType aLinkType = ELinkWebsite;
-				
-				// Check https against http
-				if(aHttpsSearch != KErrNotFound && aHttpsSearch < aLinkSearch || aLinkSearch == KErrNotFound) {
-					aLinkSearch = aHttpsSearch;
-				}
-				
+				TInt aMinLinkLength = 10;
+
 				// Check result against www
-				if(aWwwSearch != KErrNotFound && aWwwSearch < aLinkSearch || aLinkSearch == KErrNotFound) {
+				if(aWwwSearch != KErrNotFound && (aWwwSearch < aLinkSearch || aLinkSearch == KErrNotFound)) {
 					aLinkSearch = aWwwSearch;
+					aMinLinkLength = 7;
 				}
 				
 				// Check '@' result
-				if(aAtReplySearch != KErrNotFound && aAtReplySearch < aLinkSearch || aLinkSearch == KErrNotFound) {
+				if(aAtReplySearch != KErrNotFound && (aAtReplySearch < aLinkSearch || aLinkSearch == KErrNotFound)) {
 					aLinkSearch = aAtReplySearch;
 					aLinkType = ELinkUsername;
+					aMinLinkLength = 2;
 				}
 				
 				// Check '#' result
-				if(aChannelSearch != KErrNotFound && aChannelSearch < aLinkSearch || aLinkSearch == KErrNotFound) {
+				if(aChannelSearch != KErrNotFound && (aChannelSearch < aLinkSearch || aLinkSearch == KErrNotFound)) {
 					aLinkSearch = aChannelSearch;
 					aLinkType = ELinkChannel;
-				}
-				
-				if(aLinkType != ELinkWebsite) {
-					// Remove '@' or '#' from begining of username or channel
-					aLinkSearch++;
+					aMinLinkLength = 2;
 				}
 				
 				aGlobalPosition += aLinkSearch;
@@ -237,20 +230,19 @@ void CMessage::SetBodyL(TDesC& aBody, const TDesC& aUsername, TMessageContentTyp
 					pLink.Set(pBody.Left(aLinkSearch));			
 				}
 				
-				if(aLinkType == ELinkWebsite || aGlobalPosition == 1 || aBody[aGlobalPosition-2] == ' ') {
-					while((aLinkType == ELinkWebsite && 
-									// Website links only
-									((aLinkSearch = pLink.Locate('\"')) != KErrNotFound || 
-									(aLinkSearch = pLink.Locate('>')) != KErrNotFound || 
-									(aLinkSearch = pLink.Locate(']')) != KErrNotFound)) || 
-							(aLinkType != ELinkWebsite && 
+				if(aLinkType == ELinkWebsite || (aGlobalPosition == 0 || aBody[aGlobalPosition - 1] == ' ')) {
+					while((aLinkType != ELinkWebsite && 
 									// Non website links
 									((aLinkSearch = pLink.Locate(':')) != KErrNotFound || 
 									(aLinkSearch = pLink.Locate(',')) != KErrNotFound || 
-									(aLinkSearch = pLink.Locate('#')) != KErrNotFound || 
-									(aLinkSearch = pLink.Locate('@')) != KErrNotFound)) ||
+									(aLinkSearch = pLink.Locate('#')) > 0 || 
+									(aLinkSearch = pLink.Locate('@')) > 0)) ||
 							// General
 							(aLinkSearch = pLink.Locate('\'')) != KErrNotFound || 
+							(aLinkSearch = pLink.Locate('\"')) != KErrNotFound || 
+							(aLinkSearch = pLink.Locate('>')) != KErrNotFound || 
+							(aLinkSearch = pLink.Locate(']')) != KErrNotFound || 
+							(aLinkSearch = pLink.Locate(')')) != KErrNotFound || 
 							((aLinkSearch = pLink.LocateReverse('.')) != KErrNotFound && aLinkSearch == pLink.Length() - 1) ||
 							((aLinkSearch = pLink.LocateReverse('?')) != KErrNotFound && aLinkSearch == pLink.Length() - 1) ||
 							((aLinkSearch = pLink.LocateReverse('!')) != KErrNotFound && aLinkSearch == pLink.Length() - 1)) {
@@ -258,10 +250,10 @@ void CMessage::SetBodyL(TDesC& aBody, const TDesC& aUsername, TMessageContentTyp
 						pLink.Set(pLink.Left(aLinkSearch));
 					}
 					
-					if(pLink.Length() > 0) {
+					if(pLink.Length() >= aMinLinkLength) {
 						iLinks.Append(CMessageLinkPosition(aGlobalPosition, pLink.Length(), aLinkType));
 						
-						if(aLinkType == ELinkUsername && pLink.CompareF(aUsername) == 0) {
+						if(aLinkType == ELinkUsername && aUsername.CompareF(pLink.Mid(1)) == 0) {
 							iDirectReply = true;
 						}
 					}
@@ -270,8 +262,7 @@ void CMessage::SetBodyL(TDesC& aBody, const TDesC& aUsername, TMessageContentTyp
 				aGlobalPosition += pLink.Length();
 				pBody.Set(pBody.Mid(pLink.Length()));	
 				
-				aLinkSearch = pBody.FindF(_L("http://"));
-				aHttpsSearch = pBody.FindF(_L("https://"));
+				aLinkSearch = pBody.MatchF(_L("*http*://*"));
 				aWwwSearch = pBody.FindF(_L("www."));
 				aAtReplySearch = pBody.Locate('@');
 				aChannelSearch = pBody.Locate('#');
@@ -680,7 +671,7 @@ void CDiscussion::LoadDiscussionFromFileL() {
 
 			CXmlParser* aXmlParser = CXmlParser::NewLC(*aBuf);
 			CTextUtilities* aCharCoder = CTextUtilities::NewLC();
-			CTimeCoder* aTimeCoder = CTimeCoder::NewLC();
+			CTimeUtilities* aTimeUtilities = CTimeUtilities::NewLC();
 
 			if(aXmlParser->MoveToElement(_L8("discussion"))) {
 				// Buzz
@@ -695,7 +686,7 @@ void CDiscussion::LoadDiscussionFromFileL() {
 
 					TPtrC8 pAttributeAt = aXmlParser->GetStringAttribute(_L8("at"));
 					if(pAttributeAt.Length() > 0) {
-						aMessage->SetReceivedAt(aTimeCoder->DecodeL(pAttributeAt));
+						aMessage->SetReceivedAt(aTimeUtilities->DecodeL(pAttributeAt));
 					}
 
 					aMessage->SetAvatarId(aXmlParser->GetIntAttribute(_L8("avatar")));
@@ -718,7 +709,7 @@ void CDiscussion::LoadDiscussionFromFileL() {
 				}
 			}
 
-			CleanupStack::PopAndDestroy(4); // aTimeCoder, aCharCoder, aXmlParser, aBuf
+			CleanupStack::PopAndDestroy(4); // aTimeUtilities, aCharCoder, aXmlParser, aBuf
 			CleanupStack::PopAndDestroy(&aFile);
 		}
 			
@@ -742,7 +733,7 @@ void CDiscussion::SaveDiscussionToFileL() {
 			CleanupClosePushL(aFile);
 
 			CTextUtilities* aCharCoder = CTextUtilities::NewLC();
-			CTimeCoder* aTimeCoder = CTimeCoder::NewLC();
+			CTimeUtilities* aTimeUtilities = CTimeUtilities::NewLC();
 			TFormattedTimeDesc aTime;
 
 			aFile.WriteL(_L8("<?xml version='1.0' encoding='UTF-8'?>"));		
@@ -780,7 +771,7 @@ void CDiscussion::SaveDiscussionToFileL() {
 				}
 
 				aFile.WriteL(_L8(" at='"));
-				aTimeCoder->EncodeL(aMessage->GetReceivedAt(), aTime);
+				aTimeUtilities->EncodeL(aMessage->GetReceivedAt(), aTime);
 				aFile.WriteL(aTime);
 
 				aBuf.Format(_L8("' avatar='%d' read='%d' reply='%d' private='%d' own='%d' type='%d' body='"), aMessage->GetAvatarId(), aMessage->GetRead(), aMessage->GetDirectReply(), aMessage->GetPrivate(), aMessage->GetOwn(), aMessage->GetMessageType());
@@ -792,7 +783,7 @@ void CDiscussion::SaveDiscussionToFileL() {
 
 			aFile.WriteL(_L8("</discussion></?xml?>"));
 
-			CleanupStack::PopAndDestroy(2); // aTimeCoder, aCharCoder
+			CleanupStack::PopAndDestroy(2); // aTimeUtilities, aCharCoder
 			CleanupStack::PopAndDestroy(&aFile);
 		}
 	}
@@ -854,7 +845,7 @@ void CMessagingManager::ConstructL() {
 	iTimer->After(300000000);
 }
 
-void CMessagingManager::TimerExpired(TInt /*aExpiryId*/) {
+void CMessagingManager::CompressMessagesL() {
 	for(TInt i = 0; i < iDiscussions.Count(); i++) {
 		iDiscussions[i]->CompressL();
 	}
@@ -896,4 +887,8 @@ void CMessagingManager::DeleteDiscussionL(const TDesC& aJid) {
 			break;
 		}
 	}
+}
+
+void CMessagingManager::TimerExpired(TInt /*aExpiryId*/) {
+	CompressMessagesL();	
 }

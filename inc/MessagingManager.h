@@ -266,13 +266,16 @@ class CMessagingManager : public CBase, MTimeoutNotification {
 	
 	private:
 		void ConstructL();
-		
-	public: // From MTimeoutNotification
-		void TimerExpired(TInt aExpiryId);
 	
+	public:
+		void CompressMessagesL();
+		
 	public:
 		CDiscussion* GetDiscussionL(const TDesC& aJid);
 		void DeleteDiscussionL(const TDesC& aJid);
+		
+	public: // From MTimeoutNotification
+		void TimerExpired(TInt aExpiryId);
 		
 	protected:
 		RPointerArray<CDiscussion> iDiscussions;

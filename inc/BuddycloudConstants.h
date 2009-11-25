@@ -21,6 +21,9 @@ const TUid KCommunitiesViewId            = {12};
 _LIT(KBuddycloudRosterServer, "@buddycloud.com");
 _LIT(KBuddycloudChannelsServer, "@channels.buddycloud.com");
 
+_LIT8(KBuddycloudOsloPubsubServer, "comptest.xmpp.lobstermonster.org");
+_LIT8(KBuddycloudChannelsPubsubServer, "comptest.xmpp.lobstermonster.org");
+
 _LIT8(KRosterSubscriptionBoth, "both");
 _LIT8(KRosterSubscriptionFrom, "from");
 _LIT8(KRosterSubscriptionTo, "to");

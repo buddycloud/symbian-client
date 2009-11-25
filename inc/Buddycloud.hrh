@@ -114,11 +114,13 @@ enum TSettingsAccountItems {
 	ESettingAccountEmailAddress,
 	ESettingAccountPhoneNumber,
 	ESettingAccountUsername, 
-	ESettingAccountPassword
+	ESettingAccountPassword,
+	ESettingAccountServer
 };
 
 enum TSettingsPreferencesItems {
 	ESettingPreferencesLanguage = 1,
+	ESettingPreferencesBlocking,
 	ESettingPreferencesAutoStart,
 	ESettingPreferencesAccessPoint,
 	ESettingPreferencesShowContacts,

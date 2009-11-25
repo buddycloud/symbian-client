@@ -248,38 +248,42 @@ void CXmppEngine::SetAuthorizationDetailsL(TDesC& aUsername, TDesC& aPassword) {
 		delete iPassword;
 
 	iUsername = HBufC8::NewL(aUsername.Length());
-	TPtr8 pUsername(iUsername->Des());
-	pUsername.Copy(aUsername);
+	iUsername->Des().Copy(aUsername);
 
 	iPassword = HBufC8::NewL(aPassword.Length());
-	TPtr8 pPassword(iPassword->Des());
-	pPassword.Copy(aPassword);
+	iPassword->Des().Copy(aPassword);
 
-	ValidateDetails();
+	// Validate xmpp server domain
+	TInt aLocate = aUsername.Locate('@');
+	
+	if(aLocate != KErrNotFound) {
+		SetXmppServerL(aUsername.Mid(aLocate + 1));
+	}	
 }
 
-void CXmppEngine::ValidateDetails() {
-	TPtr8 pUsername(iUsername->Des());
-
-	TInt aResult = pUsername.Locate('@');
-	if(aResult != KErrNotFound) {
-		pUsername.Delete(aResult, (pUsername.Length() - aResult));
-	}
-}
-
-void CXmppEngine::SetHostServerL(const TDesC& aServerName, TInt aPort) {
+void CXmppEngine::SetServerDetailsL(const TDesC& aHostName, TInt aPort) {
+	iHostPort = aPort;
+	
 	if(iHostName)
 		delete iHostName;
 
-	iHostName = aServerName.AllocL();
-	iHostPort = aPort;
+	iHostName = aHostName.AllocL();	
+	TInt aLocate = aHostName.Locate('.');
+	
+	if(aLocate != KErrNotFound) {
+		SetXmppServerL(aHostName.Mid(aLocate + 1));
+	}
+	else {
+		SetXmppServerL(aHostName);
+	}
 }
 
-void CXmppEngine::SetXmppServerL(const TDesC8& aXmppServer) {
+void CXmppEngine::SetXmppServerL(const TDesC& aXmppServer) {
 	if(iXmppServer)
 		delete iXmppServer;
-
-	iXmppServer = aXmppServer.AllocL();
+	
+	iXmppServer = HBufC8::NewL(aXmppServer.Length());
+	iXmppServer->Des().Copy(aXmppServer);
 }
 
 void CXmppEngine::SetResourceL(const TDesC8& aResource) {
@@ -349,7 +353,8 @@ TDesC& CXmppEngine::GetConnectionName() {
 }
 
 void CXmppEngine::GetConnectionStatistics(TInt& aDataSent, TInt& aDataReceived) {
-	iCompressionEngine->GetDeflatedStatistics(aDataSent, aDataReceived);
+	aDataSent = iDataSent;
+	aDataReceived = iDataReceived;
 }
 
 void CXmppEngine::PrepareShutdown() {
@@ -364,45 +369,6 @@ void CXmppEngine::PrepareShutdown() {
 	iEngineState = EXmppShutdown;
 
 	iTcpIpEngine->Disconnect();
-}
-
-void CXmppEngine::SendAndForgetXmppStanza(const TDesC8& aStanza, TBool aPersisant, TXmppMessagePriority aPriority) {
-	CXmppOutboxMessage* aMessage = CXmppOutboxMessage::NewLC();
-	aMessage->SetStanzaL(aStanza);
-	aMessage->SetPersistance(aPersisant);
-	aMessage->SetPriority(aPriority);
-	
-	iXmppOutbox->AddMessage(aMessage);
-	CleanupStack::Pop(); // aMessage
-	
-	if(iSilenceState == EXmppSilenceTest && !iXmppOutbox->SendInProgress()) {
-		if(iSendQueuedMessages || iXmppOutbox->ContainsPriorityMessages(EXmppPriorityHigh)) {			
-			WriteToStreamL(iXmppOutbox->GetNextMessage()->GetStanza());
-		}
-	}
-}
-
-void CXmppEngine::SendAndAcknowledgeXmppStanza(const TDesC8& aStanza, MXmppStanzaObserver* aObserver, TBool aPersisant, TXmppMessagePriority aPriority) {
-	if(aPersisant || aPriority == EXmppPriorityHigh || (!aPersisant && (iEngineState == EXmppOnline || iLastError != EXmppNone))) {
-		// Add observer to observing list
-		CXmlParser* aXmlParser = CXmlParser::NewLC(aStanza);
-		TPtrC8 aStanzaId = aXmlParser->GetStringAttribute(_L8("id"));
-		
-		AddStanzaObserverL(aStanzaId, aObserver);
-		CleanupStack::PopAndDestroy(); // aXmlParser
-		
-		// Send xmpp stanza
-		SendAndForgetXmppStanza(aStanza, aPersisant, aPriority);
-	}
-}
-
-void CXmppEngine::CancelXmppStanzaObservation(MXmppStanzaObserver* aObserver) {
-	for(TInt i = iStanzaObserverArray.Count() - 1; i >= 0; i--) {
-		if(iStanzaObserverArray[i]->GetStanzaObserver() == aObserver) {
-			delete iStanzaObserverArray[i];
-			iStanzaObserverArray.Remove(i);
-		}
-	}
 }
 
 void CXmppEngine::SendQueuedXmppStanzas() {
@@ -438,15 +404,17 @@ void CXmppEngine::OpenStream() {
 }
 
 void CXmppEngine::SendAuthorization() {
-	TPtr8 pUsername = iUsername->Des();
-	TPtr8 pPassword = iPassword->Des();
+	TPtr8 pUsername(iUsername->Des());
+	TPtr8 pPassword(iPassword->Des());
+	TPtr8 pXmppServer(iXmppServer->Des());
 
 	// Create source auth string
-	HBufC8* aSrc = HBufC8::NewLC(pUsername.Length() + pPassword.Length() + 2);
+	HBufC8* aSrc = HBufC8::NewLC(pUsername.Length() + pXmppServer.Length() + pPassword.Length() + 3);
 	TPtr8 pSrc(aSrc->Des());
-	pSrc.Append(TChar(0000));
+	pSrc.Append(TChar(0));
 	pSrc.Append(pUsername);
-	pSrc.Append(TChar(0000));
+	
+	pSrc.Append(TChar(0));
 	pSrc.Append(pPassword);
 
 	HBufC8* aDest = HBufC8::NewLC(pSrc.Length() * 2);
@@ -469,16 +437,18 @@ void CXmppEngine::SendAuthorization() {
 }
 
 void CXmppEngine::QueryServerTimeL() {
-	TPtr8 pXmppServer(iXmppServer->Des());
-	_LIT8(KPingStanza, "<iq to='' type='get' id='time1'><query xmlns='jabber:iq:time'/></iq>\r\n");
-
-	HBufC8* aPingStanza = HBufC8::NewLC(KPingStanza().Length() + pXmppServer.Length());
-	TPtr8 pPingStanza(aPingStanza->Des());
-	pPingStanza.Copy(KPingStanza);
-	pPingStanza.Insert(8, pXmppServer);
-
-	WriteToStreamL(pPingStanza);
-	CleanupStack::PopAndDestroy();
+//	TPtr8 pXmppServer(iXmppServer->Des());
+//	_LIT8(KPingStanza, "<iq to='' type='get' id='time1'><time xmlns='urn:xmpp:time'/></iq>\r\n");
+//
+//	HBufC8* aPingStanza = HBufC8::NewLC(KPingStanza().Length() + pXmppServer.Length());
+//	TPtr8 pPingStanza(aPingStanza->Des());
+//	pPingStanza.Copy(KPingStanza);
+//	pPingStanza.Insert(8, pXmppServer);
+//
+//	WriteToStreamL(pPingStanza);
+//	CleanupStack::PopAndDestroy();
+	
+	WriteToStreamL(_L8("<iq to='buddycloud.com' type='get' id='time1'><time xmlns='urn:xmpp:time'/></iq>\r\n"));
 }
 
 void CXmppEngine::WriteToStreamL(const TDesC8& aData) {
@@ -511,7 +481,7 @@ void CXmppEngine::HandleXmppStanzaL(const TDesC8& aStanza) {
 					aStanzaIsProcessed = true;
 					
 					// Forward to observer
-					iStanzaObserverArray[i]->GetStanzaObserver()->XmppStanzaNotificationL(aStanza, aAttributeId);
+					iStanzaObserverArray[i]->GetStanzaObserver()->XmppStanzaAcknowledgedL(aStanza, aAttributeId);
 				}
 				
 				// Delete and remove
@@ -534,8 +504,20 @@ void CXmppEngine::HandleXmppStanzaL(const TDesC8& aStanza) {
 			aStanzaIsProcessed = true;
 		}
 		else if(aElement.Compare(_L8("stream:features")) == 0) {
-			// Start compression
-			if(!iStreamCompressed && aXmlParser->MoveToElement(_L8("compression"))) {
+			iNegotiatingSecureConnection = false;
+
+			if(aXmlParser->MoveToElement(_L8("starttls"))) {
+				// Should TLS be negotiated
+				if(aXmlParser->GetStringData().Compare(_L8("<required/>")) == 0) {
+					iNegotiatingSecureConnection = true;
+				}				
+			}
+			
+			if(iNegotiatingSecureConnection) {
+				// Start TLS negotiation
+				WriteToStreamL(_L8("<starttls xmlns='urn:ietf:params:xml:ns:xmpp-tls'/>"));
+			}
+			else if(!iStreamCompressed && aXmlParser->MoveToElement(_L8("compression"))) {
 				// Compress
 				TBool aCompressionStarted = false;
 	
@@ -558,7 +540,7 @@ void CXmppEngine::HandleXmppStanzaL(const TDesC8& aStanza) {
 					}
 				}
 	
-				if( !aCompressionStarted ) {
+				if(!aCompressionStarted) {
 					// Authenticate
 					SendAuthorization();
 				}
@@ -584,6 +566,12 @@ void CXmppEngine::HandleXmppStanzaL(const TDesC8& aStanza) {
 			
 			aStanzaIsProcessed = true;
 		}
+		else if(aElement.Compare(_L8("proceed")) == 0) {
+			// Secure the connection
+			iTcpIpEngine->SecureConnectionL(KXmppTLSProtocol);
+			
+			aStanzaIsProcessed = true;
+		}
 		else if(aElement.Compare(_L8("compressed")) == 0) {
 			// Start compressed stream
 			iStreamCompressed = true;
@@ -600,9 +588,17 @@ void CXmppEngine::HandleXmppStanzaL(const TDesC8& aStanza) {
 			aStanzaIsProcessed = true;
 		}
 		else if(aElement.Compare(_L8("failure")) == 0) {
-			// Authorization Failure
-			iLastError = EXmppBadAuthorization;
-			iEngineObserver->XmppError(iLastError);
+			TPtrC8 aAttributeXmlns = aXmlParser->GetStringAttribute(_L8("xmlns"));
+			
+			if(aAttributeXmlns.Compare(_L8("urn:ietf:params:xml:ns:xmpp-tls")) == 0) {
+				// TLS negotiation failure
+				iLastError = EXmppTlsFailed;
+			}
+			else {
+				// Authorization Failure
+				iLastError = EXmppBadAuthorization;
+				iEngineObserver->XmppError(iLastError);
+			}
 			
 			aStanzaIsProcessed = true;
 		}
@@ -697,7 +693,46 @@ void CXmppEngine::HandleXmppStanzaL(const TDesC8& aStanza) {
 	iSilenceState = EXmppSilenceTest;
 }
 
-void CXmppEngine::XmppStanzaNotificationL(const TDesC8& aStanza, const TDesC8& aId) {
+void CXmppEngine::SendAndForgetXmppStanza(const TDesC8& aStanza, TBool aPersisant, TXmppMessagePriority aPriority) {
+	CXmppOutboxMessage* aMessage = CXmppOutboxMessage::NewLC();
+	aMessage->SetStanzaL(aStanza);
+	aMessage->SetPersistance(aPersisant);
+	aMessage->SetPriority(aPriority);
+	
+	iXmppOutbox->AddMessage(aMessage);
+	CleanupStack::Pop(); // aMessage
+	
+	if(iSilenceState == EXmppSilenceTest && !iXmppOutbox->SendInProgress()) {
+		if(iSendQueuedMessages || iXmppOutbox->ContainsPriorityMessages(EXmppPriorityHigh)) {			
+			WriteToStreamL(iXmppOutbox->GetNextMessage()->GetStanza());
+		}
+	}
+}
+
+void CXmppEngine::SendAndAcknowledgeXmppStanza(const TDesC8& aStanza, MXmppStanzaObserver* aObserver, TBool aPersisant, TXmppMessagePriority aPriority) {
+	if(aPersisant || aPriority == EXmppPriorityHigh || (!aPersisant && (iEngineState == EXmppOnline || iLastError != EXmppNone))) {
+		// Add observer to observing list
+		CXmlParser* aXmlParser = CXmlParser::NewLC(aStanza);
+		TPtrC8 aStanzaId = aXmlParser->GetStringAttribute(_L8("id"));
+		
+		AddStanzaObserverL(aStanzaId, aObserver);
+		CleanupStack::PopAndDestroy(); // aXmlParser
+		
+		// Send xmpp stanza
+		SendAndForgetXmppStanza(aStanza, aPersisant, aPriority);
+	}
+}
+
+void CXmppEngine::CancelXmppStanzaAcknowledge(MXmppStanzaObserver* aObserver) {
+	for(TInt i = iStanzaObserverArray.Count() - 1; i >= 0; i--) {
+		if(iStanzaObserverArray[i]->GetStanzaObserver() == aObserver) {
+			delete iStanzaObserverArray[i];
+			iStanzaObserverArray.Remove(i);
+		}
+	}
+}
+
+void CXmppEngine::XmppStanzaAcknowledgedL(const TDesC8& aStanza, const TDesC8& aId) {
 	CXmlParser* aXmlParser = CXmlParser::NewLC(aStanza);
 	TPtrC8 aAttributeType = aXmlParser->GetStringAttribute(_L8("type"));
 	
@@ -760,6 +795,8 @@ void CXmppEngine::DataInflated(const TDesC8& aInflatedData) {
 }
 
 void CXmppEngine::DataRead(const TDesC8& aMessage) {
+	iDataReceived += aMessage.Length();
+	
 	if(iStreamCompressed) {
 		TRAPD(aErr, iCompressionEngine->InflateL(aMessage));
 	}
@@ -862,8 +899,12 @@ void CXmppEngine::ProcessStanzaInBufferL(TInt aLength) {
 	}
 }
 
-void CXmppEngine::DataWritten(const TDesC8& /*aMessage*/) {
-//	iEngineObserver->XmppStanzaWritten(aMessage);
+void CXmppEngine::DataWritten(const TDesC8& aMessage) {
+	iDataSent += aMessage.Length();
+	
+	if(!iStreamCompressed) {
+		iEngineObserver->XmppStanzaWritten(aMessage);
+	}
 }
 
 void CXmppEngine::NotifyEvent(TTcpIpEngineState aTcpEngineState) {
@@ -884,16 +925,25 @@ void CXmppEngine::NotifyEvent(TTcpIpEngineState aTcpEngineState) {
 			iStateTimer->After(30000000);
 			iEngineState = EXmppLoggingIn;
 			iEngineObserver->XmppStateChanged(iEngineState);
+			
+			// Begin socket listening
+			iTcpIpEngine->Read();
 
 			// Reset compression engine
-			if(iEngineState >= EXmppLoggingIn) {
-				iCompressionEngine->WriteDebugL();
-				iCompressionEngine->ResetL();
-			}
+			iCompressionEngine->WriteDebugL();
+			iCompressionEngine->ResetL();
 
 			iConnectionAttempts = 0;
 			iStreamCompressed = false;
 
+			// Initialize xmpp stream
+			OpenStream();
+			break;
+		case ETcpIpSecureConnection:
+			// Connection is secured
+			iTcpIpEngine->Read();
+
+			// Initialize xmpp stream
 			OpenStream();
 			break;
 		case ETcpIpCarrierChangeReq:
@@ -967,6 +1017,8 @@ void CXmppEngine::Error(TTcpIpEngineError aError) {
 				iTcpIpEngine->Disconnect();
 			}
 			break;
+		case ETcpIpSecureFailed:
+			iLastError = EXmppTlsFailed;
 		default:
 			iEngineState = EXmppReconnect;
 			iEngineObserver->XmppStateChanged(EXmppReconnect);
@@ -976,8 +1028,8 @@ void CXmppEngine::Error(TTcpIpEngineError aError) {
 }
 
 void CXmppEngine::TcpIpDebug(const TDesC8& aMessage, TInt aCode) {
-	TBuf8<256> aPrint;
-	aPrint.Copy(aMessage);
+	TBuf8<256> aPrint(aMessage);
+
 	aPrint.AppendFormat(_L8(": %d"), aCode);
 	iEngineObserver->XmppDebug(aPrint);
 }

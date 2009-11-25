@@ -33,7 +33,7 @@
 #include "Timer.h"
 #include "TelephonyEngine.h"
 #include "XmppEngine.h"
-#include "XmppObservers.h"
+#include "XmppInterfaces.h"
 
 /*
 ----------------------------------------------------------------------------
@@ -50,15 +50,15 @@ enum TDescSettingItems {
 };
 
 enum TIntSettingItems {
-	ESettingItemGroupNotification, ESettingItemLanguage, 
+	ESettingItemGroupNotification, ESettingItemServerId, ESettingItemLanguage, 
 	ESettingItemPrivateMessageTone, ESettingItemChannelPostTone, ESettingItemDirectReplyTone
 };
 
 enum TBoolSettingItems {
-	ESettingItemTestServer, ESettingItemCellOn, ESettingItemWifiOn, ESettingItemBtOn, ESettingItemGpsOn, 
+	ESettingItemCellOn, ESettingItemWifiOn, ESettingItemBtOn, ESettingItemGpsOn, 
 	ESettingItemCellAvailable, ESettingItemWifiAvailable, ESettingItemBtAvailable, ESettingItemGpsAvailable, 
 	ESettingItemNewInstall, ESettingItemNotifyReplyTo, ESettingItemAutoStart, ESettingItemShowName, 
-	ESettingItemShowContacts, ESettingItemContactsLoaded, ESettingItemAccessPoint
+	ESettingItemShowContacts, ESettingItemContactsLoaded, ESettingItemAccessPoint, ESettingItemMessageBlocking
 };
 
 enum TBuddycloudLogicState {
@@ -139,7 +139,7 @@ class MBuddycloudLogicDebugObserver {
 ----------------------------------------------------------------------------
 */
 
-class CBuddycloudLogic : public CBase, MContactDbObserver, MLocationEngineNotification,
+class CBuddycloudLogic : public CBase, MContactDbObserver, MLocationEngineNotification, MTimeInterface,
 									MXmppEngineObserver, MXmppRosterObserver, MXmppStanzaObserver,
 									MTimeoutNotification, MAvatarRepositoryObserver,
 									MDiscussionReadObserver, MTelephonyEngineNotification,
@@ -163,8 +163,7 @@ class CBuddycloudLogic : public CBase, MContactDbObserver, MLocationEngineNotifi
 		
 		TBuddycloudLogicState GetState();
 		
-		void SendXmppStanzaL(const TDesC8& aStanza, MXmppStanzaObserver* aObserver = NULL);
-		void CancelXmppStanzaObservation(MXmppStanzaObserver* aObserver);
+		MXmppWriteInterface* GetXmppInterface();
 		
 		void GetConnectionStatistics(TInt& aDataSent, TInt& aDataReceived);
 
@@ -184,8 +183,8 @@ class CBuddycloudLogic : public CBase, MContactDbObserver, MLocationEngineNotifi
 		void LookupUserByNumberL(TBool aForcePublish = false);
 		void PublishUserDataL(CContactIdArray* aContactIdArray, TBool aForcePublish = false);
 		
-		void LanguageChanged();
-		void NotificationChanged(TIntSettingItems aItem);
+		void LanguageSettingChanged();
+		void NotificationSettingChanged(TIntSettingItems aItem);
 		
 		TDes& GetDescSetting(TDescSettingItems aItem);
 		TInt& GetIntSetting(TIntSettingItems aItem);
@@ -372,10 +371,11 @@ class CBuddycloudLogic : public CBase, MContactDbObserver, MLocationEngineNotifi
 	   	void TelephonyDebug(const TDesC8& aMessage);
 
 	public: // From CLocationEngine
-    	void HandleXmppLocationStanza(const TDesC8& aStanza, MXmppStanzaObserver* aObserver);
     	void HandleLocationServerResult(TLocationMotionState aMotionState, TInt aPatternQuality, TInt aPlaceId);
-    	TTime GetObserverTime();
-		void LocationShutdownComplete();
+ 		void LocationShutdownComplete();
+	
+	public: // From MTimeInterface
+    	TTime GetTime();
 
     public: // From MXmppEngineNotification
 		void XmppStanzaRead(const TDesC8& aMessage);
@@ -395,7 +395,7 @@ class CBuddycloudLogic : public CBase, MContactDbObserver, MLocationEngineNotifi
     	void RosterSubscriptionL(TDesC& aJid, const TDesC8& aData);
 	
     public: // From MXmppStanzaObserver
-		void XmppStanzaNotificationL(const TDesC8& aStanza, const TDesC8& aId);
+		void XmppStanzaAcknowledgedL(const TDesC8& aStanza, const TDesC8& aId);
 
     private: // Presence handling
     	void HandleIncomingPresenceL(TDesC& aFrom, const TDesC8& aData);
@@ -404,7 +404,7 @@ class CBuddycloudLogic : public CBase, MContactDbObserver, MLocationEngineNotifi
 		void HandleIncomingMessageL(TDesC& aFrom, const TDesC8& aData);
 		void ProcessNewMessageL(TDesC& aFrom, const TDesC8& aData);
 
-    private:
+    protected:
     	MBuddycloudLogicOwnerObserver* iOwnerObserver;
 		MBuddycloudLogicStatusObserver* iStatusObserver;
 		RPointerArray<MBuddycloudLogicNotificationObserver> iNotificationObservers;
@@ -439,6 +439,7 @@ class CBuddycloudLogic : public CBase, MContactDbObserver, MLocationEngineNotifi
 		
 		TBool iOffsetReceived;
 		TBool iRosterSynchronized;
+		TBool iMyChannelMembersRequested;
 
 		CXmppEngine* iXmppEngine;
         TBool iXmppEngineReady;
@@ -466,9 +467,9 @@ class CBuddycloudLogic : public CBase, MContactDbObserver, MLocationEngineNotifi
         
         // Preferences settings
         TInt iSettingPreferredLanguage;
+        TBool iSettingMessageBlocking;
         TBool iSettingAccessPoint;
         TBool iSettingShowName;
-        TBool iSettingTestServer;
         TBool iSettingAutoStart;
         TBool iSettingShowContacts;
        
@@ -478,6 +479,9 @@ class CBuddycloudLogic : public CBase, MContactDbObserver, MLocationEngineNotifi
         TBuf<32> iSettingEmailAddress;
         TBuf<32> iSettingUsername;
         TBuf<32> iSettingPassword;
+        TInt iSettingServerId;
+        
+        TPtrC iSettingUsernameOnly;
         
         // Community settings
         TBuf<32> iSettingTwitterUsername;

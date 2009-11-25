@@ -1004,7 +1004,7 @@ void CBuddycloudMessagingContainer::DynInitMenuPaneL(TInt aResourceId, CEikMenuP
 			if(aLinkPosition.iType != ELinkWebsite) {
 				HBufC* aJid = HBufC::NewLC(aLinkPosition.iLength + KBuddycloudChannelsServer().Length());
 				TPtr pJid(aJid->Des());
-				pJid.Append(aMessage->GetBody().Mid(aLinkPosition.iStart, aLinkPosition.iLength));
+				pJid.Append(aMessage->GetBody().Mid((aLinkPosition.iStart + 1), (aLinkPosition.iLength - 1)));
 					
 				if(aLinkPosition.iType == ELinkUsername) {
 					pJid.Append(KBuddycloudRosterServer);
@@ -1124,7 +1124,7 @@ void CBuddycloudMessagingContainer::HandleCommandL(TInt aCommand) {
 			CMessageLinkPosition aLinkPosition = aMessage->GetLink(iSelectedLink);
 			
 			if(aLinkPosition.iType != ELinkWebsite) {
-				TPtrC aLinkText(aMessage->GetBody().Mid(aLinkPosition.iStart, aLinkPosition.iLength));
+				TPtrC aLinkText(aMessage->GetBody().Mid((aLinkPosition.iStart + 1), (aLinkPosition.iLength - 1)));
 				
 				if(aCommand == EMenuFollowLinkCommand) {
 					if(aLinkPosition.iType == ELinkUsername) {
