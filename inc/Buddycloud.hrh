@@ -45,16 +45,16 @@ enum TSettingsTabs {
 #define EMenuMessagesCommand 211
 #define EMenuPrivateMessagesCommand 212
 #define EMenuChannelMessagesCommand 213
-#define EMenuInviteCommand 214
+#define EMenuAddContactCommand 214
 #define EMenuSelectCommand 215
 #define EMenuNewSearchCommand 216
 #define EMenuPreviousCommand 217
-#define EMenuJoinGroupCommand 218
+#define EMenuEditChannelCommand 218
 #define EMenuUnfollowCommand 219
-#define EMenuPostMessageCommand 220
-#define EMenuReplyToMessageCommand 221
-#define EMenuSetTopicCommand 222
-#define EMenuJumpToUnreadCommand 223
+#define EMenuWritePostCommand 220
+#define EMenuAddCommentCommand 221
+#define EMenuJumpToUnreadCommand 222
+#define EMenuChannelInfoCommand 223
 #define EMenuDeleteCommand 224
 #define EMenuUserSettingsCommand 225
 #define EMenuCommunitySettingsCommand 226
@@ -62,8 +62,8 @@ enum TSettingsTabs {
 #define EMenuHelpCommand 228
 #define EMenuUpdateCommand 229
 #define EMenuAboutCommand 230
-#define EMenuGroupMembersCommand 231
-#define EMenuInviteToGroupCommand 232
+#define EMenuChannelMembersCommand 231
+#define EMenuRequestToPostCommand 232
 #define EMenuEditItemCommand 233
 #define EMenuInviteToBuddycloudCommand 234
 #define EMenuFollowCommand 235
@@ -81,7 +81,7 @@ enum TSettingsTabs {
 #define EMenuOptionsUpdateCommand 246
 #define EMenuOptionsAddCommand 247
 #define EMenuOptionsHelpCommand 248
-#define EMenuOptionsGroupCommand 249
+#define EMenuOptionsChannelCommand 249
 #define EMenuOptionsExploreCommand 250
 
 #define EMenuLoudspeakerCommand 251
@@ -90,29 +90,28 @@ enum TSettingsTabs {
 #define EMenuResumeCallCommand 254
 #define EMenuEndCallCommand 255
 
-#define EMenuBanCommand 256
-#define EMenuKickCommand 257
-#define EMenuChangeRoleCommand 258
+#define EMenuCopyPostCommand 256
+#define EMenuLikePostCommand 257
+#define EMenuReportPostCommand 258
+#define EMenuDeletePostCommand 259
+#define EMenuChangePermissionCommand 260
 
-#define EMenuSeeFollowersCommand 259
-#define EMenuSeePlacesCommand 260
-#define EMenuSeeFollowingCommand 261
-#define EMenuSeeProducingCommand 262
-#define EMenuSeeNearbyCommand 263
-#define EMenuSeeBeenHereCommand 264
-#define EMenuSeeGoingHereCommand 265
+#define EMenuSeeFollowersCommand 261
+#define EMenuSeePlacesCommand 262
+#define EMenuSeeFollowingCommand 263
+#define EMenuSeeProducingCommand 264
+#define EMenuSeeNearbyCommand 265
+#define EMenuSeeBeenHereCommand 266
+#define EMenuSeeGoingHereCommand 267
 
-#define EMenuAcceptCommand 266
-#define EMenuAcceptAndFollowCommand 267
-#define EMenuDeclineCommand 268
-
-#define EMenuGetChannelInfoCommand 269
+#define EMenuAcceptCommand 268
+#define EMenuAcceptAndFollowCommand 269
+#define EMenuDeclineCommand 270
 
 // Settings
 enum TSettingsAccountItems {
 	ESettingAccountFullName = 1, 
 	ESettingAccountEmailAddress,
-	ESettingAccountPhoneNumber,
 	ESettingAccountUsername, 
 	ESettingAccountPassword,
 	ESettingAccountServer
@@ -129,7 +128,8 @@ enum TSettingsPreferencesItems {
 };
 
 enum TSettingsNotificationsItems {
-	ESettingNotificationsGroupNotification = 1,
+	ESettingNotificationsNotifyChannelsModerating = 1,
+	ESettingNotificationsNotifyChannelsFollowing,
 	ESettingNotificationsNotifyReplyTo,	
 	ESettingNotificationsPrivateMessageTone,	
 	ESettingNotificationsChannelPostTone,	
@@ -153,6 +153,14 @@ enum TEditPlaceItems {
 	EEditPlaceItemPostcode,
 	EEditPlaceItemRegion,
 	EEditPlaceItemCountry
+};
+
+// Edit channel
+enum TEditChannelItems {
+	EEditChannelItemTitle = 1,
+	EEditChannelItemId, 
+	EEditChannelItemDescription, 
+	EEditChannelItemAccess
 };
 
 // Communities

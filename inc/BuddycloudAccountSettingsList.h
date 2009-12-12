@@ -27,7 +27,6 @@ class CBuddycloudAccountSettingsList : public CAknSettingItemList {
 	public:
 		void ActivateL(TInt aSelectItem);
 		void EditCurrentItemL();
-		void SaveL();
 		
 	public: // From CCoeControl
 		void GetHelpContext(TCoeHelpContext& aContext) const;
@@ -47,8 +46,6 @@ class CBuddycloudAccountSettingsList : public CAknSettingItemList {
 		CAknNavigationDecorator* iNaviDecorator;
         
 		CBuddycloudLogic* iBuddycloudLogic;
-		
-		TBool iSettingsChanged;
 };
 
 #endif

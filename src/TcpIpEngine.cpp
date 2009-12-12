@@ -392,11 +392,12 @@ void CTcpIpEngine::Disconnect() {
 		case ETcpIpConnecting:
 		case ETcpIpConnected:
 		case ETcpIpCarrierChangeReq:
-			iTcpIpSocket.Shutdown(RSocket::EImmediate, iStatus);
 			iSocketReader->Cancel();
 			iSocketWriter->Reset();
 			iSocketWriter->Cancel();
 			
+			iTcpIpSocket.Shutdown(RSocket::EImmediate, iStatus);
+		
 			if(iEngineStatus == ETcpIpCarrierChangeReq) {
 				iEngineObserver->NotifyEvent(iEngineStatus);
 				iEngineStatus = ETcpIpCarrierChanging;
@@ -564,6 +565,12 @@ void CTcpIpEngine::RunL() {
 			break;
 		case ETcpIpCarrierChanging:
 			CloseSocket();
+			
+#ifdef __3_2_ONWARDS__
+			// Migrate to new carrier
+			iEngineObserver->TcpIpDebug(_L8("TCP   MigrateToPreferredCarrier"));
+			iMobility->MigrateToPreferredCarrier();
+#endif
 			break;
 		case ETcpIpDisconnecting:
 			CloseSocket();
@@ -584,10 +591,6 @@ void CTcpIpEngine::PreferredCarrierAvailable(TAccessPointInfo /*aOldAp*/, TAcces
 			iEngineObserver->TcpIpDebug(_L8("TCP   PreferredCarrierAvailable - disconnect"));
 			iEngineStatus = ETcpIpCarrierChangeReq;
 			Disconnect();
-			
-			// Migrate to new carrier
-			iEngineObserver->TcpIpDebug(_L8("TCP   MigrateToPreferredCarrier"));
-			iMobility->MigrateToPreferredCarrier();
 		}
 		else {
 			// Ingore carrier change
@@ -681,6 +684,7 @@ void CSocketReader::IssueRead() {
 
 void CSocketReader::CancelRead() {
 	iAllowRead = false;
+	iErrorCount = 0;
 	
 	Cancel();
 }
@@ -711,14 +715,23 @@ void CSocketReader::DoCancel() {
 
 void CSocketReader::RunL() {
 	switch(iStatus.Int()) {
-		case KErrNone:
+		case KErrNone:			
 			iEngineObserver->DataRead(iBuffer);
+			
+			iErrorCount = 0;
 			
 			Read();
 			break;
 		case KErrEof:
-			iEngineObserver->TcpIpDebug(_L8("TCP   RSocket::Recv EOF"), iStatus.Int());
-			iEngineObserver->Error(ETcpIpReadWriteError);
+			iErrorCount++;
+			
+			if(iErrorCount < 10) {
+				Read();
+			}
+			else {
+				iEngineObserver->TcpIpDebug(_L8("TCP   RSocket::Recv EOF"), iStatus.Int());
+				iEngineObserver->Error(ETcpIpReadWriteError);
+			}
 			break;
 		case KErrTimedOut:
 			Read();

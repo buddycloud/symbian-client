@@ -1,0 +1,109 @@
+Change Log
+==========
+
+0.05.04
+
+- Add EvaluateAsReal to XmlParser
+- Remove geoloc, mood and muc from disco#info response
+- Create XmppContants and XmppUtilities for attribute, geoloc and atom entry conversions
+- Create CGeolocData and CAtomEntryData classes for data storage and access
+- [bug] Fix in TcpIpEngine to only accept carrier migration only after socket is closed
+- Add AppendToString (with seperator) function to CTextUtilities
+
+- Create generic list class CBuddycloudListItem and data storage CBuddycloudListStore
+- Complete rewrite of following, place % explorer data storage to use generic lists
+- Adapt CFollowingChannelItem for pubsub data
+- Adapt CFollowingRosterItem to use CGeolocData
+- Remove CFollowingItemStore (use CBuddycloudListStore instead)
+- Remove CBuddycloudBasicPlace & CBuddycloudExtendedPlace
+- Create CBuddycloudPlace extending CBuddycloudListItem and using CGeolocData as storage
+- Rewrite CBuddycloudPlaceStore to extend generic CBuddycloudListStore
+
+- Remove CMessagingManager, CMessage & CMessageParticipants
+- Create CDiscussionManager to manage caching, insertion and deletion of CAtomEntryData entries
+- Create CThreadedEntry to manage a threaded head CAtomEntryData and comment entries
+- Rewrite of unread count handling, now a shared interface MDiscussionUnreadData
+- Rewrite of discussion notification tree, is now Entry -> Thread (Entry observer) -> Manager (Thread observer) -> (Discussion Read & Update observer)
+
+- Remove all references to MUC from CBuddycloudLogic (Yey!)
+- Remove channel presence sending logic
+- Remove users PEP data handling
+- Add setting item for notifying moderated channel entries
+- Remove any CContactDatabase email/number lookup, remove PEP user profile publishing
+- Rewrite of roster collection and parsing
+- Auto-subscribe to the pubsub service if not already subscribed
+- Collect subscribed to node from the pubsub service
+- Synchronize subscribed nodes to following list
+- Collect members subscribed to own pubsub user nodes
+- Synchronize members subscribed with roster list
+- Rewrite following & unfollowing of channels for the pubsub service
+- Rewrite channel creation for pubsub service
+- Add publish and collecting of channel metadata
+- Add pubsub node affiliation & subscription setting functions
+- Add HandlePubsubEventL to process incoming pubsub message events
+- Change SetMoodL to push publishes to the pubsub service
+- Store node id of last pubsub items event received (to be used later)
+- Remove channel invite process & handling
+- Rewrite of message building, depending if it's a private (message) or channel (atom entry) message
+- Rewrite HandleIncomingMessageL to use CAtomEntryData and CDiscussionManager
+- Remove use of chat states
+
+- Remove phone number entry from CBuddycloudAccountSettingsContainer
+- Create CBuddycloudEditChannelView & CBuddycloudEditChannelList for creating & editing channel metadata
+- Add kinetic scrolling to CBuddycloudListComponent
+- Update CBuddycloudFollowingContainer to use CBuddycloudListStore
+- Allow CBuddycloudFollowingContainer to wrap back to top from last list item
+- Remove CreateAddressTextLC from CBuddycloudPlacesContainer (use CTextUtilities::AppendToString)
+- Update CBuddycloudPlacesContainer to use CBuddycloudListStore
+- Improve CBuddycloudPlacesContainer item rendering logic
+- Launch CBuddycloudEditChannelView when creating new channel from CBuddycloudExplorerContainer
+
+- Rewrite of CBuddycloudMessagingContainer to handle threaded discussions
+- Handle events EntryAdded & EntryDeleted from MDiscussionUpdateObserver
+- Rewrite compose new post/comment handling
+- Display unread discussion entries in bold
+- Add affiliation bar to left side screen
+- Rewrite of CBuddycloudMessagingContainer menu logic
+- 'Reply to' removed and replaced with 'Write comment'
+- Direct replies are now comments to a root entry written by you
+- Add 'Copy post' to copy entry content to the clipboard
+- Remove kick & ban menu items and logic. Replaced with 'Change permissions'
+- Go back to same following item position after reading all entries (dont bubble down with item)
+
+0.05.03
+
+- Cleanup & extension of TcpIpEngine to negotiate SSL/TLS connections
+- Cleanup of XmppEngine to handle jabber server address changing
+- Move connection statistic management to XmppEngine from CompressionEngine
+- [Workaround] Force server time query to buddycloud.com
+- Negotiate TLS connection if stream requires it in XmppEngine
+- Handle TLS negotiation error cases in XmppEngine
+- Define MXmppWriteInterface to allow direct write access to the XmppEngine
+- Improve LocationEngine & BuddycloudExplorerContainer to use MXmppWriteInterface
+- Store xmpp server data to settings, set xmpp server dynamically to XmppEngine
+- Add setting list option to select xmpp server
+- Allow '.' & '@' in usernames
+- [bug] Fix roster & channel members synchronization (complete list not sync'ed in some cases)
+- Add a block private messages setting from non-followers
+- Rename TimeCoder to TimeUtilities & XmppObservers to XmppInterfaces
+- Change sending of channel presence to one every 500000ms (from 5 per 1000000ms) - google fix
+- Update from 99translations
+
+0.05.02
+
+- Fix bug not recognizing a direct reply
+- Improve some link matching
+- Allow partial updates of gps data
+
+0.05.01
+
+- Fix bug in message layout of @ and # links
+- Force compression of CMessageManager after a reconnect state is received
+
+0.05.00
+
+* Symbian Signed
+- Update help files
+- Fix toolbar label for create message
+- Fix bug not sending place id in media request
+- Fix bug not sending new channel configuration stanza

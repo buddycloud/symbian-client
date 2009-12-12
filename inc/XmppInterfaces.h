@@ -13,15 +13,12 @@
 #ifndef XMPPINTERFACES_H_
 #define XMPPINTERFACES_H_
 
-#include <XmppOutbox.h>
+#include "XmppConstants.h"
 
 class MXmppRosterObserver {
 	public:
-		virtual void RosterItemsL(const TDesC8& aItems, TBool aUpdate) = 0;
+		virtual void RosterItemsL(const TDesC8& aItems, TBool aPush) = 0;
 		virtual void RosterOwnJidL(TDesC& aJid) = 0;
-		virtual void RosterPubsubEventL(TDesC& aFrom, const TDesC8& aItem, TBool aNew) = 0;
-		virtual void RosterPubsubDeleteL(TDesC& aFrom, const TDesC8& aNode) = 0;
-		virtual void RosterSubscriptionL(TDesC& aJid, const TDesC8& aData) = 0;
 };
 
 class MXmppStanzaObserver {

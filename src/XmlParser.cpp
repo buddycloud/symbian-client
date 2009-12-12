@@ -59,6 +59,13 @@ TBool CXmlParser::EvaluateAsBool(const TDesC8& aText) {
 	return false;
 }
 
+TReal CXmlParser::EvaluateAsReal(const TDesC8& aText, TReal aDefault) {
+	TLex8 aLex(aText);
+	aLex.Val(aDefault);
+	
+	return aDefault;
+}
+
 TInt CXmlParser::EvaluateAsInt(const TDesC8& aText, TInt aDefault) {
 	TLex8 aLex(aText);
 	aLex.Val(aDefault);
@@ -220,6 +227,10 @@ TPtrC8 CXmlParser::GetStringData() {
 
 TBool CXmlParser::GetBoolData() {
 	return EvaluateAsBool(GetStringData());
+}
+
+TReal CXmlParser::GetRealData(TReal aDefault) {
+	return EvaluateAsReal(GetStringData(), aDefault);
 }
 
 TInt CXmlParser::GetIntData(TInt aDefault) {

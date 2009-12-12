@@ -13,7 +13,6 @@
 CHARACTER_SET UTF8
 
 rls_string r_string_app_caption "buddycloud"
-rls_string r_string_groupinvite_text " invited you to join channel: "
 // DO NOT TRANSLATE
 
 rls_string r_string_langcode "ro"
@@ -88,7 +87,7 @@ rls_string r_string_item_showchanneldetails "Detaliile canalului"
 rls_string r_string_item_call "Apelare contact"
 rls_string r_string_item_sendplacebysms "Trimite loc prin SMS"
 rls_string r_string_item_sendinvite "Invita in buddycloud"
-rls_string r_string_item_delete "Elimina"
+rls_string r_string_item_delete "Remove"
 rls_string r_string_item_noticeaccept "Accepta"
 rls_string r_string_item_noticeacceptandfollow "Accepta si Continua"
 rls_string r_string_item_noticedecline "Neacceptare"
@@ -101,17 +100,18 @@ rls_string r_string_settings_clearconnection "Schimbare conexiune"
 rls_string r_string_note_followinglistempty "Nu urmaresti nimic.\n\nUtilizeaza Canale, Explorer si file pentru a cauta lucruri, pentru a urmari."
 
 // Menu: Messaging
-rls_string r_string_options_openlink "Deschide link-ul"
-rls_string r_string_options_postmessage "Posteaza mesaj"
+rls_string r_string_options_postrequest "Request to post"
+rls_string r_string_options_postmessage "Write new post"
 rls_string r_string_options_postmedia "Posteaza Media"
-rls_string r_string_options_replytomessage "Răspundeţi"
-rls_string r_string_options_settopic "Setare subiect"
 rls_string r_string_options_jumptounread "Sariti la necitit"
-rls_string r_string_options_invitetochannel "Invita in canal"
-rls_string r_string_options_invitetootherchannel "Invita in alte canale"
-rls_string r_string_options_invitefriendtochannel "Invita urmaritorul"
 rls_string r_string_options_notificationon "Pune Buzz On"
 rls_string r_string_options_notificationoff "Pune Buzz off"
+
+rls_string r_string_item_addcomment "Write comment"
+rls_string r_string_item_likepost "♥ post"
+rls_string r_string_item_copypost "Copy post"
+rls_string r_string_item_reportpost "Report post"
+rls_string r_string_item_deletepost "Delete post"
 
 // Menu: Places
 rls_string r_string_options_setcurrent "Salveaza locatia"
@@ -127,7 +127,6 @@ rls_string r_string_note_placevisits "Vizite"
 rls_string r_string_note_placepopulation "Populaţia"
 rls_string r_string_note_learningplace "Invata locatia"
 rls_string r_string_note_updatingplace "Actualizarea locul..."
-rls_string r_string_note_noplaceaddress "Adresa nedefinita"
 rls_string r_string_note_placeslistempty "Nu aveti locuri marcate.\n\nPentru a cunoaste acest loc, apasati\n'Optiuni > Salveaza locatia'"
 
 // Menu: Nearby
@@ -171,33 +170,35 @@ rls_string r_string_item_unfollow "Nu mai urmareste"
 // Channel: Settings & Configuration
 rls_string r_string_note_personalchannelcreated "Bine ati venit la canalele buddycloud $USER!\n\nAcesta este canalul tau personal pe buddycloud. Acest canal este doar al tau si iti permite sa difuzezi adeptilor/urmaritorilor tai!"
 rls_string r_string_note_mediauploadready "Poti sa-ti urci media la $LINK"
-rls_string r_string_note_userkickedfromgroup "$USER a fost scos din canal"
-rls_string r_string_note_userbannedfromgroup "$USER a fost banat din canal"
-rls_string r_string_dialog_kickconfirmation "Scoate aceasta persoana din canal (se va alatura la urmatoarea inregistrare)?"
-rls_string r_string_dialog_banconfirmation "Interzice acestei persoane sa mai vada canalul"
-rls_string r_string_item_banfromgroup "Banat din canal"
-rls_string r_string_item_kickfromgroup "Scos din canal"
-rls_string r_string_item_changerole "Schimbaţi rolul"
-rls_string r_string_list_changerole_title "Schimbaţi rolul de a:"
-rls_string r_string_changerole_itemlist_moderator "Moderator"
-rls_string r_string_changerole_itemlist_contributor "Contribuitor"
-rls_string r_string_changerole_itemlist_visitor "Vizitator"
-rls_string r_string_note_changerolefailed "Nu aveţi permisiunea de a schimba rolul acestei persoane"
 
-// Settings Item List
+rls_string r_string_item_changerole "Change permission"
+rls_string r_string_changerole_itemlist_outcast "Elimina"
+rls_string r_string_changerole_itemlist_follower "Contribuitor"
+rls_string r_string_changerole_itemlist_publisher "Publisher"
+rls_string r_string_changerole_itemlist_moderator "Moderator"
+
+rls_string r_string_note_affiliationoutcast "You have been banned from the channel. You now cannot read or post in this channel's content."
+rls_string r_string_note_affiliationmember "You have become a follower of this channel. You can now read, but not post in this channel's content."
+rls_string r_string_note_affiliationpublisher "You have become a publisher of this channel. You can now read and post in this channel's content."
+rls_string r_string_note_affiliationmoderator "You have become a moderator of this channel. You can now read, post, and manage this channel's content."
+
+rls_string r_string_note_subscriptionpending "Your subscription request has been sent to the channel's producer."
+rls_string r_string_note_subscriptionaccepted "Your subscription to this channel has been accepted."
+rls_string r_string_note_subscriptionrejected "Your subscription to this channel has been rejected."
+
+// Account settings
 rls_string r_string_settings_account_title "Cont"
 rls_string r_string_settings_itemlist_fullname "Numele complet"
 rls_string r_string_settings_itemlist_fullname_hint "Numele dvs. complet"
 rls_string r_string_settings_itemlist_email "Adresa de Email"
 rls_string r_string_settings_itemlist_email_hint "Adresa de e-mail"
-rls_string r_string_settings_itemlist_phonenumber "Numărul de telefon"
-rls_string r_string_settings_itemlist_phonenumber_hint "Numărul dvs. de telefon principal"
 rls_string r_string_settings_itemlist_username "Nume de utilizator"
 rls_string r_string_settings_itemlist_username_hint "XMPP server username"
 rls_string r_string_settings_itemlist_password "Parola"
 rls_string r_string_settings_itemlist_password_hint "XMPP server password"
 rls_string r_string_settings_itemlist_server "XMPP server"
 
+// Preference settings
 rls_string r_string_settings_itemlist_language "Arata limba"
 rls_string r_string_settings_itemlist_blocking "Show private messages"
 rls_string r_string_settings_itemlist_blockingalwaysshow "From anyone"
@@ -209,18 +210,23 @@ rls_string r_string_settings_itemlist_accesspointalwaysask "Intodeauna intreaba"
 rls_string r_string_settings_itemlist_autostart "Porneste aplicatia la repornirea telefonului"
 rls_string r_string_settings_itemlist_showcontacts "Arata persoanele de contact"
 
+// Notification settings
 rls_string r_string_settings_notifications_title "Notificari"
-rls_string r_string_settings_itemlist_groupnotification "Anunta posturile din canal"
+rls_string r_string_settings_itemlist_notifyfollowing "Channels I follow"
+rls_string r_string_settings_itemlist_notifymoderating "Channels I moderate"
+rls_string r_string_settings_itemlist_notifyreply "Replies to my post"
+
 rls_string r_string_settings_itemlist_groupnever "Niciodată nu notifică"
 rls_string r_string_settings_itemlist_groupfirstonly "Primul post numai"
 rls_string r_string_settings_itemlist_groupallmessages "Toate postarile"
-rls_string r_string_settings_itemlist_notifyreply "Anunta-mi @Raspunsurile:"
+
 rls_string r_string_settings_itemlist_privatemessagetone "Sunet pentru mesaj privat"
 rls_string r_string_settings_itemlist_channelposttone "Avertizare post pe canal"
-rls_string r_string_settings_itemlist_directreplytone "Ton pentru @Raspunsuri"
+rls_string r_string_settings_itemlist_directreplytone "Replied comment tone"
 rls_string r_string_settings_itemlist_tonenone "Fara Ton"
 rls_string r_string_settings_itemlist_tonedefault "Ton Default"
 
+// Positioning settings
 rls_string r_string_settings_beacons_title "Poziţionarea"
 rls_string r_string_settings_itemlist_cell "Cell Turnul"
 rls_string r_string_settings_itemlist_wlan "WIFI"
@@ -257,16 +263,24 @@ rls_string r_string_editplace_itemlist_visibility "Altele pot fi plasate aici?"
 rls_string r_string_editplace_itemlist_visibility_public "Shared"
 rls_string r_string_editplace_itemlist_visibility_private "Personale"
 
+// Edit channel list
+rls_string r_string_newchannel_title "New channel"
+rls_string r_string_editchannel_title "Edit channel"
+rls_string r_string_editchannel_itemlist_title "Title"
+rls_string r_string_editchannel_itemlist_title_hint "Channel's title"
+rls_string r_string_editchannel_itemlist_id "#Channel Id"
+rls_string r_string_editchannel_itemlist_id_hint "Channel's unique Id"
+rls_string r_string_editchannel_itemlist_description "Description"
+rls_string r_string_editchannel_itemlist_description_hint "Channel's description"
+rls_string r_string_editchannel_itemlist_access "Access"
+rls_string r_string_editchannel_itemlist_access_open "Open channel"
+rls_string r_string_editchannel_itemlist_access_whitelist "Members only"
+
+rls_string r_string_note_channelexists "This #channel_id already exists. Please enter a unique one."
+
 // Following & Invitations
 rls_string r_string_followingrequest_title "Ca urmare a cererii"
 rls_string r_string_followerrequest_text "$USER doreste sa te urmareasca in buddycloud.\n* Arata-ti locatia si statusul\n* Arata-ti canalele personale\n* Arata-ti locatiile"
-
-rls_string r_string_channelinvite_title "Canal invitaţie"
-
-// Create channel
-rls_string r_string_dialog_createchannelname "Canalul de nume:"
-rls_string r_string_dialog_createchanneldescription "Scurtă Descriere:"
-rls_string r_string_channelfollowing_text "Canalul '$CHANNEL' există deja. Doriţi să urmaţi acest canal?"
 
 // Exit Confirmation
 rls_string r_string_exit_title "Confirmare iesirii"
@@ -294,9 +308,9 @@ rls_string r_string_dialog_setmood "Set status:"
 rls_string r_string_dialog_moodis "este"
 rls_string r_string_dialog_setcurrentlocation "Stabiliţi locul meu:"
 rls_string r_string_dialog_setnextlocation "Seteaza locul urmator:"
-rls_string r_string_dialog_settopic "Setare subiect:"
-rls_string r_string_dialog_newmessage "Mesaj nou:"
-rls_string r_string_dialog_addcontact "Introduceţi buddycloud sau Jabber ID-ul (de exemplu, test@gtalk.com):"
+rls_string r_string_dialog_newmessage "Write post:"
+rls_string r_string_dialog_newcomment "Write comment:"
+rls_string r_string_dialog_addcontact "Enter contact's Id (eg. test@gtalk.com):"
 
 // Notes
 rls_string r_string_note_connecting "Conectare..."

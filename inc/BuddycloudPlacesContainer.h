@@ -33,9 +33,6 @@ class CBuddycloudPlacesContainer : public CBuddycloudListComponent, MAknTabObser
  
 	public: // From MBuddycloudLogicNotificationObserver
 		void NotificationEvent(TBuddycloudLogicNotificationType aEvent, TInt aId = KErrNotFound);
-	
-	private:
-		HBufC* CreateAddressTextLC(CBuddycloudExtendedPlace* aPlace);
 
 	private: // From CBuddycloudListComponent
 		void RenderWrappedText(TInt aIndex);
@@ -70,7 +67,6 @@ class CBuddycloudPlacesContainer : public CBuddycloudListComponent, MAknTabObser
 		HBufC* iLocalizedPlacePopulation;
 		HBufC* iLocalizedLearningPlace;
 		HBufC* iLocalizedUpdatingPlace;
-		HBufC* iLocalizedNoPlaceAddress;
 
 		CBuddycloudPlaceStore* iPlaceStore;
 };

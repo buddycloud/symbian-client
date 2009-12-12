@@ -27,7 +27,7 @@ void CBuddycloudEditPlaceList::ConstructL(const TRect& aRect, CBuddycloudLogic* 
 	
 	iTitleResourceId = R_LOCALIZED_STRING_NEWPLACE_TITLE;
 
-	if(iEditingPlace && iEditingPlace->GetPlaceId() > 0) {		
+	if(iEditingPlace && iEditingPlace->GetItemId() > 0) {		
 		iTitleResourceId = R_LOCALIZED_STRING_EDITPLACE_TITLE;
 	}
 
@@ -47,17 +47,17 @@ void CBuddycloudEditPlaceList::SetTitleL(TInt aResourceId) {
 }
 
 void CBuddycloudEditPlaceList::GetEditedPlace() {
-	iEditingPlace = iBuddycloudLogic->GetPlaceStore()->GetEditedPlace();
+	iEditingPlace = static_cast <CBuddycloudExtendedPlace*> (iBuddycloudLogic->GetPlaceStore()->GetEditedPlace());
 
 	if(iEditingPlace) {
-		iName = iEditingPlace->GetPlaceName();
-		iStreet = iEditingPlace->GetPlaceStreet();
-		iArea = iEditingPlace->GetPlaceArea();
-		iCity = iEditingPlace->GetPlaceCity();
-		iPostcode = iEditingPlace->GetPlacePostcode();
-		iRegion = iEditingPlace->GetPlaceRegion();
-		iCountry = iEditingPlace->GetPlaceCountry();
-		iShared = iEditingPlace->GetShared();
+		iName = iEditingPlace->GetGeoloc()->GetString(EGeolocText);
+		iStreet = iEditingPlace->GetGeoloc()->GetString(EGeolocStreet);
+		iArea = iEditingPlace->GetGeoloc()->GetString(EGeolocArea);
+		iCity = iEditingPlace->GetGeoloc()->GetString(EGeolocLocality);
+		iPostcode = iEditingPlace->GetGeoloc()->GetString(EGeolocPostalcode);
+		iRegion = iEditingPlace->GetGeoloc()->GetString(EGeolocRegion);
+		iCountry = iEditingPlace->GetGeoloc()->GetString(EGeolocCountry);
+		iShared = iEditingPlace->Shared();
 	}
 }
 
@@ -74,13 +74,13 @@ void CBuddycloudEditPlaceList::SaveL() {
 	StoreSettingsL();
 
 	if(iEditingPlace) {
-		iEditingPlace->SetPlaceNameL(iName);
-		iEditingPlace->SetPlaceStreetL(iStreet);
-		iEditingPlace->SetPlaceAreaL(iArea);
-		iEditingPlace->SetPlaceCityL(iCity);
-		iEditingPlace->SetPlacePostcodeL(iPostcode);
-		iEditingPlace->SetPlaceRegionL(iRegion);
-		iEditingPlace->SetPlaceCountryL(iCountry);
+		iEditingPlace->GetGeoloc()->SetStringL(EGeolocText, iName);
+		iEditingPlace->GetGeoloc()->SetStringL(EGeolocStreet, iStreet);
+		iEditingPlace->GetGeoloc()->SetStringL(EGeolocArea, iArea);
+		iEditingPlace->GetGeoloc()->SetStringL(EGeolocLocality, iCity);
+		iEditingPlace->GetGeoloc()->SetStringL(EGeolocPostalcode, iPostcode);
+		iEditingPlace->GetGeoloc()->SetStringL(EGeolocRegion, iRegion);
+		iEditingPlace->GetGeoloc()->SetStringL(EGeolocCountry, iCountry);
 		iEditingPlace->SetShared(iShared);
 	}
 }
@@ -100,7 +100,7 @@ void CBuddycloudEditPlaceList::DynInitMenuPaneL(TInt aResourceId, CEikMenuPane* 
 		}
 		
 		if(aIdentifier == EEditPlaceItemCountry) {
-			if(iEditingPlace && iEditingPlace->GetPlaceCountry().Length() > 0) {
+			if(iEditingPlace && iEditingPlace->GetGeoloc()->GetString(EGeolocCountry).Length() > 0) {
 				aMenuPane->SetItemDimmed(EMenuEditItemCommand, true);
 			}
 		}
@@ -146,7 +146,7 @@ void CBuddycloudEditPlaceList::EditItemL(TInt aIndex, TBool aCalledFromMenu) {
 			SetTitleL(R_LOCALIZED_STRING_EDITPLACE_REGION);
 			break;
 		case EEditPlaceItemCountry:			
-			if(iEditingPlace && iEditingPlace->GetPlaceCountry().Length() > 0) {
+			if(iEditingPlace && iEditingPlace->GetGeoloc()->GetString(EGeolocCountry).Length() > 0) {
 				return;
 			}
 			

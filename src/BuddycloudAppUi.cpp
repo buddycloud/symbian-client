@@ -36,6 +36,7 @@
 #include "BuddycloudExplorerView.h"
 #include "BuddycloudChannelsView.h"
 #include "BuddycloudEditPlaceView.h"
+#include "BuddycloudEditChannelView.h"
 #include "BuddycloudConstants.h"
 #include "BuddycloudIconIds.h"
 #include "FileUtilities.h"
@@ -149,6 +150,12 @@ void CBuddycloudAppUi::CreateViewsL() {
 	CleanupStack::PushL(aViewEditPlace);
 	aViewEditPlace->ConstructL(iBuddycloudLogic);
 	AddViewL(aViewEditPlace);
+	CleanupStack::Pop();
+
+	CBuddycloudEditChannelView* aViewEditChannel = new (ELeave) CBuddycloudEditChannelView;
+	CleanupStack::PushL(aViewEditChannel);
+	aViewEditChannel->ConstructL(iBuddycloudLogic);
+	AddViewL(aViewEditChannel);
 	CleanupStack::Pop();
 
 	if(iBuddycloudLogic->GetDescSetting(ESettingItemUsername).Length() > 0) {
@@ -385,7 +392,7 @@ void CBuddycloudAppUi::HandleCommandL(TInt aCommand) {
 		
 		TCallBack aCallback(AboutDialogCallback);
 		aMessageDialog->SetLink(aCallback);
-		aMessageDialog->SetLinkTextL(_L("http://www.buddycloud.com"));
+		aMessageDialog->SetLinkTextL(_L("http://buddycloud.com"));
 		
 		aMessageDialog->RunLD();
 	}
@@ -416,6 +423,9 @@ void CBuddycloudAppUi::NotificationEvent(TBuddycloudLogicNotificationType aEvent
 	}
 	else if(aEvent == ENotificationEditPlaceRequested) {
 		iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KEditPlaceViewId), TUid::Uid(aId), _L8(""));
+	}
+	else if(aEvent == ENotificationEditChannelRequested) {
+		iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KEditChannelViewId), TUid::Uid(aId), _L8(""));
 	}
 	else if(aEvent == ENotificationAuthenticationFailed) {
 		iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KAccountSettingsViewId), TUid::Uid(3), _L8(""));

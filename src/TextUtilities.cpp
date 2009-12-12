@@ -26,21 +26,18 @@ CTextUtilities* CTextUtilities::NewL() {
 CTextUtilities* CTextUtilities::NewLC() {
 	CTextUtilities* self = new (ELeave) CTextUtilities();
 	CleanupStack::PushL(self);
-	self->ConstructL();
 	return self;
 }
 
 CTextUtilities::~CTextUtilities() {
 	if(iUtf8)
 		delete iUtf8;	
+	
 	if(iUnicode)
 		delete iUnicode;
 	
 	if(iBidi)
 		delete iBidi;
-}
-
-void CTextUtilities::ConstructL() {
 }
 
 void CTextUtilities::WrapToArrayL(RPointerArray<HBufC>& aArray, CFont* aFont, const TDesC& aText, TInt aWidth) {
@@ -83,45 +80,58 @@ void CTextUtilities::WrapToArrayL(RPointerArray<HBufC>& aArray, CFont* aFont, co
 	}
 }
 
+void CTextUtilities::AppendToString(TDes& aString, TDesC& aAppend, const TDesC& aSeperator) {
+	if((aString.MaxLength() - aString.Length()) >= (aAppend.Length() + aSeperator.Length())) {
+		if(aString.Length() > 0 && aAppend.Length() > 0) {
+			aString.Append(aSeperator);
+		}
+		
+		aString.Append(aAppend);
+	}
+}
+
 TDesC8& CTextUtilities::UnicodeToUtf8L(const TDesC& aUnicode) {
 	if(iUtf8)
 		delete iUtf8;
 
 	iUtf8 = HBufC8::NewL(aUnicode.Length());
-	TPtr8 pUtf8(iUtf8->Des());
 	
-	// First convert to UTF8
-	TBuf8<32> aConvertedBuf;
-	TPtrC pRemainingUnicode(aUnicode);
-	
-	while(true) {
-		TInt aResult = CnvUtfConverter::ConvertFromUnicodeToUtf8(aConvertedBuf, pRemainingUnicode);
+	if(aUnicode.Length() > 0) {
+		TPtr8 pUtf8(iUtf8->Des());
 		
-		if(aResult < 0)
-			User::Leave(KErrGeneral);
+		// First convert to UTF8
+		TBuf8<32> aConvertedBuf;
+		TPtrC pRemainingUnicode(aUnicode);
 		
-		if(pUtf8.Length() + aConvertedBuf.Length() > pUtf8.MaxLength()) {
-			iUtf8 = iUtf8->ReAlloc(pUtf8.Length()+aConvertedBuf.Length());
-			pUtf8.Set(iUtf8->Des());
+		while(true) {
+			TInt aResult = CnvUtfConverter::ConvertFromUnicodeToUtf8(aConvertedBuf, pRemainingUnicode);
+			
+			if(aResult < 0)
+				User::Leave(KErrGeneral);
+			
+			if(pUtf8.Length() + aConvertedBuf.Length() > pUtf8.MaxLength()) {
+				iUtf8 = iUtf8->ReAlloc(pUtf8.Length()+aConvertedBuf.Length());
+				pUtf8.Set(iUtf8->Des());
+			}
+			
+			pUtf8.Append(aConvertedBuf);
+			
+			if(aResult == 0)
+				break;
+			
+			pRemainingUnicode.Set(pRemainingUnicode.Right(aResult));
 		}
 		
-		pUtf8.Append(aConvertedBuf);
-		
-		if(aResult == 0)
-			break;
-		
-		pRemainingUnicode.Set(pRemainingUnicode.Right(aResult));
+		// Second convert UTF8 to HTML
+		FindAndReplace(_L8("&"), _L8("&amp;"));
+		FindAndReplace(_L8("'"), _L8("&apos;"));
+		FindAndReplace(_L8("\""), _L8("&quot;"));
+		FindAndReplace(_L8("<"), _L8("&lt;"));
+		FindAndReplace(_L8(">"), _L8("&gt;"));
+		FindAndReplace(_L8("\n"), _L8("&#10;"));
+		FindAndReplace(_L8("\r"), _L8("&#13;"));
+		FindAndReplace(_L8("\x01"), _L8("&#10;"));
 	}
-	
-	// Second convert UTF8 to HTML
-	FindAndReplace(_L8("&"), _L8("&amp;"));
-	FindAndReplace(_L8("'"), _L8("&apos;"));
-	FindAndReplace(_L8("\""), _L8("&quot;"));
-	FindAndReplace(_L8("<"), _L8("&lt;"));
-	FindAndReplace(_L8(">"), _L8("&gt;"));
-	FindAndReplace(_L8("\n"), _L8("&#10;"));
-	FindAndReplace(_L8("\r"), _L8("&#13;"));
-	FindAndReplace(_L8("\x01"), _L8("&#10;"));
 	
 	return *iUtf8;
 }
@@ -135,40 +145,43 @@ TDesC& CTextUtilities::Utf8ToUnicodeL(const TDesC8& aUtf8) {
 
 	iUtf8 = aUtf8.AllocL();
 	iUnicode = HBufC::NewL(aUtf8.Length());
-	TPtr pUnicode(iUnicode->Des());
 	
-	// First convert HTML to UTF8
-	FindAndReplace(_L8("&#13;"), _L8("\r"));
-	FindAndReplace(_L8("&#10;"), _L8("\n"));
-	FindAndReplace(_L8("&gt;"), _L8(">"));
-	FindAndReplace( _L8("&lt;"), _L8("<"));
-	FindAndReplace(_L8("&quot;"), _L8("\""));
-	FindAndReplace(_L8("&apos;"), _L8("'"));
-	FindAndReplace(_L8("&amp;"), _L8("&"));
-	
-	// Second convert UTF8 to Unicode
-	TBuf<32> aConvertedBuf;
-	TPtrC8 pRemainingUtf8(iUtf8->Des());
-	
-	while(true) {
-		TInt aResult = CnvUtfConverter::ConvertToUnicodeFromUtf8(aConvertedBuf, pRemainingUtf8);
+	if(aUtf8.Length() > 0) {
+		TPtr pUnicode(iUnicode->Des());
 		
-		if(aResult < 0) {
-			User::Leave(KErrGeneral);
+		// First convert HTML to UTF8
+		FindAndReplace(_L8("&#13;"), _L8("\r"));
+		FindAndReplace(_L8("&#10;"), _L8("\n"));
+		FindAndReplace(_L8("&gt;"), _L8(">"));
+		FindAndReplace( _L8("&lt;"), _L8("<"));
+		FindAndReplace(_L8("&quot;"), _L8("\""));
+		FindAndReplace(_L8("&apos;"), _L8("'"));
+		FindAndReplace(_L8("&amp;"), _L8("&"));
+		
+		// Second convert UTF8 to Unicode
+		TBuf<32> aConvertedBuf;
+		TPtrC8 pRemainingUtf8(iUtf8->Des());
+		
+		while(true) {
+			TInt aResult = CnvUtfConverter::ConvertToUnicodeFromUtf8(aConvertedBuf, pRemainingUtf8);
+			
+			if(aResult < 0) {
+				User::Leave(KErrGeneral);
+			}
+			
+			if(pUnicode.Length() + aConvertedBuf.Length() > pUnicode.MaxLength()) {
+				iUnicode = iUnicode->ReAlloc(pUnicode.Length()+aConvertedBuf.Length());
+				pUnicode.Set(iUnicode->Des());
+			}
+			
+			pUnicode.Append(aConvertedBuf);
+			
+			if(!aResult) {
+				break;
+			}
+			
+			pRemainingUtf8.Set(pRemainingUtf8.Right(aResult));
 		}
-		
-		if(pUnicode.Length() + aConvertedBuf.Length() > pUnicode.MaxLength()) {
-			iUnicode = iUnicode->ReAlloc(pUnicode.Length()+aConvertedBuf.Length());
-			pUnicode.Set(iUnicode->Des());
-		}
-		
-		pUnicode.Append(aConvertedBuf);
-		
-		if(!aResult) {
-			break;
-		}
-		
-		pRemainingUtf8.Set(pRemainingUtf8.Right(aResult));
 	}
 	
 	return *iUnicode;

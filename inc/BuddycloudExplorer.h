@@ -14,7 +14,8 @@
 #define BUDDYCLOUDEXPLORER_H_
 
 #include <e32base.h>
-#include "BuddycloudPlaces.h"
+#include "BuddycloudList.h"
+#include "GeolocData.h"
 
 /*
 ----------------------------------------------------------------------------
@@ -85,7 +86,7 @@ class CExplorerStanzaBuilder {
 ----------------------------------------------------------------------------
 */
 
-class CExplorerResultItem : public CBase {
+class CExplorerResultItem : public CBuddycloudListItem {
 	public:
 		static CExplorerResultItem* NewL();
 		static CExplorerResultItem* NewLC();
@@ -98,14 +99,8 @@ class CExplorerResultItem : public CBase {
 		TExplorerItemType GetResultType();
 		void SetResultType(TExplorerItemType aResultType);
 		
-		TInt GetAvatarId();
-		void SetAvatarId(TInt aAvatarId);
-		
 		TInt GetOverlayId();
 		void SetOverlayId(TInt aOverlayId);
-		
-		TInt GetDistance();
-		void SetDistance(TInt aDistance);		
 		
 		TInt GetRank();
 		void SetRank(TInt aRank);
@@ -114,33 +109,21 @@ class CExplorerResultItem : public CBase {
 		TDesC& GetId();
 		void SetIdL(const TDesC& aId);
 		
-		TDesC& GetTitle();
-		void SetTitleL(const TDesC& aTitle);
-		
-		TDesC& GetDescription();
-		void SetDescriptionL(const TDesC& aDescription);
-		void GenerateDescriptionL();
-		
-	private:
-		void AddDescriptionDelimitedString(TDesC& aString);
-		
 	public:
-		CBuddycloudBasicPlace* GetLocation();
+		CGeolocData* GetGeoloc();
+		void SetGeolocL(CGeolocData* aGeoloc);
+		
+		void UpdateFromGeolocL();
 	
 	protected:
 		TExplorerItemType iResultType;
 		
-		TInt iAvatarId;
 		TInt iOverlayId;
-		
-		TInt iDistance;
 		TInt iRank;
 		
 		HBufC* iId;
-		HBufC* iTitle;
-		HBufC* iDescription;
 		
-		CBuddycloudBasicPlace* iLocation;
+		CGeolocData* iGeoloc;
 };
 
 /*

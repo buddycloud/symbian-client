@@ -17,7 +17,6 @@
 #include <e32base.h>
 #include "TcpIpEngine.h"
 #include "XmlParser.h"
-#include "MessagingParticipants.h"
 #include "Timer.h"
 #include "ConnectionMonitor.h"
 #include "CompressionEngine.h"
@@ -49,11 +48,6 @@ enum TXmppEngineState {
 
 enum TXmppEngineError {
 	EXmppNone, EXmppAuthorizationNotDefined, EXmppBadAuthorization, EXmppAlreadyConnected, EXmppTlsFailed
-};
-
-enum TXmppPubsubNodeType {
-	EXmppNodeOther, EXmppNodeMood, EXmppNodeGeolocPrev, EXmppNodeGeoloc, EXmppNodeGeolocNext,
-	EXmppNodeProfile, EXmppNodeAvatar
 };
 
 enum TXmppSilenceState {

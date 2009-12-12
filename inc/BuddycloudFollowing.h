@@ -14,7 +14,12 @@
 #define BUDDYCLOUDFOLLOWING_H_
 
 #include <e32base.h>
-#include "BuddycloudPlaces.h"
+#include "BuddycloudList.h"
+#include "DiscussionManager.h"
+#include "GeolocData.h"
+#include "XmppConstants.h"
+
+const TInt KEditingNewChannelId = -9999;
 
 /*
 ----------------------------------------------------------------------------
@@ -25,7 +30,6 @@
 */
 
 enum TFollowingItemType {
-	EItem = 0, 
 	EItemNotice = 2, 
 	EItemContact = 4, 
 	EItemRoster = 8, 
@@ -34,34 +38,20 @@ enum TFollowingItemType {
 	EItemAll = 30
 };
 
-enum TJidType {
-	EJidRoster, EJidChannel
-};
-
-enum TSubscriptionType {
-	ESubscriptionUnknown, ESubscriptionRemove, ESubscriptionNone, 
-	ESubscriptionFrom, ESubscriptionTo, ESubscriptionBoth
+enum TIdType {
+	EIdRoster, EIdChannel
 };
 
 enum TPresenceState {
-	EPresenceOffline, EPresenceSent, EPresenceOnline
+	EPresenceOffline, EPresenceOnline
 };
 
 enum TNoticeResponse {
 	ENoticeAccept, ENoticeAcceptAndFollow, ENoticeDecline
 };
 
-/*
-----------------------------------------------------------------------------
---
--- Interfaces
---
-----------------------------------------------------------------------------
-*/
-
-class MMessageReadObserver {
-	public:
-		virtual void MessageRead(TDesC& aJid, TInt aMessageId, TInt aUnreadMessages, TInt aUnreadReplies = 0) = 0;
+enum TGeolocItemType {
+	EGeolocItemPrevious, EGeolocItemCurrent, EGeolocItemFuture, EGeolocItemBroad
 };
 
 /*
@@ -72,80 +62,30 @@ class MMessageReadObserver {
 ----------------------------------------------------------------------------
 */
 
-class CFollowingItem : public CBase {
+class CFollowingItem : public CBuddycloudListItem {
 	public:
 		static CFollowingItem* NewL();
 		static CFollowingItem* NewLC();
 		~CFollowingItem();
-	
+		
 	protected:
 		CFollowingItem();
 		void ConstructL();
 
 	public:
-		TInt GetItemId();
-		void SetItemId(TInt aId);
-
 		TFollowingItemType GetItemType();
+		void SetItemType(TFollowingItemType aItemType);
 
-		TBool GetIsOwn();
-		void SetIsOwn(TBool aIsOwn);
-
-		TTime GetLastUpdated();
-		void SetLastUpdated(TTime aTime);
-
-		TBool IsFiltered();
-		void SetFiltered(TBool aFilter);
+		TDesC& GetId(TIdType aType = EIdChannel);
+		void SetIdL(const TDesC& aId, TIdType aType = EIdChannel);
 		
-	public:
-		TInt GetAvatarId();
-		void SetAvatarId(TInt aAvatarId);
-
-		TDesC& GetTitle();
-		void SetTitleL(const TDesC& aTitle);
-		
-		TDesC& GetDescription();
-		void SetDescriptionL(const TDesC& aDescription);
+		TIdType GetIdType();
 
 	protected:
 		TFollowingItemType iItemType;
-		TInt iItemId;
-		TBool iIsOwn;
-		TTime iLastUpdated;
-		TBool iIsFiltered;
-		
-		TInt iAvatarId;
-		HBufC* iTitle;
-		HBufC* iDescription;
-};
 
-/*
-----------------------------------------------------------------------------
---
--- CFollowingNoticeItem
---
-----------------------------------------------------------------------------
-*/
-
-class CFollowingNoticeItem : public CFollowingItem {
-	public:
-		static CFollowingNoticeItem* NewL();
-		static CFollowingNoticeItem* NewLC();
-		~CFollowingNoticeItem();
-		
-	protected:
-		CFollowingNoticeItem();
-		void ConstructL();
-
-	public:
-		TDesC& GetJid();
-		void SetJidL(const TDesC& aJid, TJidType aType);
-		
-		TJidType GetJidType();
-
-	protected:
-		HBufC* iJid;
-		TJidType iJidType;
+		HBufC* iId;
+		TIdType iIdType;
 };
 
 /*
@@ -180,47 +120,43 @@ class CFollowingContactItem : public CFollowingItem {
 ----------------------------------------------------------------------------
 */
 
-class CFollowingChannelItem : public CFollowingContactItem, public MMessageReadObserver {
+class CFollowingChannelItem : public CFollowingContactItem {
 	public:
 		static CFollowingChannelItem* NewL();
 		static CFollowingChannelItem* NewLC();
-		~CFollowingChannelItem();
 	
 	protected:
 		CFollowingChannelItem();
-		void ConstructL();
-		
+
+// New		
 	public:
-		TDesC& GetJid(TJidType aType = EJidChannel);
-		void SetJidL(const TDesC& aJid, TJidType aType = EJidChannel);
+		TXmppPubsubAccessModel GetAccessModel();
+		void SetAccessModel(TXmppPubsubAccessModel aAccessModel);
 		
-		TPresenceState GetPresence(TJidType aType = EJidChannel);
-		void SetPresence(TPresenceState aPresence, TJidType aType = EJidChannel);
+		TXmppPubsubSubscription GetPubsubSubscription();
+		void SetPubsubSubscription(TXmppPubsubSubscription aPubsubSubscription);
 		
-	public:
-		TBool IsExternal();
-		void SetExternal(TBool aExternal);
+		TXmppPubsubAffiliation GetPubsubAffiliation();
+		void SetPubsubAffiliation(TXmppPubsubAffiliation aPubsubAffiliation);
 		
 	public:
 		TInt GetRank();
 		TInt GetRankShift();
 		void SetRank(TInt aRank, TInt aShift = 0);
 		
-	public: // From MMessageReadObserver
-		void MessageRead(TDesC& aJid, TInt aMessageId, TInt aUnreadMessages, TInt aUnreadReplies = 0);
+	public:
+		void SetUnreadData(MDiscussionUnreadData* aUnreadData, TIdType aType = EIdChannel);
 		
 	public:
-		TInt GetUnread(TJidType aType = EJidChannel);
+		TInt GetUnread(TIdType aType = EIdChannel);
 		TInt GetReplies();
 		
 	protected:
-		HBufC* iChannelJid;
-		TInt iChannelUnread;	
-		TInt iChannelReplies;	
+		MDiscussionUnreadData* iChannelUnreadData;
 		
-		TPresenceState iChannelPresence;
-		
-		TBool iExternal;
+		TXmppPubsubAccessModel iAccessModel;
+		TXmppPubsubSubscription iPubsubSubscription;
+		TXmppPubsubAffiliation iPubsubAffiliation;
 		
 		TInt iRank;
 		TInt iRankShift;
@@ -243,82 +179,47 @@ class CFollowingRosterItem : public CFollowingChannelItem {
 	protected:
 		CFollowingRosterItem();
 		void ConstructL();
+		
+	public:
+		TBool OwnItem();
+		void SetOwnItem(TBool aIsOwn);
 
 	public:
-		TDesC& GetJid(TJidType aType = EJidRoster);
-		void SetJidL(TDesC& aJid, TJidType aType = EJidRoster);
+		TDesC& GetId(TIdType aType = EIdRoster);
+		void SetIdL(TDesC& aId, TIdType aType = EIdRoster);
+				
+	public:
+		TPresenceState GetPresence();
+		void SetPresence(TPresenceState aPresence);
 
-		TPresenceState GetPresence(TJidType aType = EJidRoster);
-		void SetPresence(TPresenceState aPresence, TJidType aType = EJidRoster);
-
-		TSubscriptionType GetSubscriptionType();
-		void SetSubscriptionType(TSubscriptionType aSubscription);
+		TPresenceSubscription GetSubscription();
+		void SetSubscription(TPresenceSubscription aSubscription);
 
 	public:
-		TBool GetPubsubCollected();
+		TBool PubsubCollected();
 		void SetPubsubCollected(TBool aCollected);
 
-		CBuddycloudBasicPlace* GetPlace(TBuddycloudPlaceType aPlaceType);
-		void SetPlaceL(TBuddycloudPlaceType aPlaceType, CBuddycloudBasicPlace* aPlace);
-		
-	public: // From MMessageReadObserver
-		void MessageRead(TDesC& aJid, TInt aMessageId, TInt aUnreadMessages, TInt aUnreadReplies = 0);
+		CGeolocData* GetGeolocItem(TGeolocItemType aGeolocItem);
+		void SetGeolocItemL(TGeolocItemType aGeolocItem, CGeolocData* aGeoloc);
 		
 	public:
-		TInt GetUnread(TJidType aType = EJidRoster);
+		void SetUnreadData(MDiscussionUnreadData* aUnreadData, TIdType aType = EIdRoster);
+		
+	public:
+		TInt GetUnread(TIdType aType = EIdRoster);
 
 	protected:
-		HBufC* iRosterJid;
-		TInt iRosterUnread;
-
-		TSubscriptionType iSubscription;
-		TPresenceState iRosterPresence;
-
-		TBool iPubsubCollected;
-
-		CBuddycloudBasicPlace* iPlacePrevious;
-		CBuddycloudBasicPlace* iPlaceCurrent;
-		CBuddycloudBasicPlace* iPlaceNext;
-};
-
-/*
-----------------------------------------------------------------------------
---
--- CBuddycloudFollowingStore
---
-----------------------------------------------------------------------------
-*/
-
-class CBuddycloudFollowingStore : public CBase {
-	public:
-		static CBuddycloudFollowingStore* NewL();
-		static CBuddycloudFollowingStore* NewLC();
-		~CBuddycloudFollowingStore();
-
-	public:
-		TInt Count();
-
-		CFollowingItem* GetItemByIndex(TInt aIndex);
-		CFollowingItem* GetItemById(TInt aItemId);
+		MDiscussionUnreadData* iRosterUnreadData;
 		
-		TInt GetIdByIndex(TInt aIndex);
-		TInt GetIndexById(TInt aItemId);
+		HBufC* iJid;
 
-		void MoveItemByIndex(TInt aIndex, TInt aPosition);
-		void MoveItemById(TInt aItemId, TInt aPosition);
+		TBool iOwnItem;
+		TBool iPubsubCollected;		
+		
+		TPresenceSubscription iSubscription;
+		TPresenceState iPresence;
 
-		void AddItem(CFollowingItem* aItem);
-		void InsertItem(TInt aIndex, CFollowingItem* aItem);
-
-		void RemoveItemByIndex(TInt aIndex);
-		void RemoveItemById(TInt aItemId);
-		void RemoveAll();
-
-		void DeleteItemByIndex(TInt aIndex);
-		void DeleteItemById(TInt aItemId);
-
-	protected:
-		RPointerArray<CFollowingItem> iItemStore;
+		RPointerArray<CGeolocData> iGeolocs;
 };
 
 #endif /*BUDDYCLOUDFOLLOWING_H_*/

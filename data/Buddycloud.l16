@@ -13,7 +13,6 @@
 CHARACTER_SET UTF8
 
 rls_string r_string_app_caption "buddycloud"
-rls_string r_string_groupinvite_text " invited you to join channel: "
 // DO NOT TRANSLATE
 
 rls_string r_string_langcode "ru"
@@ -88,7 +87,7 @@ rls_string r_string_item_showchanneldetails "Информация о канал�
 rls_string r_string_item_call "Вызвать контакт"
 rls_string r_string_item_sendplacebysms "Отправить координаты по СМС"
 rls_string r_string_item_sendinvite "Пригласить в Buddycloud"
-rls_string r_string_item_delete "Удалить"
+rls_string r_string_item_delete "Remove"
 rls_string r_string_item_noticeaccept "Принять"
 rls_string r_string_item_noticeacceptandfollow "Принять и последующей"
 rls_string r_string_item_noticedecline "Закат"
@@ -101,17 +100,18 @@ rls_string r_string_settings_clearconnection "Изменить подлкюче�
 rls_string r_string_note_followinglistempty "Вы ни на кого не подписаны.\n\nИспользуйте каналы и пункт меню Обзор для поиска интересующей вас информации."
 
 // Menu: Messaging
-rls_string r_string_options_openlink "Перейти по ссылке"
-rls_string r_string_options_postmessage "Опубликовать сообщение"
+rls_string r_string_options_postrequest "Request to post"
+rls_string r_string_options_postmessage "Write new post"
 rls_string r_string_options_postmedia "Закачать медиа-файл"
-rls_string r_string_options_replytomessage "Ответить"
-rls_string r_string_options_settopic "Задать тему"
 rls_string r_string_options_jumptounread "Перейти к непрочитанному"
-rls_string r_string_options_invitetochannel "Пригласить на канал"
-rls_string r_string_options_invitetootherchannel "Пригласить на другой канал"
-rls_string r_string_options_invitefriendtochannel "Пригласить подписчика"
 rls_string r_string_options_notificationon "Включить оповещания"
 rls_string r_string_options_notificationoff "Отключить оповещания"
+
+rls_string r_string_item_addcomment "Write comment"
+rls_string r_string_item_likepost "♥ post"
+rls_string r_string_item_copypost "Copy post"
+rls_string r_string_item_reportpost "Report post"
+rls_string r_string_item_deletepost "Delete post"
 
 // Menu: Places
 rls_string r_string_options_setcurrent "Отметить новое место"
@@ -127,7 +127,6 @@ rls_string r_string_note_placevisits "Посещений"
 rls_string r_string_note_placepopulation "Кол-во людей"
 rls_string r_string_note_learningplace "Обзор места"
 rls_string r_string_note_updatingplace "Обновление места..."
-rls_string r_string_note_noplaceaddress "Адрес не указан"
 rls_string r_string_note_placeslistempty "У вас нет не одного отмеченного места.\nЧтобы отметить это место нажимите\n'Опции > Создать новое место'"
 
 // Menu: Nearby
@@ -171,33 +170,35 @@ rls_string r_string_item_unfollow "Отписаться"
 // Channel: Settings & Configuration
 rls_string r_string_note_personalchannelcreated "$USER, приветствуем Вас на каналах Buddycloud!\n\nЭто - Ваш персональный канал на Buddycloud, он позволяет оставлять сообщения тем, на кого вы подписаны и вашим подписчикам! "
 rls_string r_string_note_mediauploadready "Вы можете закачать медиа-файл по ссылке $LINK"
-rls_string r_string_note_userkickedfromgroup "$USER временно заблокирован этим каналом."
-rls_string r_string_note_userbannedfromgroup "$USER заблокирован в этом канале."
-rls_string r_string_dialog_kickconfirmation "Выгнать его с канала до следующего подключения?"
-rls_string r_string_dialog_banconfirmation "Запретить пользователю просмотр канала?"
-rls_string r_string_item_banfromgroup "Заблокирован каналом"
-rls_string r_string_item_kickfromgroup "Выгнать с канала"
-rls_string r_string_item_changerole "Изменить роль"
-rls_string r_string_list_changerole_title "Изменить роль на:"
-rls_string r_string_changerole_itemlist_moderator "Модератор"
-rls_string r_string_changerole_itemlist_contributor "Подписан на"
-rls_string r_string_changerole_itemlist_visitor "Гости"
-rls_string r_string_note_changerolefailed "У Вас нет привилегий для изменения значимости этого пользователя"
 
-// Settings Item List
+rls_string r_string_item_changerole "Change permission"
+rls_string r_string_changerole_itemlist_outcast "Удалить"
+rls_string r_string_changerole_itemlist_follower "Подписан на"
+rls_string r_string_changerole_itemlist_publisher "Publisher"
+rls_string r_string_changerole_itemlist_moderator "Модератор"
+
+rls_string r_string_note_affiliationoutcast "You have been banned from the channel. You now cannot read or post in this channel's content."
+rls_string r_string_note_affiliationmember "You have become a follower of this channel. You can now read, but not post in this channel's content."
+rls_string r_string_note_affiliationpublisher "You have become a publisher of this channel. You can now read and post in this channel's content."
+rls_string r_string_note_affiliationmoderator "You have become a moderator of this channel. You can now read, post, and manage this channel's content."
+
+rls_string r_string_note_subscriptionpending "Your subscription request has been sent to the channel's producer."
+rls_string r_string_note_subscriptionaccepted "Your subscription to this channel has been accepted."
+rls_string r_string_note_subscriptionrejected "Your subscription to this channel has been rejected."
+
+// Account settings
 rls_string r_string_settings_account_title "Учётная запись"
 rls_string r_string_settings_itemlist_fullname "Полное имя"
 rls_string r_string_settings_itemlist_fullname_hint "Ваше полное имя"
 rls_string r_string_settings_itemlist_email "E-mail"
 rls_string r_string_settings_itemlist_email_hint "Ваш E-Mail"
-rls_string r_string_settings_itemlist_phonenumber "Номер телефона"
-rls_string r_string_settings_itemlist_phonenumber_hint "Ваш основной телефонный номер"
 rls_string r_string_settings_itemlist_username "Имя пользователя"
 rls_string r_string_settings_itemlist_username_hint "XMPP server username"
 rls_string r_string_settings_itemlist_password "Пароль"
 rls_string r_string_settings_itemlist_password_hint "XMPP server password"
 rls_string r_string_settings_itemlist_server "XMPP server"
 
+// Preference settings
 rls_string r_string_settings_itemlist_language "Язык интерфейса"
 rls_string r_string_settings_itemlist_blocking "Show private messages"
 rls_string r_string_settings_itemlist_blockingalwaysshow "From anyone"
@@ -209,18 +210,23 @@ rls_string r_string_settings_itemlist_accesspointalwaysask "Всегда спр�
 rls_string r_string_settings_itemlist_autostart "Запускать вместе с телефоном"
 rls_string r_string_settings_itemlist_showcontacts "Показывать контакты телефона"
 
+// Notification settings
 rls_string r_string_settings_notifications_title "Уведомления"
-rls_string r_string_settings_itemlist_groupnotification "Сообщать об обновлениях на канале"
+rls_string r_string_settings_itemlist_notifyfollowing "Channels I follow"
+rls_string r_string_settings_itemlist_notifymoderating "Channels I moderate"
+rls_string r_string_settings_itemlist_notifyreply "Replies to my post"
+
 rls_string r_string_settings_itemlist_groupnever "Никогда не напоминать"
 rls_string r_string_settings_itemlist_groupfirstonly "Только первый пост"
 rls_string r_string_settings_itemlist_groupallmessages "Все посты"
-rls_string r_string_settings_itemlist_notifyreply "Оповещать о моих @Replies:"
+
 rls_string r_string_settings_itemlist_privatemessagetone "Частные тон сообщения"
 rls_string r_string_settings_itemlist_channelposttone "Звук каналовых постов"
-rls_string r_string_settings_itemlist_directreplytone "Мои @ответы тон"
+rls_string r_string_settings_itemlist_directreplytone "Replied comment tone"
 rls_string r_string_settings_itemlist_tonenone "Отключить звук"
 rls_string r_string_settings_itemlist_tonedefault "Звук по умолчанию"
 
+// Positioning settings
 rls_string r_string_settings_beacons_title "Позиционирование"
 rls_string r_string_settings_itemlist_cell "Базовая Станция"
 rls_string r_string_settings_itemlist_wlan "WI-FI"
@@ -257,16 +263,24 @@ rls_string r_string_editplace_itemlist_visibility "Могут ли другие 
 rls_string r_string_editplace_itemlist_visibility_public "Общее"
 rls_string r_string_editplace_itemlist_visibility_private "Приватное"
 
+// Edit channel list
+rls_string r_string_newchannel_title "New channel"
+rls_string r_string_editchannel_title "Edit channel"
+rls_string r_string_editchannel_itemlist_title "Title"
+rls_string r_string_editchannel_itemlist_title_hint "Channel's title"
+rls_string r_string_editchannel_itemlist_id "#Channel Id"
+rls_string r_string_editchannel_itemlist_id_hint "Channel's unique Id"
+rls_string r_string_editchannel_itemlist_description "Description"
+rls_string r_string_editchannel_itemlist_description_hint "Channel's description"
+rls_string r_string_editchannel_itemlist_access "Access"
+rls_string r_string_editchannel_itemlist_access_open "Open channel"
+rls_string r_string_editchannel_itemlist_access_whitelist "Members only"
+
+rls_string r_string_note_channelexists "This #channel_id already exists. Please enter a unique one."
+
 // Following & Invitations
 rls_string r_string_followingrequest_title "Запрос подписки"
 rls_string r_string_followerrequest_text "$USER хотел бы стать вашим пописчиком на Buddycloud.\n* Показывать Ваше присутствие и статус\n* Показывать Ваш личный канал\n* Показывать Ваши места"
-
-rls_string r_string_channelinvite_title "Приглашение канала"
-
-// Create channel
-rls_string r_string_dialog_createchannelname "Название канала:"
-rls_string r_string_dialog_createchanneldescription "Краткое описание канала:"
-rls_string r_string_channelfollowing_text "Канал '$CHANNEL' уже существует. Вы хотите подписаться на этот канал?"
 
 // Exit Confirmation
 rls_string r_string_exit_title "Подтверждение выхода"
@@ -294,9 +308,9 @@ rls_string r_string_dialog_setmood "Задать статус:"
 rls_string r_string_dialog_moodis "есть "
 rls_string r_string_dialog_setcurrentlocation "Указать мое место:"
 rls_string r_string_dialog_setnextlocation "Задать следующее место:"
-rls_string r_string_dialog_settopic "Задать тему:"
-rls_string r_string_dialog_newmessage "Новое сообщение:"
-rls_string r_string_dialog_addcontact "Введите Buddycloud аккаунт или Jabber ID (например test@gtalk.com):"
+rls_string r_string_dialog_newmessage "Write post:"
+rls_string r_string_dialog_newcomment "Write comment:"
+rls_string r_string_dialog_addcontact "Enter contact's Id (eg. test@gtalk.com):"
 
 // Notes
 rls_string r_string_note_connecting "Соединение..."

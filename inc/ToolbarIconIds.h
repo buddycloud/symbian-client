@@ -6,6 +6,5 @@ enum TMifToolbariconids
 	EMbmToolbariconidsMessage = 16386,
 	EMbmToolbariconidsMessagereply = 16388,
 	EMbmToolbariconidsSearch = 16390,
-	EMbmToolbariconidsInvite = 16392,
 	EMbmToolbariconidsLastElement
 	};

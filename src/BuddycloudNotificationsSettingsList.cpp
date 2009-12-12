@@ -185,8 +185,11 @@ CAknSettingItem* CBuddycloudNotificationsSettingsList::CreateSettingItemL (TInt 
 	CAknSettingItem* aSettingItem = NULL;
 
     switch(aIdentifier) {
-		case ESettingNotificationsGroupNotification:
-			aSettingItem = new (ELeave) CAknEnumeratedTextPopupSettingItem(aIdentifier, iBuddycloudLogic->GetIntSetting(ESettingItemGroupNotification));
+		case ESettingNotificationsNotifyChannelsModerating:
+			aSettingItem = new (ELeave) CAknEnumeratedTextPopupSettingItem(aIdentifier, iBuddycloudLogic->GetIntSetting(ESettingItemNotifyChannelsModerating));
+			break;
+		case ESettingNotificationsNotifyChannelsFollowing:
+			aSettingItem = new (ELeave) CAknEnumeratedTextPopupSettingItem(aIdentifier, iBuddycloudLogic->GetIntSetting(ESettingItemNotifyChannelsFollowing));
 			break;
 		case ESettingNotificationsNotifyReplyTo:
 			aSettingItem = new (ELeave) CAknBinaryPopupSettingItem(aIdentifier, iBuddycloudLogic->GetBoolSetting(ESettingItemNotifyReplyTo));

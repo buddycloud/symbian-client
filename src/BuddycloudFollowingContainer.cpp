@@ -277,15 +277,13 @@ void CBuddycloudFollowingContainer::GetHelpContext(TCoeHelpContext& aContext) co
 	aContext.iContext = KFollowingTab;
 	
 	if(iItemStore->Count() > 0) {
-		CFollowingItem* aItem = iItemStore->GetItemById(iSelectedItem);
+		CFollowingItem* aItem = static_cast <CFollowingItem*> (iItemStore->GetItemById(iSelectedItem));
 
 		if(aItem->GetItemType() == EItemContact) {
 			aContext.iContext = KSendingInvites;			
 		}
 		else if(aItem->GetItemType() == EItemNotice) {
-			CFollowingNoticeItem* aNoticeItem = static_cast <CFollowingNoticeItem*> (aItem);
-
-			if(aNoticeItem->GetJidType() == EJidRoster) {
+			if(aItem->GetIdType() == EIdRoster) {
 				aContext.iContext = KFollowingRequests;	
 			}
 			else {
@@ -299,16 +297,14 @@ void CBuddycloudFollowingContainer::GetHelpContext(TCoeHelpContext& aContext) co
 				aContext.iContext = KNamingPlaces;
 			}
 			else {
-				if(aRosterItem->GetIsOwn()) {				
+				if(aRosterItem->OwnItem()) {				
 					aContext.iContext = KMyBuddycloud;
 				}
 				else {
-					CDiscussion* aDiscussion = iBuddycloudLogic->GetDiscussion(aRosterItem->GetJid(EJidChannel));				
-					
-					if(aDiscussion->GetUnreadReplies() > 0) {
+					if(aRosterItem->GetReplies() > 0) {
 						aContext.iContext = KDirectReplies;
 					}
-					else if(aDiscussion->GetUnreadMessages() > 0) {
+					else if(aRosterItem->GetUnread(EIdChannel) > 0) {
 						aContext.iContext = KViewingChannels;
 					}
 					else {
@@ -319,12 +315,11 @@ void CBuddycloudFollowingContainer::GetHelpContext(TCoeHelpContext& aContext) co
 		}
 		else if(aItem->GetItemType() == EItemChannel) {
 			CFollowingChannelItem* aChannelItem = static_cast <CFollowingChannelItem*> (aItem);			
-			CDiscussion* aDiscussion = iBuddycloudLogic->GetDiscussion(aChannelItem->GetJid());				
 			
-			if(aDiscussion->GetUnreadReplies() > 0) {
+			if(aChannelItem->GetReplies() > 0) {
 				aContext.iContext = KDirectReplies;
 			}
-			else if(aDiscussion->GetUnreadMessages() > 0) {
+			else if(aChannelItem->GetUnread() > 0) {
 				aContext.iContext = KViewingChannels;
 			}
 			else {
@@ -385,13 +380,13 @@ void CBuddycloudFollowingContainer::RenderWrappedText(TInt aIndex) {
 	iNewMessagesOffset = 0;
 
 	if(iItemStore->Count() > 0) {
-		CFollowingItem* aItem = iItemStore->GetItemById(aIndex);
-		TInt aWidth = (iRect.Width() - iSelectedItemIconTextOffset - 2 - iScrollbarOffset - iScrollbarWidth);
-		TBuf<32> aBuf;
+		CFollowingItem* aItem = static_cast <CFollowingItem*> (iItemStore->GetItemById(aIndex));
+		TInt aWidth = (iRect.Width() - iSelectedItemIconTextOffset - 2 - iLeftBarSpacer - iRightBarSpacer);
 		
 		if(aItem) {	
 			if(aItem->GetItemType() == EItemRoster || aItem->GetItemType() == EItemChannel) {
 				CFollowingChannelItem* aChannelItem = static_cast <CFollowingChannelItem*> (aItem);
+				TBuf<32> aBuf;
 	
 				if(aChannelItem->GetUnread() > 0) {
 					aBuf.Format(_L("%d"), aChannelItem->GetUnread());
@@ -420,7 +415,7 @@ void CBuddycloudFollowingContainer::RenderWrappedText(TInt aIndex) {
 	}
 	else {
 		// No following items
-		TInt aWidth = (iRect.Width() - 2 - iScrollbarOffset - iScrollbarWidth);
+		TInt aWidth = (iRect.Width() - 2 - iLeftBarSpacer - iRightBarSpacer);
 
 		HBufC* aNoItems = iEikonEnv->AllocReadResourceLC(R_LOCALIZED_STRING_NOTE_FOLLOWINGLISTEMPTY);		
 		iTextUtilities->WrapToArrayL(iWrappedTextArray, i10BoldFont, *aNoItems, aWidth);		
@@ -428,18 +423,8 @@ void CBuddycloudFollowingContainer::RenderWrappedText(TInt aIndex) {
 	}
 }
 
-TBool CBuddycloudFollowingContainer::IsFilteredItem(TInt aIndex) {
-	CFollowingItem* aItem = iItemStore->GetItemByIndex(aIndex);
-
-	if(aItem) {
-		return aItem->IsFiltered();
-	}
-
-	return false;
-}
-
 TInt CBuddycloudFollowingContainer::CalculateItemSize(TInt aIndex) {
-	CFollowingItem* aItem = iItemStore->GetItemByIndex(aIndex);
+	CFollowingItem* aItem = static_cast <CFollowingItem*> (iItemStore->GetItemByIndex(aIndex));
 	TInt aItemSize = 0;
 	TInt aMinimumSize = 0;
 
@@ -460,9 +445,9 @@ TInt CBuddycloudFollowingContainer::CalculateItemSize(TInt aIndex) {
 				CFollowingRosterItem* aRosterItem = static_cast <CFollowingRosterItem*> (aItem);
 				
 				// Place history
-				if(aRosterItem->GetPlace(EPlacePrevious)->GetPlaceName().Length() > 0 || 
-						aRosterItem->GetPlace(EPlaceCurrent)->GetPlaceName().Length() > 0 || 
-						aRosterItem->GetPlace(EPlaceNext)->GetPlaceName().Length() > 0) {	
+				if(aRosterItem->GetGeolocItem(EGeolocItemPrevious)->GetString(EGeolocText).Length() > 0 || 
+						aRosterItem->GetGeolocItem(EGeolocItemCurrent)->GetString(EGeolocText).Length() > 0 || 
+						aRosterItem->GetGeolocItem(EGeolocItemFuture)->GetString(EGeolocText).Length() > 0) {	
 					
 					if(aItemSize < (iItemIconSize + 2)) {
 						aItemSize = (iItemIconSize + 2);
@@ -471,7 +456,7 @@ TInt CBuddycloudFollowingContainer::CalculateItemSize(TInt aIndex) {
 					aItemSize += i10NormalFont->HeightInPixels();
 					aItemSize += i10BoldFont->HeightInPixels();
 					
-					if(aRosterItem->GetPlace(EPlaceNext)->GetPlaceName().Length() > 0) {
+					if(aRosterItem->GetGeolocItem(EGeolocItemFuture)->GetString(EGeolocText).Length() > 0) {
 						aItemSize += i10NormalFont->HeightInPixels();
 					}
 				}
@@ -489,7 +474,7 @@ TInt CBuddycloudFollowingContainer::CalculateItemSize(TInt aIndex) {
 			if(aItem->GetItemType() == EItemRoster) {
 				CFollowingRosterItem* aRosterItem = static_cast <CFollowingRosterItem*> (aItem);
 				
-				if(aRosterItem->GetPlace(EPlaceCurrent)->GetPlaceName().Length() > 0) {
+				if(aRosterItem->GetGeolocItem(EGeolocItemCurrent)->GetString(EGeolocText).Length() > 0) {
 					aItemSize += i10BoldFont->FontMaxDescent();
 					aItemSize += i10NormalFont->HeightInPixels();
 				}
@@ -517,10 +502,10 @@ void CBuddycloudFollowingContainer::RenderListItems() {
 #endif
 
 		for(TInt i = 0; i < iItemStore->Count(); i++) {
-			CFollowingItem* aItem = iItemStore->GetItemByIndex(i);
+			CFollowingItem* aItem = static_cast <CFollowingItem*> (iItemStore->GetItemByIndex(i));
 
 			if(aItem) {
-				if(IsFilteredItem(i)) {
+				if(aItem->Filtered()) {
 					// Calculate item size
 					aItemSize = CalculateItemSize(i);
 					
@@ -529,7 +514,7 @@ void CBuddycloudFollowingContainer::RenderListItems() {
 						TInt aItemDrawPos = aDrawPos;
 						
 #ifdef __SERIES60_40__
-						iListItems.Append(TListItem(aItem->GetItemId(), TRect(0, aItemDrawPos, (Rect().Width() - iScrollbarWidth), (aItemDrawPos + aItemSize))));
+						iListItems.Append(TListItem(aItem->GetItemId(), TRect(0, aItemDrawPos, (Rect().Width() - iRightBarSpacer), (aItemDrawPos + aItemSize))));
 #endif
 
 						if(aItem->GetItemType() == EItemContact && aItem->GetTitle().Length() == 0) {
@@ -541,7 +526,7 @@ void CBuddycloudFollowingContainer::RenderListItems() {
 						
 						if(iSelectedItem == aItem->GetItemId()) {
 							// Currently selected item
-							TRect aRect = TRect(iScrollbarOffset + 1, aItemDrawPos, (iRect.Width() - iScrollbarWidth), (aItemDrawPos + aItemSize));
+							TRect aRect = TRect(iLeftBarSpacer + 1, aItemDrawPos, (iRect.Width() - iRightBarSpacer), (aItemDrawPos + aItemSize));
 							RenderItemFrame(aRect);
 							
 							iBufferGc->SetPenColor(iColourTextSelected);
@@ -559,17 +544,17 @@ void CBuddycloudFollowingContainer::RenderListItems() {
 									
 									// Message Icon
 									iBufferGc->SetBrushStyle(CGraphicsContext::ENullBrush);
-									iBufferGc->BitBltMasked(TPoint((iRect.Width() - iScrollbarWidth - 3 - (iItemIconSize / 2)), aUnreadPos), iAvatarRepository->GetImage(KIconMessage2, false, iIconMidmapSize), TRect(0, 0, (iItemIconSize / 2), (iItemIconSize / 2)), iAvatarRepository->GetImage(KIconMessage2, true, iIconMidmapSize), true);								
+									iBufferGc->BitBltMasked(TPoint((iRect.Width() - iRightBarSpacer - 3 - (iItemIconSize / 2)), aUnreadPos), iAvatarRepository->GetImage(KIconMessage2, false, iIconMidmapSize), TRect(0, 0, (iItemIconSize / 2), (iItemIconSize / 2)), iAvatarRepository->GetImage(KIconMessage2, true, iIconMidmapSize), true);								
 									
 									if(aChannelItem->GetReplies() > 0) {
 										// Draw direct reply icon
-										iBufferGc->BitBltMasked(TPoint((iRect.Width() - iScrollbarWidth - 3 - (iItemIconSize / 2)), aUnreadPos), iAvatarRepository->GetImage(KOverlayReply, false, iIconMidmapSize), TRect(0, 0, (iItemIconSize / 2), (iItemIconSize / 2)), iAvatarRepository->GetImage(KOverlayReply, true, iIconMidmapSize), true);
+										iBufferGc->BitBltMasked(TPoint((iRect.Width() - iRightBarSpacer - 3 - (iItemIconSize / 2)), aUnreadPos), iAvatarRepository->GetImage(KOverlayReply, false, iIconMidmapSize), TRect(0, 0, (iItemIconSize / 2), (iItemIconSize / 2)), iAvatarRepository->GetImage(KOverlayReply, true, iIconMidmapSize), true);
 									}
 
 									iBufferGc->SetBrushStyle(CGraphicsContext::ESolidBrush);
 									
 									// Unread number
-									iBufferGc->DrawText(aBuf, TPoint((iRect.Width() - iScrollbarWidth - 3 - (iItemIconSize / 2) - i10NormalFont->TextWidthInPixels(aBuf)), aUnreadPos + (i10NormalFont->HeightInPixels() / 2) + (iItemIconSize / 4)));
+									iBufferGc->DrawText(aBuf, TPoint((iRect.Width() - iRightBarSpacer - 3 - (iItemIconSize / 2) - i10NormalFont->TextWidthInPixels(aBuf)), aUnreadPos + (i10NormalFont->HeightInPixels() / 2) + (iItemIconSize / 4)));
 									aUnreadPos += (iItemIconSize / 2);									
 								}
 								
@@ -582,11 +567,11 @@ void CBuddycloudFollowingContainer::RenderListItems() {
 										
 										// Message Icon
 										iBufferGc->SetBrushStyle(CGraphicsContext::ENullBrush);
-										iBufferGc->BitBltMasked(TPoint((iRect.Width() - iScrollbarWidth - 3 - (iItemIconSize / 2)), aUnreadPos), iAvatarRepository->GetImage(KIconMessage1, false, iIconMidmapSize), TRect(0, 0, (iItemIconSize / 2), (iItemIconSize / 2)), iAvatarRepository->GetImage(KIconMessage1, true, iIconMidmapSize), true);
+										iBufferGc->BitBltMasked(TPoint((iRect.Width() - iRightBarSpacer - 3 - (iItemIconSize / 2)), aUnreadPos), iAvatarRepository->GetImage(KIconMessage1, false, iIconMidmapSize), TRect(0, 0, (iItemIconSize / 2), (iItemIconSize / 2)), iAvatarRepository->GetImage(KIconMessage1, true, iIconMidmapSize), true);
 										iBufferGc->SetBrushStyle(CGraphicsContext::ESolidBrush);
 										
 										// Unread number
-										iBufferGc->DrawText(aBuf, TPoint((iRect.Width() - iScrollbarWidth - 3 - (iItemIconSize / 2) - i10NormalFont->TextWidthInPixels(aBuf)), aUnreadPos + (i10NormalFont->HeightInPixels() / 2) + (iItemIconSize / 4)));
+										iBufferGc->DrawText(aBuf, TPoint((iRect.Width() - iRightBarSpacer - 3 - (iItemIconSize / 2) - i10NormalFont->TextWidthInPixels(aBuf)), aUnreadPos + (i10NormalFont->HeightInPixels() / 2) + (iItemIconSize / 4)));
 									}
 								}
 								
@@ -595,14 +580,14 @@ void CBuddycloudFollowingContainer::RenderListItems() {
 							
 							// Draw avatar
 							iBufferGc->SetBrushStyle(CGraphicsContext::ENullBrush);
-							iBufferGc->BitBltMasked(TPoint(iScrollbarOffset + 6, aItemDrawPos + 2), iAvatarRepository->GetImage(aItem->GetAvatarId(), false, iIconMidmapSize), TRect(0, 0, iItemIconSize, iItemIconSize), iAvatarRepository->GetImage(aItem->GetAvatarId(), true, iIconMidmapSize), true);
+							iBufferGc->BitBltMasked(TPoint(iLeftBarSpacer + 6, aItemDrawPos + 2), iAvatarRepository->GetImage(aItem->GetIconId(), false, iIconMidmapSize), TRect(0, 0, iItemIconSize, iItemIconSize), iAvatarRepository->GetImage(aItem->GetIconId(), true, iIconMidmapSize), true);
 							iBufferGc->SetBrushStyle(CGraphicsContext::ESolidBrush);
 							
-							aRect = TRect(iScrollbarOffset + 3, aItemDrawPos, (iRect.Width() - iScrollbarWidth - iNewMessagesOffset - 3), iRect.Height());
+							aRect = TRect(iLeftBarSpacer + 3, aItemDrawPos, (iRect.Width() - iRightBarSpacer - iNewMessagesOffset - 3), iRect.Height());
 							iBufferGc->SetClippingRect(aRect);
 
 							// Name
-							if(i13BoldFont->TextCount(aDirectionalText, (iRect.Width() - iScrollbarOffset - iScrollbarWidth - iNewMessagesOffset - 3 - iSelectedItemIconTextOffset)) < aDirectionalText.Length()) {
+							if(i13BoldFont->TextCount(aDirectionalText, (iRect.Width() - iLeftBarSpacer - iRightBarSpacer - iNewMessagesOffset - 3 - iSelectedItemIconTextOffset)) < aDirectionalText.Length()) {
 								iBufferGc->UseFont(i10BoldFont);
 							}
 							else {
@@ -610,7 +595,7 @@ void CBuddycloudFollowingContainer::RenderListItems() {
 							}
 
 							aItemDrawPos += i13BoldFont->HeightInPixels();
-							iBufferGc->DrawText(aDirectionalText, TPoint(iScrollbarOffset + iSelectedItemIconTextOffset, aItemDrawPos));
+							iBufferGc->DrawText(aDirectionalText, TPoint(iLeftBarSpacer + iSelectedItemIconTextOffset, aItemDrawPos));
 							aItemDrawPos += i13BoldFont->FontMaxDescent();
 							iBufferGc->DiscardFont();
 
@@ -620,7 +605,7 @@ void CBuddycloudFollowingContainer::RenderListItems() {
 								
 								for(TInt i = 0; i < iWrappedTextArray.Count(); i++) {
 									aItemDrawPos += i10ItalicFont->HeightInPixels();
-									iBufferGc->DrawText(*iWrappedTextArray[i], TPoint(iScrollbarOffset + iSelectedItemIconTextOffset, aItemDrawPos));
+									iBufferGc->DrawText(*iWrappedTextArray[i], TPoint(iLeftBarSpacer + iSelectedItemIconTextOffset, aItemDrawPos));
 								}
 								
 								iBufferGc->DiscardFont();
@@ -630,9 +615,9 @@ void CBuddycloudFollowingContainer::RenderListItems() {
 								CFollowingRosterItem* aRosterItem = static_cast <CFollowingRosterItem*> (aItem);
 								
 								// Place history
-								if(aRosterItem->GetPlace(EPlacePrevious)->GetPlaceName().Length() > 0 || 
-										aRosterItem->GetPlace(EPlaceCurrent)->GetPlaceName().Length() > 0 ||
-										aRosterItem->GetPlace(EPlaceNext)->GetPlaceName().Length() > 0) {
+								if(aRosterItem->GetGeolocItem(EGeolocItemPrevious)->GetString(EGeolocText).Length() > 0 || 
+										aRosterItem->GetGeolocItem(EGeolocItemCurrent)->GetString(EGeolocText).Length() > 0 ||
+										aRosterItem->GetGeolocItem(EGeolocItemFuture)->GetString(EGeolocText).Length() > 0) {
 									
 									if(aItemDrawPos - aDrawPos < (iItemIconSize + 2)) {
 										aItemDrawPos = (aDrawPos + iItemIconSize + 2);
@@ -640,11 +625,11 @@ void CBuddycloudFollowingContainer::RenderListItems() {
 									
 									iBufferGc->SetBrushStyle(CGraphicsContext::ENullBrush);
 									
-									if(aRosterItem->GetPlace(EPlaceNext)->GetPlaceName().Length() > 0) {
-										iBufferGc->BitBltMasked(TPoint(iScrollbarOffset + 9, aItemDrawPos), iArrow2Bitmap, TRect(0, 0, iArrow2Size.iWidth, iArrow2Size.iHeight), iArrow2Mask, true);
+									if(aRosterItem->GetGeolocItem(EGeolocItemFuture)->GetString(EGeolocText).Length() > 0) {
+										iBufferGc->BitBltMasked(TPoint(iLeftBarSpacer + 9, aItemDrawPos), iArrow2Bitmap, TRect(0, 0, iArrow2Size.iWidth, iArrow2Size.iHeight), iArrow2Mask, true);
 									}
 									else {
-										iBufferGc->BitBltMasked(TPoint(iScrollbarOffset + 9, aItemDrawPos), iArrow1Bitmap, TRect(0, 0, iArrow1Size.iWidth, iArrow1Size.iHeight), iArrow1Mask, true);
+										iBufferGc->BitBltMasked(TPoint(iLeftBarSpacer + 9, aItemDrawPos), iArrow1Bitmap, TRect(0, 0, iArrow1Size.iWidth, iArrow1Size.iHeight), iArrow1Mask, true);
 									}
 									
 									iBufferGc->SetBrushStyle(CGraphicsContext::ESolidBrush);
@@ -653,31 +638,31 @@ void CBuddycloudFollowingContainer::RenderListItems() {
 									iBufferGc->UseFont(i10NormalFont);
 									iBufferGc->SetStrikethroughStyle(EStrikethroughOn);
 									aItemDrawPos += i10NormalFont->HeightInPixels();
-									aDirectionalText.Set(iTextUtilities->BidiLogicalToVisualL(aRosterItem->GetPlace(EPlacePrevious)->GetPlaceName()));
-									iBufferGc->DrawText(aDirectionalText, TPoint(iScrollbarOffset + 30, aItemDrawPos));
+									aDirectionalText.Set(iTextUtilities->BidiLogicalToVisualL(aRosterItem->GetGeolocItem(EGeolocItemPrevious)->GetString(EGeolocText)));
+									iBufferGc->DrawText(aDirectionalText, TPoint(iLeftBarSpacer + 30, aItemDrawPos));
 									iBufferGc->SetStrikethroughStyle(EStrikethroughOff);
 									iBufferGc->DiscardFont();
 
 									// Current place
 									iBufferGc->UseFont(i10BoldFont);
 									aItemDrawPos += i10BoldFont->HeightInPixels();
-									aDirectionalText.Set(iTextUtilities->BidiLogicalToVisualL(aRosterItem->GetPlace(EPlaceCurrent)->GetPlaceName()));
-									iBufferGc->DrawText(aDirectionalText, TPoint(iScrollbarOffset + 30, aItemDrawPos));
+									aDirectionalText.Set(iTextUtilities->BidiLogicalToVisualL(aRosterItem->GetGeolocItem(EGeolocItemCurrent)->GetString(EGeolocText)));
+									iBufferGc->DrawText(aDirectionalText, TPoint(iLeftBarSpacer + 30, aItemDrawPos));
 									iBufferGc->DiscardFont();
 
 									// Next place
-									if(aRosterItem->GetPlace(EPlaceNext)->GetPlaceName().Length() > 0) {
+									if(aRosterItem->GetGeolocItem(EGeolocItemFuture)->GetString(EGeolocText).Length() > 0) {
 										iBufferGc->UseFont(i10NormalFont);
 										aItemDrawPos += i10NormalFont->HeightInPixels();
-										aDirectionalText.Set(iTextUtilities->BidiLogicalToVisualL(aRosterItem->GetPlace(EPlaceNext)->GetPlaceName()));
-										iBufferGc->DrawText(aDirectionalText, TPoint(iScrollbarOffset + 30, aItemDrawPos));
+										aDirectionalText.Set(iTextUtilities->BidiLogicalToVisualL(aRosterItem->GetGeolocItem(EGeolocItemFuture)->GetString(EGeolocText)));
+										iBufferGc->DrawText(aDirectionalText, TPoint(iLeftBarSpacer + 30, aItemDrawPos));
 										iBufferGc->DiscardFont();
 									}
 								}
 								
 								// Request pubsub if not collected
-								if( !aDynamicContentRequested && !aRosterItem->GetPubsubCollected() ) {
-									iBuddycloudLogic->GetFriendDetailsL(aRosterItem->GetItemId());
+								if( !aDynamicContentRequested && !aRosterItem->PubsubCollected() ) {
+									iBuddycloudLogic->RecollectFollowerDetailsL(aRosterItem->GetItemId());
 									aDynamicContentRequested = true;
 								}
 							}							
@@ -693,7 +678,7 @@ void CBuddycloudFollowingContainer::RenderListItems() {
 							iBufferGc->SetBrushStyle(CGraphicsContext::ENullBrush);
 							
 							if(aItem->GetItemType() == EItemRoster || aItem->GetItemType() == EItemChannel) {
-								TInt aMessageIconOffset = (iScrollbarWidth + 3);
+								TInt aMessageIconOffset = (iRightBarSpacer + 3);
 							
 								// Private messages
 								if(aItem->GetItemType() == EItemRoster) {
@@ -724,7 +709,7 @@ void CBuddycloudFollowingContainer::RenderListItems() {
 							}
 							
 							// Draw avatar
-							iBufferGc->BitBltMasked(TPoint(iScrollbarOffset + (iUnselectedItemIconTextOffset / 2) - (iItemIconSize / 4), (aItemDrawPos + 1)), iAvatarRepository->GetImage(aItem->GetAvatarId(), false, (iIconMidmapSize + 1)), TRect(0, 0, (iItemIconSize / 2), (iItemIconSize / 2)), iAvatarRepository->GetImage(aItem->GetAvatarId(), true, (iIconMidmapSize + 1)), true);							
+							iBufferGc->BitBltMasked(TPoint(iLeftBarSpacer + (iUnselectedItemIconTextOffset / 2) - (iItemIconSize / 4), (aItemDrawPos + 1)), iAvatarRepository->GetImage(aItem->GetIconId(), false, (iIconMidmapSize + 1)), TRect(0, 0, (iItemIconSize / 2), (iItemIconSize / 2)), iAvatarRepository->GetImage(aItem->GetIconId(), true, (iIconMidmapSize + 1)), true);							
 							iBufferGc->SetBrushStyle(CGraphicsContext::ESolidBrush);							
 							
 							iBufferGc->SetClippingRect(aRect);
@@ -732,33 +717,33 @@ void CBuddycloudFollowingContainer::RenderListItems() {
 							// Title
 							iBufferGc->UseFont(i10BoldFont);
 							aItemDrawPos += i10BoldFont->HeightInPixels();
-							iBufferGc->DrawText(aDirectionalText, TPoint(iScrollbarOffset + iUnselectedItemIconTextOffset, aItemDrawPos));
+							iBufferGc->DrawText(aDirectionalText, TPoint(iLeftBarSpacer + iUnselectedItemIconTextOffset, aItemDrawPos));
 							iBufferGc->DiscardFont();
 							
 							if(aItem->GetItemType() == EItemRoster) {
 								CFollowingRosterItem* aRosterItem = static_cast <CFollowingRosterItem*> (aItem);
 								
-								if(!aRosterItem->GetPubsubCollected()) {
+								if(!aRosterItem->PubsubCollected()) {
 									iBufferGc->SetPenColor(iColourTextSelectedTrans);
 								}
 								
 								// Current place
-								if(aRosterItem->GetPlace(EPlaceCurrent)->GetPlaceName().Length() > 0) {
-									if( !aRosterItem->GetPubsubCollected() ) {
+								if(aRosterItem->GetGeolocItem(EGeolocItemCurrent)->GetString(EGeolocText).Length() > 0) {
+									if( !aRosterItem->PubsubCollected() ) {
 										iBufferGc->SetPenColor(iColourTextTrans);
 									}
 	
 									iBufferGc->UseFont(i10NormalFont);
 									aItemDrawPos += i10BoldFont->FontMaxDescent();
 									aItemDrawPos += i10NormalFont->HeightInPixels();
-									aDirectionalText.Set(iTextUtilities->BidiLogicalToVisualL(aRosterItem->GetPlace(EPlaceCurrent)->GetPlaceName()));
-									iBufferGc->DrawText(aDirectionalText, TPoint(iScrollbarOffset + iUnselectedItemIconTextOffset, aItemDrawPos));
+									aDirectionalText.Set(iTextUtilities->BidiLogicalToVisualL(aRosterItem->GetGeolocItem(EGeolocItemCurrent)->GetString(EGeolocText)));
+									iBufferGc->DrawText(aDirectionalText, TPoint(iLeftBarSpacer + iUnselectedItemIconTextOffset, aItemDrawPos));
 									iBufferGc->DiscardFont();
 								}
 								
 								// Request pubsub if not collected
-								if( !aDynamicContentRequested && !aRosterItem->GetPubsubCollected() ) {
-									iBuddycloudLogic->GetFriendDetailsL(aRosterItem->GetItemId());
+								if( !aDynamicContentRequested && !aRosterItem->PubsubCollected() ) {
+									iBuddycloudLogic->RecollectFollowerDetailsL(aRosterItem->GetItemId());
 									aDynamicContentRequested = true;
 								}
 							}
@@ -788,7 +773,7 @@ void CBuddycloudFollowingContainer::RenderListItems() {
 			aDrawPos = ((iRect.Height() / 2) - (i10BoldFont->HeightInPixels() / 2));
 			
 			HBufC* aNoResults = iEikonEnv->AllocReadResourceLC(R_LOCALIZED_STRING_NOTE_NORESULTSFOUND);		
-			iBufferGc->DrawText(*aNoResults, TPoint(((iScrollbarOffset + ((iRect.Width() - iScrollbarOffset - iScrollbarWidth) / 2)) - (i10BoldFont->TextWidthInPixels(*aNoResults) / 2)), aDrawPos));
+			iBufferGc->DrawText(*aNoResults, TPoint(((iLeftBarSpacer + ((iRect.Width() - iLeftBarSpacer - iRightBarSpacer) / 2)) - (i10BoldFont->TextWidthInPixels(*aNoResults) / 2)), aDrawPos));
 			CleanupStack::PopAndDestroy();// aNoResults	
 		}
 		else {
@@ -797,7 +782,7 @@ void CBuddycloudFollowingContainer::RenderListItems() {
 						
 			for(TInt i = 0; i < iWrappedTextArray.Count(); i++) {
 				aDrawPos += i10ItalicFont->HeightInPixels();
-				iBufferGc->DrawText(iWrappedTextArray[i]->Des(), TPoint(((iScrollbarOffset + ((iRect.Width() - iScrollbarOffset - iScrollbarWidth) / 2)) - (i10BoldFont->TextWidthInPixels(iWrappedTextArray[i]->Des()) / 2)), aDrawPos));
+				iBufferGc->DrawText(iWrappedTextArray[i]->Des(), TPoint(((iLeftBarSpacer + ((iRect.Width() - iLeftBarSpacer - iRightBarSpacer) / 2)) - (i10BoldFont->TextWidthInPixels(iWrappedTextArray[i]->Des()) / 2)), aDrawPos));
 			}
 		}
 		
@@ -833,17 +818,19 @@ void CBuddycloudFollowingContainer::RepositionItems(TBool aSnapToItem) {
 		TInt aItemSize;
 
 		// Check if current item exists
-		CFollowingItem* aItem = iItemStore->GetItemById(iSelectedItem);
+		CBuddycloudListItem* aItem = iItemStore->GetItemById(iSelectedItem);
 
-		if(aItem == NULL || !aItem->IsFiltered()) {
+		if(aItem == NULL || !aItem->Filtered()) {
 			iSelectedItem = KErrNotFound;
 		}
 		
 		for(TInt i = 0; i < iItemStore->Count(); i++) {
+			aItem = iItemStore->GetItemByIndex(i);
+
 			// If item is in filtering list
-			if(IsFilteredItem(i)) {
+			if(aItem && aItem->Filtered()) {
 				if(iSelectedItem == KErrNotFound) {
-					iSelectedItem = iItemStore->GetItemByIndex(i)->GetItemId();
+					iSelectedItem = aItem->GetItemId();
 					
 #ifdef __SERIES60_40__
 					DynInitToolbarL(R_STATUS_TOOLBAR, iViewAccessor->ViewToolbar());
@@ -853,7 +840,7 @@ void CBuddycloudFollowingContainer::RepositionItems(TBool aSnapToItem) {
 				
 				aItemSize = CalculateItemSize(i);
 				
-				if(aSnapToItem && iItemStore->GetItemByIndex(i)->GetItemId() == iSelectedItem) {
+				if(aSnapToItem && aItem->GetItemId() == iSelectedItem) {
 					if(iTotalListSize + (aItemSize / 2) > (iRect.Height() / 2)) {
 						iScrollbarHandlePosition = (iTotalListSize + (aItemSize / 2)) - (iRect.Height() / 2);
 					}
@@ -883,10 +870,11 @@ void CBuddycloudFollowingContainer::HandleItemSelection(TInt aItemId) {
 	}
 	else {
 		// Trigger item event
-		CFollowingItem* aItem = iItemStore->GetItemById(iSelectedItem);
+		CFollowingItem* aItem = static_cast <CFollowingItem*> (iItemStore->GetItemById(iSelectedItem));
+		CFollowingRosterItem* aOwnItem = iBuddycloudLogic->GetOwnItem();
 
 		if(aItem) {
-			if(aItem->GetIsOwn()) {
+			if(aOwnItem && aItem->GetItemId() == aOwnItem->GetItemId()) {
 				iViewAccessor->ViewMenuBar()->SetMenuTitleResourceId(R_STATUS_UPDATE_MENUBAR);
 				iViewAccessor->ViewMenuBar()->TryDisplayMenuBarL();
 				iViewAccessor->ViewMenuBar()->SetMenuTitleResourceId(R_STATUS_OPTIONS_MENUBAR);
@@ -913,31 +901,29 @@ void CBuddycloudFollowingContainer::DynInitToolbarL(TInt aResourceId, CAknToolba
 		aToolbar->SetItemDimmed(EMenuCallCommand, true, true);
 		aToolbar->SetItemDimmed(EMenuMessagesCommand, true, true);
 		
-		CFollowingItem* aItem = iItemStore->GetItemById(iSelectedItem);
+		CFollowingItem* aItem = static_cast <CFollowingItem*> (iItemStore->GetItemById(iSelectedItem));
 
-		if(aItem) {
-			if(aItem->GetItemType() >= EItemContact) {
-				CFollowingContactItem* aContactItem = static_cast <CFollowingContactItem*> (aItem);
+		if(aItem && aItem->GetItemType() >= EItemContact) {
+			CFollowingContactItem* aContactItem = static_cast <CFollowingContactItem*> (aItem);
+			
+			// Call dimming
+			if(aContactItem->GetAddressbookId() >= 0) {
+				CContactItem* aContact = iBuddycloudLogic->GetContactDetailsLC(aContactItem->GetAddressbookId());
 				
-				// Call dimming
-				if(aContactItem->GetAddressbookId() >= 0) {
-					CContactItem* aContact = iBuddycloudLogic->GetContactDetailsLC(aContactItem->GetAddressbookId());
-					
-					if(aContact != NULL) {
-						if(aContact->CardFields().FindNext(KUidContactFieldPhoneNumber) != KErrNotFound) {
-							if( !iBuddycloudLogic->GetCall()->IsTelephonyBusy() ) {
-								aToolbar->SetItemDimmed(EMenuCallCommand, false, true);
-							}				
-						}
-						
-						CleanupStack::PopAndDestroy(); // aContact
+				if(aContact != NULL) {
+					if(aContact->CardFields().FindNext(KUidContactFieldPhoneNumber) != KErrNotFound) {
+						if( !iBuddycloudLogic->GetCall()->IsTelephonyBusy() ) {
+							aToolbar->SetItemDimmed(EMenuCallCommand, false, true);
+						}				
 					}
+					
+					CleanupStack::PopAndDestroy(); // aContact
 				}
-				
-				// Message dimming
-				if(aItem->GetItemType() >= EItemRoster) {
-					aToolbar->SetItemDimmed(EMenuMessagesCommand, false, true);
-				}
+			}
+			
+			// Message dimming
+			if(aItem->GetItemType() >= EItemRoster) {
+				aToolbar->SetItemDimmed(EMenuMessagesCommand, false, true);
 			}
 		}		
 	}
@@ -981,14 +967,12 @@ void CBuddycloudFollowingContainer::DynInitMenuPaneL(TInt aResourceId, CEikMenuP
 
 		if(iBuddycloudLogic->GetState() == ELogicOffline) {
 			aMenuPane->SetItemDimmed(EMenuConnectCommand, false);
-			aMenuPane->SetItemDimmed(EMenuInviteCommand, true);
 		}
 		else {
 			aMenuPane->SetItemDimmed(EMenuDisconnectCommand, false);
-			aMenuPane->SetItemDimmed(EMenuInviteCommand, false);
 		}
 
-		CFollowingItem* aItem = iItemStore->GetItemById(iSelectedItem);
+		CFollowingItem* aItem = static_cast <CFollowingItem*> (iItemStore->GetItemById(iSelectedItem));
 
 		if(aItem) {
 			if(aItem->GetItemType() >= EItemRoster && iBuddycloudLogic->GetState() == ELogicOnline) {
@@ -1006,9 +990,8 @@ void CBuddycloudFollowingContainer::DynInitMenuPaneL(TInt aResourceId, CEikMenuP
 		aMenuPane->SetItemDimmed(EMenuPrivateMessagesCommand, true);
 		aMenuPane->SetItemDimmed(EMenuChannelMessagesCommand, true);
 		aMenuPane->SetItemDimmed(EMenuGetPlaceInfoCommand, true);
-		aMenuPane->SetItemDimmed(EMenuGetChannelInfoCommand, true);
+		aMenuPane->SetItemDimmed(EMenuChannelInfoCommand, true);
 		aMenuPane->SetItemDimmed(EMenuFollowCommand, true);
-		aMenuPane->SetItemDimmed(EMenuInviteToGroupCommand, true);
 		aMenuPane->SetItemDimmed(EMenuSendPlaceBySmsCommand, true);
 		aMenuPane->SetItemDimmed(EMenuInviteToBuddycloudCommand, true);
 		aMenuPane->SetItemDimmed(EMenuUnfollowCommand, true);
@@ -1016,18 +999,16 @@ void CBuddycloudFollowingContainer::DynInitMenuPaneL(TInt aResourceId, CEikMenuP
 		aMenuPane->SetItemDimmed(EMenuAcceptAndFollowCommand, true);
 		aMenuPane->SetItemDimmed(EMenuDeclineCommand, true);
 
-		CFollowingItem* aItem = iItemStore->GetItemById(iSelectedItem);
+		CFollowingItem* aItem = static_cast <CFollowingItem*> (iItemStore->GetItemById(iSelectedItem));
 
 		if(aItem) {
 			// Item dimming
 			if(aItem->GetItemType() == EItemNotice) {
-				CFollowingNoticeItem* aNoticeItem = static_cast <CFollowingNoticeItem*> (aItem);
-				
 				aMenuPane->SetItemDimmed(EMenuAcceptCommand, false);
 				aMenuPane->SetItemDimmed(EMenuDeclineCommand, false);
 				
-				if(aNoticeItem->GetJidType() == EJidRoster) {
-					CFollowingItem* aSubscribedItem = iItemStore->GetItemById(iBuddycloudLogic->IsSubscribedTo(aNoticeItem->GetJid(), EItemRoster));
+				if(aItem->GetIdType() == EIdRoster) {
+					CBuddycloudListItem* aSubscribedItem = iItemStore->GetItemById(iBuddycloudLogic->IsSubscribedTo(aItem->GetId(), EItemRoster));
 					
 					if(aSubscribedItem == NULL) {
 						aMenuPane->SetItemDimmed(EMenuAcceptAndFollowCommand, false);
@@ -1060,14 +1041,13 @@ void CBuddycloudFollowingContainer::DynInitMenuPaneL(TInt aResourceId, CEikMenuP
 			else if(aItem->GetItemType() == EItemRoster) {
 				CFollowingRosterItem* aRosterItem = static_cast <CFollowingRosterItem*> (aItem);				
 				
-				if(!aRosterItem->GetIsOwn()) {
+				if(!aRosterItem->OwnItem()) {
 					aMenuPane->SetItemDimmed(EMenuPrivateMessagesCommand, false);
-					aMenuPane->SetItemDimmed(EMenuInviteToGroupCommand, false);
 				}
 				
-				if(aRosterItem->GetJid(EJidChannel).Length() > 0) {
+				if(aRosterItem->GetId(EIdChannel).Length() > 0) {
 					aMenuPane->SetItemDimmed(EMenuChannelMessagesCommand, false);
-					aMenuPane->SetItemDimmed(EMenuGetChannelInfoCommand, false);
+					aMenuPane->SetItemDimmed(EMenuChannelInfoCommand, false);
 				}
 
 				if(aRosterItem->GetAddressbookId() >= 0) {
@@ -1088,24 +1068,29 @@ void CBuddycloudFollowingContainer::DynInitMenuPaneL(TInt aResourceId, CEikMenuP
 					}
 				}
 				
-				if(!aRosterItem->GetIsOwn()) {
-					if(aRosterItem->GetSubscriptionType() <= ESubscriptionFrom) {
+				if(!aRosterItem->OwnItem()) {
+					if(aRosterItem->GetSubscription() <= EPresenceSubscriptionFrom) {
 						aMenuPane->SetItemDimmed(EMenuFollowCommand, false);
 					}
 					
-					if(aRosterItem->GetSubscriptionType() >= ESubscriptionFrom) {
+					if(aRosterItem->GetSubscription() >= EPresenceSubscriptionFrom) {
 						aMenuPane->SetItemDimmed(EMenuUnfollowCommand, false);
 					}
 				}
 				
-				if(aRosterItem->GetPlace(EPlaceCurrent)->GetPlaceName().Length() > 0) {
+				if(aRosterItem->GetGeolocItem(EGeolocItemCurrent)->GetString(EGeolocText).Length() > 0) {
 					aMenuPane->SetItemDimmed(EMenuGetPlaceInfoCommand, false);
 				}
 			}
 			else if(aItem->GetItemType() == EItemChannel) {
+				CFollowingChannelItem* aChannelItem = static_cast <CFollowingChannelItem*> (aItem);								
+				
 				aMenuPane->SetItemDimmed(EMenuChannelMessagesCommand, false);
-				aMenuPane->SetItemDimmed(EMenuGetChannelInfoCommand, false);
-				aMenuPane->SetItemDimmed(EMenuUnfollowCommand, false);
+				aMenuPane->SetItemDimmed(EMenuChannelInfoCommand, false);
+				
+				if(aChannelItem->GetPubsubAffiliation() < EPubsubAffiliationOwner) {
+					aMenuPane->SetItemDimmed(EMenuUnfollowCommand, false);
+				}
 			}
 		}
 	}
@@ -1113,12 +1098,12 @@ void CBuddycloudFollowingContainer::DynInitMenuPaneL(TInt aResourceId, CEikMenuP
 		aMenuPane->SetItemDimmed(EMenuChannelMessagesCommand, true);
 		aMenuPane->SetItemDimmed(EMenuPrivateMessagesCommand, true);
 		
-		CFollowingItem* aItem = iItemStore->GetItemById(iSelectedItem);
+		CFollowingItem* aItem = static_cast <CFollowingItem*> (iItemStore->GetItemById(iSelectedItem));
 
 		if(aItem && aItem->GetItemType() == EItemRoster) {
 			CFollowingRosterItem* aRosterItem = static_cast <CFollowingRosterItem*> (aItem);				
 			
-			if(aRosterItem->GetJid(EJidChannel).Length() > 0) {
+			if(aRosterItem->GetId(EIdChannel).Length() > 0) {
 				aMenuPane->SetItemDimmed(EMenuChannelMessagesCommand, false);
 			}
 			
@@ -1136,16 +1121,14 @@ void CBuddycloudFollowingContainer::DynInitMenuPaneL(TInt aResourceId, CEikMenuP
 		aMenuPane->SetItemDimmed(EMenuSeeBeenHereCommand, true);
 		aMenuPane->SetItemDimmed(EMenuSeeGoingHereCommand, true);
 		
-		CFollowingItem* aItem = iItemStore->GetItemById(iSelectedItem);
+		CFollowingItem* aItem = static_cast <CFollowingItem*> (iItemStore->GetItemById(iSelectedItem));
 
 		if(aItem && aItem->GetItemType() >= EItemRoster) {
-			CFollowingChannelItem* aChannelItem = static_cast <CFollowingChannelItem*> (aItem);
-			
-			if(aChannelItem->GetJid().Length() > 0) {
+			if(aItem->GetId().Length() > 0) {
 				aMenuPane->SetItemDimmed(EMenuSeeFollowersCommand, false);
 			}
 			
-			if(aChannelItem->GetItemType() == EItemRoster) {
+			if(aItem->GetItemType() == EItemRoster) {
 				aMenuPane->SetItemDimmed(EMenuSeeFollowingCommand, false);
 				aMenuPane->SetItemDimmed(EMenuSeeProducingCommand, false);
 			}
@@ -1194,19 +1177,14 @@ void CBuddycloudFollowingContainer::HandleCommandL(TInt aCommand) {
 			iBuddycloudLogic->SetMoodL(aMood);
 		}
 	}
-	else if(aCommand == EMenuFollowCommand || aCommand == EMenuInviteToGroupCommand) {
-		CFollowingItem* aItem = iItemStore->GetItemById(iSelectedItem);
+	else if(aCommand == EMenuFollowCommand) {
+		CFollowingItem* aItem = static_cast <CFollowingItem*> (iItemStore->GetItemById(iSelectedItem));
 
-		if(aItem != NULL) {
-			if(aItem->GetItemType() == EItemRoster) {
-				CFollowingRosterItem* aRosterItem = static_cast <CFollowingRosterItem*> (aItem);
-				
-				if(aCommand == EMenuFollowCommand) {
-					iBuddycloudLogic->FollowContactL(aRosterItem->GetJid());
-				}
-				else {
-					iBuddycloudLogic->InviteToChannelL(aRosterItem->GetJid());
-				}
+		if(aItem && aItem->GetItemType() == EItemRoster) {
+			CFollowingRosterItem* aRosterItem = static_cast <CFollowingRosterItem*> (aItem);
+			
+			if(aCommand == EMenuFollowCommand) {
+				iBuddycloudLogic->FollowContactL(aRosterItem->GetId());
 			}
 		}
 	}
@@ -1216,7 +1194,7 @@ void CBuddycloudFollowingContainer::HandleCommandL(TInt aCommand) {
 	else if(aCommand == EMenuInviteToBuddycloudCommand) {
 		iBuddycloudLogic->SendInviteL(iSelectedItem);
 	}
-	else if(aCommand == EMenuInviteCommand) {
+	else if(aCommand == EMenuAddContactCommand) {
 		TBuf<64> aContact;
 
 		CAknTextQueryDialog* aDialog = CAknTextQueryDialog::NewL(aContact, CAknQueryDialog::ENoTone);
@@ -1230,11 +1208,11 @@ void CBuddycloudFollowingContainer::HandleCommandL(TInt aCommand) {
 		CAknMessageQueryDialog* aDialog = new (ELeave) CAknMessageQueryDialog();
 
 		if(aDialog->ExecuteLD(R_DELETE_DIALOG) != 0) {
-			iBuddycloudLogic->DeleteItemL(iSelectedItem);
+			iBuddycloudLogic->UnfollowItemL(iSelectedItem);
 		}
 	}
 	else if(aCommand == EMenuMessagesCommand || aCommand == EMenuPrivateMessagesCommand || aCommand == EMenuChannelMessagesCommand) {
-		CFollowingItem* aItem = iItemStore->GetItemById(iSelectedItem);
+		CFollowingItem* aItem = static_cast <CFollowingItem*> (iItemStore->GetItemById(iSelectedItem));
 
 		if(aItem) {
 			TMessagingViewObject aObject;			
@@ -1248,8 +1226,8 @@ void CBuddycloudFollowingContainer::HandleCommandL(TInt aCommand) {
 				if(aItem->GetItemType() == EItemRoster) {
 					CFollowingRosterItem* aRosterItem = static_cast <CFollowingRosterItem*> (aItem);
 					
-					if(aRosterItem->GetJid(EJidChannel).Length() == 0 || 
-							(aRosterItem->GetUnread(EJidRoster) > 0 && aRosterItem->GetUnread(EJidChannel) == 0)) {
+					if(aRosterItem->GetId(EIdChannel).Length() == 0 || 
+							(aRosterItem->GetUnread(EIdRoster) > 0 && aRosterItem->GetUnread(EIdChannel) == 0)) {
 						
 						// Open private messages if channel is read/not existing
 						aCommand = EMenuPrivateMessagesCommand;
@@ -1261,13 +1239,11 @@ void CBuddycloudFollowingContainer::HandleCommandL(TInt aCommand) {
 				// Private messages
 				CFollowingRosterItem* aRosterItem = static_cast <CFollowingRosterItem*> (aItem);
 				
-				aObject.iJid.Append(aRosterItem->GetJid());
+				aObject.iId.Append(aRosterItem->GetId());
 			}
 			else {
 				// Topic or personal channel
-				CFollowingChannelItem* aChannelItem = static_cast <CFollowingChannelItem*> (aItem);
-				
-				aObject.iJid.Append(aChannelItem->GetJid());
+				aObject.iId.Append(aItem->GetId());
 			}
 			
 			TMessagingViewObjectPckg aObjectPckg(aObject);		
@@ -1275,61 +1251,32 @@ void CBuddycloudFollowingContainer::HandleCommandL(TInt aCommand) {
 		}
 	}
 	else if(aCommand == EMenuGetPlaceInfoCommand) {
-		CFollowingItem* aItem = iItemStore->GetItemById(iSelectedItem);
+		CFollowingItem* aItem = static_cast <CFollowingItem*> (iItemStore->GetItemById(iSelectedItem));
 
 		if(aItem && aItem->GetItemType() == EItemRoster) {
 			CFollowingRosterItem* aRosterItem = static_cast <CFollowingRosterItem*> (aItem);
-			CBuddycloudBasicPlace* aUserPlace = aRosterItem->GetPlace(EPlaceCurrent);
-			
+			CGeolocData* aGeoloc = aRosterItem->GetGeolocItem(EGeolocItemCurrent);
+						
 			// Prepare dialog header
 			HBufC* aHeader = iEikonEnv->AllocReadResourceLC(R_LOCALIZED_STRING_ITEM_PLACEINFO);
 			TPtr pHeader(aHeader->Des());
 							
 			// Prepare dialog message
-			HBufC* aMessage = HBufC::NewLC(aUserPlace->GetPlaceName().Length() + 
-					aUserPlace->GetPlaceStreet().Length() + aUserPlace->GetPlaceArea().Length() + 
-					aUserPlace->GetPlaceCity().Length() + aUserPlace->GetPlacePostcode().Length() + 
-					aUserPlace->GetPlaceRegion().Length() + aUserPlace->GetPlaceCountry().Length() + 11);
-			
+			HBufC* aMessage = HBufC::NewLC(aGeoloc->GetString(EGeolocText).Length() + 
+					aGeoloc->GetString(EGeolocStreet).Length() + aGeoloc->GetString(EGeolocArea).Length() + 
+					aGeoloc->GetString(EGeolocLocality).Length() + aGeoloc->GetString(EGeolocPostalcode).Length() + 
+					aGeoloc->GetString(EGeolocRegion).Length() + aGeoloc->GetString(EGeolocCountry).Length() + 11);
 			TPtr pMessage(aMessage->Des());
-			pMessage.Append(aUserPlace->GetPlaceName());
 			
-			if(pMessage.Length() && aUserPlace->GetPlaceStreet().Length() > 0) {
-				pMessage.Append(_L(",\n"));
-			}
-			
-			pMessage.Append(aUserPlace->GetPlaceStreet());
-			
-			if(pMessage.Length() && aUserPlace->GetPlaceArea().Length() > 0) {
-				pMessage.Append(_L(",\n"));
-			}
-			
-			pMessage.Append(aUserPlace->GetPlaceArea());
-			
-			if(pMessage.Length() && (aUserPlace->GetPlaceCity().Length() > 0 || aUserPlace->GetPlacePostcode().Length() > 0)) {
-				pMessage.Append(_L(",\n"));
-			}
-			
-			pMessage.Append(aUserPlace->GetPlaceCity());
-			
-			if(aUserPlace->GetPlaceCity().Length() > 0) {
-				pMessage.Append(_L(" "));
-			}
-			
-			pMessage.Append(aUserPlace->GetPlacePostcode());
-							
-			if(pMessage.Length() && aUserPlace->GetPlaceRegion().Length() > 0) {
-				pMessage.Append(_L(",\n"));
-			}
-			
-			pMessage.Append(aUserPlace->GetPlaceRegion());
-
-			if(pMessage.Length() && aUserPlace->GetPlaceCountry().Length() > 0) {
-				pMessage.Append(_L(",\n"));
-			}
-			
-			pMessage.Append(aUserPlace->GetPlaceCountry());
-			
+			CTextUtilities* aTextUtilities = CTextUtilities::NewLC();
+			aTextUtilities->AppendToString(pMessage, aGeoloc->GetString(EGeolocText), _L(""));
+			aTextUtilities->AppendToString(pMessage, aGeoloc->GetString(EGeolocStreet), _L(",\n"));
+			aTextUtilities->AppendToString(pMessage, aGeoloc->GetString(EGeolocArea), _L(",\n"));
+			aTextUtilities->AppendToString(pMessage, aGeoloc->GetString(EGeolocLocality), _L(",\n"));
+			aTextUtilities->AppendToString(pMessage, aGeoloc->GetString(EGeolocPostalcode), _L(" "));
+			aTextUtilities->AppendToString(pMessage, aGeoloc->GetString(EGeolocRegion), _L(",\n"));
+			aTextUtilities->AppendToString(pMessage, aGeoloc->GetString(EGeolocCountry), _L(",\n"));
+					
 			// Prepare dialog
 			CAknMessageQueryDialog* aDialog = new (ELeave) CAknMessageQueryDialog();
 			aDialog->PrepareLC(R_ABOUT_DIALOG);				
@@ -1339,11 +1286,11 @@ void CBuddycloudFollowingContainer::HandleCommandL(TInt aCommand) {
 			// Show dialog
 			aDialog->RunLD();			
 			
-			CleanupStack::PopAndDestroy(2); // aMessage, aHeader
+			CleanupStack::PopAndDestroy(3); // aTextUtilities, aMessage, aHeader
 		}
 	}
-	else if(aCommand == EMenuGetChannelInfoCommand) {
-		CFollowingItem* aItem = iItemStore->GetItemById(iSelectedItem);
+	else if(aCommand == EMenuChannelInfoCommand) {
+		CFollowingItem* aItem = static_cast <CFollowingItem*> (iItemStore->GetItemById(iSelectedItem));
 
 		if(aItem && aItem->GetItemType() >= EItemRoster) {
 			_LIT(KChannelName, "#\n");
@@ -1352,7 +1299,7 @@ void CBuddycloudFollowingContainer::HandleCommandL(TInt aCommand) {
 			TPtrC pRankResource(aRankResource->Des());
 			
 			CFollowingChannelItem* aChannelItem = static_cast <CFollowingChannelItem*> (aItem);
-			TPtrC pChannelName(aChannelItem->GetJid());
+			TPtrC pChannelName(aChannelItem->GetId());
 			TInt aLocate = pChannelName.Locate('@');
 			
 			if(aLocate != KErrNotFound) {
@@ -1416,31 +1363,30 @@ void CBuddycloudFollowingContainer::HandleCommandL(TInt aCommand) {
 		RenderScreen();
 	}
 	else if(aCommand == EMenuSeeFollowingCommand || aCommand == EMenuSeeFollowersCommand || aCommand == EMenuSeeProducingCommand) {
-		CFollowingItem* aItem = iItemStore->GetItemById(iSelectedItem);
+		CFollowingItem* aItem = static_cast <CFollowingItem*> (iItemStore->GetItemById(iSelectedItem));
 
 		if(aItem && aItem->GetItemType() >= EItemRoster) {
 			TExplorerQuery aQuery;
 			
 			if(aItem->GetItemType() == EItemChannel || (aItem->GetItemType() == EItemRoster && aCommand == EMenuSeeFollowersCommand)) {
-				CFollowingChannelItem* aChannelItem = static_cast <CFollowingChannelItem*> (aItem);
-				TPtrC8 aSubjectJid = iTextUtilities->UnicodeToUtf8L(aChannelItem->GetJid());
+				TPtrC8 aSubjectId = iTextUtilities->UnicodeToUtf8L(aItem->GetId());
 				
 				aQuery.iStanza.Append(_L8("<iq to='maitred.buddycloud.com' type='get' id='exp_users1'><query xmlns='http://buddycloud.com/protocol/channels#followers'><channel><jid></jid></channel></query></iq>"));
-				aQuery.iStanza.Insert(138, aSubjectJid);
+				aQuery.iStanza.Insert(138, aSubjectId);
 				
 				iEikonEnv->ReadResourceL(aQuery.iTitle, R_LOCALIZED_STRING_TITLE_FOLLOWEDBY);
 				aQuery.iTitle.Replace(aQuery.iTitle.Find(_L("$OBJECT")), 7, aItem->GetTitle());
 			}
 			else {
 				CFollowingRosterItem* aRosterItem = static_cast <CFollowingRosterItem*> (aItem);
-				TPtrC8 aSubjectJid = iTextUtilities->UnicodeToUtf8L(aRosterItem->GetJid());
+				TPtrC8 aSubjectId = iTextUtilities->UnicodeToUtf8L(aRosterItem->GetId());
 				
 				if(aCommand == EMenuSeeProducingCommand) {
-					aQuery = CExplorerStanzaBuilder::BuildChannelsXmppStanza(aSubjectJid, EChannelProducer);
+					aQuery = CExplorerStanzaBuilder::BuildChannelsXmppStanza(aSubjectId, EChannelProducer);
 					iEikonEnv->ReadResourceL(aQuery.iTitle, R_LOCALIZED_STRING_TITLE_ISPRODUCING);
 				}
 				else {
-					aQuery = CExplorerStanzaBuilder::BuildChannelsXmppStanza(aSubjectJid, EChannelAll);
+					aQuery = CExplorerStanzaBuilder::BuildChannelsXmppStanza(aSubjectId, EChannelAll);
 					iEikonEnv->ReadResourceL(aQuery.iTitle, R_LOCALIZED_STRING_TITLE_ISFOLLOWING);
 				}
 				
@@ -1452,7 +1398,7 @@ void CBuddycloudFollowingContainer::HandleCommandL(TInt aCommand) {
 		}
 	}
 	else if(aCommand == EMenuSeeNearbyCommand) {
-		CFollowingItem* aItem = iItemStore->GetItemById(iSelectedItem);
+		CFollowingItem* aItem = static_cast <CFollowingItem*> (iItemStore->GetItemById(iSelectedItem));
 
 		if(aItem) {
 			TExplorerQuery aQuery;
@@ -1461,12 +1407,10 @@ void CBuddycloudFollowingContainer::HandleCommandL(TInt aCommand) {
 			if(aItem->GetItemType() == EItemRoster) {
 				CFollowingRosterItem* aRosterItem = static_cast <CFollowingRosterItem*> (aItem);
 				
-				aQuery = CExplorerStanzaBuilder::BuildNearbyXmppStanza(EExplorerItemPerson, iTextUtilities->UnicodeToUtf8L(aRosterItem->GetJid()));
+				aQuery = CExplorerStanzaBuilder::BuildNearbyXmppStanza(EExplorerItemPerson, iTextUtilities->UnicodeToUtf8L(aRosterItem->GetId()));
 			}
 			else {
-				CFollowingChannelItem* aChannelItem = static_cast <CFollowingChannelItem*> (aItem);
-				
-				aQuery = CExplorerStanzaBuilder::BuildNearbyXmppStanza(EExplorerItemChannel, iTextUtilities->UnicodeToUtf8L(aChannelItem->GetJid()));
+				aQuery = CExplorerStanzaBuilder::BuildNearbyXmppStanza(EExplorerItemChannel, iTextUtilities->UnicodeToUtf8L(aItem->GetId()));
 			}
 			
 			// Add title
@@ -1487,9 +1431,11 @@ TKeyResponse CBuddycloudFollowingContainer::OfferKeyEventL(const TKeyEvent& aKey
 			TInt aIndex = iItemStore->GetIndexById(iSelectedItem);
 
 			if(aIndex > 0) {
-				for(TInt i = aIndex-1; i >= 0; i--) {
-					if(IsFilteredItem(i)) {
-						HandleItemSelection(iItemStore->GetItemByIndex(i)->GetItemId());
+				for(TInt i = (aIndex - 1); i >= 0; i--) {
+					CBuddycloudListItem* aItem = iItemStore->GetItemByIndex(i);
+					
+					if(aItem && aItem->Filtered()) {
+						HandleItemSelection(aItem->GetItemId());
 						break;
 					}
 				}
@@ -1498,13 +1444,22 @@ TKeyResponse CBuddycloudFollowingContainer::OfferKeyEventL(const TKeyEvent& aKey
 			aResult = EKeyWasConsumed;
 		}
 		else if(aKeyEvent.iCode == EKeyDownArrow) {
-			TInt aIndex = iItemStore->GetIndexById(iSelectedItem);
-
-			if(aIndex < iItemStore->Count() - 1) {
-				for(TInt i = aIndex+1; i < iItemStore->Count(); i++) {
-					if(IsFilteredItem(i)) {
-						HandleItemSelection(iItemStore->GetItemByIndex(i)->GetItemId());
-						break;
+			if(iItemStore->Count() > 0) {
+				TInt aIndex = iItemStore->GetIndexById(iSelectedItem);
+				
+				if(aIndex == iItemStore->Count() - 1) {
+					// Last item
+					aIndex = KErrNotFound;
+				}
+	
+				if(aIndex < iItemStore->Count() - 1) {
+					for(TInt i = (aIndex + 1); i < iItemStore->Count(); i++) {
+						CBuddycloudListItem* aItem = iItemStore->GetItemByIndex(i);
+						
+						if(aItem && aItem->Filtered()) {
+							HandleItemSelection(aItem->GetItemId());
+							break;
+						}
 					}
 				}
 			}

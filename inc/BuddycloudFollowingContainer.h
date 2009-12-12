@@ -15,7 +15,6 @@
 #include <akntabgrp.h>
 #include <akntabobserver.h>
 #include <eikedwin.h>
-#include "MessagingParticipants.h"
 #include "BuddycloudListComponent.h"
 #include "BuddycloudFollowing.h"
 
@@ -52,9 +51,6 @@ class CBuddycloudFollowingContainer : public CBuddycloudListComponent, MBuddyclo
 
 	public: // From MBuddycloudLogicStatusObserver
 		void JumpToItem(TInt aItemId);
-
-	private:
-		TBool IsFilteredItem(TInt aIndex);
 	
 	private: // From CBuddycloudListComponent
 		void RenderWrappedText(TInt aIndex);
@@ -107,7 +103,7 @@ class CBuddycloudFollowingContainer : public CBuddycloudListComponent, MBuddyclo
 		CFbsBitmap* iArrow2Bitmap;
 		CFbsBitmap* iArrow2Mask;	
 
-		CBuddycloudFollowingStore* iItemStore;
+		CBuddycloudListStore* iItemStore;
 };
 
 #endif

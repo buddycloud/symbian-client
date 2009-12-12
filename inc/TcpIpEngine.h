@@ -102,7 +102,9 @@ class CSocketReader : public CActive {
 		void RunL();
 
 	private:
+		TInt iErrorCount;
 		TBool iAllowRead;
+		
 		MTcpIpEngineNotification* iEngineObserver;
 		
 		RSocket* iTcpIpSocket;

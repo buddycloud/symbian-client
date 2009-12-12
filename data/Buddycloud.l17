@@ -13,7 +13,6 @@
 CHARACTER_SET UTF8
 
 rls_string r_string_app_caption "buddycloud"
-rls_string r_string_groupinvite_text " invited you to join channel: "
 // DO NOT TRANSLATE
 
 rls_string r_string_langcode "hu"
@@ -88,7 +87,7 @@ rls_string r_string_item_showchanneldetails "Csatorna részletei"
 rls_string r_string_item_call "Ismerős hívása"
 rls_string r_string_item_sendplacebysms "Hely küldése sms-ben"
 rls_string r_string_item_sendinvite "Meghívás buddycloudra"
-rls_string r_string_item_delete "Eltávolítás"
+rls_string r_string_item_delete "Remove"
 rls_string r_string_item_noticeaccept "Elfogad"
 rls_string r_string_item_noticeacceptandfollow "Elfogad és Követ"
 rls_string r_string_item_noticedecline "Visszautasít"
@@ -101,17 +100,18 @@ rls_string r_string_settings_clearconnection "Kapcsolat változtatása"
 rls_string r_string_note_followinglistempty "Nem követsz semmit.\n\nHasználd a Csatorna és Böngésző füleket követendő személyek és csatornák találásához."
 
 // Menu: Messaging
-rls_string r_string_options_openlink "Link megnyitása"
-rls_string r_string_options_postmessage "Üzenet írása"
+rls_string r_string_options_postrequest "Request to post"
+rls_string r_string_options_postmessage "Write new post"
 rls_string r_string_options_postmedia "Média közzététele"
-rls_string r_string_options_replytomessage "Válasz"
-rls_string r_string_options_settopic "Téma beállítása"
 rls_string r_string_options_jumptounread "Ugrás az olvasatlanokhoz"
-rls_string r_string_options_invitetochannel "Meghívás csatornába"
-rls_string r_string_options_invitetootherchannel "Meghívás más csatornába"
-rls_string r_string_options_invitefriendtochannel "Követő meghívása"
 rls_string r_string_options_notificationon "Figyelmeztetés bekapcs."
 rls_string r_string_options_notificationoff "Figyelmeztetés kikapcs."
+
+rls_string r_string_item_addcomment "Write comment"
+rls_string r_string_item_likepost "♥ post"
+rls_string r_string_item_copypost "Copy post"
+rls_string r_string_item_reportpost "Report post"
+rls_string r_string_item_deletepost "Delete post"
 
 // Menu: Places
 rls_string r_string_options_setcurrent "Új hely rögzítése"
@@ -127,7 +127,6 @@ rls_string r_string_note_placevisits "Látogatások"
 rls_string r_string_note_placepopulation "Látogatók"
 rls_string r_string_note_learningplace "Hely tanulása"
 rls_string r_string_note_updatingplace "Hely frissítése..."
-rls_string r_string_note_noplaceaddress "Cím nincs megadva"
 rls_string r_string_note_placeslistempty "Nincsen rögzített helyed.\n\nHa ezt a helyet rögzíteni szeretnéd, válaszd az \n'Opciók > Hely rögzítése'-t a menüben."
 
 // Menu: Nearby
@@ -171,33 +170,35 @@ rls_string r_string_item_unfollow "Követés megszüntetése"
 // Channel: Settings & Configuration
 rls_string r_string_note_personalchannelcreated "$USER, üdvözlünk a buddycloud csatornákban.\n\nEz a személyes csatornád a buddycloudon belül. Ez a csatorna csak a tiéd amelyen keresztül üzenhetsz követőidnek!"
 rls_string r_string_note_mediauploadready "Erre kattintva feltöltheted a médiát: $LINK"
-rls_string r_string_note_userkickedfromgroup "$USER ki lett rúgva a csatornából."
-rls_string r_string_note_userbannedfromgroup "$USER ki lett tiltva a csatornából."
-rls_string r_string_dialog_kickconfirmation "Személy kirúgása a szobából (következő bejelntkezéskor visszatér)?"
-rls_string r_string_dialog_banconfirmation "Megtiltja ennek a személynek, hogy belépjen ebbe a csatornába?"
-rls_string r_string_item_banfromgroup "Tiltás a csatornáról"
-rls_string r_string_item_kickfromgroup "Kirúgás csatornából"
-rls_string r_string_item_changerole "Szerep változtatása"
-rls_string r_string_list_changerole_title "Szerep változtatása:"
-rls_string r_string_changerole_itemlist_moderator "Moderátor"
-rls_string r_string_changerole_itemlist_contributor "Követő"
-rls_string r_string_changerole_itemlist_visitor "Látogató"
-rls_string r_string_note_changerolefailed "Nincs engedélyed arra, hogy ennek a személynek a szerepkörét megváltoztasd"
 
-// Settings Item List
+rls_string r_string_item_changerole "Change permission"
+rls_string r_string_changerole_itemlist_outcast "Eltávolítás"
+rls_string r_string_changerole_itemlist_follower "Követő"
+rls_string r_string_changerole_itemlist_publisher "Publisher"
+rls_string r_string_changerole_itemlist_moderator "Moderátor"
+
+rls_string r_string_note_affiliationoutcast "You have been banned from the channel. You now cannot read or post in this channel's content."
+rls_string r_string_note_affiliationmember "You have become a follower of this channel. You can now read, but not post in this channel's content."
+rls_string r_string_note_affiliationpublisher "You have become a publisher of this channel. You can now read and post in this channel's content."
+rls_string r_string_note_affiliationmoderator "You have become a moderator of this channel. You can now read, post, and manage this channel's content."
+
+rls_string r_string_note_subscriptionpending "Your subscription request has been sent to the channel's producer."
+rls_string r_string_note_subscriptionaccepted "Your subscription to this channel has been accepted."
+rls_string r_string_note_subscriptionrejected "Your subscription to this channel has been rejected."
+
+// Account settings
 rls_string r_string_settings_account_title "Fiók"
 rls_string r_string_settings_itemlist_fullname "Teljes név"
 rls_string r_string_settings_itemlist_fullname_hint "Teljes neved"
 rls_string r_string_settings_itemlist_email "E-mail cím"
 rls_string r_string_settings_itemlist_email_hint "Az e-mail címed"
-rls_string r_string_settings_itemlist_phonenumber "Telefonszám"
-rls_string r_string_settings_itemlist_phonenumber_hint "Elsődleges telefonszámod"
 rls_string r_string_settings_itemlist_username "Felhasználónév"
 rls_string r_string_settings_itemlist_username_hint "XMPP server username"
 rls_string r_string_settings_itemlist_password "Jelszó"
 rls_string r_string_settings_itemlist_password_hint "XMPP server password"
 rls_string r_string_settings_itemlist_server "XMPP server"
 
+// Preference settings
 rls_string r_string_settings_itemlist_language "Nyelv kijelzése"
 rls_string r_string_settings_itemlist_blocking "Show private messages"
 rls_string r_string_settings_itemlist_blockingalwaysshow "From anyone"
@@ -209,18 +210,23 @@ rls_string r_string_settings_itemlist_accesspointalwaysask "Mindig kérdezzen r�
 rls_string r_string_settings_itemlist_autostart "Indítás a telefon bekapcsolásakor"
 rls_string r_string_settings_itemlist_showcontacts "Telefon-névjegyzék mutatása"
 
+// Notification settings
 rls_string r_string_settings_notifications_title "Figyelmeztetések"
-rls_string r_string_settings_itemlist_groupnotification "Értesítés csatorna-üzenetekről "
+rls_string r_string_settings_itemlist_notifyfollowing "Channels I follow"
+rls_string r_string_settings_itemlist_notifymoderating "Channels I moderate"
+rls_string r_string_settings_itemlist_notifyreply "Replies to my post"
+
 rls_string r_string_settings_itemlist_groupnever "Sose figyelmeztessen"
 rls_string r_string_settings_itemlist_groupfirstonly "Csak az első hozzászólást"
 rls_string r_string_settings_itemlist_groupallmessages "Minden hozzászólás"
-rls_string r_string_settings_itemlist_notifyreply "Értesítsd @ válaszaimat"
+
 rls_string r_string_settings_itemlist_privatemessagetone "Személyes üzenethang"
 rls_string r_string_settings_itemlist_channelposttone "Csatorna figyelmeztetőhang"
-rls_string r_string_settings_itemlist_directreplytone "A @válaszaim üzenethang"
+rls_string r_string_settings_itemlist_directreplytone "Replied comment tone"
 rls_string r_string_settings_itemlist_tonenone "Néma"
 rls_string r_string_settings_itemlist_tonedefault "Alapértelmezett hang"
 
+// Positioning settings
 rls_string r_string_settings_beacons_title "Helyezés"
 rls_string r_string_settings_itemlist_cell "GSM-torony"
 rls_string r_string_settings_itemlist_wlan "WIFI"
@@ -257,16 +263,24 @@ rls_string r_string_editplace_itemlist_visibility "Mások ide helyezhetők?"
 rls_string r_string_editplace_itemlist_visibility_public "Nyilvános"
 rls_string r_string_editplace_itemlist_visibility_private "Személyes"
 
+// Edit channel list
+rls_string r_string_newchannel_title "New channel"
+rls_string r_string_editchannel_title "Edit channel"
+rls_string r_string_editchannel_itemlist_title "Title"
+rls_string r_string_editchannel_itemlist_title_hint "Channel's title"
+rls_string r_string_editchannel_itemlist_id "#Channel Id"
+rls_string r_string_editchannel_itemlist_id_hint "Channel's unique Id"
+rls_string r_string_editchannel_itemlist_description "Description"
+rls_string r_string_editchannel_itemlist_description_hint "Channel's description"
+rls_string r_string_editchannel_itemlist_access "Access"
+rls_string r_string_editchannel_itemlist_access_open "Open channel"
+rls_string r_string_editchannel_itemlist_access_whitelist "Members only"
+
+rls_string r_string_note_channelexists "This #channel_id already exists. Please enter a unique one."
+
 // Following & Invitations
 rls_string r_string_followingrequest_title "Követési felkérés"
 rls_string r_string_followerrequest_text "$USER követni szeretne a buddycloudon.\n* Mutasd a helyszínedet és állapotodat\n* Mutasd a személyes csatornádat\n* Mutasd a helyeidet"
-
-rls_string r_string_channelinvite_title "Meghívó Csatornába"
-
-// Create channel
-rls_string r_string_dialog_createchannelname "Csatorna neve:"
-rls_string r_string_dialog_createchanneldescription "Rövid csatornaleírás:"
-rls_string r_string_channelfollowing_text "A '$CHANNEL' nevű szoba már létezik. Szeretnéd követni ezt a szobát?"
 
 // Exit Confirmation
 rls_string r_string_exit_title "Kilépés megerősítése"
@@ -294,9 +308,9 @@ rls_string r_string_dialog_setmood "Állapot beállítása:"
 rls_string r_string_dialog_moodis "van "
 rls_string r_string_dialog_setcurrentlocation "Helyem beállítása:"
 rls_string r_string_dialog_setnextlocation "Következő hely beállítása:"
-rls_string r_string_dialog_settopic "Téma beállítása:"
-rls_string r_string_dialog_newmessage "Új üzenet:"
-rls_string r_string_dialog_addcontact "Add meg a buddycloud vagy Jabber felhasználónevedet (pl. teszt@gtalk.com):"
+rls_string r_string_dialog_newmessage "Write post:"
+rls_string r_string_dialog_newcomment "Write comment:"
+rls_string r_string_dialog_addcontact "Enter contact's Id (eg. test@gtalk.com):"
 
 // Notes
 rls_string r_string_note_connecting "Csatlakozás..."

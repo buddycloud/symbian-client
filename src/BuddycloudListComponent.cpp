@@ -49,9 +49,13 @@ void CBuddycloudListComponent::ConstructL() {
 	// Touch
 	iTouchFeedback = MTouchFeedback::Instance();
 	
+	EnableDragEvents();
+	
 	if(!iTouchFeedback->FeedbackEnabledForThisApp()) {
 		iTouchFeedback->SetFeedbackEnabledForThisApp(true);
 	}
+	
+	iDragTimer = CCustomTimer::NewL(this, KDragTimerId);
 	
 	iUnselectedItemIconTextOffset = 40;
 	iSelectedItemIconTextOffset = 72;
@@ -88,7 +92,12 @@ CBuddycloudListComponent::~CBuddycloudListComponent() {
 
 	if(iCallTimer)
 		delete iCallTimer;
-
+	
+#ifdef __SERIES60_40__
+	if(iDragTimer)
+		delete iDragTimer;
+#endif
+	
 	// Skins
 	if(iBgContext)
 		delete iBgContext;
@@ -178,6 +187,19 @@ void CBuddycloudListComponent::TimerExpired(TInt aExpiryId) {
 	if(aExpiryId == KCallTimerId) {
 		RenderScreen();
 	}
+	else if(aExpiryId == KDragTimerId) {
+#ifdef __SERIES60_40__		
+		iDragVelocity = iDragVelocity * 0.95;		
+		iScrollbarHandlePosition += TInt(iDragVelocity);		
+		
+		CBuddycloudListComponent::RepositionItems(false);
+		RenderScreen();
+		
+		if(Abs(iDragVelocity) > 0.05) {
+			iDragTimer->After(50000);
+		}
+#endif
+	}
 	else if(aExpiryId == KTimeTimerId) {
 #ifdef __3_2_ONWARDS__
 		HBufC* aTitle = iEikonEnv->AllocReadResourceLC(R_LOCALIZED_STRING_APPNAME);
@@ -241,12 +263,17 @@ void CBuddycloudListComponent::SizeChanged() {
 	
 	// Scrollbar
 	if(iScrollBar) {
-		iScrollbarWidth = iScrollBar->VerticalScrollBar()->ScrollBarBreadth();
+		iLayoutMirrored = false;
+
+		iLeftBarSpacer = 1;
+		iRightBarSpacer = iScrollBar->VerticalScrollBar()->ScrollBarBreadth();
 	}
 	
 	if(AknLayoutUtils::LayoutMirrored()) {
-		iScrollbarOffset = (iScrollbarWidth * 2);
-		iScrollbarWidth = 1;
+		iLayoutMirrored = true;
+		
+		iLeftBarSpacer = (iRightBarSpacer * 2);
+		iRightBarSpacer = 1;
 	}
 
 	// Skins
@@ -342,14 +369,15 @@ void CBuddycloudListComponent::RenderScreen() {
 					break;
 			}
 			
-			CFollowingItem* aItem = iBuddycloudLogic->GetFollowingStore()->GetItemById(aItemId);
+			CBuddycloudListStore* aItemStore = iBuddycloudLogic->GetFollowingStore();
+			CFollowingItem* aItem = static_cast <CFollowingItem*> (aItemStore->GetItemById(aItemId));
 			
 			if(aItem && aItem->GetItemType() == EItemRoster) {
 				CFollowingRosterItem* aRosterItem = static_cast <CFollowingRosterItem*> (aItem);
-				aAvatarId = aRosterItem->GetAvatarId();
+				aAvatarId = aRosterItem->GetIconId();
 					
 				if(aEngineState == ETelephonyDialling) {
-					aMialogLine2.Copy(aRosterItem->GetPlace(EPlaceCurrent)->GetPlaceName());
+					aMialogLine2.Copy(aRosterItem->GetGeolocItem(EGeolocItemCurrent)->GetString(EGeolocText));
 						
 #ifdef __SERIES60_3X__
 					if(aMialogLine2.Length() > 24) {
@@ -462,6 +490,9 @@ void CBuddycloudListComponent::HandleScrollEventL(CEikScrollBar* aScrollBar, TEi
 	if(aScrollBar) {
 		iSnapToItem = false;
 		
+		iDragTimer->Stop();
+		iDragVelocity = 0.0;
+		
 		iScrollBarVModel.iThumbPosition = aScrollBar->ThumbPosition();	
 		iScrollBarVModel.CheckBounds();	
 		
@@ -477,14 +508,52 @@ void CBuddycloudListComponent::HandlePointerEventL(const TPointerEvent &aPointer
 	CCoeControl::HandlePointerEventL(aPointerEvent);
 	
 	if(aPointerEvent.iType == TPointerEvent::EButton1Up) {			
-		for(TInt i = 0; i < iListItems.Count(); i++) {
-			if(iListItems[i].iRect.Contains(aPointerEvent.iPosition)) {
-				// Provide feedback
-				iTouchFeedback->InstantFeedback(ETouchFeedbackBasic);
-				
-				HandleItemSelection(iListItems[i].iId);			
-				break;
+		if(iDraggingAllowed) {
+			if(Abs(iDragVelocity) > 5.0) {
+				TimerExpired(KDragTimerId);
 			}
+		}
+		else {
+			for(TInt i = 0; i < iListItems.Count(); i++) {
+				if(iListItems[i].iRect.Contains(aPointerEvent.iPosition)) {
+					// Provide feedback
+					iTouchFeedback->InstantFeedback(ETouchFeedbackBasic);
+					
+					HandleItemSelection(iListItems[i].iId);			
+					break;
+				}
+			}
+		}
+	}
+	else if(aPointerEvent.iType == TPointerEvent::EButton1Down) {
+		iDragTimer->Stop();
+		iDragVelocity = 0.0;
+		iDraggingAllowed = false;
+		
+		iStartDragPosition = aPointerEvent.iPosition.iY;
+		iStartDragHandlePosition = iScrollbarHandlePosition;
+		
+		iLastDragTime.UniversalTime();
+		iLastDragPosition = iStartDragPosition;
+	}
+	else if(aPointerEvent.iType == TPointerEvent::EDrag) {	
+		if(aPointerEvent.iPosition.iY + 32 < iStartDragPosition || aPointerEvent.iPosition.iY - 32 > iStartDragPosition) {
+			iDraggingAllowed = true;			
+		}
+		
+		if(iDraggingAllowed) {
+			TTime aNow;			
+			aNow.UniversalTime();
+			
+			iDragVelocity = TReal(TReal(iLastDragPosition - aPointerEvent.iPosition.iY) * (1000000.0 / TReal(aNow.MicroSecondsFrom(iLastDragTime).Int64()))) / 20.0;
+			
+			iLastDragTime.UniversalTime();
+			iLastDragPosition = aPointerEvent.iPosition.iY;
+			
+			iScrollbarHandlePosition = iStartDragHandlePosition + (iStartDragPosition - aPointerEvent.iPosition.iY);
+			
+			CBuddycloudListComponent::RepositionItems(false);
+			RenderScreen();
 		}
 	}
 }

@@ -12,7 +12,7 @@
 
 // INCLUDES
 #include "BuddycloudListComponent.h"
-#include "MessagingParticipants.h"
+#include "DiscussionManager.h"
 
 enum TMoveDirection {
 	EMoveNone, EMoveUp, EMoveDown
@@ -30,7 +30,7 @@ class TMessagingViewObject {
 	public:
 		TInt iFollowerId;
 		TBuf<128> iTitle;
-		TBuf<128> iJid;
+		TBuf<256> iId;
 };
 
 typedef TPckg<TMessagingViewObject> TMessagingViewObjectPckg;
@@ -38,16 +38,36 @@ typedef TPckg<TMessagingViewObject> TMessagingViewObjectPckg;
 /*
 ----------------------------------------------------------------------------
 --
--- CFormattedBody
+-- CTextWrappedEntry
 --
 ----------------------------------------------------------------------------
 */
 
-class CFormattedBody : public CBase {
+class CTextWrappedEntry : public CBase {
 	public:
-		CFormattedBody();
-		~CFormattedBody();
+		static CTextWrappedEntry* NewLC(CAtomEntryData* aEntry, TBool aComment);
+	
+	public:
+		CTextWrappedEntry(CAtomEntryData* aEntry, TBool aComment);
+		~CTextWrappedEntry();
+		
+	public:
+		CAtomEntryData* GetEntry();
+		TBool Comment();
+		
+		TBool Read();
+		void SetRead(TBool aRead);
+		
+	public:
+		TInt LineCount();
+		TDesC& GetLine(TInt aIndex);
+		void ResetLines();
 
+	protected:
+		CAtomEntryData* iEntry;
+		TBool iComment;
+		TBool iRead;
+		
 	public:
 		RPointerArray<HBufC> iLines;
 };
@@ -60,7 +80,7 @@ class CFormattedBody : public CBase {
 ----------------------------------------------------------------------------
 */
 
-class CBuddycloudMessagingContainer : public CBuddycloudListComponent, MDiscussionMessagingObserver {
+class CBuddycloudMessagingContainer : public CBuddycloudListComponent, MDiscussionUpdateObserver {
 	public: // Constructors and destructor
 		CBuddycloudMessagingContainer(MViewAccessorObserver* aViewAccessor, CBuddycloudLogic* aBuddycloudLogic);
 		void ConstructL(const TRect& aRect, TMessagingViewObject aObject);
@@ -72,18 +92,21 @@ class CBuddycloudMessagingContainer : public CBuddycloudListComponent, MDiscussi
 	public: // From MBuddycloudLogicNotificationObserver
 		void NotificationEvent(TBuddycloudLogicNotificationType aEvent, TInt aId = KErrNotFound);
 
-	public: // From MDiscussionMessagingObserver
-		void TopicChanged(TDesC& aTopic);
-		void MessageDeleted(TInt aPosition);
-		void MessageReceived(CMessage* aMessageItem, TInt aPosition);
+	public: // From MDiscussionUpdateObserver
+		void EntryAdded(CAtomEntryData* aAtomEntry);
+		void EntryDeleted(CAtomEntryData* aAtomEntry);
 
 	public: // From MTimeoutNotification
 		void TimerExpired(TInt aExpiryId);
 
 	private:
-		void ComposeNewMessageL(const TDesC& aPretext, CMessage* aReferenceMessage = NULL);
-		TBool OpenMessageLinkL();
-		void FormatWordWrap(CMessage* aMessage, TInt aPosition);
+		void ComposeNewCommentL(const TDesC& aContent);
+		void ComposeNewPostL(const TDesC& aContent, const TDesC8& aReferenceId = KNullDesC8);
+		TBool OpenPostedLinkL();
+		
+	private:
+		void TextWrapEntry(TInt aIndex);
+		
 		void RenderSelectedText(TInt& aStartPos);
 #ifdef __SERIES60_40__
 		void ResetItemLinks();
@@ -121,19 +144,19 @@ class CBuddycloudMessagingContainer : public CBuddycloudListComponent, MDiscussi
  		void HandlePointerEventL(const TPointerEvent &aPointerEvent);
 #endif
 
-	private: // Variables
-		TBool iRendering;
-
+	protected: // Variables
 		TMessagingViewObject iMessagingObject;
- 		
-		TBool iIsPersonalChannel;
- 		TBool iIsChannel;
- 		
- 		TBool iJumpToUnreadMessage;
+		TInt iFollowingItemIndex;
+		
+		// Flags
+		TBool iRendering;
+		TBool iIsChannel;		
+ 		TBool iJumpToUnreadPost;
  		
 		// Messages
-		RPointerArray<CFormattedBody> iMessages;
+		RPointerArray<CTextWrappedEntry> iEntries;
 		CDiscussion* iDiscussion;
+		CFollowingItem* iItem;
 
 		TInt iSelectedLink;		
 		TRect iSelectedItemBox;

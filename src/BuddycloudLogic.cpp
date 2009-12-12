@@ -41,6 +41,7 @@
 #include "TextUtilities.h"
 #include "TimeUtilities.h"
 #include "XmlParser.h"
+#include "XmppUtilities.h"
 
 /*
 ----------------------------------------------------------------------------
@@ -50,7 +51,7 @@
 ----------------------------------------------------------------------------
 */
 
-CBuddycloudLogic::CBuddycloudLogic(MBuddycloudLogicOwnerObserver* aObserver) : iSettingUsernameOnly(iSettingUsername) {
+CBuddycloudLogic::CBuddycloudLogic(MBuddycloudLogicOwnerObserver* aObserver) {
 	iOwnerObserver = aObserver;
 }
 
@@ -88,6 +89,9 @@ CBuddycloudLogic::~CBuddycloudLogic() {
 	
 	if(iBroadLocationText)
 		delete iBroadLocationText;
+	
+	if(iLastNodeIdReceived) 
+		delete iLastNodeIdReceived;
 
 	if(iContactFilter)
 		delete iContactFilter;
@@ -109,14 +113,14 @@ CBuddycloudLogic::~CBuddycloudLogic() {
 	}
 
 	// Stores
-	if(iMasterFollowingList)
-		delete iMasterFollowingList;
+	if(iFollowingList)
+		delete iFollowingList;
 	
-	if(iMasterPlaceList)
-		delete iMasterPlaceList;
+	if(iPlaceList)
+		delete iPlaceList;
 	
-	if(iMessagingManager)
-		delete iMessagingManager;
+	if(iDiscussionManager)
+		delete iDiscussionManager;
 	
 	// Nearby places
 	for(TInt i = 0; i < iNearbyPlaces.Count(); i++) {
@@ -151,6 +155,7 @@ void CBuddycloudLogic::ConstructL() {
 	iState = ELogicOffline;
 	iServerActivityText = HBufC::NewL(0);
 	iBroadLocationText = HBufC::NewL(0);
+	iLastNodeIdReceived = HBufC8::NewL(0);
 
 	iTimer = CCustomTimer::NewL(this);
 	
@@ -174,6 +179,7 @@ void CBuddycloudLogic::ConstructL() {
 
 	// Preferences defaults
 	iSettingPreferredLanguage = -1;
+	iSettingNotifyChannelsModerating = 1;
 	iSettingNotifyReplyTo = true;
 	iSettingShowContacts = false;
 	
@@ -187,7 +193,7 @@ void CBuddycloudLogic::ConstructL() {
 	WriteToLog(_L8("BL    Initialize CBuddycloudFollowingStore"));
 #endif
 
-	iMasterFollowingList = CBuddycloudFollowingStore::NewL();
+	iFollowingList = CBuddycloudListStore::NewL();
 
  	iContactFilter = HBufC::NewL(0);
  	iFilteringContacts = false;
@@ -199,18 +205,16 @@ void CBuddycloudLogic::ConstructL() {
 	iXmppEngineReady = false;
 	iXmppEngine = CXmppEngine::NewL(this);
 	iXmppEngine->AddRosterObserver(this);
- 	iXmppEngine->SetResourceL(_L8("buddycloud"));
+ 	iXmppEngine->SetResourceL(_L8("s60/bcloud"));
 	
 #ifdef _DEBUG
 	WriteToLog(_L8("BL    Initialize CBuddycloudPlaceStore/CBuddycloudNearbyStore"));
 #endif
 
- 	iMasterPlaceList = CBuddycloudPlaceStore::NewL();
-
- 	iLastReceivedAt = TimeStamp();
+ 	iPlaceList = CBuddycloudPlaceStore::NewL();
 	
 	// Messaging manager
-	iMessagingManager = CMessagingManager::NewL();
+	iDiscussionManager = CDiscussionManager::NewL();
 	
 	// Notification engine
 	iNotificationEngine = CNotificationEngine::NewL();
@@ -286,9 +290,9 @@ void CBuddycloudLogic::PrepareShutdown() {
 		SavePlaceItemsL();
 		
 		// Close messaging manager
-		if(iMessagingManager) {
-			delete iMessagingManager;
-			iMessagingManager = NULL;
+		if(iDiscussionManager) {
+			delete iDiscussionManager;
+			iDiscussionManager = NULL;
 		}
 	
 		// Shutdown xmpp & location engines
@@ -355,11 +359,6 @@ void CBuddycloudLogic::ConnectToXmppServerL() {
 
 	SetActivityStatus(R_LOCALIZED_STRING_NOTE_CONNECTING);
 	
-	TInt aLocate = iSettingUsername.Locate('@');	
-	if(aLocate != KErrNotFound) {
-		iSettingUsernameOnly.Set(iSettingUsername.Left(aLocate));
-	}
-	
 	switch(iSettingServerId) {
 		case 1:
 			iXmppEngine->SetServerDetailsL(_L("beta.buddycloud.com"), 5222);
@@ -382,16 +381,73 @@ void CBuddycloudLogic::SendPresenceL() {
 #endif
 	
 	CTextUtilities* aTextUtilities = CTextUtilities::NewLC();
-	TPtrC8 aEncBroadLocationText(aTextUtilities->UnicodeToUtf8L(*iBroadLocationText));
 	
-	_LIT8(KPresenceStanza, "<presence><priority>10</priority><status></status><c xmlns='http://jabber.org/protocol/caps' node='http://buddycloud.com/caps' ver='s60-0.5.00'/></presence>\r\n");
-	HBufC8* aPresenceStanza = HBufC8::NewLC(KPresenceStanza().Length() + aEncBroadLocationText.Length());
+	// Nick
+	TPtrC8 aEncText(aTextUtilities->UnicodeToUtf8L(iSettingFullName));
+	_LIT8(KNickContainer, "<nick xmlns='http://jabber.org/protocol/nick'></nick>");
+	
+	HBufC8* aEncNick = HBufC8::NewLC(KNickContainer().Length() + aEncText.Length());
+	TPtr8 pEncNick(aEncNick->Des());
+	
+	if(aEncText.Length() > 0) {
+		pEncNick.Append(KNickContainer);
+		pEncNick.Insert(46, aEncText);
+	}
+	
+	// Broad location
+	aEncText.Set(aTextUtilities->UnicodeToUtf8L(*iBroadLocationText));
+	
+	_LIT8(KPresenceStanza, "<presence><priority>10</priority><status></status><c xmlns='http://jabber.org/protocol/caps' node='http://buddycloud.com/caps' ver='s60-0.5.04'/></presence>\r\n");
+	HBufC8* aPresenceStanza = HBufC8::NewLC(KPresenceStanza().Length() + aEncText.Length() + pEncNick.Length());
 	TPtr8 pPresenceStanza(aPresenceStanza->Des());
 	pPresenceStanza.Copy(KPresenceStanza);
-	pPresenceStanza.Insert(41, aEncBroadLocationText);
+	pPresenceStanza.Insert(145, pEncNick);
+	pPresenceStanza.Insert(41, aEncText);
 	
 	iXmppEngine->SendAndForgetXmppStanza(pPresenceStanza, false, EXmppPriorityHigh);
-	CleanupStack::PopAndDestroy(2); // aPresenceStanza, aTextUtilities
+	CleanupStack::PopAndDestroy(3); // aPresenceStanza, aEncNick, aTextUtilities
+}
+
+void CBuddycloudLogic::SendPresenceSubscriptionL(const TDesC8& aTo, const TDesC8& aType, const TDesC8& aOptionalData) {
+#ifdef _DEBUG
+	WriteToLog(_L8("BL    CBuddycloudLogic::SendPresenceSubscriptionL"));
+#endif
+	
+	// Add roster item
+	if(aType.Compare(_L8("subscribe")) == 0) {
+		_LIT8(KRosterItemStanza, "<iq type='set' id='additem1'><query xmlns='jabber:iq:roster'><item jid=''/></query></iq>\r\n");
+		HBufC8* aRosterItemStanza = HBufC8::NewLC(KRosterItemStanza().Length() + aTo.Length());
+		TPtr8 pRosterItemStanza(aRosterItemStanza->Des());
+		pRosterItemStanza.Append(KRosterItemStanza);
+		pRosterItemStanza.Insert(72, aTo);
+		
+		iXmppEngine->SendAndForgetXmppStanza(pRosterItemStanza, true, EXmppPriorityHigh);
+		CleanupStack::PopAndDestroy(); // aRosterItemStanza
+	}
+	
+	// Send presence subscription
+	_LIT8(KSubscriptionStanza, "<presence to='' type=''/>\r\n");
+	_LIT8(KExtendedSubscriptionStanza, "<presence to='' type=''></presence>\r\n");
+	HBufC8* aSubscribeStanza = HBufC8::NewLC(KExtendedSubscriptionStanza().Length() + aTo.Length() + aType.Length() + aOptionalData.Length());
+	TPtr8 pSubscribeStanza(aSubscribeStanza->Des());
+	
+	if(aOptionalData.Length() > 0) {
+		pSubscribeStanza.Copy(KExtendedSubscriptionStanza);
+		pSubscribeStanza.Insert(24, aOptionalData);
+	}
+	else {
+		pSubscribeStanza.Copy(KSubscriptionStanza);
+	}
+
+	pSubscribeStanza.Insert(22, aType);
+	pSubscribeStanza.Insert(14, aTo);
+	
+	iXmppEngine->SendAndForgetXmppStanza(pSubscribeStanza, true, EXmppPriorityHigh);
+	CleanupStack::PopAndDestroy(); // aSubscribeStanza
+}
+
+TInt CBuddycloudLogic::GetNewIdStamp() {
+	return (++iIdStamp) % 100;
 }
 
 /*
@@ -401,16 +457,17 @@ void CBuddycloudLogic::SendPresenceL() {
 --
 ----------------------------------------------------------------------------
 */
-void CBuddycloudLogic::MasterResetL() {
+
+void CBuddycloudLogic::ResetStoredDataL() {
 #ifdef _DEBUG
-	WriteToLog(_L8("BL    CBuddycloudLogic::MasterResetL"));
+	WriteToLog(_L8("BL    CBuddycloudLogic::ResetStoredDataL"));
 #endif
 
 	iOwnItem = NULL;
 		
 	// Remove People items
-	for(TInt i = iMasterFollowingList->Count() - 1; i >= 0; i--) {
-		CFollowingItem* aItem = iMasterFollowingList->GetItemByIndex(i);
+	for(TInt i = iFollowingList->Count() - 1; i >= 0; i--) {
+		CFollowingItem* aItem = static_cast <CFollowingItem*> (iFollowingList->GetItemByIndex(i));
 		
 		if(aItem->GetItemType() == EItemRoster) {
 			CFollowingRosterItem* aRosterItem = static_cast <CFollowingRosterItem*> (aItem);
@@ -420,21 +477,19 @@ void CBuddycloudLogic::MasterResetL() {
 				UnpairItemsL(aRosterItem->GetItemId());
 			}
 				
-			iMessagingManager->DeleteDiscussionL(aRosterItem->GetJid(EJidRoster));
-			iMessagingManager->DeleteDiscussionL(aRosterItem->GetJid(EJidChannel));
-			iMasterFollowingList->DeleteItemByIndex(i);
+			iDiscussionManager->DeleteDiscussionL(aRosterItem->GetId(EIdRoster));
+			iDiscussionManager->DeleteDiscussionL(aRosterItem->GetId(EIdChannel));
+			iFollowingList->DeleteItemByIndex(i);
 		}
 		else if(aItem->GetItemType() == EItemChannel) {
-			CFollowingChannelItem* aChannelItem = static_cast <CFollowingChannelItem*> (aItem);
-			
-			iMessagingManager->DeleteDiscussionL(aChannelItem->GetJid());
-			iMasterFollowingList->DeleteItemByIndex(i);
+			iDiscussionManager->DeleteDiscussionL(aItem->GetId());
+			iFollowingList->DeleteItemByIndex(i);
 		}
 	}	
 	
 	// Remove Place items
-	while(iMasterPlaceList->CountPlaces() > 0) {
-		iMasterPlaceList->DeletePlaceByIndex(0);
+	while(iPlaceList->Count() > 0) {
+		iPlaceList->DeleteItemByIndex(0);
 	}
 	
 	// Remove Nearby items
@@ -513,168 +568,6 @@ void CBuddycloudLogic::ValidateUsername() {
 			iSettingUsername.Delete(i, 1);
 		}
 	}
-	
-	iSettingUsernameOnly.Set(iSettingUsername);
-}
-
-void CBuddycloudLogic::LookupUserByEmailL(TBool aForcePublish) {
-#ifdef _DEBUG
-	WriteToLog(_L8("BL    CBuddycloudLogic::LookupUserByEmailL"));
-#endif
-	
-	if(iSettingEmailAddress.Length() > 0 && iSettingEmailAddress.Locate('@') != KErrNotFound) {
-		// Contact text definition
-		CContactItemFieldDef* aFieldDef = new (ELeave) CContactItemFieldDef();
-		CleanupStack::PushL(aFieldDef);
-		aFieldDef->AppendL(KUidContactFieldEMail);
-		
-		CContactIdArray* aContactIdArray = iContactDatabase->FindLC(iSettingEmailAddress, aFieldDef);	
-		
-		if(aContactIdArray->Count() == 1) {
-			TRAPD(aErr, PublishUserDataL(aContactIdArray, aForcePublish));	
-		}
-		
-		CleanupStack::PopAndDestroy(2); // aContactIdArray, aTextDef
-	}
-}
-
-void CBuddycloudLogic::LookupUserByNumberL(TBool aForcePublish) {
-#ifdef _DEBUG
-	WriteToLog(_L8("BL    CBuddycloudLogic::LookupUserByNumberL"));
-#endif
-
-	CContactIdArray* aContactIdArray = iContactDatabase->MatchPhoneNumberL(iSettingPhoneNumber, 9);
-	CleanupStack::PushL(aContactIdArray);
-	
-	TRAPD(aErr, PublishUserDataL(aContactIdArray, aForcePublish));	
-	
-	CleanupStack::PopAndDestroy(); // aContactIdArray
-}
-
-void CBuddycloudLogic::PublishUserDataL(CContactIdArray* aContactIdArray, TBool aForcePublish) {
-#ifdef _DEBUG
-	WriteToLog(_L8("BL    CBuddycloudLogic::PublishUserDataL"));
-#endif
-	
-	iSettingsSaveNeeded = true;
-		
-	// User profile
-	_LIT8(KProfileStanza, "<iq type='set' id='profile1'><pubsub xmlns='http://jabber.org/protocol/pubsub'><publish node='http://www.xmpp.org/extensions/xep-0154.html#ns'><item id='current'><profile xmlns='http://www.xmpp.org/extensions/xep-0154.html#ns'><x xmlns='jabber:x:data' type='result'><field var='detail'></field></x></profile></item></publish></pubsub></iq>\r\n");		
-	_LIT8(KNameElement, "<field var='full_name'><value></value></field>");
-	_LIT8(KEmailElement, "<field var='email'><value></value></field>");
-	_LIT8(KValueElement, "<value></value>");
-	
-	TInt aAddedDetails = 0;
-	CTextUtilities* aTextUtilities = CTextUtilities::NewLC();
-	HBufC8* aEncName = aTextUtilities->UnicodeToUtf8L(iSettingFullName).AllocLC();
-	TPtr8 pEncName(aEncName->Des());
-	
-	HBufC8* aEncEmail = aTextUtilities->UnicodeToUtf8L(iSettingEmailAddress).AllocLC();
-	TPtr8 pEncEmail(aEncEmail->Des());
-	
-	// User profile
-	HBufC8* aProfileStanza = HBufC8::NewL(KProfileStanza().Length() + KNameElement().Length() + pEncName.Length() + KEmailElement().Length() + pEncEmail.Length());
-	TPtr8 pProfileStanza(aProfileStanza->Des());
-	pProfileStanza.Append(KProfileStanza);
-	
-	if(pEncEmail.Length() > 0) {
-		pProfileStanza.Insert(266, KEmailElement);
-		pProfileStanza.Insert(266 + 26, pEncEmail);
-	}
-	
-	pProfileStanza.Insert(266, KNameElement);
-	pProfileStanza.Insert(266 + 30, pEncName);
-	
-	if(aContactIdArray) {
-		for(TInt i = 0; i < aContactIdArray->Count(); i++) {
-			TContactItemId aContactId = (*aContactIdArray)[i];
-			CContactItem* aContact = iContactDatabase->ReadContactLC(aContactId);
-			CContactItemFieldSet& aContactFieldSet = aContact->CardFields();
-			
-			// List phone numbers & email addresses
-			for(TInt x = 0; x < aContactFieldSet.Count(); x++) {
-				if(aContactFieldSet[x].ContentType().ContainsFieldType(KUidContactFieldPhoneNumber) ||
-						aContactFieldSet[x].ContentType().ContainsFieldType(KUidContactFieldEMail)) {
-					
-					if(iSettingPhoneNumber.Length() == 0) {
-						if(aContactFieldSet[x].ContentType().ContainsFieldType(KUidContactFieldPhoneNumber)) {
-							iSettingPhoneNumber.Append(aContactFieldSet[x].TextStorage()->Text());
-						}
-					}
-					
-					if(iSettingEmailAddress.Length() == 0) {
-						if(aContactFieldSet[x].ContentType().ContainsFieldType(KUidContactFieldEMail)) {
-							iSettingEmailAddress.Append(aContactFieldSet[x].TextStorage()->Text());
-						}
-					}
-					
-					// Encode detail
-					TPtrC8 aEncDetail(aTextUtilities->UnicodeToUtf8L(aContactFieldSet[x].TextStorage()->Text()));
-					
-					// Package detail
-					HBufC8* aValueElement = HBufC8::NewLC(KValueElement().Length() + aEncDetail.Length());
-					TPtr8 pValueElement(aValueElement->Des());
-					pValueElement.Append(KValueElement);
-					pValueElement.Insert(7, aEncDetail);
-					
-					// Add to stanza
-					if((pProfileStanza.MaxLength() - pProfileStanza.Length()) < pValueElement.Length()) {
-						aProfileStanza = aProfileStanza->ReAlloc(pProfileStanza.Length() + pValueElement.Length());
-						pProfileStanza.Set(aProfileStanza->Des());
-					}
-					
-					pProfileStanza.Insert(pProfileStanza.Length() - 55, pValueElement);
-					
-					aAddedDetails++;
-									
-					CleanupStack::PopAndDestroy(); // aValueElement
-				}
-			}
-			
-			CleanupStack::PopAndDestroy(); // aContact
-		}
-	}
-	
-	if(aAddedDetails == 0 && (iSettingPhoneNumber.Length() > 0 || iSettingEmailAddress.Length() > 0)) {
-		// No contact database items found
-		TPtrC8 aEncDetail;
-		
-		// Encode & package detail
-		if(iSettingPhoneNumber.Length() > 0) {
-			aEncDetail.Set(aTextUtilities->UnicodeToUtf8L(iSettingPhoneNumber));
-		}
-		else {
-			aEncDetail.Set(aTextUtilities->UnicodeToUtf8L(iSettingEmailAddress));
-		}
-		
-		// Package detail
-		HBufC8* aValueElement = HBufC8::NewLC(KValueElement().Length() + aEncDetail.Length());
-		TPtr8 pValueElement(aValueElement->Des());
-		pValueElement.Append(KValueElement);
-		pValueElement.Insert(7, aEncDetail);
-		
-		// Add to stanza
-		if((pProfileStanza.MaxLength() - pProfileStanza.Length()) < pValueElement.Length()) {
-			aProfileStanza = aProfileStanza->ReAlloc(pProfileStanza.Length() + pValueElement.Length());
-			pProfileStanza.Set(aProfileStanza->Des());
-		}
-		
-		pProfileStanza.Insert(pProfileStanza.Length() - 55, pValueElement);
-		
-		aAddedDetails++;
-						
-		CleanupStack::PopAndDestroy(); // aValueElement
-	}
-	
-	if(aAddedDetails > 0 || aForcePublish) {
-		iXmppEngine->SendAndForgetXmppStanza(pProfileStanza, true);
-	}
-	
-	if(aProfileStanza) {
-		delete aProfileStanza;
-	}
-	
-	CleanupStack::PopAndDestroy(3); // aEncEmail, aEncName, aTextUtilities
 }
 
 void CBuddycloudLogic::LanguageSettingChanged() {
@@ -726,8 +619,6 @@ TDes& CBuddycloudLogic::GetDescSetting(TDescSettingItems aItem) {
 	switch(aItem) {
 		case ESettingItemEmailAddress:
 			return iSettingEmailAddress;
-		case ESettingItemPhoneNumber:
-			return iSettingPhoneNumber;
 		case ESettingItemUsername:
 			return iSettingUsername;
 		case ESettingItemPassword:
@@ -755,14 +646,16 @@ TInt& CBuddycloudLogic::GetIntSetting(TIntSettingItems aItem) {
 			return iSettingChannelPostTone;
 		case ESettingItemDirectReplyTone:
 			return iSettingDirectReplyTone;
-		case ESettingItemGroupNotification:
-			return iSettingGroupNotification;
+		case ESettingItemNotifyChannelsFollowing:
+			return iSettingNotifyChannelsFollowing;
+		case ESettingItemNotifyChannelsModerating:
+			return iSettingNotifyChannelsModerating;
 		case ESettingItemLanguage:
 			return iSettingPreferredLanguage;
 		case ESettingItemServerId:
 			return iSettingServerId;
 		default:
-			return iSettingGroupNotification;
+			return iSettingNotifyChannelsFollowing;
 	}
 }
 
@@ -999,91 +892,89 @@ void CBuddycloudLogic::SendInviteL(TInt aFollowerId) {
 	TPtr8 pInviteStanza(aInviteStanza->Des());
 	pInviteStanza.Append(KInviteStanza);
 
-	CFollowingItem* aItem = iMasterFollowingList->GetItemById(aFollowerId);
+	CFollowingItem* aItem = static_cast <CFollowingItem*> (iFollowingList->GetItemById(aFollowerId));
 
-	if(aItem != NULL) {
-		if(aItem->GetItemType() == EItemContact) {
-			CFollowingContactItem* aContactItem = static_cast <CFollowingContactItem*> (aItem);
+	if(aItem && aItem->GetItemType() == EItemContact) {
+		CFollowingContactItem* aContactItem = static_cast <CFollowingContactItem*> (aItem);
 
-			// Select contact
-			CContactItem* aContact = GetContactDetailsLC(aContactItem->GetAddressbookId());
+		// Select contact
+		CContactItem* aContact = GetContactDetailsLC(aContactItem->GetAddressbookId());
+		
+		if(aContact != NULL) {
+			CContactItemFieldSet& aContactFieldSet = aContact->CardFields();
+			RPointerArray<HBufC> aDynItems;				
 			
-			if(aContact != NULL) {
-				CContactItemFieldSet& aContactFieldSet = aContact->CardFields();
-				RPointerArray<HBufC> aDynItems;				
-				
-				// List phone numbers & email addresses
-				for(TInt x = 0; x < aContactFieldSet.Count(); x++) {
-					if(aContactFieldSet[x].ContentType().ContainsFieldType(KUidContactFieldPhoneNumber) ||
-							aContactFieldSet[x].ContentType().ContainsFieldType(KUidContactFieldEMail)) {
-						
-						// Add detail
-						HBufC* aDetailLine = HBufC::NewLC(2 + aContactFieldSet[x].Label().Length() + 1 + aContactFieldSet[x].TextStorage()->Text().Length());
-						TPtr pDetailLine(aDetailLine->Des());
-						pDetailLine.Append(aContactFieldSet[x].TextStorage()->Text());				
-						pDetailLine.Insert(0, _L("\t"));
-						pDetailLine.Insert(0, aContactFieldSet[x].Label());
-						
-						if(aContactFieldSet[x].ContentType().ContainsFieldType(KUidContactFieldPhoneNumber)) {
-							pDetailLine.Insert(0, _L("0\t"));
-						}
-						else {
-							pDetailLine.Insert(0, _L("1\t"));
-						}
-						
-						aDynItems.Append(aDetailLine);
-						CleanupStack::Pop();
-						
-						// ---------------------------------------------------------
-						// Maitre'd
-						// ---------------------------------------------------------
-						TPtrC8 aEncDetail(aTextUtilities->UnicodeToUtf8L(aContactFieldSet[x].TextStorage()->Text()));
-	
-						// Package detail
-						HBufC8* aDetailElement = HBufC8::NewLC(KDetailElement().Length() + aEncDetail.Length());
-						TPtr8 pDetailElement(aDetailElement->Des());
-						pDetailElement.Append(KDetailElement);
-						pDetailElement.Insert(8, aEncDetail);
-						
-						// Add to stanza
-						aInviteStanza = aInviteStanza->ReAlloc(pInviteStanza.Length()+pDetailElement.Length());
-						pInviteStanza.Set(aInviteStanza->Des());
-						pInviteStanza.Insert(pInviteStanza.Length() - 26, pDetailElement);
-	
-						CleanupStack::PopAndDestroy(); // aDetailElement
+			// List phone numbers & email addresses
+			for(TInt x = 0; x < aContactFieldSet.Count(); x++) {
+				if(aContactFieldSet[x].ContentType().ContainsFieldType(KUidContactFieldPhoneNumber) ||
+						aContactFieldSet[x].ContentType().ContainsFieldType(KUidContactFieldEMail)) {
+					
+					// Add detail
+					HBufC* aDetailLine = HBufC::NewLC(2 + aContactFieldSet[x].Label().Length() + 1 + aContactFieldSet[x].TextStorage()->Text().Length());
+					TPtr pDetailLine(aDetailLine->Des());
+					pDetailLine.Append(aContactFieldSet[x].TextStorage()->Text());				
+					pDetailLine.Insert(0, _L("\t"));
+					pDetailLine.Insert(0, aContactFieldSet[x].Label());
+					
+					if(aContactFieldSet[x].ContentType().ContainsFieldType(KUidContactFieldPhoneNumber)) {
+						pDetailLine.Insert(0, _L("0\t"));
 					}
-				}
-				
-				if(aDynItems.Count() == 0) {
-					aDynItems.Append(_L("\t").AllocL());
-				}
-				
-				// Selection result
-				TInt aSelectedItem = DisplayDoubleLinePopupMenuL(aDynItems);
-				
-				if(aSelectedItem != KErrNotFound) {
-					TPtr pSelectedAddress(aDynItems[aSelectedItem]->Des());
-					pSelectedAddress.Delete(0, pSelectedAddress.LocateReverse('\t') + 1);
+					else {
+						pDetailLine.Insert(0, _L("1\t"));
+					}
 					
-					// Send invite to contact
-					HBufC* aSubject = CEikonEnv::Static()->AllocReadResourceLC(R_LOCALIZED_STRING_INVITEMESSAGE_TITLE);
-					HBufC* aBody = CEikonEnv::Static()->AllocReadResourceLC(R_LOCALIZED_STRING_INVITEMESSAGE_TEXT);					
-					SendSmsOrEmailL(pSelectedAddress, *aSubject, *aBody);
-					CleanupStack::PopAndDestroy(2); // aBody, aSubject
+					aDynItems.Append(aDetailLine);
+					CleanupStack::Pop();
 					
-					// Send invite to maitre'd
-					iXmppEngine->SendAndForgetXmppStanza(pInviteStanza, true);
-				}
+					// ---------------------------------------------------------
+					// Maitre'd
+					// ---------------------------------------------------------
+					TPtrC8 aEncDetail(aTextUtilities->UnicodeToUtf8L(aContactFieldSet[x].TextStorage()->Text()));
+
+					// Package detail
+					HBufC8* aDetailElement = HBufC8::NewLC(KDetailElement().Length() + aEncDetail.Length());
+					TPtr8 pDetailElement(aDetailElement->Des());
+					pDetailElement.Append(KDetailElement);
+					pDetailElement.Insert(8, aEncDetail);
 					
-				while(aDynItems.Count() > 0) {
-					delete aDynItems[0];
-					aDynItems.Remove(0);
+					// Add to stanza
+					aInviteStanza = aInviteStanza->ReAlloc(pInviteStanza.Length()+pDetailElement.Length());
+					pInviteStanza.Set(aInviteStanza->Des());
+					pInviteStanza.Insert(pInviteStanza.Length() - 26, pDetailElement);
+
+					CleanupStack::PopAndDestroy(); // aDetailElement
 				}
+			}
+			
+			if(aDynItems.Count() == 0) {
+				aDynItems.Append(_L("\t").AllocL());
+			}
+			
+			// Selection result
+			TInt aSelectedItem = DisplayDoubleLinePopupMenuL(aDynItems);
+			
+			if(aSelectedItem != KErrNotFound) {
+				TPtr pSelectedAddress(aDynItems[aSelectedItem]->Des());
+				pSelectedAddress.Delete(0, pSelectedAddress.LocateReverse('\t') + 1);
 				
-				aDynItems.Close();		
-				CleanupStack::PopAndDestroy(); // aContact
-			}			
-		}
+				// Send invite to contact
+				HBufC* aSubject = CEikonEnv::Static()->AllocReadResourceLC(R_LOCALIZED_STRING_INVITEMESSAGE_TITLE);
+				HBufC* aBody = CEikonEnv::Static()->AllocReadResourceLC(R_LOCALIZED_STRING_INVITEMESSAGE_TEXT);					
+				SendSmsOrEmailL(pSelectedAddress, *aSubject, *aBody);
+				CleanupStack::PopAndDestroy(2); // aBody, aSubject
+				
+				// Send invite to maitre'd
+				iXmppEngine->SendAndForgetXmppStanza(pInviteStanza, true);
+			}
+				
+			while(aDynItems.Count() > 0) {
+				delete aDynItems[0];
+				aDynItems.Remove(0);
+			}
+			
+			aDynItems.Close();		
+			CleanupStack::PopAndDestroy(); // aContact
+		}			
 	}
 	
 	if(aInviteStanza) {
@@ -1099,82 +990,80 @@ void CBuddycloudLogic::SendPlaceL(TInt aFollowerId) {
 #endif
 
 	if(iLocationEngine->GetLastPlaceId() > 0) {
-		CFollowingItem* aItem = iMasterFollowingList->GetItemById(aFollowerId);
+		CFollowingItem* aItem = static_cast <CFollowingItem*> (iFollowingList->GetItemById(aFollowerId));
 	
-		if(aItem != NULL) {
-			if(aItem->GetItemType() == EItemContact || aItem->GetItemType() == EItemRoster) {
-				CFollowingContactItem* aContactItem = static_cast <CFollowingContactItem*> (aItem);
-	
-				if(aContactItem->GetAddressbookId() > KErrNotFound) {
-					// Select contact
-					CContactItem* aContact = GetContactDetailsLC(aContactItem->GetAddressbookId());
+		if(aItem && (aItem->GetItemType() == EItemContact || aItem->GetItemType() == EItemRoster)) {
+			CFollowingContactItem* aContactItem = static_cast <CFollowingContactItem*> (aItem);
+
+			if(aContactItem->GetAddressbookId() > KErrNotFound) {
+				// Select contact
+				CContactItem* aContact = GetContactDetailsLC(aContactItem->GetAddressbookId());
+				
+				if(aContact != NULL) {
+					CContactItemFieldSet& aContactFieldSet = aContact->CardFields();
+					RPointerArray<HBufC> aDynItems;				
 					
-					if(aContact != NULL) {
-						CContactItemFieldSet& aContactFieldSet = aContact->CardFields();
-						RPointerArray<HBufC> aDynItems;				
-						
-						// List phone numbers & email addresses
-						for(TInt x = 0; x < aContactFieldSet.Count(); x++) {
-							if(aContactFieldSet[x].ContentType().ContainsFieldType(KUidContactFieldPhoneNumber) ||
-									aContactFieldSet[x].ContentType().ContainsFieldType(KUidContactFieldEMail)) {
-								
-								// Add detail
-								HBufC* aDetailLine = HBufC::NewLC(2 + aContactFieldSet[x].Label().Length() + 1 + aContactFieldSet[x].TextStorage()->Text().Length());
-								TPtr pDetailLine(aDetailLine->Des());
-								pDetailLine.Append(aContactFieldSet[x].TextStorage()->Text());				
-								pDetailLine.Insert(0, _L("\t"));
-								pDetailLine.Insert(0, aContactFieldSet[x].Label());
-								
-								if(aContactFieldSet[x].ContentType().ContainsFieldType(KUidContactFieldPhoneNumber)) {
-									pDetailLine.Insert(0, _L("0\t"));
-								}
-								else {
-									pDetailLine.Insert(0, _L("1\t"));
-								}
+					// List phone numbers & email addresses
+					for(TInt x = 0; x < aContactFieldSet.Count(); x++) {
+						if(aContactFieldSet[x].ContentType().ContainsFieldType(KUidContactFieldPhoneNumber) ||
+								aContactFieldSet[x].ContentType().ContainsFieldType(KUidContactFieldEMail)) {
 							
-								aDynItems.Append(aDetailLine);
-								CleanupStack::Pop();
+							// Add detail
+							HBufC* aDetailLine = HBufC::NewLC(2 + aContactFieldSet[x].Label().Length() + 1 + aContactFieldSet[x].TextStorage()->Text().Length());
+							TPtr pDetailLine(aDetailLine->Des());
+							pDetailLine.Append(aContactFieldSet[x].TextStorage()->Text());				
+							pDetailLine.Insert(0, _L("\t"));
+							pDetailLine.Insert(0, aContactFieldSet[x].Label());
+							
+							if(aContactFieldSet[x].ContentType().ContainsFieldType(KUidContactFieldPhoneNumber)) {
+								pDetailLine.Insert(0, _L("0\t"));
 							}
-						}
+							else {
+								pDetailLine.Insert(0, _L("1\t"));
+							}
 						
-						if(aDynItems.Count() == 0) {
-							aDynItems.Append(_L("\t").AllocL());
+							aDynItems.Append(aDetailLine);
+							CleanupStack::Pop();
 						}
+					}
+					
+					if(aDynItems.Count() == 0) {
+						aDynItems.Append(_L("\t").AllocL());
+					}
+					
+					// Selection result
+					TInt aSelectedItem = DisplayDoubleLinePopupMenuL(aDynItems);
+					
+					if(aSelectedItem != KErrNotFound) {
+						TPtr pSelectedAddress(aDynItems[aSelectedItem]->Des());
+						pSelectedAddress.Delete(0, pSelectedAddress.LocateReverse('\t') + 1);
 						
-						// Selection result
-						TInt aSelectedItem = DisplayDoubleLinePopupMenuL(aDynItems);
+						// Construct body
+						TBuf<32> aId;
+						aId.Format(_L("%d"), iLocationEngine->GetLastPlaceId());
+						HBufC* aSendPlaceText = CEikonEnv::Static()->AllocReadResourceLC(R_LOCALIZED_STRING_SENDPLACEMESSAGE_TEXT);
+						TPtr pSendPlaceText(aSendPlaceText->Des());
+						HBufC* aBody = HBufC::NewLC(pSendPlaceText.Length() + aId.Length() + iOwnItem->GetGeolocItem(EGeolocItemCurrent)->GetString(EGeolocText).Length());
 						
-						if(aSelectedItem != KErrNotFound) {
-							TPtr pSelectedAddress(aDynItems[aSelectedItem]->Des());
-							pSelectedAddress.Delete(0, pSelectedAddress.LocateReverse('\t') + 1);
-							
-							// Construct body
-							TBuf<32> aId;
-							aId.Format(_L("%d"), iLocationEngine->GetLastPlaceId());
-							HBufC* aSendPlaceText = CEikonEnv::Static()->AllocReadResourceLC(R_LOCALIZED_STRING_SENDPLACEMESSAGE_TEXT);
-							TPtr pSendPlaceText(aSendPlaceText->Des());
-							HBufC* aBody = HBufC::NewLC(pSendPlaceText.Length() + aId.Length() + iOwnItem->GetPlace(EPlaceCurrent)->GetPlaceName().Length());
-							
-							TPtr pBody(aBody->Des());
-							pBody.Copy(pSendPlaceText);
-							pBody.Replace(pBody.Find(_L("$PLACE")), 6, iOwnItem->GetPlace(EPlaceCurrent)->GetPlaceName());
-							pBody.Replace(pBody.Find(_L("$ID")), 3, aId);
-							
-							HBufC* aSubject = CEikonEnv::Static()->AllocReadResourceLC(R_LOCALIZED_STRING_SENDPLACEMESSAGE_TITLE);			
-							
-							SendSmsOrEmailL(pSelectedAddress, *aSubject, pBody);
-							CleanupStack::PopAndDestroy(3); // aSubject, aBody, aSendPlaceText
-						}
-							
-						while(aDynItems.Count() > 0) {
-							delete aDynItems[0];
-							aDynItems.Remove(0);
-						}
+						TPtr pBody(aBody->Des());
+						pBody.Copy(pSendPlaceText);
+						pBody.Replace(pBody.Find(_L("$PLACE")), 6, iOwnItem->GetGeolocItem(EGeolocItemCurrent)->GetString(EGeolocText));
+						pBody.Replace(pBody.Find(_L("$ID")), 3, aId);
 						
-						aDynItems.Close();		
-						CleanupStack::PopAndDestroy(); // aContact
-					}	
-				}
+						HBufC* aSubject = CEikonEnv::Static()->AllocReadResourceLC(R_LOCALIZED_STRING_SENDPLACEMESSAGE_TITLE);			
+						
+						SendSmsOrEmailL(pSelectedAddress, *aSubject, pBody);
+						CleanupStack::PopAndDestroy(3); // aSubject, aBody, aSendPlaceText
+					}
+						
+					while(aDynItems.Count() > 0) {
+						delete aDynItems[0];
+						aDynItems.Remove(0);
+					}
+					
+					aDynItems.Close();		
+					CleanupStack::PopAndDestroy(); // aContact
+				}	
 			}
 		}
 	}
@@ -1185,77 +1074,66 @@ void CBuddycloudLogic::FollowContactL(const TDesC& aContact) {
 	WriteToLog(_L8("BL    CBuddycloudLogic::FollowContactL"));
 #endif
 
-	HBufC* aJid = HBufC::NewLC(aContact.Length() + KBuddycloudRosterServer().Length());
-	TPtr pJid(aJid->Des());
-	pJid.Copy(aContact);
-	pJid.LowerCase();
-
-	// Check for server
-	TInt aSearchResult = pJid.Locate('@');
-	if(aSearchResult == KErrNotFound) {
-		pJid.Append(KBuddycloudRosterServer);
-	}
-	
-	CFollowingItem* aItem = iMasterFollowingList->GetItemById(IsSubscribedTo(pJid, EItemRoster));
-	
-	if(aItem == NULL) {
-		// Prepare data
-		CTextUtilities* aTextUtilities = CTextUtilities::NewLC();
+	if(aContact.Locate('@') != KErrNotFound) {	
+		CFollowingItem* aItem = static_cast <CFollowingItem*> (iFollowingList->GetItemById(IsSubscribedTo(aContact, EItemRoster)));
 		
-		HBufC8* aEncJid = aTextUtilities->UnicodeToUtf8L(pJid).AllocLC();
-		TPtr8 pEncJid(aEncJid->Des());
-		
-		_LIT8(KNickElement, "<nick xmlns='http://jabber.org/protocol/nick'></nick>");
-		HBufC8* aEncFullName = aTextUtilities->UnicodeToUtf8L(iSettingFullName).AllocLC();
-		TPtr8 pEncFullName(aEncFullName->Des());
-		
-		_LIT8(KGeolocElement, "<geoloc xmlns='http://jabber.org/protocol/geoloc'><text></text></geoloc>");
-		HBufC8* aEncLocation = aTextUtilities->UnicodeToUtf8L(*iBroadLocationText).AllocLC();
-		TPtr8 pEncLocation(aEncLocation->Des());
-		
-		// Build & send request
-		_LIT8(KStanza, "<presence to='' type='subscribe'></presence>\r\n");
-		HBufC8* aStanza = HBufC8::NewLC(KStanza().Length() + pEncJid.Length() + KNickElement().Length() + pEncFullName.Length() + KGeolocElement().Length() + pEncLocation.Length());
-		TPtr8 pStanza(aStanza->Des());
-		pStanza.Append(KStanza);
-		
-		if(pEncLocation.Length() > 0) {
-			pStanza.Insert(33, KGeolocElement);
-			pStanza.Insert(33 + 56, pEncLocation);
+		if(aItem == NULL) {
+			// Prepare data
+			CTextUtilities* aTextUtilities = CTextUtilities::NewLC();
+			
+			_LIT8(KNickElement, "<nick xmlns='http://jabber.org/protocol/nick'></nick>");
+			HBufC8* aEncFullName = aTextUtilities->UnicodeToUtf8L(iSettingFullName).AllocLC();
+			TPtr8 pEncFullName(aEncFullName->Des());
+			
+			_LIT8(KGeolocElement, "<geoloc xmlns='http://jabber.org/protocol/geoloc'><text></text></geoloc>");
+			HBufC8* aEncLocation = aTextUtilities->UnicodeToUtf8L(*iBroadLocationText).AllocLC();
+			TPtr8 pEncLocation(aEncLocation->Des());
+			
+			// Build & send request
+			HBufC8* aOptionalData = HBufC8::NewLC(KNickElement().Length() + pEncFullName.Length() + KGeolocElement().Length() + pEncLocation.Length());
+			TPtr8 pOptionalData(aOptionalData->Des());
+			
+			if(pEncFullName.Length() > 0) {
+				pOptionalData.Append(KNickElement);
+				pOptionalData.Insert(pOptionalData.Length() - 7, pEncFullName);
+			}
+			
+			if(pEncLocation.Length() > 0) {
+				pOptionalData.Append(KGeolocElement);
+				pOptionalData.Insert(pOptionalData.Length() - 16, pEncLocation);
+			}
+			
+			SendPresenceSubscriptionL(aTextUtilities->UnicodeToUtf8L(aContact), _L8("subscribe"), pOptionalData);
+			CleanupStack::PopAndDestroy(4); // aOptionalData, aEncLocation, aEncFullName, aTextUtilities
+					
+			// Acknowledge request sent
+			HBufC* aMessage = CEikonEnv::Static()->AllocReadResourceLC(R_LOCALIZED_STRING_NOTE_REQUESTSENT);
+			CAknInformationNote* aDialog = new (ELeave) CAknInformationNote();		
+			aDialog->ExecuteLD(*aMessage);
+			CleanupStack::PopAndDestroy(); // aMessage
 		}
-		
-		if(pEncFullName.Length() > 0) {
-			pStanza.Insert(33, KNickElement);
-			pStanza.Insert(33 + 46, pEncFullName);
-		}
-		pStanza.Insert(14, pEncJid);
-
-		iXmppEngine->SendAndForgetXmppStanza(pStanza, true);
-		CleanupStack::PopAndDestroy(5); // aStanza, aEncLocation, aEncFullName, aEncJid, aTextUtilities
-				
-		// Acknowledge request sent
-		HBufC* aMessage = CEikonEnv::Static()->AllocReadResourceLC(R_LOCALIZED_STRING_NOTE_REQUESTSENT);
-		CAknInformationNote* aDialog = new (ELeave) CAknInformationNote();		
-		aDialog->ExecuteLD(*aMessage);
-		CleanupStack::PopAndDestroy(); // aMessage
 	}
-
-	CleanupStack::PopAndDestroy(); // aJid	
 }
 
-void CBuddycloudLogic::GetFriendDetailsL(TInt aFollowerId) {
+void CBuddycloudLogic::RecollectFollowerDetailsL(TInt aFollowerId) {
 	if(iState == ELogicOnline) {	
 #ifdef _DEBUG
-		WriteToLog(_L8("BL    CBuddycloudLogic::GetFriendDetailsL"));
+		WriteToLog(_L8("BL    CBuddycloudLogic::RecollectFollowerDetailsL"));
 #endif
 
-		CFollowingItem* aItem = iMasterFollowingList->GetItemById(aFollowerId);
+		CFollowingItem* aItem = static_cast <CFollowingItem*> (iFollowingList->GetItemById(aFollowerId));
 		
 		if(aItem && aItem->GetItemType() == EItemRoster) {
 			CFollowingRosterItem* aRosterItem = static_cast <CFollowingRosterItem*> (aItem);
 			
-			if(!aRosterItem->GetPubsubCollected() && aRosterItem->GetSubscriptionType() >= ESubscriptionTo) {
-				CollectPubsubNodesL(aRosterItem->GetJid());
+			if(!aRosterItem->PubsubCollected() && aRosterItem->GetPubsubAffiliation() > EPubsubAffiliationNone &&
+					aRosterItem->GetPubsubSubscription() == EPubsubSubscriptionSubscribed) {
+				
+//				// Collect nodes
+//				CollectUserPubsubNodeL(aRosterItem->GetId(), _L8("/mood"));
+//				CollectUserPubsubNodeL(aRosterItem->GetId(), _L8("/geo/previous"));
+//				CollectUserPubsubNodeL(aRosterItem->GetId(), _L8("/geo/current"));
+//				CollectUserPubsubNodeL(aRosterItem->GetId(), _L8("/geo/future"));				
 			}
 			
 			aRosterItem->SetPubsubCollected(true);
@@ -1263,541 +1141,240 @@ void CBuddycloudLogic::GetFriendDetailsL(TInt aFollowerId) {
 	}	
 }
 
-TInt CBuddycloudLogic::FollowTopicChannelL(TDesC& aChannelJid, TDesC& aTitle, const TDesC& aDescription) {
-#ifdef _DEBUG
-	WriteToLog(_L8("BL    CBuddycloudLogic::FollowTopicChannelL"));
-#endif
-
-	TInt aChannelItemId = 0;
-	
-	if(aChannelJid.Locate('@') != KErrNotFound) {
-		if((aChannelItemId = IsSubscribedTo(aChannelJid, EItemChannel)) == 0) {
-			// Add channel Item to list
-			CFollowingChannelItem* aChannelItem = CFollowingChannelItem::NewLC();
-			aChannelItemId = iNextItemId;
-			aChannelItem->SetItemId(iNextItemId++);
-			aChannelItem->SetJidL(aChannelJid);
-			aChannelItem->SetTitleL(aTitle);
-			aChannelItem->SetDescriptionL(aDescription);
-			
-			CDiscussion* aDiscussion = iMessagingManager->GetDiscussionL(aChannelJid);
-			aDiscussion->AddMessageReadObserver(aChannelItem);
-			aDiscussion->AddDiscussionReadObserver(this, aChannelItem);
-
-			iSettingsSaveNeeded = true;			
-			iMasterFollowingList->InsertItem(GetBubbleToPosition(aChannelItem), aChannelItem);
-			CleanupStack::Pop(); // aGroupItem
-		}
-
-		// Send initial presence to channel
-		SendChannelPresenceL(aChannelJid, _L8("<history maxstanzas='30'/>"));
+void CBuddycloudLogic::SetLastNodeIdReceived(const TDesC8& aNodeItemId) {
+	if(iLastNodeIdReceived) {
+		delete iLastNodeIdReceived;
 	}
 	
-	return aChannelItemId;
+	iLastNodeIdReceived = aNodeItemId.Alloc();
 }
 
-void CBuddycloudLogic::FollowPersonalChannelL(TInt aFollowerId) {
+void CBuddycloudLogic::CollectPubsubSubscriptionsL() {
 #ifdef _DEBUG
-	WriteToLog(_L8("BL    CBuddycloudLogic::FollowPersonalChannelL"));
-#endif
-	
-	CFollowingItem* aItem = iMasterFollowingList->GetItemById(aFollowerId);
-
-	if(aItem && aItem->GetItemType() == EItemRoster) {
-		CFollowingRosterItem* aRosterItem = static_cast <CFollowingRosterItem*> (aItem);
-		
-		if(aRosterItem->GetSubscriptionType() == ESubscriptionTo || aRosterItem->GetSubscriptionType() == ESubscriptionBoth) {	
-			if(aRosterItem->GetJid(EJidChannel).Length() == 0) {
-				HBufC* aChannelJid = HBufC::NewLC(aRosterItem->GetJid().Length() + KBuddycloudChannelsServer().Length());
-				TPtr pChannelJid(aChannelJid->Des());
-				pChannelJid.Append(aRosterItem->GetJid());
-				
-				TInt aLocateResult = pChannelJid.Locate('@');
-				
-				if(aLocateResult != KErrNotFound) {
-					pChannelJid.Replace(aLocateResult, 1, _L("%"));
-					pChannelJid.Append(KBuddycloudChannelsServer);
-					
-					aRosterItem->SetJidL(pChannelJid, EJidChannel);
-					
-					CDiscussion* aDiscussion = iMessagingManager->GetDiscussionL(pChannelJid);
-					aDiscussion->AddMessageReadObserver(aRosterItem);
-					aDiscussion->AddDiscussionReadObserver(this, aRosterItem);
-									
-					GetChannelInfoL(pChannelJid);
-				}
-				
-				CleanupStack::PopAndDestroy(); // aChannelJid			
-			}
-		}
-	}
-}
-
-void CBuddycloudLogic::UnfollowChannelL(TInt aFollowerId) {
-#ifdef _DEBUG
-	WriteToLog(_L8("BL    CBuddycloudLogic::UnfollowChannelL"));
-#endif
-	
-	CFollowingItem* aItem = iMasterFollowingList->GetItemById(aFollowerId);
-
-	if(aItem && (aItem->GetItemType() == EItemRoster || aItem->GetItemType() == EItemChannel)) {
-		CFollowingChannelItem* aChannelItem = static_cast <CFollowingChannelItem*> (aItem);
-		TPtrC aChannelJid(aChannelItem->GetJid());
-		
-		if(aChannelJid.Length() > 0) {
-			CDiscussion* aDiscussion = iMessagingManager->GetDiscussionL(aChannelJid);
-			
-			if(aItem->GetItemType() == EItemChannel) {
-				if(aDiscussion->GetMyAffiliation() == EAffiliationOwner) {
-					// Is owner, delete the channel
-					CTextUtilities* aTextUtilities = CTextUtilities::NewLC();
-					TPtrC8 aEncChannelJid = aTextUtilities->UnicodeToUtf8L(aChannelJid);
-					
-					_LIT8(KDeleteChannelsStanza, "<iq to='' type='set' id='deletechannel1'><query xmlns='http://jabber.org/protocol/muc#owner'><destroy/></query></iq>\r\n");
-					HBufC8* aDeleteChannelsStanza = HBufC8::NewLC(KDeleteChannelsStanza().Length() + aEncChannelJid.Length());
-					TPtr8 pDeleteChannelsStanza(aDeleteChannelsStanza->Des());
-					pDeleteChannelsStanza.Append(KDeleteChannelsStanza);
-					pDeleteChannelsStanza.Insert(8, aEncChannelJid);
-
-					iXmppEngine->SendAndForgetXmppStanza(pDeleteChannelsStanza, true);
-					CleanupStack::PopAndDestroy(2); // aDeleteChannelsStanza, aTextUtilities
-				}
-				else {
-					// Unfollow channel (change own affiliation to none)
-					ChangeUsersChannelAffiliationL(iOwnItem->GetJid(), aChannelItem->GetJid(), EAffiliationNone);
-				}
-				
-				// Send unavailable to channel
-				SendChannelUnavailableL(aChannelJid);
-				
-				// A topic channel, delete the item
-				iMessagingManager->DeleteDiscussionL(aChannelJid);
-				iMasterFollowingList->DeleteItemById(aFollowerId);
-			}
-			else {
-				// Unfollow channel (change own affiliation to none)
-				ChangeUsersChannelAffiliationL(iOwnItem->GetJid(), aChannelJid, EAffiliationNone);
-				
-				// Send unavailable to channel
-				SendChannelUnavailableL(aChannelJid);
-								
-				// Delete discussion
-				iMessagingManager->DeleteDiscussionL(aChannelJid);
-				
-				// Set personal channel jid to empty
-				aChannelItem->SetJidL(_L(""));
-			}
-			
-			NotifyNotificationObservers(ENotificationFollowingItemDeleted, aFollowerId);
-			
-			iSettingsSaveNeeded = true;
-		}
-	}
-}
-
-TInt CBuddycloudLogic::CreateChannelL(const TDesC& aChannelTitleOrJid) {
-#ifdef _DEBUG
-	WriteToLog(_L8("BL    CBuddycloudLogic::CreateChannelL"));
+	WriteToLog(_L8("BL    CBuddycloudLogic::CollectPubsubSubscriptionsL"));
 #endif
 
-	TInt aChannelItemId = 0;
-	
-	CFollowingChannelItem* aChannelItem = CFollowingChannelItem::NewLC();
-	aChannelItemId = iNextItemId;
-	aChannelItem->SetItemId(iNextItemId++);
-	
-	HBufC* aJid = HBufC::NewLC(aChannelTitleOrJid.Length() + KBuddycloudChannelsServer().Length());
-	TPtr pJid(aJid->Des());
-	pJid.Append(aChannelTitleOrJid);
-	pJid.LowerCase();
-	
-	if(aChannelTitleOrJid.Locate('@') == KErrNotFound) {
-		// Validate jid by removing special characters
-		for(TInt i = pJid.Length() - 1; i >= 0; i--) {
-			if(pJid[i] <= 47 || (pJid[i] >= 58 && pJid[i] <= 64) ||
-					(pJid[i] >= 91 && pJid[i] <= 96) || pJid[i] >= 123) {
-				
-				pJid.Delete(i, 1);
-			}
-		}
-		
-		if(pJid.Length() == 0) {
-			// Jid is empty because it contains non-ascii characters
-			pJid.Append(aChannelTitleOrJid);
-			
-			for(TInt i = 0; i < pJid.Length(); i++) {
-				pJid[i] = (pJid[i] % 26) + 97;
-			}
-		}
-		
-		pJid.Append(KBuddycloudChannelsServer);
-	}
-	else {
-		aChannelItem->SetExternal(true);
-	}
-	
-	aChannelItem->SetJidL(pJid);
-	aChannelItem->SetTitleL(aChannelTitleOrJid);	
-	CleanupStack::PopAndDestroy(); // aJid
-	
-	CDiscussion* aDiscussion = iMessagingManager->GetDiscussionL(aChannelItem->GetJid());
-	CFollowingItem* aItem = aDiscussion->GetFollowingItem();
-	
-	if(aItem) {
-		// Already exists
-		aChannelItemId = aItem->GetItemId();
-		CleanupStack::PopAndDestroy(); // aChannelItem
-	}
-	else {
-		// Does not exist in list
-		aDiscussion->AddMessageReadObserver(aChannelItem);
-		aDiscussion->AddDiscussionReadObserver(this, aChannelItem);
-	
-		iSettingsSaveNeeded = true;			
-		iMasterFollowingList->InsertItem(GetBubbleToPosition(aChannelItem), aChannelItem);
-		CleanupStack::Pop(); // aChannelItem
-			
-		GetChannelInfoL(aChannelItem->GetJid());
-	}
-	
-	return aChannelItemId;
+	// Collect users pubsub subscriptions
+	_LIT8(KPubsubSubscriptions, "<iq to='' type='get' id='pubsubsubscriptions'><pubsub xmlns='http://jabber.org/protocol/pubsub'><subscriptions/></pubsub></iq>\r\n");
+	HBufC8* aPubsubSubscriptions = HBufC8::NewLC(KPubsubSubscriptions().Length() + KBuddycloudPubsubServer().Length());
+	TPtr8 pPubsubSubscriptions(aPubsubSubscriptions->Des());
+	pPubsubSubscriptions.Append(KPubsubSubscriptions);
+	pPubsubSubscriptions.Insert(8, KBuddycloudPubsubServer);
+
+	iXmppEngine->SendAndAcknowledgeXmppStanza(pPubsubSubscriptions, this, false, EXmppPriorityHigh);
+	CleanupStack::PopAndDestroy(); // aPubsubSubscriptions	
 }
 
-void CBuddycloudLogic::InviteToChannelL(TInt aChannelId) {
-	HBufC* aEmptyText = HBufC::NewLC(0);
-	InviteToChannelL(*aEmptyText, aChannelId);
-	CleanupStack::PopAndDestroy();
-}
-
-void CBuddycloudLogic::InviteToChannelL(TDesC& aJid, TInt aChannelId) {
+void CBuddycloudLogic::ProcessPubsubSubscriptionsL(const TDesC8& aStanza) {
 #ifdef _DEBUG
-	WriteToLog(_L8("BL    CBuddycloudLogic::InviteToChannelL"));
-#endif
-	
-	RPointerArray<HBufC> aDynItems;
-	RArray<TInt> aDynItemIds;
-		
-	// Search existing Channels & contacts
-	for(TInt i = 1; i < iMasterFollowingList->Count(); i++) {
-		CFollowingItem* aItem = iMasterFollowingList->GetItemByIndex(i);
-
-		if(aItem->GetItemType() == EItemChannel || aItem->GetItemType() == EItemRoster) {			
-			if(aItem->GetItemType() == EItemChannel) {
-				if(aJid.Length() > 0 && aChannelId != aItem->GetItemId()) {
-					HBufC* aItemText = HBufC::NewLC(4 + aItem->GetTitle().Length());
-					TPtr pItemText(aItemText->Des());
-					pItemText.Append(_L("3\t\t\t"));
-					pItemText.Insert(2, aItem->GetTitle());
-					
-					aDynItems.Insert(aItemText, 0);
-					aDynItemIds.Insert(aItem->GetItemId(), 0);
-					CleanupStack::Pop(); // aItem
-				}
-			}
-			else {
-				if( !aItem->GetIsOwn() && aJid.Length() == 0 ) {
-					HBufC* aItemText = HBufC::NewLC(4 + aItem->GetTitle().Length());
-					TPtr pItemText(aItemText->Des());
-					pItemText.Append(_L("2\t\t\t"));
-					pItemText.Insert(2, aItem->GetTitle());
-					
-					aDynItems.Append(aItemText);
-					aDynItemIds.Append(aItem->GetItemId());
-					CleanupStack::Pop(); // aItem
-				}
-			}
-		}
-	}
-		
-	if(aJid.Length() > 0) {		
-		// New Channel
-		HBufC* aNewChannel = CEikonEnv::Static()->AllocReadResourceLC(R_LOCALIZED_STRING_ITEM_NEWGROUP);
-		TPtr pNewChannel(aNewChannel->Des());
-		
-		HBufC* aItem = HBufC::NewLC(4 + pNewChannel.Length());
-		TPtr pItem(aItem->Des());
-		pItem.Append(_L("3\t\t\t"));
-		pItem.Insert(2, pNewChannel);
-		
-		aDynItems.Insert(aItem, 0);
-		aDynItemIds.Insert(0, 0);
-		CleanupStack::Pop(); // aItem
-		CleanupStack::PopAndDestroy(); // aNewChannel	
-	}
-	
-	// Selection result
-	TInt aSelectedItem = DisplaySingleLinePopupMenuL(aDynItems);
-	
-	if(aSelectedItem != KErrNotFound) {
-		TInt aSelectedItemId = aDynItemIds[aSelectedItem];
-		
-		if(aSelectedItemId == 0) {
-			// New Channel
-			TBuf<64> aChannelNameOrJid;
-
-			CAknTextQueryDialog* aDialog = CAknTextQueryDialog::NewL(aChannelNameOrJid);
-			aDialog->SetPredictiveTextInputPermitted(true);
-
-			if(aDialog->ExecuteLD(R_CREATECHANNEL_DIALOG) != 0) {
-				CreateChannelL(aChannelNameOrJid);
-			}
-		}
-		
-		if(aSelectedItemId > 0) {
-			CFollowingItem* aItem = static_cast <CFollowingItem*> (iMasterFollowingList->GetItemById(aSelectedItemId));
-	
-			if(aItem->GetItemType() == EItemRoster) {
-				CFollowingRosterItem* aChosenItem = static_cast <CFollowingRosterItem*> (aItem);
-				
-				SendChannelInviteL(aChosenItem->GetJid(), aChannelId);
-			}
-			else if(aItem->GetItemType() == EItemChannel) {
-				SendChannelInviteL(aJid, aSelectedItemId);
-			}
-			
-			HBufC* aMessage = CEikonEnv::Static()->AllocReadResourceLC(R_LOCALIZED_STRING_NOTE_REQUESTSENT);
-			CAknInformationNote* aDialog = new (ELeave) CAknInformationNote();		
-			
-			aDialog->ExecuteLD(*aMessage);
-			CleanupStack::PopAndDestroy(); // aMessage
-		}
-	}
-	
-	while(aDynItems.Count() > 0) {
-		delete aDynItems[0];
-		aDynItems.Remove(0);
-	}
-	
-	aDynItems.Close();
-	aDynItemIds.Close();
-}
-
-void CBuddycloudLogic::DeclineChannelInviteL(TDesC& aJid) {
-#ifdef _DEBUG
-	WriteToLog(_L8("BL    CBuddycloudLogic::DeclineChannelInviteL"));
+	WriteToLog(_L8("BL    CBuddycloudLogic::ProcessPubsubSubscriptionsL"));
 #endif
 
-	CTextUtilities* aTextUtilities = CTextUtilities::NewLC();
-	TPtrC8 aEncJid(aTextUtilities->UnicodeToUtf8L(aJid));
-
-	_LIT8(KStanza, "<message to=''><x xmlns='http://jabber.org/protocol/muc#user'><decline/></x></message>\r\n");	
-	HBufC8* aStanza = HBufC8::NewLC(KStanza().Length() + aEncJid.Length());
-	TPtr8 pStanza(aStanza->Des());
-	pStanza.Copy(KStanza);
-	pStanza.Insert(13, aEncJid);
-
-	iXmppEngine->SendAndForgetXmppStanza(pStanza, true);
-	CleanupStack::PopAndDestroy(2); // aStanza, aTextUtilities
-}
-
-void CBuddycloudLogic::CollectMyChannelsL() {
-#ifdef _DEBUG
-	WriteToLog(_L8("BL    CBuddycloudLogic::CollectMyChannelsL"));
-#endif
+	CBuddycloudListStore* aChannelItemStore = CBuddycloudListStore::NewLC();
 	
-	CTextUtilities* aTextUtilities = CTextUtilities::NewLC();
-		
-	// Collect my channels
-	TPtrC8 aEncOwnJid = aTextUtilities->UnicodeToUtf8L(iOwnItem->GetJid());
-
-	_LIT8(KMyChannelsStanza, "<iq to='maitred.buddycloud.com' type='get' id='mychannels1'><query xmlns='http://buddycloud.com/protocol/channels'><subject></subject></query></iq>\r\n");
-	HBufC8* aMyChannelsStanza = HBufC8::NewLC(KMyChannelsStanza().Length() + aEncOwnJid.Length());
-	TPtr8 pMyChannelsStanza(aMyChannelsStanza->Des());
-	pMyChannelsStanza.Append(KMyChannelsStanza);
-	pMyChannelsStanza.Insert(124, aEncOwnJid);
-
-	iXmppEngine->SendAndAcknowledgeXmppStanza(pMyChannelsStanza, this, false, EXmppPriorityHigh);
-	CleanupStack::PopAndDestroy(2); // aMyChannelsStanza, aTextUtilities
-}
-
-void CBuddycloudLogic::ProcessMyChannelsL(const TDesC8& aStanza) {
-#ifdef _DEBUG
-	WriteToLog(_L8("BL    CBuddycloudLogic::ProcessMyChannelsL"));
-#endif
-	
-	// Synchronize local channels to server stored channels
-	CBuddycloudFollowingStore* aStoredChannels = CBuddycloudFollowingStore::NewLC();
 	CTextUtilities* aTextUtilities = CTextUtilities::NewLC();
 	CXmlParser* aXmlParser = CXmlParser::NewLC(aStanza);
-	TBool aChannelFound = false;
-	TInt aLocateResult;
 	
-	// Parse my channels
-	while(aXmlParser->MoveToElement(_L8("channel"))) {	
-		CFollowingChannelItem* aChannel = CFollowingChannelItem::NewLC();
-		CXmlParser* aChannelXmlParser = CXmlParser::NewLC(aXmlParser->GetStringData());
+	// Collect subscriptions
+	while(aXmlParser->MoveToElement(_L8("subscription"))) {
+		TPtrC8 aAttributeNode(aXmlParser->GetStringAttribute(_L8("node")));
 		
-		if(aChannelXmlParser->MoveToElement(_L8("jid"))) {
-			aChannel->SetJidL(aTextUtilities->Utf8ToUnicodeL(aChannelXmlParser->GetStringData()));
-		}
+		CXmppPubsubNodeParser* aNodeParser = CXmppPubsubNodeParser::NewLC(aAttributeNode);
+		TXmppPubsubSubscription aSubscription = CXmppEnumerationConverter::PubsubSubscription(aXmlParser->GetStringAttribute(_L8("subscription")));
+		TXmppPubsubAffiliation aAffiliation = CXmppEnumerationConverter::PubsubAffiliation(aXmlParser->GetStringAttribute(_L8("affiliation")));
 		
-		if(aChannelXmlParser->MoveToElement(_L8("title"))) {
-			aChannel->SetTitleL(aTextUtilities->Utf8ToUnicodeL(aChannelXmlParser->GetStringData()));
-		}
-		
-		if(aChannelXmlParser->MoveToElement(_L8("rank"))) {
-			aChannel->SetRank(aChannelXmlParser->GetIntData());
-		}
-		
-		CleanupStack::PopAndDestroy(); // aChannelXmlParser
-		
-		// Check if channel is a personal one
-		aLocateResult = aChannel->GetJid().Locate('%');
-		
-		if(aLocateResult != KErrNotFound) {
-			// Is a personal channel
-			HBufC* aChannelJid = aChannel->GetJid().AllocLC();
-			TPtr pChannelJid(aChannelJid->Des());
-			pChannelJid.Replace(aLocateResult, 1, _L("@"));
+		if(aNodeParser->GetNode(0).Compare(_L8("channel")) == 0) {
+			// Handle topic channel node
+			CFollowingChannelItem* aChannelItem = CFollowingChannelItem::NewLC();
+			aChannelItem->SetIdL(aTextUtilities->Utf8ToUnicodeL(aAttributeNode));
+			aChannelItem->SetPubsubSubscription(aSubscription);
+			aChannelItem->SetPubsubAffiliation(aAffiliation);
 			
-			if((aLocateResult = pChannelJid.LocateReverse('@')) != KErrNotFound) {
-				pChannelJid = pChannelJid.Left(aLocateResult);
-			}
-			
-			// Get discussion & item of ROSTER (not channel)
-			CDiscussion* aDiscussion = iMessagingManager->GetDiscussionL(pChannelJid);
-			CFollowingItem* aItem = aDiscussion->GetFollowingItem();
-			
-			if(aItem && aItem->GetItemType() == EItemRoster) {
-				CFollowingChannelItem* aChannelItem = static_cast <CFollowingChannelItem*> (aItem);
-				
-				aChannelItem->SetRank(aChannel->GetRank());
-				
-				// Set channel jid if not exists
-				if(aChannelItem->GetJid().Length() == 0) {
-					aChannelItem->SetJidL(aChannel->GetJid());
-				}
-				
-				// Now get CHANNEL discussion & setup observers
-				aDiscussion = iMessagingManager->GetDiscussionL(aChannelItem->GetJid());
-				aDiscussion->AddMessageReadObserver(aChannelItem);
-				aDiscussion->AddDiscussionReadObserver(this, aChannelItem);
-				
-				// Change discussion jid if different
-				if(aChannel->GetJid().Compare(aChannelItem->GetJid()) != 0) {
-					aChannelItem->SetJidL(aChannel->GetJid());
-					aDiscussion->SetJidL(aChannel->GetJid());
-				}
-			}
-			
-			CleanupStack::PopAndDestroy(2); // aChannelJid, aChannel
+			aChannelItemStore->AddItem(aChannelItem);
+			CleanupStack::Pop(); // aChannelItem
 		}
-		else {		
-			// Add to stored channels
-			aStoredChannels->AddItem(aChannel);
-			CleanupStack::Pop(); // aChannel
-		}
-	}
-	
-	CleanupStack::PopAndDestroy(); // aXmlParser
-	
-	// Syncronization of topic channels
-	for(TInt i = iMasterFollowingList->Count() - 1; i >= 0; i--) {
-		CFollowingItem* aItem = iMasterFollowingList->GetItemByIndex(i);
+		else if(aNodeParser->GetNode(2).Compare(_L8("channel")) == 0) {
+			// Handle user channel node
+			TPtrC aJid(aTextUtilities->Utf8ToUnicodeL(aNodeParser->GetNode(1)));
+			
+			for(TInt i = 0; i < iFollowingList->Count(); i++) {
+				CFollowingItem* aItem = static_cast <CFollowingItem*> (iFollowingList->GetItemByIndex(i));
 
-		if(aItem && aItem->GetItemType() == EItemChannel) {
-			CFollowingChannelItem* aChannelItem = static_cast <CFollowingChannelItem*> (aItem);
-
-			aChannelFound = false;
-				
-			if(!aChannelItem->IsExternal()) {
-				for(TInt x = 0; x < aStoredChannels->Count(); x++) {
-					CFollowingChannelItem* aStoredChannel = static_cast <CFollowingChannelItem*> (aStoredChannels->GetItemByIndex(x));
+				if(aItem && aItem->GetItemType() == EItemRoster) {
+					CFollowingRosterItem* aRosterItem = static_cast <CFollowingRosterItem*> (aItem);
 					
-					if(aChannelItem->GetJid().Compare(aStoredChannel->GetJid()) == 0) {						
-						CFollowingChannelItem* aChannelItem = static_cast <CFollowingChannelItem*> (aItem);						
-						aChannelItem->SetTitleL(aStoredChannel->GetTitle());
-						aChannelItem->SetRank(aStoredChannel->GetRank());
+					if(aRosterItem->GetId().Compare(aJid) == 0) {
+						TPtrC aEncNode(aTextUtilities->Utf8ToUnicodeL(aAttributeNode));
 						
-						// Delete stored channel from list
-						aStoredChannels->DeleteItemByIndex(x);
+						if(aRosterItem->GetId(EIdChannel).Compare(aEncNode) != 0) {
+							// Get old discussion
+							CDiscussion* aDiscussion = iDiscussionManager->GetDiscussionL(aRosterItem->GetId(EIdChannel));							
+							
+							// Change channel id
+							aRosterItem->SetIdL(aEncNode, EIdChannel);
+							aRosterItem->SetUnreadData(aDiscussion, EIdChannel);
+							
+							// Update discuss with new id
+							aDiscussion->SetDiscussionIdL(aRosterItem->GetId(EIdChannel));
+							aDiscussion->SetDiscussionReadObserver(this, aRosterItem->GetItemId());
+							
+							// Collect node items
+							CollectLastPubsubNodeItemsL(aRosterItem->GetId(EIdChannel), _L8("1"));
+							
+							iSettingsSaveNeeded = true;
+						}
+
+						aRosterItem->SetPubsubSubscription(aSubscription);
+						aRosterItem->SetPubsubAffiliation(aAffiliation);
 						
-						aChannelFound = true;
 						break;
 					}
-				}
+				}				
+			}
+		}
+		
+		CleanupStack::PopAndDestroy(); // aNodeParser
+	}
+	
+	CleanupStack::PopAndDestroy(2); // aXmlParser, aTextUtilities
+	
+	// Synchronize local roster to received roster
+	for(TInt i = (iFollowingList->Count() - 1); i >= 1; i--) {
+		CFollowingItem* aItem = static_cast <CFollowingItem*> (iFollowingList->GetItemByIndex(i));
+
+		if(aItem && aItem->GetItemType() == EItemChannel) {
+			CFollowingChannelItem* aLocalItem = static_cast <CFollowingChannelItem*> (aItem);
+			
+			TBool aItemFound = false;
+			
+			for(TInt x = 0; x < aChannelItemStore->Count(); x++) {
+				CFollowingChannelItem* aChannelItem = static_cast <CFollowingChannelItem*> (aChannelItemStore->GetItemByIndex(x));
 				
-				if(!aChannelFound) {
-					// Delete channel					
-					iMessagingManager->DeleteDiscussionL(aChannelItem->GetJid());
-					iMasterFollowingList->DeleteItemByIndex(i);
-										
-					NotifyNotificationObservers(ENotificationFollowingItemDeleted, aItem->GetItemId());
-				}
-				
-				if(aStoredChannels->Count() == 0) {
+				if(aLocalItem->GetId().Compare(aChannelItem->GetId()) == 0) {				
+					// Update
+					aLocalItem->SetPubsubSubscription(aChannelItem->GetPubsubSubscription());
+					aLocalItem->SetPubsubAffiliation(aChannelItem->GetPubsubAffiliation());
+					
+					aChannelItemStore->DeleteItemByIndex(x);
+					
+					aItemFound = true;
 					break;
 				}
 			}
+			
+			if(!aItemFound) {
+				// Remove no longer subscribed to channel
+				iDiscussionManager->DeleteDiscussionL(aLocalItem->GetId());
+				iFollowingList->DeleteItemByIndex(i);
+				
+				iSettingsSaveNeeded = true;
+			}
 		}
 	}
 	
-	// Syncronize - add stored
-	while(aStoredChannels->Count() > 0) {
-		CFollowingChannelItem* aChannelItem = static_cast <CFollowingChannelItem*> (aStoredChannels->GetItemByIndex(0));
+	// Add new channel items
+	while(aChannelItemStore->Count() > 0) {
+		CFollowingChannelItem* aChannelItem = static_cast <CFollowingChannelItem*> (aChannelItemStore->GetItemByIndex(0));
+		CDiscussion* aDiscussion = iDiscussionManager->GetDiscussionL(aChannelItem->GetId());
+				
+		// Set temporary channel name
+		TPtrC aTitle(aChannelItem->GetId());
+		TInt aLocate = aTitle.LocateReverse('/');		
 		
-		AddChannelItemL(aChannelItem->GetJid(), aChannelItem->GetTitle(), aChannelItem->GetDescription(), aChannelItem->GetRank());
-		aStoredChannels->DeleteItemByIndex(0);
-	}
+		if(aLocate != KErrNotFound) {
+			aTitle.Set(aTitle.Mid(aLocate + 1));
+		}
+		
+		aChannelItem->SetItemId(iNextItemId++);
+		aChannelItem->SetTitleL(aTitle);
+		aChannelItem->SetUnreadData(aDiscussion);
+					
+		// Add to discussion manager
+		aDiscussion->SetDiscussionReadObserver(this, aChannelItem->GetItemId());		
 	
-	iSettingsSaveNeeded = true;
-	
-	// Send presence to channels
-	iTimerState |= ETimeoutSendPresence;
-	TimerExpired(0);
-	
-	if(iOwnItem->GetJid(EJidChannel).Length() == 0) {
-		// No personal channel
-		FollowPersonalChannelL(iOwnItem->GetItemId());
+		iFollowingList->InsertItem(GetBubbleToPosition(aChannelItem), aChannelItem);		
+		aChannelItemStore->RemoveItemByIndex(0);	
+		
+		// Collect metadata & items
+		CollectChannelMetadataL(aChannelItem->GetId());
+		CollectLastPubsubNodeItemsL(aChannelItem->GetId(), _L8("1"));
+			
+		iSettingsSaveNeeded = true;
 	}
 
-	CleanupStack::PopAndDestroy(2); // aTextUtilities, aStoredChannels
+	CleanupStack::PopAndDestroy(); // aChannelItemStore
+	
+	NotifyNotificationObservers(ENotificationFollowingItemsUpdated);
+	
+	// Collect users pubsub node subscribers
+	CollectUsersPubsubNodeSubscribersL();
 }
 
-void CBuddycloudLogic::SynchronizePersonalChannelMembersL(const TDesC8& aStanza) {
+void CBuddycloudLogic::CollectUsersPubsubNodeSubscribersL() {
 #ifdef _DEBUG
-	WriteToLog(_L8("BL    CBuddycloudLogic::SynchronizePersonalChannelMembersL"));
+	WriteToLog(_L8("BL    CBuddycloudLogic::CollectUsersPubsubNodeSubscribersL"));
 #endif
 	
-	// Synchronize personal channel members to my roster
-	CBuddycloudFollowingStore* aChannelMembers = CBuddycloudFollowingStore::NewLC();
+	if(iOwnItem) {
+		CTextUtilities* aTextUtilities = CTextUtilities::NewLC();
+		TPtrC8 aEncId = aTextUtilities->UnicodeToUtf8L(iOwnItem->GetId(EIdChannel));
+		
+		// Collect users pubsub node subscribers
+		_LIT8(KNodeSubscribers, "<iq to='' type='get' id='pubsubnodesubscribers'><pubsub xmlns='http://jabber.org/protocol/pubsub#owner'><subscriptions node=''/></pubsub></iq>\r\n");
+		HBufC8* aNodeSubscribers = HBufC8::NewLC(KNodeSubscribers().Length() + KBuddycloudPubsubServer().Length() + aEncId.Length());
+		TPtr8 pNodeSubscribers(aNodeSubscribers->Des());
+		pNodeSubscribers.Append(KNodeSubscribers);
+		pNodeSubscribers.Insert(125, aEncId);
+		pNodeSubscribers.Insert(8, KBuddycloudPubsubServer);
+	
+		iXmppEngine->SendAndAcknowledgeXmppStanza(pNodeSubscribers, this, false, EXmppPriorityHigh);
+		CleanupStack::PopAndDestroy(2); // aPubsubSubscriptions, aTextUtilities
+	}
+}
+
+void CBuddycloudLogic::ProcessUsersPubsubNodeSubscribersL(const TDesC8& aStanza) {
+#ifdef _DEBUG
+	WriteToLog(_L8("BL    CBuddycloudLogic::ProcessUsersPubsubNodeSubscribersL"));
+#endif
+	
+	// Synchronize users node subscribers to my roster
+	CBuddycloudListStore* aUserNodeSubscribers = CBuddycloudListStore::NewLC();
 	CTextUtilities* aTextUtilities = CTextUtilities::NewLC();
 	CXmlParser* aXmlParser = CXmlParser::NewLC(aStanza);
 	
-	// Get personal channel jid
-	TPtrC aOwnChannelJid(iOwnItem->GetJid(EJidChannel));
+	// Users node id
+	HBufC8* aEncId = aTextUtilities->UnicodeToUtf8L(iOwnItem->GetId(EIdChannel)).AllocLC();
+	TPtrC8 pEncId(aEncId->Des());
 	
 	// Parse personal channel members
-	while(aXmlParser->MoveToElement(_L8("item"))) {	
-		CFollowingRosterItem* aRosterItem = CFollowingRosterItem::NewLC();
-		aRosterItem->SetJidL(aTextUtilities->Utf8ToUnicodeL(aXmlParser->GetStringAttribute(_L8("jid"))));
+	while(aXmlParser->MoveToElement(_L8("subscription"))) {	
+		CFollowingItem* aItem = CFollowingItem::NewLC();
+		aItem->SetIdL(aTextUtilities->Utf8ToUnicodeL(aXmlParser->GetStringAttribute(_L8("jid"))));
 		
-		aChannelMembers->AddItem(aRosterItem);
-		CleanupStack::Pop(); // aRosterItem
+		aUserNodeSubscribers->AddItem(aItem);
+		CleanupStack::Pop(); // aItem
 	}
 	
-	_LIT8(KAffiliationItem, "<item jid='' affiliation=''/>");
-	HBufC8* aAffiliationDeltaList = HBufC8::NewLC(0);
-	TPtr8 pAffiliationDeltaList(aAffiliationDeltaList->Des());
+	_LIT8(KAffiliationItem, "<affiliation jid='' affiliation=''/>");
+	HBufC8* aDeltaList = HBufC8::NewLC(0);
+	TPtr8 pDeltaList(aDeltaList->Des());
 	
-	TBool aUserFound = false;
-	
-	// Syncronization of roster & members
-	for(TInt i = iMasterFollowingList->Count() - 1; i >= 0; i--) {
-		CFollowingItem* aItem = iMasterFollowingList->GetItemByIndex(i);
+	// Syncronization of roster items & subscribers
+	for(TInt i = 0; i < iFollowingList->Count(); i++) {
+		CFollowingItem* aItem = static_cast <CFollowingItem*> (iFollowingList->GetItemByIndex(i));
 
-		if(aItem && !aItem->GetIsOwn() && aItem->GetItemType() == EItemRoster) {
+		if(aItem && aItem->GetItemType() == EItemRoster) {
 			CFollowingRosterItem* aRosterItem = static_cast <CFollowingRosterItem*> (aItem);
 
-			if(aRosterItem->GetSubscriptionType() == ESubscriptionFrom || aRosterItem->GetSubscriptionType() == ESubscriptionBoth) {
-				aUserFound = false;
+			if(aRosterItem->GetSubscription() >= EPresenceSubscriptionFrom) {
+				TBool aUserFound = false;
 					
-				for(TInt x = 0; x < aChannelMembers->Count(); x++) {
-					CFollowingRosterItem* aMemberItem = static_cast <CFollowingRosterItem*> (aChannelMembers->GetItemByIndex(x));
+				for(TInt x = 0; x < aUserNodeSubscribers->Count(); x++) {
+					CFollowingItem* aSubscriberItem = static_cast <CFollowingItem*> (aUserNodeSubscribers->GetItemByIndex(x));
 					
-					if(aRosterItem->GetJid().Compare(aMemberItem->GetJid()) == 0) {						
-						// Delete stored channel from list
-						aChannelMembers->DeleteItemByIndex(x);
+					if(aRosterItem->GetId().Compare(aSubscriberItem->GetId()) == 0) {						
+						// Delete subscriber from list
+						aUserNodeSubscribers->DeleteItemByIndex(x);
 						
 						aUserFound = true;
 						break;
@@ -1805,316 +1382,810 @@ void CBuddycloudLogic::SynchronizePersonalChannelMembersL(const TDesC8& aStanza)
 				}
 				
 				if(!aUserFound) {
-					// Add roster user to membership
-					TPtrC8 aEncJid = aTextUtilities->UnicodeToUtf8L(aRosterItem->GetJid());
+					// Add user to subscribers
+					TPtrC8 aEncJid = aTextUtilities->UnicodeToUtf8L(aRosterItem->GetId());
 					
-					CleanupStack::Pop();
-					aAffiliationDeltaList = aAffiliationDeltaList->ReAlloc(pAffiliationDeltaList.Length() + KAffiliationItem().Length() + aEncJid.Length() + KAffiliationMember().Length());
-					CleanupStack::PushL(aAffiliationDeltaList);
+					CleanupStack::Pop(aDeltaList);
+					aDeltaList = aDeltaList->ReAlloc(pDeltaList.Length() + KAffiliationItem().Length() + aEncJid.Length() + KPubsubAffiliationPublisher().Length());
+					CleanupStack::PushL(aDeltaList);
 					
-					pAffiliationDeltaList.Set(aAffiliationDeltaList->Des());
-					pAffiliationDeltaList.Append(KAffiliationItem);
-					pAffiliationDeltaList.Insert(pAffiliationDeltaList.Length() - 18, aEncJid);
-					pAffiliationDeltaList.Insert(pAffiliationDeltaList.Length() - 3, KAffiliationMember);					
+					pDeltaList.Set(aDeltaList->Des());
+					pDeltaList.Append(KAffiliationItem);
+					pDeltaList.Insert(pDeltaList.Length() - 18, aEncJid);
+					pDeltaList.Insert(pDeltaList.Length() - 3, KPubsubAffiliationPublisher);					
 				}
 			}
 		}
 	}
 	
-	// Remove others from personal channel membership
-	while(aChannelMembers->Count() > 0) {
-		CFollowingRosterItem* aRosterItem = static_cast <CFollowingRosterItem*> (aChannelMembers->GetItemByIndex(0));		
-		TPtrC8 aEncJid = aTextUtilities->UnicodeToUtf8L(aRosterItem->GetJid());
-		
-		CleanupStack::Pop();
-		aAffiliationDeltaList = aAffiliationDeltaList->ReAlloc(pAffiliationDeltaList.Length() + KAffiliationItem().Length() + aEncJid.Length() + KAffiliationNone().Length());
-		CleanupStack::PushL(aAffiliationDeltaList);
-
-		pAffiliationDeltaList.Set(aAffiliationDeltaList->Des());
-		pAffiliationDeltaList.Append(KAffiliationItem);
-		pAffiliationDeltaList.Insert(pAffiliationDeltaList.Length() - 18, aEncJid);
-		pAffiliationDeltaList.Insert(pAffiliationDeltaList.Length() - 3, KAffiliationNone);					
-
-		aChannelMembers->DeleteItemByIndex(0);
-	}
-	
-	if(pAffiliationDeltaList.Length() > 0) {
-		// Send affiliation delta
-		TPtrC8 aEncChannelJid = aTextUtilities->UnicodeToUtf8L(aOwnChannelJid);
-		
-		_LIT8(KAffiliationStanza, "<iq to='' type='set' id='affiliation1'><query xmlns='http://jabber.org/protocol/muc#admin'></query></iq>\r\n");	
-		HBufC8* aAffiliationStanza = HBufC8::NewLC(KAffiliationStanza().Length() + aEncChannelJid.Length() + pAffiliationDeltaList.Length());
+	// Send affiliation delta
+	if(pDeltaList.Length() > 0) {
+		_LIT8(KAffiliationStanza, "<iq to='' type='set' id='affiliation:%02d'><pubsub xmlns='http://jabber.org/protocol/pubsub#owner'><affiliations node=''></affiliations></pubsub></iq>\r\n");	
+		HBufC8* aAffiliationStanza = HBufC8::NewLC(KAffiliationStanza().Length() + KBuddycloudPubsubServer().Length() + pEncId.Length() + pDeltaList.Length());
 		TPtr8 pAffiliationStanza(aAffiliationStanza->Des());
-		pAffiliationStanza.Append(KAffiliationStanza);
-		pAffiliationStanza.Insert(91, pAffiliationDeltaList);
-		pAffiliationStanza.Insert(8, aEncChannelJid);
+		pAffiliationStanza.AppendFormat(KAffiliationStanza, GetNewIdStamp());
+		pAffiliationStanza.Insert(119, pDeltaList);
+		pAffiliationStanza.Insert(117, pEncId);
+		pAffiliationStanza.Insert(8, KBuddycloudPubsubServer);
 
 		iXmppEngine->SendAndForgetXmppStanza(pAffiliationStanza, true);
 		CleanupStack::PopAndDestroy(); // aAffiliationStanza
 	}
+	
+	// Remove users from subscribers
+	if(aUserNodeSubscribers->Count() > 0) {
+		_LIT8(KSubscriptionStanza, "<iq to='' type='set' id='subscription:%02d'><pubsub xmlns='http://jabber.org/protocol/pubsub#owner'><subscriptions node=''></subscriptions></pubsub></iq>\r\n");	
+		_LIT8(KSubscriptionItem, "<subscription jid='' subscription=''/>");
 
-	CleanupStack::PopAndDestroy(4); // aAffiliationDeltaList, aXmlParser, aTextUtilities, aChannelMembers	
+		CleanupStack::PopAndDestroy(aDeltaList);
+		aDeltaList = HBufC8::NewLC(0);
+		TPtr8 pDeltaList(aDeltaList->Des());
+		
+		while(aUserNodeSubscribers->Count() > 0) {
+			CFollowingItem* aItem = static_cast <CFollowingItem*> (aUserNodeSubscribers->GetItemByIndex(0));		
+			TPtrC8 aEncJid = aTextUtilities->UnicodeToUtf8L(aItem->GetId());
+			
+			CleanupStack::Pop();
+			aDeltaList = aDeltaList->ReAlloc(pDeltaList.Length() + KSubscriptionItem().Length() + aEncJid.Length() + KPubsubSubscriptionNone().Length());
+			CleanupStack::PushL(aDeltaList);
+
+			pDeltaList.Set(aDeltaList->Des());
+			pDeltaList.Append(KSubscriptionItem);
+			pDeltaList.Insert(pDeltaList.Length() - 19, aEncJid);
+			pDeltaList.Insert(pDeltaList.Length() - 3, KPubsubSubscriptionNone);					
+
+			aUserNodeSubscribers->DeleteItemByIndex(0);
+		}
+		
+		// Send subscription delta
+		HBufC8* aSubscriptionStanza = HBufC8::NewLC(KSubscriptionStanza().Length() + KBuddycloudPubsubServer().Length() + pEncId.Length() + pDeltaList.Length());
+		TPtr8 pSubscriptionStanza(aSubscriptionStanza->Des());
+		pSubscriptionStanza.AppendFormat(KSubscriptionStanza, GetNewIdStamp());
+		pSubscriptionStanza.Insert(121, pDeltaList);
+		pSubscriptionStanza.Insert(119, pEncId);
+		pSubscriptionStanza.Insert(8, KBuddycloudPubsubServer);
+
+		iXmppEngine->SendAndForgetXmppStanza(pSubscriptionStanza, true);
+		CleanupStack::PopAndDestroy(); // aSubscriptionStanza
+	}
+
+	CleanupStack::PopAndDestroy(5); // aDeltaList, aEncId, aXmlParser, aTextUtilities, aUserNodeSubscribers		
 }
 
-void CBuddycloudLogic::SendChannelPresenceL(TDesC& aJid, const TDesC8& aHistory) {
+void CBuddycloudLogic::CollectLastPubsubNodeItemsL(const TDesC& aNode, const TDesC8& aLastIdReceived) {
+	if(aNode.Length() > 0) {
+		CTextUtilities* aTextUtilities = CTextUtilities::NewLC();
+		TPtrC8 aEncNode(aTextUtilities->UnicodeToUtf8L(aNode));
+	
+		_LIT8(KNodeItemsStanza, "<iq to='' type='get' id='nodeitems:%02d'><pubsub xmlns='http://jabber.org/protocol/pubsub'><items node=''><set xmlns='http://jabber.org/protocol/rsm'><after></after></set></items></pubsub></iq>\r\n");
+		HBufC8* aNodeItemsStanza = HBufC8::NewLC(KNodeItemsStanza().Length() + KBuddycloudPubsubServer().Length() + aEncNode.Length() + aLastIdReceived.Length());
+		TPtr8 pNodeItemsStanza(aNodeItemsStanza->Des());
+		pNodeItemsStanza.AppendFormat(KNodeItemsStanza, GetNewIdStamp());
+		pNodeItemsStanza.Insert(155, aLastIdReceived);
+		pNodeItemsStanza.Insert(102, aEncNode);
+		pNodeItemsStanza.Insert(8, KBuddycloudPubsubServer);
+		
+		iXmppEngine->SendAndForgetXmppStanza(pNodeItemsStanza, false);
+		CleanupStack::PopAndDestroy(2); // aNodeItemsStanza, aTextUtilities
+	}
+}
+
+void CBuddycloudLogic::CollectUserPubsubNodeL(const TDesC& aJid, const TDesC& aNodeLeaf) {
+	if(aJid.Locate('@') != KErrNotFound && aNodeLeaf.Length() > 0) {
+		_LIT(KNodeRoot, "/user/");
+		HBufC* aNode = HBufC::NewLC(KNodeRoot().Length() + aJid.Length() + 1 + aNodeLeaf.Length());
+		TPtr pNode(aNode->Des());
+		pNode.Append(KNodeRoot);
+		pNode.Append(aJid);
+		
+		if(aNodeLeaf.Locate('/') != 0) {
+			pNode.Append(_L("/"));
+		}
+		
+		pNode.Append(aNodeLeaf);
+
+		CollectLastPubsubNodeItemsL(pNode, _L8("1"));
+		CleanupStack::PopAndDestroy(); // aNode
+	}
+}
+
+void CBuddycloudLogic::CollectChannelMetadataL(const TDesC& aNode) {
 #ifdef _DEBUG
-	WriteToLog(_L8("BL    CBuddycloudLogic::SendChannelPresenceL"));
+	WriteToLog(_L8("BL    CBuddycloudLogic::CollectChannelMetadataL"));
+#endif
+	
+	CTextUtilities* aTextUtilities = CTextUtilities::NewLC();
+	TPtrC8 aEncId = aTextUtilities->UnicodeToUtf8L(aNode);
+	
+	_LIT8(KDiscoItemsStanza, "<iq to='' type='get' id='metadata:%02d'><query xmlns='http://jabber.org/protocol/disco#info' node=''/></iq>\r\n");
+	HBufC8* aDiscoItemsStanza = HBufC8::NewLC(KDiscoItemsStanza().Length() + KBuddycloudPubsubServer().Length() + aEncId.Length());
+	TPtr8 pDiscoItemsStanza(aDiscoItemsStanza->Des());
+	pDiscoItemsStanza.AppendFormat(KDiscoItemsStanza, GetNewIdStamp());
+	pDiscoItemsStanza.Insert(97, aEncId);
+	pDiscoItemsStanza.Insert(8, KBuddycloudPubsubServer);
+	
+	iXmppEngine->SendAndAcknowledgeXmppStanza(pDiscoItemsStanza, this, true);
+	CleanupStack::PopAndDestroy(2); // aDiscoItemsStanza, aTextUtilities	
+}
+
+void CBuddycloudLogic::ProcessChannelMetadataL(const TDesC8& aStanza) {
+#ifdef _DEBUG
+	WriteToLog(_L8("BL    CBuddycloudLogic::ProcessChannelMetadataL"));
+#endif
+	
+	CTextUtilities* aTextUtilities = CTextUtilities::NewLC();
+	CXmlParser* aXmlParser = CXmlParser::NewLC(aStanza);
+
+	if(aXmlParser->MoveToElement(_L8("query"))) {
+		TPtrC aEncAttributeNode(aTextUtilities->Utf8ToUnicodeL(aXmlParser->GetStringAttribute(_L8("node"))));
+		
+		if(aEncAttributeNode.Length() > 0) {
+			for(TInt i = 0; i < iFollowingList->Count(); i++) {
+				CFollowingItem* aItem = static_cast <CFollowingItem*> (iFollowingList->GetItemByIndex(i));
+				
+				if(aItem && aItem->GetItemType() == EItemChannel) {
+					CFollowingChannelItem* aChannelItem = static_cast <CFollowingChannelItem*> (aItem);
+					
+					if(aChannelItem->GetId().Compare(aEncAttributeNode) == 0) {
+						while(aXmlParser->MoveToElement(_L8("field"))) {
+							TPtrC8 aAttributeVar(aXmlParser->GetStringAttribute(_L8("var")));
+							
+							if(aXmlParser->MoveToElement(_L8("value"))) {
+								TPtrC aEncDataValue(aTextUtilities->Utf8ToUnicodeL(aXmlParser->GetStringData()));							
+								
+								if(aAttributeVar.Compare(_L8("pubsub#title")) == 0) {
+									aChannelItem->SetTitleL(aEncDataValue);
+								}
+								else if(aAttributeVar.Compare(_L8("pubsub#description")) == 0) {
+									aChannelItem->SetDescriptionL(aEncDataValue);
+								}
+								else if(aAttributeVar.Compare(_L8("pubsub#access_model")) == 0) {
+									aChannelItem->SetAccessModel(CXmppEnumerationConverter::PubsubAccessModel(aXmlParser->GetStringData()));
+								}
+							}
+						}
+						
+						NotifyNotificationObservers(ENotificationFollowingItemsUpdated, aChannelItem->GetItemId());
+						
+						break;
+					}
+				}
+				
+			}
+		}
+	}
+	
+	CleanupStack::PopAndDestroy(2); // aXmlParser, aTextUtilities
+}
+
+void CBuddycloudLogic::SetPubsubNodeAffiliationL(const TDesC& aJid, const TDesC& aNode, TXmppPubsubAffiliation aAffiliation) {
+#ifdef _DEBUG
+	WriteToLog(_L8("BL    CBuddycloudLogic::SetPubsubNodeAffiliationL"));
 #endif
 	
 	CTextUtilities* aTextUtilities = CTextUtilities::NewLC();
 	HBufC8* aEncJid = aTextUtilities->UnicodeToUtf8L(aJid).AllocLC();
-	TPtr8 pEncJid(aEncJid->Des());
 	
-	HBufC8* aEncUsername = aTextUtilities->UnicodeToUtf8L(iSettingUsernameOnly).AllocLC();
-	TPtr8 pEncUsername(aEncUsername->Des());
+	TPtrC8 pEncJid(aEncJid->Des());	
+	TPtrC8 aEncNode(aTextUtilities->UnicodeToUtf8L(aNode));			
+	TPtrC8 aAffiliationText(CXmppEnumerationConverter::PubsubAffiliation(aAffiliation));
 	
-	HBufC8* aEncFullName = aTextUtilities->UnicodeToUtf8L(iSettingFullName).AllocLC();
-	TPtr8 pEncFullName(aEncFullName->Des());
-	
-	// Nick
-	_LIT8(KNickElement, "<nick xmlns='http://jabber.org/protocol/nick'></nick>");
-	HBufC8* aNickElement = HBufC8::NewLC(KNickElement().Length() + pEncFullName.Length());
-	TPtr8 pNickElement(aNickElement->Des());
-	
-	if(pEncFullName.Length() > 0 && iSettingShowName) {
-		pNickElement.Copy(KNickElement);
-		pNickElement.Insert(46, pEncFullName);
-	}
-	
-	_LIT8(KStanza, "<presence to='/'><c xmlns='http://jabber.org/protocol/caps' node='http://buddycloud.com/caps' ver='s60-0.5.00'/><x xmlns='http://jabber.org/protocol/muc'></x></presence>\r\n");
-	HBufC8* aStanza = HBufC8::NewLC(KStanza().Length() + pEncUsername.Length() + pEncJid.Length() + pNickElement.Length() + aHistory.Length());
-	TPtr8 pStanza(aStanza->Des());
-	pStanza.Copy(KStanza);
-	pStanza.Insert(158, pNickElement);
-	pStanza.Insert(154, aHistory);
-	pStanza.Insert(15, pEncUsername);
-	pStanza.Insert(14, pEncJid);
+	_LIT8(KAffiliationStanza, "<iq to='' type='set' id='affiliation:%02d'><pubsub xmlns='http://jabber.org/protocol/pubsub#owner'><affiliations node=''><affiliation jid='' affiliation=''/></affiliations></pubsub></iq>\r\n");	
+	HBufC8* aAffiliationStanza = HBufC8::NewLC(KAffiliationStanza().Length() + KBuddycloudPubsubServer().Length() + aEncNode.Length() + pEncJid.Length() + aAffiliationText.Length());
+	TPtr8 pAffiliationStanza(aAffiliationStanza->Des());
+	pAffiliationStanza.AppendFormat(KAffiliationStanza, GetNewIdStamp());
+	pAffiliationStanza.Insert(152, aAffiliationText);
+	pAffiliationStanza.Insert(137, pEncJid);
+	pAffiliationStanza.Insert(117, aEncNode);
+	pAffiliationStanza.Insert(8, KBuddycloudPubsubServer);
 
-	iXmppEngine->SendAndForgetXmppStanza(pStanza, false, EXmppPriorityHigh);
-	CleanupStack::PopAndDestroy(6); // aStanza, aNickElement, aEncFullName, aEncUsername, aEncJid, aTextUtilities
+	iXmppEngine->SendAndForgetXmppStanza(pAffiliationStanza, true);
+	CleanupStack::PopAndDestroy(3); // aAffiliationStanza, aEncJid, aTextUtilities
 }
 
-void CBuddycloudLogic::SendChannelUnavailableL(TDesC& aChannelJid) {
+void CBuddycloudLogic::SetPubsubNodeSubscriptionL(const TDesC& aJid, const TDesC& aNode, TXmppPubsubSubscription aSubscription) {
 #ifdef _DEBUG
-	WriteToLog(_L8("BL    CBuddycloudLogic::SendChannelUnavailableL"));
+	WriteToLog(_L8("BL    CBuddycloudLogic::SetPubsubNodeSubscriptionL"));
+#endif
+	
+	CTextUtilities* aTextUtilities = CTextUtilities::NewLC();	
+	HBufC8* aEncJid = aTextUtilities->UnicodeToUtf8L(aJid).AllocLC();
+	
+	TPtrC8 pEncJid(aEncJid->Des());	
+	TPtrC8 aEncNode(aTextUtilities->UnicodeToUtf8L(aNode));			
+	TPtrC8 aSubscriptionText(CXmppEnumerationConverter::PubsubSubscription(aSubscription));
+	
+	_LIT8(KSubscriptionStanza, "<iq to='' type='set' id='subscription:%02d'><pubsub xmlns='http://jabber.org/protocol/pubsub#owner'><subscriptions node=''><subscription jid='' subscription=''/></subscriptions></pubsub></iq>\r\n");	
+	HBufC8* aSubscriptionStanza = HBufC8::NewLC(KSubscriptionStanza().Length() + KBuddycloudPubsubServer().Length() + aEncNode.Length() + pEncJid.Length() + aSubscriptionText.Length());
+	TPtr8 pSubscriptionStanza(aSubscriptionStanza->Des());
+	pSubscriptionStanza.AppendFormat(KSubscriptionStanza, GetNewIdStamp());
+	pSubscriptionStanza.Insert(156, aSubscriptionText);
+	pSubscriptionStanza.Insert(140, pEncJid);
+	pSubscriptionStanza.Insert(119, aEncNode);
+	pSubscriptionStanza.Insert(8, KBuddycloudPubsubServer);
+
+	iXmppEngine->SendAndForgetXmppStanza(pSubscriptionStanza, true);
+	CleanupStack::PopAndDestroy(3); // aSubscriptionStanza, aEncJid, aTextUtilities
+}
+
+void CBuddycloudLogic::RetractPubsubNodeItemL(const TDesC& aNode, const TDesC8& aNodeItemId) {
+#ifdef _DEBUG
+	WriteToLog(_L8("BL    CBuddycloudLogic::RetractPubsubNodeItemL"));
+#endif
+	
+	CTextUtilities* aTextUtilities = CTextUtilities::NewLC();	
+	TPtrC8 aEncNode(aTextUtilities->UnicodeToUtf8L(aNode));			
+	
+	_LIT8(KRetractStanza, "<iq to='' type='set' id='retractitem:%02d'><pubsub xmlns='http://jabber.org/protocol/pubsub'><retract node='' notify='1'><item id=''/></retract></pubsub></iq>\r\n");	
+	HBufC8* aRetractStanza = HBufC8::NewLC(KRetractStanza().Length() + KBuddycloudPubsubServer().Length() + aEncNode.Length() + aNodeItemId.Length());
+	TPtr8 pRetractStanza(aRetractStanza->Des());
+	pRetractStanza.AppendFormat(KRetractStanza, GetNewIdStamp());
+	pRetractStanza.Insert(129, aNodeItemId);
+	pRetractStanza.Insert(106, aEncNode);
+	pRetractStanza.Insert(8, KBuddycloudPubsubServer);
+
+	iXmppEngine->SendAndForgetXmppStanza(pRetractStanza, true);
+	CleanupStack::PopAndDestroy(2); // aRetractStanza, aTextUtilities
+}
+
+void CBuddycloudLogic::HandlePubsubEventL(const TDesC8& aStanza, TBool aNewEvent) {
+#ifdef _DEBUG
+	WriteToLog(_L8("BL    CBuddycloudLogic::HandlePubsubEventL"));
+#endif
+	
+	TBool aBubbleEvent = false;
+	TInt aNotifyId = KErrNotFound;
+	
+	TXmppPubsubEventType aPubsubEventType;
+	
+	// Initialize xml parser
+	CXmlParser* aXmlParser = CXmlParser::NewLC(aStanza);
+	CTextUtilities* aTextUtilities = CTextUtilities::NewLC();
+	
+	// Get pubsub event type
+	if(aXmlParser->MoveToElement(_L8("items"))) {
+		// Items published or retracted
+		aPubsubEventType = EPubsubEventItems;
+	}
+	else if(aXmlParser->MoveToElement(_L8("subscription"))) {
+		// Subscriptions changed
+		aPubsubEventType = EPubsubEventSubscription;
+	}
+	else if(aXmlParser->MoveToElement(_L8("affiliation"))) {
+		// Affiliations changed
+		aPubsubEventType = EPubsubEventAffiliation;
+	}
+	else if(aXmlParser->MoveToElement(_L8("purge"))) {
+		// Purge items
+		aPubsubEventType = EPubsubEventPurge;
+	}
+	
+	if(aPubsubEventType > EPubsubEventNone) {
+		// Handle event type
+		TPtrC8 aAttributeNode(aXmlParser->GetStringAttribute(_L8("node")));
+		CXmppPubsubNodeParser* aNodeParser = CXmppPubsubNodeParser::NewLC(aAttributeNode);
+			 	
+		if(aNodeParser->Count() > 1) {
+			HBufC* aUserJid = aTextUtilities->Utf8ToUnicodeL(aNodeParser->GetNode(1)).AllocLC();
+			TPtrC pUserJid(aUserJid->Des());
+			
+			TPtrC aNodeId(aTextUtilities->Utf8ToUnicodeL(aAttributeNode));		
+			
+			for(TInt i = 0; i < iFollowingList->Count(); i++) {
+				CFollowingItem* aItem = static_cast <CFollowingItem*> (iFollowingList->GetItemByIndex(i));
+				
+				if(aItem && aItem->GetItemType() >= EItemRoster) {
+					CFollowingRosterItem* aRosterItem = static_cast <CFollowingRosterItem*> (aItem);
+					
+					if((aItem->GetItemType() == EItemRoster && aRosterItem->GetId().Compare(pUserJid) == 0) || 
+							aItem->GetId().CompareF(aNodeId) == 0) {
+						
+						aNotifyId = aItem->GetItemId();
+						
+						if(aPubsubEventType == EPubsubEventItems) {
+							// Handle item or retract event
+							while(aXmlParser->MoveToElement(_L8("item")) || aXmlParser->MoveToElement(_L8("retract"))) {
+								// Handle item or retract event
+								TPtrC8 aElement(aXmlParser->GetElementName());
+								TPtrC8 aItemId(aXmlParser->GetStringAttribute(_L8("id")));
+								
+								if(aItem->GetItemType() == EItemRoster && aNodeParser->GetNode(2).Compare(_L8("mood")) == 0) {						
+									if(aElement.Compare(_L8("item")) == 0 && aXmlParser->MoveToElement(_L8("mood"))) {
+										// XEP-0107: User mood
+										if(aXmlParser->MoveToElement(_L8("text"))) {
+											TPtrC aMood(aTextUtilities->Utf8ToUnicodeL(aXmlParser->GetStringData()));
+											
+											if(!aRosterItem->OwnItem() && aRosterItem->GetDescription().CompareF(aMood) != 0) {
+												aBubbleEvent = true;
+											}
+											
+											aRosterItem->SetDescriptionL(aMood);
+										}
+										
+										// Set last node id received
+										if(aNewEvent) {
+											SetLastNodeIdReceived(aItemId);
+										}
+									}
+									else if(aElement.Compare(_L8("retract")) == 0) {
+										// Deleted item
+										aRosterItem->SetDescriptionL(_L(""));
+									}
+								}
+								else if(aItem->GetItemType() == EItemRoster && aNodeParser->GetNode(2).Compare(_L8("geo")) == 0) {
+									TGeolocItemType aGeolocItemType = EGeolocItemBroad;
+									
+									if(aNodeParser->GetNode(3).Compare(_L8("current")) == 0) {
+										aGeolocItemType = EGeolocItemCurrent;
+									}
+									else if(aNodeParser->GetNode(3).Compare(_L8("previous")) == 0) {
+										aGeolocItemType = EGeolocItemPrevious;
+									}
+									else if(aNodeParser->GetNode(3).Compare(_L8("future")) == 0) {
+										aGeolocItemType = EGeolocItemFuture;
+									}
+									
+									if(aGeolocItemType < EGeolocItemBroad) {
+										if(aElement.Compare(_L8("item")) == 0 && aXmlParser->MoveToElement(_L8("geoloc"))) {
+											// XEP-0080: User Geoloc
+											CXmppGeolocParser* aGeolocParser = CXmppGeolocParser::NewLC();
+											CGeolocData* aGeoloc = aGeolocParser->XmlToGeolocLC(aXmlParser->GetStringData());
+											TPtr aBroadLocation(iBroadLocationText->Des());
+											
+											if(aRosterItem->OwnItem()) {
+												if(aGeolocItemType == EGeolocItemCurrent) {										
+													// Handle broad location
+													CGeolocData* aOldGeoloc = aRosterItem->GetGeolocItem(EGeolocItemCurrent);
+													
+													if(aBroadLocation.Length() == 0 || 
+															(aOldGeoloc->GetString(EGeolocLocality).Compare(aGeoloc->GetString(EGeolocLocality)) != 0 ||
+															 aOldGeoloc->GetString(EGeolocCountry).Compare(aGeoloc->GetString(EGeolocCountry)) != 0)) {
+														
+														// Broad location changed
+														aBroadLocation.Zero();
+														
+														iBroadLocationText = iBroadLocationText->ReAlloc(aGeoloc->GetString(EGeolocLocality).Length() + 2 + aGeoloc->GetString(EGeolocCountry).Length());
+														aBroadLocation.Set(iBroadLocationText->Des());
+														
+														CTextUtilities* aTextUtilities = CTextUtilities::NewLC();
+														aTextUtilities->AppendToString(aBroadLocation, aGeoloc->GetString(EGeolocLocality), _L(""));
+														aTextUtilities->AppendToString(aBroadLocation, aGeoloc->GetString(EGeolocCountry), _L(", "));
+														CleanupStack::PopAndDestroy(); // aTextUtilities
+														
+														// Send presence
+														SendPresenceL();
+													}
+												}
+												else if(aGeolocItemType == EGeolocItemFuture) {
+													if(aRosterItem->GetGeolocItem(EGeolocItemFuture)->GetString(EGeolocText).FindF(aGeoloc->GetString(EGeolocText)) != KErrNotFound) {
+														iXmppEngine->SendAndForgetXmppStanza(_L8("<iq to='butler.buddycloud.com' type='set' id='next2'><query xmlns='http://buddycloud.com/protocol/place#next'><place><name/></place></query></iq>\r\n"), true);
+													}
+												}
+											}
+											else if(aGeolocItemType > EGeolocItemPrevious && 
+													aRosterItem->GetGeolocItem(aGeolocItemType)->GetString(EGeolocText).Compare(aGeoloc->GetString(EGeolocText)) != 0) {
+													
+												// Trigger bubbling
+												aBubbleEvent = true;
+											}
+											
+											aRosterItem->SetGeolocItemL(aGeolocItemType, aGeoloc);
+											CleanupStack::Pop(); // aGeoloc
+											
+											CleanupStack::PopAndDestroy(); // aGeolocParser
+											
+											// Set last node id received
+											if(aNewEvent) {
+												SetLastNodeIdReceived(aItemId);
+											}
+										}
+										else if(aElement.Compare(_L8("retract")) == 0) {
+											// Deleted item
+											aRosterItem->SetGeolocItemL(aGeolocItemType, NULL);
+										}
+									}
+								}
+								else if(aNodeParser->GetNode(2).Compare(_L8("channel")) == 0 || aNodeParser->GetNode(0).Compare(_L8("channel")) == 0) {
+									CFollowingChannelItem* aChannelItem = static_cast <CFollowingChannelItem*> (aItem);
+									CDiscussion* aDiscussion = iDiscussionManager->GetDiscussionL(aChannelItem->GetId());
+									
+									if(aElement.Compare(_L8("item")) == 0 && aXmlParser->MoveToElement(_L8("entry"))) {
+										// Channel post
+										TBool aNotify = aDiscussion->Notify();
+										TInt aAudioId = ESettingItemChannelPostTone;
+										TBuf8<32> aReferenceId;
+										
+										CXmppAtomEntryParser* aAtomEntryParser = CXmppAtomEntryParser::NewLC();
+										
+										CAtomEntryData* aAtomEntry = aAtomEntryParser->XmlToAtomEntryLC(aXmlParser->GetStringData(), aReferenceId);									
+										aAtomEntry->SetIdL(aItemId);
+										
+										if(aAtomEntry->GetAuthorJid().Compare(iOwnItem->GetId()) == 0) {
+											// Own post
+											aAtomEntry->SetRead(true);
+											aNotify = false;
+										}
+										else if(aReferenceId.Length() > 0) {
+											CThreadedEntry* aReferenceEntry = aDiscussion->GetThreadedEntryById(aReferenceId);
+											
+											if(aReferenceEntry && aReferenceEntry->GetEntry()->GetAuthorJid().Compare(iOwnItem->GetId()) == 0) {
+												// Comment to own post
+												aAtomEntry->SetDirectReply(true);
+											}
+										}
+										
+										// Notification
+										if(aAtomEntry->DirectReply() && iSettingNotifyReplyTo) {
+											aAudioId = ESettingItemDirectReplyTone;
+											aNotify = true;
+										}
+										else if(aNotify && 
+												((aChannelItem->GetPubsubAffiliation() >= EPubsubAffiliationModerator && 
+														(iSettingNotifyChannelsModerating == 1 || 
+														(iSettingNotifyChannelsModerating == 0 && aDiscussion->GetUnreadEntries() == 0))) || 
+												((aChannelItem->GetPubsubAffiliation() < EPubsubAffiliationModerator && 
+														(iSettingNotifyChannelsFollowing == 1 || 
+														(iSettingNotifyChannelsFollowing == 0 && aDiscussion->GetUnreadEntries() == 0)))))) {
+											
+											// Channel notification on
+											aNotify = true;									
+										}
+										else {
+											aNotify = false;									
+										}
+										
+										if(aDiscussion->AddEntryOrCommentLD(aAtomEntry, aReferenceId)) {
+											if(!aRosterItem->OwnItem()) {
+												aBubbleEvent = true;
+											}
+											
+											if(aNotify && !iTelephonyEngine->IsTelephonyBusy()) {
+												NotifyNotificationObservers(ENotificationMessageNotifiedEvent, aNotifyId);
+												
+												iNotificationEngine->NotifyL(aAudioId);
+											}
+											else {
+												NotifyNotificationObservers(ENotificationMessageSilentEvent, aNotifyId);
+											}
+										}
+										
+										CleanupStack::PopAndDestroy(); // aAtomEntryParser
+										
+										// Set last node id received
+										if(aNewEvent) {
+											SetLastNodeIdReceived(aItemId);
+										}
+									}
+									else if(aElement.Compare(_L8("retract")) == 0) {
+										// Channel post deleted
+										if(aDiscussion->DeleteEntryById(aItemId)) {
+											if(!aRosterItem->OwnItem()) {
+												aBubbleEvent = true;
+											}
+											
+											NotifyNotificationObservers(ENotificationMessageSilentEvent, aNotifyId);
+										}	
+									}
+								}
+							}
+						}
+						else if(aNodeParser->GetNode(2).Compare(_L8("channel")) == 0 || aNodeParser->GetNode(0).Compare(_L8("channel")) == 0) {
+							// Handle other event types for channels
+							CFollowingChannelItem* aChannelItem = static_cast <CFollowingChannelItem*> (aItem);
+							CDiscussion* aDiscussion = iDiscussionManager->GetDiscussionL(aChannelItem->GetId());
+							TInt aResourceNotificationId = KErrNotFound;
+							
+							// User node changes
+							if(aChannelItem->GetItemType() == EItemRoster && aChannelItem->GetId().Compare(aNodeId) != 0) {
+								// Set new node id
+								aChannelItem->SetIdL(aNodeId);
+								aChannelItem->SetUnreadData(aDiscussion);
+								
+								// Set discussion id
+								aDiscussion->SetDiscussionIdL(aNodeId);								
+								aDiscussion->SetDiscussionReadObserver(this, aChannelItem->GetItemId());
+																
+								// TODO: Collect metadata
+								// CollectChannelMetadataL(aChannelItem->GetId());
+								
+								// Collect node items
+								CollectUserPubsubNodeL(aRosterItem->GetId(), _L("/channel"));
+								
+								iSettingsSaveNeeded = true;
+							}
+							
+							if(aPubsubEventType == EPubsubEventAffiliation) {
+								// Handle affiliation event
+								TPtrC aAttributeJid(aTextUtilities->Utf8ToUnicodeL(aXmlParser->GetStringAttribute(_L8("jid"))));
+								
+								if(iOwnItem->GetId().Compare(aAttributeJid) == 0) {
+									// Own affiliation to channel change
+									TXmppPubsubAffiliation aAffiliation = CXmppEnumerationConverter::PubsubAffiliation(aXmlParser->GetStringAttribute(_L8("affiliation")));
+									
+									if(aAffiliation == EPubsubAffiliationOutcast) {
+										aResourceNotificationId = R_LOCALIZED_STRING_NOTE_AFFILIATIONOUTCAST;
+									}
+									else if(aAffiliation == EPubsubAffiliationMember) {
+										aResourceNotificationId = R_LOCALIZED_STRING_NOTE_AFFILIATIONMEMBER;
+									}
+									else if(aAffiliation == EPubsubAffiliationPublisher) {
+										aResourceNotificationId = R_LOCALIZED_STRING_NOTE_AFFILIATIONPUBLISHER;
+									}
+									else if(aAffiliation == EPubsubAffiliationModerator) {
+										aResourceNotificationId = R_LOCALIZED_STRING_NOTE_AFFILIATIONMODERATOR;
+									}
+									
+									aChannelItem->SetPubsubAffiliation(aAffiliation);
+								}
+							}
+							else if(aPubsubEventType == EPubsubEventSubscription) {
+								// Handle subscription event
+								TPtrC aSubscriptionJid(aTextUtilities->Utf8ToUnicodeL(aXmlParser->GetStringAttribute(_L8("jid"))));
+								
+								if(iOwnItem->GetId().Compare(aSubscriptionJid) == 0) {
+									// Own subscription to channel change
+									TXmppPubsubSubscription aSubscription = CXmppEnumerationConverter::PubsubSubscription(aXmlParser->GetStringAttribute(_L8("subscription")));
+									
+									if(aSubscription == EPubsubSubscriptionPending) {	
+										// Pending access to channel
+										aResourceNotificationId = R_LOCALIZED_STRING_NOTE_SUBSCRIPTIONPENDING;
+									}
+									else if(aSubscription == EPubsubSubscriptionSubscribed) {	
+										// Now subscribed to channel
+										if(aChannelItem->GetPubsubSubscription() < EPubsubSubscriptionSubscribed) {
+											// Collect node items
+											CollectLastPubsubNodeItemsL(aChannelItem->GetId(), _L8("1"));
+										}
+										
+										if(aChannelItem->GetPubsubSubscription() == EPubsubSubscriptionPending) {
+											// Accepted to channel
+											aResourceNotificationId = R_LOCALIZED_STRING_NOTE_SUBSCRIPTIONACCEPTED;
+										}
+									}
+									else if((aChannelItem->GetPubsubSubscription() == EPubsubSubscriptionPending || 
+												aChannelItem->GetPubsubSubscription() == EPubsubSubscriptionSubscribed) && 
+											aSubscription == EPubsubSubscriptionNone) {
+										
+										// Rejected from channel
+										aResourceNotificationId = R_LOCALIZED_STRING_NOTE_SUBSCRIPTIONREJECTED;
+									}
+									
+									aChannelItem->SetPubsubSubscription(aSubscription);
+								}
+							}
+							else if(aPubsubEventType == EPubsubEventPurge) {
+								// Handle purge event
+								aDiscussion->DeleteAllEntries();
+							}	
+							
+							if(aResourceNotificationId != KErrNotFound) {
+								// Add notification to channel
+								HBufC* aResourceText = CEikonEnv::Static()->AllocReadResourceLC(aResourceNotificationId);
+								
+								CAtomEntryData* aAtomEntry = CAtomEntryData::NewLC();
+								aAtomEntry->SetPublishTime(TimeStamp());
+								aAtomEntry->SetContentL(*aResourceText, EEntryContentAction);			
+								aAtomEntry->SetIconId(KIconChannel);	
+								aAtomEntry->SetAuthorAffiliation(EPubsubAffiliationOwner);
+								aAtomEntry->SetDirectReply(true);
+								aAtomEntry->SetPrivate(true);
+								
+								// Add to discussion
+								if(aDiscussion->AddEntryOrCommentLD(aAtomEntry)) {
+									if(!aRosterItem->OwnItem()) {
+										aBubbleEvent = true;
+									}
+									
+									NotifyNotificationObservers(ENotificationMessageNotifiedEvent, aNotifyId);
+									
+									iNotificationEngine->NotifyL(ESettingItemDirectReplyTone);
+								}
+								
+								CleanupStack::PopAndDestroy(); // aResourceText
+							}
+						}
+						
+						if(aBubbleEvent && aNewEvent) {
+							aItem->SetLastUpdated(TimeStamp());
+							
+							iFollowingList->RemoveItemById(aItem->GetItemId());
+							iFollowingList->InsertItem(GetBubbleToPosition(aItem), aItem);
+						}
+						
+						break;
+					}
+				}
+			}
+			
+			CleanupStack::PopAndDestroy(); // aUserJid
+		}
+		 	
+		CleanupStack::PopAndDestroy(); // aNodeParser	
+	}
+	
+	CleanupStack::PopAndDestroy(2); // aTextUtilities, aItemsXmlParser
+	
+	if(aNotifyId != KErrNotFound) {
+		NotifyNotificationObservers(ENotificationFollowingItemsUpdated, aNotifyId);
+	}
+}
+
+void CBuddycloudLogic::FollowChannelL(const TDesC& aNode) {
+#ifdef _DEBUG
+	WriteToLog(_L8("BL    CBuddycloudLogic::FollowChannelL"));
 #endif
 	
 	CTextUtilities* aTextUtilities = CTextUtilities::NewLC();
-
-	HBufC8* aEncJid = aTextUtilities->UnicodeToUtf8L(aChannelJid).AllocLC();
-	TPtrC8 pEncJid(aEncJid->Des());
 	
-	HBufC8* aEncUsername = aTextUtilities->UnicodeToUtf8L(iSettingUsernameOnly).AllocLC();
-	TPtrC8 pEncUsername(aEncUsername->Des());
-
-	// Send leave group stanza
-	_LIT8(KUnavailableStanza, "<presence to='/' type='unavailable'/>\r\n");
-	HBufC8* aUnavailableStanza = HBufC8::NewLC(KUnavailableStanza().Length() + pEncUsername.Length() + pEncJid.Length());
-	TPtr8 pUnavailableStanza = aUnavailableStanza->Des();
-	pUnavailableStanza.Append(KUnavailableStanza);
-	pUnavailableStanza.Insert(15, pEncUsername);
-	pUnavailableStanza.Insert(14, pEncJid);
-
-	iXmppEngine->SendAndForgetXmppStanza(pUnavailableStanza, false);
-	CleanupStack::PopAndDestroy(4); // aUnavailableStanza, aEncUsername, aEncJid, aTextUtilities
+	CFollowingChannelItem* aChannelItem = CFollowingChannelItem::NewLC();
+	aChannelItem->SetItemId(iNextItemId++);
+	aChannelItem->SetIdL(aNode);
+	
+	_LIT(KRootNode, "/channel/");
+	if(aChannelItem->GetId().Find(KRootNode) != 0) {
+		HBufC* aNodeId = HBufC::NewLC(aNode.Length() + KRootNode().Length());
+		TPtr pNodeId(aNodeId->Des());
+		pNodeId.Append(KRootNode);
+		pNodeId.Append(aNode);
+		
+		aChannelItem->SetIdL(pNodeId);
+		CleanupStack::PopAndDestroy(); // aNodeId		
+	}
+	
+	TPtrC aNodeId(aChannelItem->GetId());
+	TInt aLocate = aNodeId.LocateReverse('/');
+	aChannelItem->SetTitleL(aNodeId.Mid(aLocate + 1));
+	
+	iFollowingList->InsertItem(GetBubbleToPosition(aChannelItem), aChannelItem);
+	CleanupStack::Pop(); // aChannelItem
+	
+	TPtrC8 aEncId = aTextUtilities->UnicodeToUtf8L(aChannelItem->GetId());
+	
+	_LIT8(KDiscoItemsStanza, "<iq to='' type='get' id='followchannel:%d'><query xmlns='http://jabber.org/protocol/disco#info' node=''/></iq>\r\n");
+	HBufC8* aDiscoItemsStanza = HBufC8::NewLC(KDiscoItemsStanza().Length() + KBuddycloudPubsubServer().Length() + aEncId.Length() + 32);
+	TPtr8 pDiscoItemsStanza(aDiscoItemsStanza->Des());
+	pDiscoItemsStanza.AppendFormat(KDiscoItemsStanza, aChannelItem->GetItemId());
+	pDiscoItemsStanza.Insert(pDiscoItemsStanza.Length() - 10, aEncId);
+	pDiscoItemsStanza.Insert(8, KBuddycloudPubsubServer);
+	
+	iXmppEngine->SendAndAcknowledgeXmppStanza(pDiscoItemsStanza, this, true);
+	CleanupStack::PopAndDestroy(2); // aDiscoItemsStanza, aTextUtilities
 }
 
-void CBuddycloudLogic::SendChannelConfigurationL(TInt aFollowerId) {
+void CBuddycloudLogic::UnfollowChannelL(TInt aItemId) {
 #ifdef _DEBUG
-	WriteToLog(_L8("BL    CBuddycloudLogic::SendChannelConfigurationL"));
+	WriteToLog(_L8("BL    CBuddycloudLogic::UnfollowChannelL"));
 #endif
 	
-	CFollowingItem* aItem = iMasterFollowingList->GetItemById(aFollowerId);
-	
-	if(aItem->GetItemType() == EItemChannel) {		
+	CFollowingItem* aItem = static_cast <CFollowingItem*> (iFollowingList->GetItemById(aItemId));
+
+	if(aItem && aItem->GetItemType() >= EItemRoster) {
 		CFollowingChannelItem* aChannelItem = static_cast <CFollowingChannelItem*> (aItem);
 		
-		CTextUtilities* aTextUtilities = CTextUtilities::NewLC();
-		HBufC8* aEncChannelJid = aTextUtilities->UnicodeToUtf8L(aChannelItem->GetJid()).AllocLC();
-		TPtrC8 pEncChannelJid(aEncChannelJid->Des());
+		if(aChannelItem->GetId().Length() > 0) {
+			CTextUtilities* aTextUtilities = CTextUtilities::NewLC();
+			
+			HBufC8* aEncNode = aTextUtilities->UnicodeToUtf8L(aChannelItem->GetId()).AllocLC();
+			TPtrC8 aEncId(aTextUtilities->UnicodeToUtf8L(iOwnItem->GetId()));
+			
+			// Send unsubscribe stanza
+			_LIT8(KUnsubscribeStanza, "<iq to='' type='set' id='unsubscribe:%02d'><pubsub xmlns='http://jabber.org/protocol/pubsub'><unsubscribe node='' jid=''/></pubsub></iq>\r\n");
+			HBufC8* aUnsubscribeStanza = HBufC8::NewLC(KUnsubscribeStanza().Length() + KBuddycloudPubsubServer().Length() + aEncNode->Des().Length() + aEncId.Length());
+			TPtr8 pUnsubscribeStanza(aUnsubscribeStanza->Des());
+			pUnsubscribeStanza.AppendFormat(KUnsubscribeStanza, GetNewIdStamp());
+			pUnsubscribeStanza.Insert(117, aEncId);
+			pUnsubscribeStanza.Insert(110, *aEncNode);
+			pUnsubscribeStanza.Insert(8, KBuddycloudPubsubServer);
+			
+			iXmppEngine->SendAndForgetXmppStanza(pUnsubscribeStanza, true);
+			CleanupStack::PopAndDestroy(3); // aSubscribeStanza, aEncNode, aTextUtilities
+			
+			// Delete discussion
+			iDiscussionManager->DeleteDiscussionL(aChannelItem->GetId());
+		}
 		
-		HBufC8* aEncChannelTitle = aTextUtilities->UnicodeToUtf8L(aChannelItem->GetTitle()).AllocLC();
-		TPtrC8 pEncChannelTitle(aEncChannelTitle->Des());
-		
-		HBufC8* aEncChannelDescription = aTextUtilities->UnicodeToUtf8L(aChannelItem->GetDescription()).AllocLC();
-		TPtrC8 pEncChannelDescription(aEncChannelDescription->Des());
-		
-		// Send topic channel config								
-		_LIT8(KConfigStanza, "<iq to='' type='set' id='channelconfig1'><query xmlns='http://jabber.org/protocol/muc#owner'><x xmlns='jabber:x:data' type='submit'><field var='FORM_TYPE'><value>http://jabber.org/protocol/muc#roomconfig</value></field><field var='muc#roomconfig_roomname'><value></value></field><field var='muc#roomconfig_roomdesc'><value></value></field><field var='muc#roomconfig_maxusers'><value>0</value></field><field var='muc#roomconfig_publicroom'><value>1</value></field><field var='muc#roomconfig_persistentroom'><value>1</value></field><field var='muc#roomconfig_moderatedroom'><value>1</value></field></x></query></iq>\r\n");
-		HBufC8* aConfigStanza = HBufC8::NewLC(KConfigStanza().Length() + pEncChannelJid.Length() + pEncChannelTitle.Length() + pEncChannelDescription.Length());
-		TPtr8 pConfigStanza(aConfigStanza->Des());
-		pConfigStanza.Append(KConfigStanza);
-		pConfigStanza.Insert(323, pEncChannelDescription);
-		pConfigStanza.Insert(263, pEncChannelTitle);
-		pConfigStanza.Insert(8, pEncChannelJid);
-		
-		iXmppEngine->SendAndForgetXmppStanza(pConfigStanza, true);
-		CleanupStack::PopAndDestroy(5); // aConfigStanza, aEncChannelDescription, aEncChannelTitle, aEncChannelJid, aTextUtilities						
+		if(aItem->GetItemType() == EItemChannel) {
+			iFollowingList->DeleteItemById(aItemId);
+			
+			NotifyNotificationObservers(ENotificationFollowingItemDeleted, aItemId);		
+			
+			iSettingsSaveNeeded = true;
+		}
 	}
 }
 
-void CBuddycloudLogic::GetChannelInfoL(TDesC& aChannelJid) {
+void CBuddycloudLogic::PublishChannelMetadataL(TInt aItemId) {
 #ifdef _DEBUG
-	WriteToLog(_L8("BL    CBuddycloudLogic::GetChannelInfoL"));
+	WriteToLog(_L8("BL    CBuddycloudLogic::PublishChannelMetadataL"));
 #endif
 	
-	// Get channel info
-	CTextUtilities* aTextUtilities = CTextUtilities::NewLC();
-	TPtrC8 pEncJid(aTextUtilities->UnicodeToUtf8L(aChannelJid));
+	CFollowingItem* aItem = static_cast <CFollowingItem*> (iFollowingList->GetItemById(aItemId));
 	
-	_LIT8(KInfoStanza, "<iq to='' type='get' id='channelinfo1'><query xmlns='http://jabber.org/protocol/disco#info'/></iq>");
-	HBufC8* aInfoStanza = HBufC8::NewLC(KInfoStanza().Length() + pEncJid.Length());
-	TPtr8 pInfoStanza(aInfoStanza->Des());
-	pInfoStanza.Append(KInfoStanza);
-	pInfoStanza.Insert(8, pEncJid);
-	
-	iXmppEngine->SendAndAcknowledgeXmppStanza(pInfoStanza, this, true);
-	CleanupStack::PopAndDestroy(2); // aInfoStanza, aTextUtilities
-
-}
-
-void CBuddycloudLogic::SendChannelInviteL(TDesC& aJid, TInt aChannelId) {
-#ifdef _DEBUG
-	WriteToLog(_L8("BL    CBuddycloudLogic::SendChannelInviteL"));
-#endif
-	
-	CFollowingItem* aItem = iMasterFollowingList->GetItemById(aChannelId);
-	
-	if(aItem->GetItemType() == EItemChannel) {		
+	if(aItem && aItem->GetItemType() >= EItemRoster) {
 		CFollowingChannelItem* aChannelItem = static_cast <CFollowingChannelItem*> (aItem);
 		
+		if(aChannelItem->GetPubsubAffiliation() == EPubsubAffiliationOwner) {		
+			CTextUtilities* aTextUtilities = CTextUtilities::NewLC();
+			
+			HBufC8* aEncTitle = aTextUtilities->UnicodeToUtf8L(aChannelItem->GetTitle()).AllocLC();
+			HBufC8* aEncDescription = aTextUtilities->UnicodeToUtf8L(aChannelItem->GetDescription()).AllocLC();
+			TPtrC8 aEncId(aTextUtilities->UnicodeToUtf8L(aChannelItem->GetId()));
+			TPtrC8 aAccess = CXmppEnumerationConverter::PubsubAccessModel(aChannelItem->GetAccessModel());
+			
+			// Send stanza
+			_LIT8(KEditStanza, "<iq to='' type='set' id='editchannel:%02d'><pubsub xmlns='http://jabber.org/protocol/pubsub#owner'><configure node=''><x xmlns='jabber:x:data' type='submit'><field var='FORM_TYPE' type='hidden'><value>http://jabber.org/protocol/pubsub#node_config</value></field><field var='pubsub#access_model'><value></value></field><field var='pubsub#title'><value></value></field><field var='pubsub#description'><value></value></field></x></configure></pubsub></iq>\r\n");
+			HBufC8* aEditStanza = HBufC8::NewLC(KEditStanza().Length() + KBuddycloudPubsubServer().Length() + aEncId.Length() + aAccess.Length() + aEncTitle->Des().Length() + aEncDescription->Des().Length());
+			TPtr8 pEditStanza(aEditStanza->Des());
+			pEditStanza.AppendFormat(KEditStanza, GetNewIdStamp());
+			pEditStanza.Insert(403, *aEncDescription);
+			pEditStanza.Insert(349, *aEncTitle);
+			pEditStanza.Insert(300, aAccess);
+			pEditStanza.Insert(116, aEncId);
+			pEditStanza.Insert(8, KBuddycloudPubsubServer);
+		
+			iXmppEngine->SendAndForgetXmppStanza(pEditStanza, true);
+			CleanupStack::PopAndDestroy(4); // aEditStanza, aEncDescription, aEncTitle, aTextUtilities
+		}
+	}
+}
+
+TInt CBuddycloudLogic::CreateChannelL(CFollowingChannelItem* aChannelItem) {
+#ifdef _DEBUG
+	WriteToLog(_L8("BL    CBuddycloudLogic::CreateChannelL"));
+#endif
+	
+	_LIT(KRootNode, "/channel/");	
+
+	if(aChannelItem->GetItemId() <= 0 && aChannelItem->GetId().Length() > 0) {
+		if(iFollowingList->GetItemById(aChannelItem->GetItemId()) == NULL) {
+			iFollowingList->InsertItem(GetBubbleToPosition(aChannelItem), aChannelItem);
+		}
+		
+		aChannelItem->SetItemId(iNextItemId++);
+		aChannelItem->SetPubsubAffiliation(EPubsubAffiliationOwner);
+		aChannelItem->SetPubsubSubscription(EPubsubSubscriptionSubscribed);
+		
+		// Create correct node id
+		if(aChannelItem->GetId().Find(KRootNode) != 0) {
+			HBufC* aNodeId = HBufC::NewLC(KRootNode().Length() + aChannelItem->GetId().Length());
+			TPtr pNodeId(aNodeId->Des());
+			pNodeId.Append(KRootNode);
+			pNodeId.Append(aChannelItem->GetId());
+			
+			aChannelItem->SetIdL(pNodeId);
+			CleanupStack::PopAndDestroy(); // aNodeId
+		}
+		
+		// Add to discussion
+		CDiscussion* aDiscussion = iDiscussionManager->GetDiscussionL(aChannelItem->GetId());
+		aDiscussion->SetDiscussionReadObserver(this, aChannelItem->GetItemId());
+		
+		aChannelItem->SetUnreadData(aDiscussion);
+			
+		// Get data
 		CTextUtilities* aTextUtilities = CTextUtilities::NewLC();
-		HBufC8* aEncChannelJid = aTextUtilities->UnicodeToUtf8L(aChannelItem->GetJid()).AllocLC();
-		TPtr8 pEncChannelJid(aEncChannelJid->Des());
 		
-		HBufC8* aEncInviteeJid = aTextUtilities->UnicodeToUtf8L(aJid).AllocLC();
-		TPtr8 pEncInviteeJid(aEncInviteeJid->Des());
+		HBufC8* aEncTitle = aTextUtilities->UnicodeToUtf8L(aChannelItem->GetTitle()).AllocLC();
+		HBufC8* aEncDescription = aTextUtilities->UnicodeToUtf8L(aChannelItem->GetDescription()).AllocLC();
+		TPtrC8 aEncId(aTextUtilities->UnicodeToUtf8L(aChannelItem->GetId()));
+		TPtrC8 aAccess = CXmppEnumerationConverter::PubsubAccessModel(aChannelItem->GetAccessModel());
 		
-		HBufC8* aEncUsername = aTextUtilities->UnicodeToUtf8L(iSettingUsername).AllocLC();
-		TPtr8 pEncUsername(aEncUsername->Des());
-		
-		HBufC8* aEncFullName = aTextUtilities->UnicodeToUtf8L(iSettingFullName).AllocLC();
-		TPtr8 pEncFullName(aEncFullName->Des());
-		
-		HBufC8* aEncChannelTitle = aTextUtilities->UnicodeToUtf8L(aChannelItem->GetTitle()).AllocLC();
-		TPtr8 pEncChannelTitle(aEncChannelTitle->Des());
-		
-		HBufC* aInviteText = CEikonEnv::Static()->AllocReadResourceLC(R_LOCALIZED_STRING_GROUPINVITE_TEXT);
-		HBufC8* aEncInviteText = aTextUtilities->UnicodeToUtf8L(*aInviteText).AllocLC();
-		TPtr8 pEncInviteText(aEncInviteText->Des());
+		// Send stanza
+		_LIT8(KCreateStanza, "<iq to='' type='set' id='createchannel:%02d'><pubsub xmlns='http://jabber.org/protocol/pubsub'><create node=''/><configure><x xmlns='jabber:x:data' type='submit'><field var='FORM_TYPE' type='hidden'><value>http://jabber.org/protocol/pubsub#node_config</value></field><field var='pubsub#access_model'><value></value></field><field var='pubsub#title'><value></value></field><field var='pubsub#description'><value></value></field></x></configure></pubsub></iq>\r\n");
+		HBufC8* aCreateStanza = HBufC8::NewLC(KCreateStanza().Length() + KBuddycloudPubsubServer().Length() + aEncId.Length() + aAccess.Length() + aEncTitle->Des().Length() + aEncDescription->Des().Length());
+		TPtr8 pCreateStanza(aCreateStanza->Des());
+		pCreateStanza.AppendFormat(KCreateStanza, GetNewIdStamp());
+		pCreateStanza.Insert(409, *aEncDescription);
+		pCreateStanza.Insert(354, *aEncTitle);
+		pCreateStanza.Insert(305, aAccess);
+		pCreateStanza.Insert(107, aEncId);
+		pCreateStanza.Insert(8, KBuddycloudPubsubServer);
 	
-		_LIT8(KName, " ()");
-		_LIT8(KStanza, "<message to=''><x xmlns='http://jabber.org/protocol/muc#user'><invite to=''><reason></reason></invite></x></message>\r\n");	
-		HBufC8* aStanza = HBufC8::NewLC(KStanza().Length() + pEncInviteeJid.Length() + KName().Length() + pEncFullName.Length() + pEncUsername.Length() + pEncChannelJid.Length() + pEncInviteText.Length() + pEncChannelTitle.Length());
-		TPtr8 pStanza(aStanza->Des());
-		pStanza.Copy(KStanza);
-		pStanza.Insert(84, pEncChannelTitle);
-		pStanza.Insert(84, pEncInviteText);
-		
-		if(pEncFullName.Length() > 0) {
-			pStanza.Insert(84, KName);
-			pStanza.Insert(86, pEncUsername);
-			pStanza.Insert(84, pEncFullName);
-		}
-		else {
-			pStanza.Insert(84, pEncUsername);
-		}
-		
-		pStanza.Insert(74, pEncInviteeJid);
-		pStanza.Insert(13, pEncChannelJid);
-	
-		iXmppEngine->SendAndForgetXmppStanza(pStanza, true);
-		CleanupStack::PopAndDestroy(9); // aStanza, aEncInviteText, aInviteText, aEncChannelTitle, aEncChannelJid, aEncFullName, aEncUsername, aEncInviteeJid, aTextUtilities
-	}
-}
-
-void CBuddycloudLogic::ChangeUsersChannelAffiliationL(const TDesC& aJid, TDesC& aChannelJid, TMucAffiliation aAffiliation) {
-#ifdef _DEBUG
-	WriteToLog(_L8("BL    CBuddycloudLogic::ChangeUsersChannelAffiliationL"));
-#endif
-	
-	CTextUtilities* aTextUtilities = CTextUtilities::NewLC();
-
-	HBufC8* aEncChannelJid = aTextUtilities->UnicodeToUtf8L(aChannelJid).AllocLC();
-	TPtr8 pEncChannelJid(aEncChannelJid->Des());
-	
-	HBufC8* aEncUserJid = aTextUtilities->UnicodeToUtf8L(aJid).AllocLC();
-	TPtr8 pEncUserJid(aEncUserJid->Des());
-	
-	_LIT8(KStanza, "<iq to='' type='set' id='affiliation1'><query xmlns='http://jabber.org/protocol/muc#admin'><item jid='' affiliation=''/></query></iq>\r\n");	
-	HBufC8* aStanza = HBufC8::NewLC(KStanza().Length() + pEncUserJid.Length() + pEncChannelJid.Length() + KAffiliationOutcast().Length());
-	TPtr8 pStanza(aStanza->Des());
-	pStanza.Copy(KStanza);
-	
-	if(aAffiliation == EAffiliationOwner) {
-		pStanza.Insert(117, KAffiliationOwner);
-	}
-	else if(aAffiliation == EAffiliationOutcast) {
-		pStanza.Insert(117, KAffiliationOutcast);
-	}
-	else if(aAffiliation == EAffiliationMember) {
-		pStanza.Insert(117, KAffiliationMember);
-	}
-	else if(aAffiliation == EAffiliationAdmin) {
-		pStanza.Insert(117, KAffiliationAdmin);
-	}
-	else {
-		pStanza.Insert(117, KAffiliationNone);
+		iXmppEngine->SendAndForgetXmppStanza(pCreateStanza, true);
+		CleanupStack::PopAndDestroy(4); // aCreateStanza, aEncDescription, aEncTitle, aTextUtilities
 	}
 	
-	pStanza.Insert(102, pEncUserJid);
-	pStanza.Insert(8, pEncChannelJid);
-
-	iXmppEngine->SendAndForgetXmppStanza(pStanza, true);
-	CleanupStack::PopAndDestroy(4); // aStanza, aEncChannelJid, aEncUserJid, aTextUtilities	
-}
-
-void CBuddycloudLogic::ChangeUsersChannelRoleL(const TDesC& aJidOrNick, TDesC& aChannelJid, TMucRole aRole) {
-#ifdef _DEBUG
-	WriteToLog(_L8("BL    CBuddycloudLogic::ChangeUsersChannelRoleL"));
-#endif
-	
-	CTextUtilities* aTextUtilities = CTextUtilities::NewLC();
-
-	HBufC8* aEncChannelJid = aTextUtilities->UnicodeToUtf8L(aChannelJid).AllocLC();
-	TPtr8 pEncChannelJid(aEncChannelJid->Des());
-	
-	HBufC8* aEncUserJidOrNick = aTextUtilities->UnicodeToUtf8L(aJidOrNick).AllocLC();
-	TPtr8 pEncUserJidOrNick(aEncUserJidOrNick->Des());
-	
-	_LIT8(KItemJid, " jid=''");
-	_LIT8(KItemNick, " nick=''");
-	_LIT8(KRoleStanza, "<iq to='' type='set' id='role1'><query xmlns='http://jabber.org/protocol/muc#admin'><item role=''/></query></iq>\r\n");	
-	HBufC8* aRoleStanza = HBufC8::NewLC(KRoleStanza().Length() + KItemNick().Length() + pEncUserJidOrNick.Length() + pEncChannelJid.Length() + KRoleParticipant().Length());
-	TPtr8 pRoleStanza(aRoleStanza->Des());
-	pRoleStanza.Copy(KRoleStanza);
-
-	if(aRole == ERoleModerator) {
-		pRoleStanza.Insert(96, KRoleModerator);
-	}
-	else if(aRole == ERoleParticipant) {
-		pRoleStanza.Insert(96, KRoleParticipant);
-	}
-	else if(aRole == ERoleVisitor) {
-		pRoleStanza.Insert(96, KRoleVisitor);
-	}
-	else {
-		pRoleStanza.Insert(96, KRoleNone);
-	}
-	
-	if(pEncUserJidOrNick.Locate('@') == KErrNotFound) {
-		pRoleStanza.Insert(89, KItemNick);
-		pRoleStanza.Insert(96, pEncUserJidOrNick);
-	}
-	else {
-		pRoleStanza.Insert(89, KItemJid);
-		pRoleStanza.Insert(95, pEncUserJidOrNick);
-	}
-	
-	pRoleStanza.Insert(8, pEncChannelJid);
-
-	iXmppEngine->SendAndForgetXmppStanza(pRoleStanza, true);
-	CleanupStack::PopAndDestroy(4); // aRoleStanza, aEncChannelJid, aEncUserJid, aTextUtilities	
+	return aChannelItem->GetItemId();
 }
 
 void CBuddycloudLogic::SetMoodL(TDesC& aMood) {
@@ -2122,21 +2193,29 @@ void CBuddycloudLogic::SetMoodL(TDesC& aMood) {
 	WriteToLog(_L8("BL    CBuddycloudLogic::SetMoodL"));
 #endif
 
-	CTextUtilities* aTextUtilities = CTextUtilities::NewLC();
-	TPtrC8 aEncodedMood(aTextUtilities->UnicodeToUtf8L(aMood));
-
-	_LIT8(KStanza, "<iq type='set' id='setmood1'><pubsub xmlns='http://jabber.org/protocol/pubsub'><publish node='http://jabber.org/protocol/mood'><item id='current'><mood xmlns='http://jabber.org/protocol/mood'><undefined/><text></text></mood></item></publish></pubsub></iq>\r\n");
-	HBufC8* aStanza = HBufC8::NewLC(KStanza().Length() + aEncodedMood.Length());
-	TPtr8 pStanza = aStanza->Des();
-	pStanza.Append(KStanza);
-	pStanza.Insert(210, aEncodedMood);
-
-	iXmppEngine->SendAndAcknowledgeXmppStanza(pStanza, this, true);
-	CleanupStack::PopAndDestroy(2); // aStanza, aTextUtilities
+	if(iOwnItem) {
+		CTextUtilities* aTextUtilities = CTextUtilities::NewLC();
+		
+		HBufC8* aEncJid = aTextUtilities->UnicodeToUtf8L(iOwnItem->GetId()).AllocLC();
+		TPtrC8 pEncJid(aEncJid->Des());
+		
+		TPtrC8 aEncodedMood(aTextUtilities->UnicodeToUtf8L(aMood));
 	
-	// Set Activity Status
-	if(iState == ELogicOnline) {
-		SetActivityStatus(R_LOCALIZED_STRING_NOTE_UPDATING);
+		_LIT8(KMoodStanza, "<iq to='' type='set' id='setmood:%02d'><pubsub xmlns='http://jabber.org/protocol/pubsub'><publish node='/user//mood'><item><mood xmlns='http://jabber.org/protocol/mood'><undefined/><text></text></mood></item></publish></pubsub></iq>\r\n");
+		HBufC8* aMoodStanza = HBufC8::NewLC(KMoodStanza().Length() + KBuddycloudPubsubServer().Length() + pEncJid.Length() + aEncodedMood.Length());
+		TPtr8 pMoodStanza(aMoodStanza->Des());
+		pMoodStanza.AppendFormat(KMoodStanza, GetNewIdStamp());
+		pMoodStanza.Insert(185, aEncodedMood);
+		pMoodStanza.Insert(108, pEncJid);
+		pMoodStanza.Insert(8, KBuddycloudPubsubServer);
+	
+		iXmppEngine->SendAndAcknowledgeXmppStanza(pMoodStanza, this, true);
+		CleanupStack::PopAndDestroy(3); // aStanza, aEncJid, aTextUtilities
+		
+		// Set Activity Status
+		if(iState == ELogicOnline) {
+			SetActivityStatus(R_LOCALIZED_STRING_NOTE_UPDATING);
+		}
 	}
 }
 
@@ -2166,16 +2245,16 @@ void CBuddycloudLogic::SetCurrentPlaceL() {
 	aDynItemIds.Append(0);
 	
 	if(iLocationEngine->GetLastPlaceId() > 0) {
-		CBuddycloudExtendedPlace* aPlace = iMasterPlaceList->GetPlaceById(iLocationEngine->GetLastPlaceId());
+		CBuddycloudExtendedPlace* aPlace =  static_cast <CBuddycloudExtendedPlace*> (iPlaceList->GetItemById(iLocationEngine->GetLastPlaceId()));
 		
-		if(aPlace != NULL) {
-			HBufC* aItem = HBufC::NewLC(4 + aPlace->GetPlaceName().Length());
+		if(aPlace) {
+			HBufC* aItem = HBufC::NewLC(4 + aPlace->GetGeoloc()->GetString(EGeolocText).Length());
 			TPtr pItem(aItem->Des());
 			pItem.Append(_L("4\t\t\t"));
-			pItem.Insert(2, aPlace->GetPlaceName());
+			pItem.Insert(2, aPlace->GetGeoloc()->GetString(EGeolocText));
 			
 			aDynItems.Append(aItem);
-			aDynItemIds.Append(aPlace->GetPlaceId());
+			aDynItemIds.Append(aPlace->GetItemId());
 			CleanupStack::Pop(); // aItem
 		}
 	}
@@ -2202,33 +2281,31 @@ void CBuddycloudLogic::SetCurrentPlaceL() {
 		
 		if(aSelectedItemId == 0) {
 			// New place
-			CBuddycloudExtendedPlace* aNewPlace = iMasterPlaceList->GetPlaceById(KEditingNewPlaceId);
+			CBuddycloudExtendedPlace* aNewPlace = static_cast <CBuddycloudExtendedPlace*> (iPlaceList->GetItemById(KEditingNewPlaceId));
 			
 			if(aNewPlace == NULL) {
 				aNewPlace = CBuddycloudExtendedPlace::NewLC();
-				aNewPlace->SetPlaceId(KEditingNewPlaceId);
+				aNewPlace->SetItemId(KEditingNewPlaceId);
 				aNewPlace->SetShared(false);
 				
-				iMasterPlaceList->AddPlace(aNewPlace);
+				iPlaceList->AddItem(aNewPlace);
 				CleanupStack::Pop(); // aNewPlace
 			}
 			
-			iMasterPlaceList->SetEditedPlace(KEditingNewPlaceId);
+			iPlaceList->SetEditedPlace(KEditingNewPlaceId);
 						
 			if(iOwnItem) {
-				CBuddycloudBasicPlace* aOwnPlace = iOwnItem->GetPlace(EPlaceCurrent);
+				CGeolocData* aGeoloc = iOwnItem->GetGeolocItem(EGeolocItemCurrent);
 				
-				if(aOwnPlace) {
-					aNewPlace->SetPlaceStreetL(aOwnPlace->GetPlaceStreet());
-					aNewPlace->SetPlaceAreaL(aOwnPlace->GetPlaceArea());
-					aNewPlace->SetPlaceCityL(aOwnPlace->GetPlaceCity());
-					aNewPlace->SetPlacePostcodeL(aOwnPlace->GetPlacePostcode());
-					aNewPlace->SetPlaceRegionL(aOwnPlace->GetPlaceRegion());
-					aNewPlace->SetPlaceCountryL(aOwnPlace->GetPlaceCountry());
-				}
+				aNewPlace->GetGeoloc()->SetStringL(EGeolocStreet, aGeoloc->GetString(EGeolocStreet));
+				aNewPlace->GetGeoloc()->SetStringL(EGeolocArea, aGeoloc->GetString(EGeolocArea));
+				aNewPlace->GetGeoloc()->SetStringL(EGeolocLocality, aGeoloc->GetString(EGeolocLocality));
+				aNewPlace->GetGeoloc()->SetStringL(EGeolocPostalcode, aGeoloc->GetString(EGeolocPostalcode));
+				aNewPlace->GetGeoloc()->SetStringL(EGeolocRegion, aGeoloc->GetString(EGeolocRegion));
+				aNewPlace->GetGeoloc()->SetStringL(EGeolocCountry, aGeoloc->GetString(EGeolocCountry));
 			}
 			
-			NotifyNotificationObservers(ENotificationEditPlaceRequested, aNewPlace->GetPlaceId());
+			NotifyNotificationObservers(ENotificationEditPlaceRequested, aNewPlace->GetItemId());
 		}
 		else if(aSelectedItemId > 0) {
 			SetCurrentPlaceL(aSelectedItemId);
@@ -2301,63 +2378,6 @@ void CBuddycloudLogic::SetNextPlaceL(TDesC& aPlace, TInt aPlaceId) {
 	}
 }
 
-void CBuddycloudLogic::CollectPubsubNodesL(TDesC& aJid) {
-	if(aJid.Locate('@') != KErrNotFound) {
-		CTextUtilities* aTextUtilities = CTextUtilities::NewLC();
-		TPtrC8 aEncJid(aTextUtilities->UnicodeToUtf8L(aJid));
-
-		// Collect mood item
-		_LIT8(KPubStanzaMood, "<iq to='' type='get' id='items1'><pubsub xmlns='http://jabber.org/protocol/pubsub'><items node='http://jabber.org/protocol/mood'/></pubsub></iq>\r\n");
-		HBufC8* aMoodStanza = HBufC8::NewLC(aEncJid.Length() + KPubStanzaMood().Length());
-		TPtr8 pMoodStanza = aMoodStanza->Des();
-		pMoodStanza.Append(KPubStanzaMood);
-		pMoodStanza.Insert(8, aEncJid);
-
-		iXmppEngine->SendAndForgetXmppStanza(pMoodStanza, false);
-		CleanupStack::PopAndDestroy(); // aMoodStanza
-
-		// Collect geoloc-prev item
-		_LIT8(KPubStanzaGeoPrev, "<iq to='' type='get' id='items1'><pubsub xmlns='http://jabber.org/protocol/pubsub'><items node='http://jabber.org/protocol/geoloc-prev'/></pubsub></iq>\r\n");
-		HBufC8* aGeoPrevStanza = HBufC8::NewLC(aEncJid.Length() + KPubStanzaGeoPrev().Length());
-		TPtr8 pGeoPrevStanza = aGeoPrevStanza->Des();
-		pGeoPrevStanza.Append(KPubStanzaGeoPrev);
-		pGeoPrevStanza.Insert(8, aEncJid);
-
-		iXmppEngine->SendAndForgetXmppStanza(pGeoPrevStanza, false);
-		CleanupStack::PopAndDestroy(); // aGeoPrevStanza
-
-		// Collect geoloc item
-		_LIT8(KPubStanzaGeo, "<iq to='' type='get' id='items1'><pubsub xmlns='http://jabber.org/protocol/pubsub'><items node='http://jabber.org/protocol/geoloc'/></pubsub></iq>\r\n");
-		HBufC8* aGeoStanza = HBufC8::NewLC(aEncJid.Length() + KPubStanzaGeo().Length());
-		TPtr8 pGeoStanza = aGeoStanza->Des();
-		pGeoStanza.Append(KPubStanzaGeo);
-		pGeoStanza.Insert(8, aEncJid);
-
-		iXmppEngine->SendAndForgetXmppStanza(pGeoStanza, false);
-		CleanupStack::PopAndDestroy(); // aGeoStanza
-
-		// Collect geoloc-next item
-		_LIT8(KPubStanzaGeoNext, "<iq to='' type='get' id='items1'><pubsub xmlns='http://jabber.org/protocol/pubsub'><items node='http://jabber.org/protocol/geoloc-next'/></pubsub></iq>\r\n");
-		HBufC8* aGeoNextStanza = HBufC8::NewLC(aEncJid.Length() + KPubStanzaGeoNext().Length());
-		TPtr8 pGeoNextStanza = aGeoNextStanza->Des();
-		pGeoNextStanza.Append(KPubStanzaGeoNext);
-		pGeoNextStanza.Insert(8, aEncJid);
-
-		iXmppEngine->SendAndForgetXmppStanza(pGeoNextStanza, false);
-		CleanupStack::PopAndDestroy(); // aGeoNextStanza
-
-		// Collect profile item
-		_LIT8(KPubStanzaProfile, "<iq to='' type='get' id='items1'><pubsub xmlns='http://jabber.org/protocol/pubsub'><items node='http://www.xmpp.org/extensions/xep-0154.html#ns'/></pubsub></iq>\r\n");
-		HBufC8* aProfileStanza = HBufC8::NewLC(aEncJid.Length() + KPubStanzaProfile().Length());
-		TPtr8 pProfileStanza = aProfileStanza->Des();
-		pProfileStanza.Append(KPubStanzaProfile);
-		pProfileStanza.Insert(8, aEncJid);
-
-		iXmppEngine->SendAndForgetXmppStanza(pProfileStanza, false);
-		CleanupStack::PopAndDestroy(2); // aProfileStanza, aTextUtilities
-	}
-}
-
 TInt CBuddycloudLogic::GetBubbleToPosition(CFollowingItem* aBubblingItem) {
 #ifdef _DEBUG
 	WriteToLog(_L8("BL    CBuddycloudLogic::GetBubbleToPosition"));
@@ -2391,8 +2411,8 @@ TInt CBuddycloudLogic::GetBubbleToPosition(CFollowingItem* aBubblingItem) {
 		}
 
 		// Loop through other items
-		for(TInt i = 1; i < iMasterFollowingList->Count(); i++) {
-			CFollowingItem* aListItem = iMasterFollowingList->GetItemByIndex(i);
+		for(TInt i = 1; i < iFollowingList->Count(); i++) {
+			CFollowingItem* aListItem = static_cast <CFollowingItem*> (iFollowingList->GetItemByIndex(i));
 
 			if(aListItem->GetItemType() >= EItemRoster) {
 				CFollowingChannelItem* aListChannelItem = static_cast <CFollowingChannelItem*> (aListItem);
@@ -2413,14 +2433,6 @@ TInt CBuddycloudLogic::GetBubbleToPosition(CFollowingItem* aBubblingItem) {
 					
 					return i;
 				}
-				
-//				if(aBubblingPrivateUnread > aListPrivateUnread || 
-//						(aBubblingPrivateUnread == aListPrivateUnread && 
-//								(aBubblingChannelUnread > aListChannelUnread || aBubblingChannelUnread == aListChannelUnread))) {
-//					// If more unread pm's or (equal pm's and (more unread cm's or equal cm's))
-//					
-//					return i;
-//				}
 			}
 			else if(aListItem->GetItemType() == EItemContact) {
 				return i;
@@ -2428,21 +2440,21 @@ TInt CBuddycloudLogic::GetBubbleToPosition(CFollowingItem* aBubblingItem) {
 		}
 	}
 	
-	return iMasterFollowingList->Count();
+	return iFollowingList->Count();
 }
 
-void CBuddycloudLogic::AllMessagesRead(CFollowingItem* aItem) {
-	if(iOwnItem && aItem) {
-		if(iOwnItem->GetItemId() != aItem->GetItemId()) {
-			// Move Item
-			iMasterFollowingList->RemoveItemById(aItem->GetItemId());
-			iMasterFollowingList->InsertItem(GetBubbleToPosition(aItem), aItem);
+void CBuddycloudLogic::DiscussionRead(TDesC& /*aDiscussionId*/, TInt aItemId) {
+	CFollowingItem* aFollowingItem = static_cast <CFollowingItem*> (iFollowingList->GetItemById(aItemId));
+	
+	if(iOwnItem && aFollowingItem) {
+		if(iOwnItem->GetItemId() != aFollowingItem->GetItemId()) {
+			iFollowingList->RemoveItemById(aFollowingItem->GetItemId());
+			iFollowingList->InsertItem(GetBubbleToPosition(aFollowingItem), aFollowingItem);
+			
+			iSettingsSaveNeeded = true;
+			NotifyNotificationObservers(ENotificationFollowingItemsUpdated);
 		}
 	}
-	
-	iSettingsSaveNeeded = true;
-
-	NotifyNotificationObservers(ENotificationFollowingItemsUpdated);
 }
 
 /*
@@ -2458,8 +2470,9 @@ void CBuddycloudLogic::PairItemIdsL(TInt aPairItemId1, TInt aPairItemId2) {
 	WriteToLog(_L8("BL    CBuddycloudLogic::PairItemIdsL"));
 #endif
 
-	CFollowingItem* aPair1 = iMasterFollowingList->GetItemById(aPairItemId1);
-	CFollowingItem* aPair2 = iMasterFollowingList->GetItemById(aPairItemId2);
+	
+	CFollowingItem* aPair1 = static_cast <CFollowingItem*> (iFollowingList->GetItemById(aPairItemId1));
+	CFollowingItem* aPair2 = static_cast <CFollowingItem*> (iFollowingList->GetItemById(aPairItemId2));
 
 	if(aPair1 && aPair2) {
 		if(aPair1->GetItemType() >= EItemContact && aPair2->GetItemType() >= EItemContact) {
@@ -2482,7 +2495,7 @@ void CBuddycloudLogic::PairItemIdsL(TInt aPairItemId1, TInt aPairItemId2) {
 					CFollowingContactItem* aBuddycloudContactItem = CFollowingContactItem::NewLC();
 					aBuddycloudContactItem->SetItemId(iNextItemId++);
 					aBuddycloudContactItem->SetAddressbookId(aRosterItem->GetAddressbookId());
-					iMasterFollowingList->InsertItem(iMasterFollowingList->GetIndexById(aContactItem->GetItemId()), aBuddycloudContactItem);
+					iFollowingList->InsertItem(iFollowingList->GetIndexById(aContactItem->GetItemId()), aBuddycloudContactItem);
 					CleanupStack::Pop();
 				}
 
@@ -2491,7 +2504,7 @@ void CBuddycloudLogic::PairItemIdsL(TInt aPairItemId1, TInt aPairItemId2) {
 				aRosterItem->SetAddressbookId(aContactItem->GetAddressbookId());
 
 				// Delete contact item
-				iMasterFollowingList->DeleteItemById(aContactItem->GetItemId());
+				iFollowingList->DeleteItemById(aContactItem->GetItemId());
 			}
 		}
 	}
@@ -2502,7 +2515,7 @@ void CBuddycloudLogic::UnpairItemsL(TInt aItemId) {
 	WriteToLog(_L8("BL    CBuddycloudLogic::UnpairItemsL"));
 #endif
 
-	CFollowingItem* aItem = iMasterFollowingList->GetItemById(aItemId);
+	CFollowingItem* aItem = static_cast <CFollowingItem*> (iFollowingList->GetItemById(aItemId));
 
 	if(aItem && aItem->GetItemType() == EItemRoster) {
 		CFollowingRosterItem* aRosterItem = static_cast <CFollowingRosterItem*> (aItem);
@@ -2514,7 +2527,7 @@ void CBuddycloudLogic::UnpairItemsL(TInt aItemId) {
 				aContactItem->SetItemId(iNextItemId++);
 				aContactItem->SetAddressbookId(aRosterItem->GetAddressbookId());
 				
-				iMasterFollowingList->AddItem(aContactItem);
+				iFollowingList->AddItem(aContactItem);
 				CleanupStack::Pop();
 			}
 
@@ -2548,11 +2561,11 @@ void CBuddycloudLogic::RemoveAddressBookContacts() {
 		iContactStreamer = NULL;
 	}
 	
-	for(TInt i = iMasterFollowingList->Count() - 1; i >= 0; i--) {
-		CFollowingItem* aItem = iMasterFollowingList->GetItemByIndex(i);
+	for(TInt i = iFollowingList->Count() - 1; i >= 0; i--) {
+		CFollowingItem* aItem = static_cast <CFollowingItem*> (iFollowingList->GetItemByIndex(i));
 		
-		if(aItem->GetItemType() == EItemContact) {
-			iMasterFollowingList->DeleteItemByIndex(i);
+		if(aItem && aItem->GetItemType() == EItemContact) {
+			iFollowingList->DeleteItemByIndex(i);
 		}
 	}
 	
@@ -2610,75 +2623,73 @@ void CBuddycloudLogic::CallL(TInt aItemId) {
 	WriteToLog(_L8("BL    CBuddycloudLogic::CallL"));
 #endif
 
-	CFollowingItem* aItem = iMasterFollowingList->GetItemById(aItemId);
+	CFollowingItem* aItem = static_cast <CFollowingItem*> (iFollowingList->GetItemById(aItemId));
 	
-	if(aItem != NULL) {
-		if(aItem->GetItemType() == EItemContact || aItem->GetItemType() == EItemRoster) {
-			CFollowingContactItem* aContactItem = static_cast <CFollowingContactItem*> (aItem);
-			
-			if(aContactItem->GetAddressbookId() > -1) {
-				CContactItem* aContactDetails = GetContactDetailsLC(aContactItem->GetAddressbookId());
-	
-				if(aContactDetails != NULL) {
-					CContactItemFieldSet& aContactDetailsFieldSet = aContactDetails->CardFields();
+	if(aItem && (aItem->GetItemType() == EItemContact || aItem->GetItemType() == EItemRoster)) {
+		CFollowingContactItem* aContactItem = static_cast <CFollowingContactItem*> (aItem);
+		
+		if(aContactItem->GetAddressbookId() > -1) {
+			CContactItem* aContactDetails = GetContactDetailsLC(aContactItem->GetAddressbookId());
+
+			if(aContactDetails != NULL) {
+				CContactItemFieldSet& aContactDetailsFieldSet = aContactDetails->CardFields();
+				
+				// Get list of callers phone numbers
+				RPointerArray<HBufC> aDynItems;				
+				TInt aPosition = aContactDetailsFieldSet.FindNext(KUidContactFieldPhoneNumber);
+				
+				while(aPosition != KErrNotFound) {
+					HBufC* aNumberLine = HBufC::NewLC(2 + aContactDetailsFieldSet[aPosition].Label().Length() + 1 + aContactDetailsFieldSet[aPosition].TextStorage()->Text().Length());
+					TPtr pNumberLine(aNumberLine->Des());
+					pNumberLine.Append(aContactDetailsFieldSet[aPosition].TextStorage()->Text());
 					
-					// Get list of callers phone numbers
-					RPointerArray<HBufC> aDynItems;				
-					TInt aPosition = aContactDetailsFieldSet.FindNext(KUidContactFieldPhoneNumber);
-					
-					while(aPosition != KErrNotFound) {
-						HBufC* aNumberLine = HBufC::NewLC(2 + aContactDetailsFieldSet[aPosition].Label().Length() + 1 + aContactDetailsFieldSet[aPosition].TextStorage()->Text().Length());
-						TPtr pNumberLine(aNumberLine->Des());
-						pNumberLine.Append(aContactDetailsFieldSet[aPosition].TextStorage()->Text());
-						
-						// Remove ' '
-						TInt aSearch = KErrNotFound;
-						while((aSearch = pNumberLine.Locate(' ')) != KErrNotFound) {
-							pNumberLine.Delete(aSearch, 1);
-						}
-						
-						// Remove '-'
-						while((aSearch = pNumberLine.Locate('-')) != KErrNotFound) {
-							pNumberLine.Delete(aSearch, 1);
-						}
-						
-						pNumberLine.Insert(0, _L("\t"));
-						pNumberLine.Insert(0, aContactDetailsFieldSet[aPosition].Label());
-						pNumberLine.Insert(0, _L("0\t"));
-						
-						if(aContactDetailsFieldSet[aPosition].ContentType().ContainsFieldType(KUidContactFieldVCardMapPREF)) {
-							aDynItems.Insert(aNumberLine, 0);
-						}
-						else {
-							aDynItems.Append(aNumberLine);
-						}
-						
-						CleanupStack::Pop();
-						
-						aPosition = aContactDetailsFieldSet.FindNext(KUidContactFieldPhoneNumber, aPosition+1);
+					// Remove ' '
+					TInt aSearch = KErrNotFound;
+					while((aSearch = pNumberLine.Locate(' ')) != KErrNotFound) {
+						pNumberLine.Delete(aSearch, 1);
 					}
 					
-					// Get callers name
-					iTelephonyEngine->SetCallerDetailsL(aItemId, aContactItem->GetTitle());
-					
-					// Selection result
-					TInt aSelectedItem = DisplayDoubleLinePopupMenuL(aDynItems);
-					
-					if(aSelectedItem != KErrNotFound) {
-						TPtr pSelectedText(aDynItems[aSelectedItem]->Des());
-						pSelectedText.Delete(0, pSelectedText.LocateReverse('\t') + 1);
-						
-						iTelephonyEngine->DialNumber(pSelectedText);
+					// Remove '-'
+					while((aSearch = pNumberLine.Locate('-')) != KErrNotFound) {
+						pNumberLine.Delete(aSearch, 1);
 					}
-						
-					while(aDynItems.Count() > 0) {
-						delete aDynItems[0];
-						aDynItems.Remove(0);
+					
+					pNumberLine.Insert(0, _L("\t"));
+					pNumberLine.Insert(0, aContactDetailsFieldSet[aPosition].Label());
+					pNumberLine.Insert(0, _L("0\t"));
+					
+					if(aContactDetailsFieldSet[aPosition].ContentType().ContainsFieldType(KUidContactFieldVCardMapPREF)) {
+						aDynItems.Insert(aNumberLine, 0);
 					}
-						
-					aDynItems.Close();	
-					CleanupStack::PopAndDestroy(); // aContactDetails
+					else {
+						aDynItems.Append(aNumberLine);
+					}
+					
+					CleanupStack::Pop();
+					
+					aPosition = aContactDetailsFieldSet.FindNext(KUidContactFieldPhoneNumber, aPosition+1);
 				}
+				
+				// Get callers name
+				iTelephonyEngine->SetCallerDetailsL(aItemId, aContactItem->GetTitle());
+				
+				// Selection result
+				TInt aSelectedItem = DisplayDoubleLinePopupMenuL(aDynItems);
+				
+				if(aSelectedItem != KErrNotFound) {
+					TPtr pSelectedText(aDynItems[aSelectedItem]->Des());
+					pSelectedText.Delete(0, pSelectedText.LocateReverse('\t') + 1);
+					
+					iTelephonyEngine->DialNumber(pSelectedText);
+				}
+					
+				while(aDynItems.Count() > 0) {
+					delete aDynItems[0];
+					aDynItems.Remove(0);
+				}
+					
+				aDynItems.Close();	
+				CleanupStack::PopAndDestroy(); // aContactDetails
 			}
 		}
 	}
@@ -2730,8 +2741,8 @@ void CBuddycloudLogic::FilterContactsL() {
 		iFilteringContacts = false;
 
 		// Reset Filter
-		for(TInt i = 0; i < iMasterFollowingList->Count(); i++) {
-			iMasterFollowingList->GetItemByIndex(i)->SetFiltered(true);
+		for(TInt i = 0; i < iFollowingList->Count(); i++) {
+			iFollowingList->GetItemByIndex(i)->SetFiltered(true);
 		}
 	}
 	else {
@@ -2739,8 +2750,8 @@ void CBuddycloudLogic::FilterContactsL() {
 
 		iFilteringContacts = true;
 
-		for(TInt i = 0; i < iMasterFollowingList->Count(); i++) {
-			CFollowingItem* aItem = iMasterFollowingList->GetItemByIndex(i);
+		for(TInt i = 0; i < iFollowingList->Count(); i++) {
+			CFollowingItem* aItem = static_cast <CFollowingItem*> (iFollowingList->GetItemByIndex(i));
 
 			aToFilter = false;
 
@@ -2754,7 +2765,7 @@ void CBuddycloudLogic::FilterContactsL() {
 				
 				if(!aToFilter && aItem->GetItemType() == EItemRoster) {
 					CFollowingRosterItem* aRosterItem = static_cast <CFollowingRosterItem*> (aItem);
-					TPtrC aPlaceName(aRosterItem->GetPlace(EPlaceCurrent)->GetPlaceName());
+					TPtrC aPlaceName(aRosterItem->GetGeolocItem(EGeolocItemCurrent)->GetString(EGeolocText));
 					
 					// Place
 					if(pContactFilter.Length() <= aPlaceName.Length()) {
@@ -2783,10 +2794,10 @@ CContactItem* CBuddycloudLogic::GetContactDetailsLC(TInt aContactId) {
 	
 	if(aErr == KErrNotFound) {
 		// Contact not found so clean the roster item
-		for(TInt i = 0;i < iMasterFollowingList->Count();i++) {
-			CFollowingItem* aItem = iMasterFollowingList->GetItemByIndex(i);
+		for(TInt i = 0;i < iFollowingList->Count();i++) {
+			CFollowingItem* aItem = static_cast <CFollowingItem*> (iFollowingList->GetItemByIndex(i));
 
-			if(aItem->GetItemType() == EItemRoster) {
+			if(aItem && aItem->GetItemType() == EItemRoster) {
 				CFollowingRosterItem* aRosterItem = static_cast <CFollowingRosterItem*> (aItem);
 				
 				if(aRosterItem->GetAddressbookId() == aContactId) {
@@ -2806,7 +2817,7 @@ CContactItem* CBuddycloudLogic::GetContactDetailsLC(TInt aContactId) {
 }
 
 void CBuddycloudLogic::CollectContactDetailsL(TInt aFollowerId) {
-	CFollowingItem* aItem = iMasterFollowingList->GetItemById(aFollowerId);
+	CFollowingItem* aItem = static_cast <CFollowingItem*> (iFollowingList->GetItemById(aFollowerId));
 
 	if(aItem && aItem->GetItemType() == EItemContact) {
 		CFollowingContactItem* aContactItem = static_cast <CFollowingContactItem*> (aItem);
@@ -2852,11 +2863,11 @@ void CBuddycloudLogic::CollectContactDetailsL(TInt aFollowerId) {
 }
 
 void CBuddycloudLogic::HandleStreamingContactL(TInt aContactId, CContactItem* aContact) {
-	if(aContact != NULL) {
+	if(aContact) {
 		TBool aFound = false;
 		
-		for(TInt i = 0;i < iMasterFollowingList->Count();i++) {
-			CFollowingItem* aItem = iMasterFollowingList->GetItemByIndex(i);
+		for(TInt i = 0;i < iFollowingList->Count();i++) {
+			CFollowingItem* aItem = static_cast <CFollowingItem*> (iFollowingList->GetItemByIndex(i));
 
 			if(aItem->GetItemType() == EItemRoster) {
 				CFollowingRosterItem* aRosterItem = static_cast <CFollowingRosterItem*> (aItem);
@@ -2869,14 +2880,14 @@ void CBuddycloudLogic::HandleStreamingContactL(TInt aContactId, CContactItem* aC
 		}
 
 		// Not paired. Add as contact and index
-		if( !aFound ) {
+		if(!aFound) {
 			CFollowingContactItem* aContactItem = CFollowingContactItem::NewLC();
 			aContactItem->SetItemId(iNextItemId++);
 			aContactItem->SetAddressbookId(aContactId);
 			aContactItem->SetFiltered(!iFilteringContacts);
 
 			// Insert
-			iMasterFollowingList->AddItem(aContactItem);
+			iFollowingList->AddItem(aContactItem);
 			CleanupStack::Pop();
 		}
 	}
@@ -2897,10 +2908,10 @@ void CBuddycloudLogic::FinishedContactSearch() {
 		CleanupStack::PushL(aContactArray);
 		
 		while(aContactArray->Count() > 0) {
-			for(TInt i = 0;i < iMasterFollowingList->Count();i++) {
-				CFollowingItem* aItem = iMasterFollowingList->GetItemByIndex(i);
+			for(TInt i = 0;i < iFollowingList->Count();i++) {
+				CFollowingItem* aItem = static_cast <CFollowingItem*> (iFollowingList->GetItemByIndex(i));
 
-				if(aItem->GetItemType() >= EItemContact) {
+				if(aItem && aItem->GetItemType() >= EItemContact) {
 					CFollowingContactItem* aContactItem = static_cast <CFollowingContactItem*> (aItem);
 					
 					if(aContactItem->GetAddressbookId() > KErrNotFound) {
@@ -2934,26 +2945,26 @@ void CBuddycloudLogic::HandleDatabaseEventL(TContactDbObserverEvent aEvent) {
 				aNewItem->SetItemId(iNextItemId++);
 				aNewItem->SetAddressbookId(aEvent.iContactId);
 				
-				iMasterFollowingList->InsertItem(GetBubbleToPosition(aNewItem), aNewItem);
+				iFollowingList->InsertItem(GetBubbleToPosition(aNewItem), aNewItem);
 				CleanupStack::Pop();
 			}
 		}
 		else if(aEvent.iType == EContactDbObserverEventContactDeleted) {
-			for(TInt i = 0; i < iMasterFollowingList->Count(); i++) {
-				CFollowingItem* aItem = iMasterFollowingList->GetItemByIndex(i);
+			for(TInt i = 0; i < iFollowingList->Count(); i++) {
+				CFollowingItem* aItem = static_cast <CFollowingItem*> (iFollowingList->GetItemByIndex(i));
 
-				if(aItem->GetItemType() >= EItemContact) {
+				if(aItem && aItem->GetItemType() >= EItemContact) {
 					CFollowingContactItem* aContactItem = static_cast <CFollowingContactItem*> (aItem);
 
 					if(aContactItem->GetAddressbookId() == aEvent.iContactId) {
 						if(aItem->GetItemType() == EItemContact) {
-							iMasterFollowingList->DeleteItemByIndex(i);
+							iFollowingList->DeleteItemByIndex(i);
 						}
 						else if(aItem->GetItemType() == EItemRoster) {
 							CFollowingRosterItem* aRosterItem = static_cast <CFollowingRosterItem*> (aItem);
 							aRosterItem->SetAddressbookId(KErrNotFound);
 
-							TPtrC aName(aRosterItem->GetJid());
+							TPtrC aName(aRosterItem->GetId());
 							TInt aSearchResult = aName.Locate('@');
 							
 							if(aSearchResult != KErrNotFound) {
@@ -3021,13 +3032,7 @@ void CBuddycloudLogic::LoadSettingsAndItemsL() {
 		CTimeUtilities* aTimeUtilities = CTimeUtilities::NewLC();
 
 		if(aXmlParser->MoveToElement(_L8("logicstate"))) {
-			// Last Received At
-			TPtrC8 pAttributeLast = aXmlParser->GetStringAttribute(_L8("last"));
-
-			if(pAttributeLast.Length() > 0) {
-				iLastReceivedAt = aTimeUtilities->DecodeL(pAttributeLast);
-			}
-			
+			// App version
 			HBufC* aAppVersion = CEikonEnv::Static()->AllocReadResourceLC(R_STRING_APPVERSION);
 			TPtrC aEncVersion(aTextUtilities->Utf8ToUnicodeL(aXmlParser->GetStringAttribute(_L8("version"))));
 			
@@ -3037,6 +3042,9 @@ void CBuddycloudLogic::LoadSettingsAndItemsL() {
 			
 			WriteToLog(aTextUtilities->UnicodeToUtf8L(*aAppVersion));
 			CleanupStack::PopAndDestroy(); // aAppVersion
+			
+			// Last node received
+			SetLastNodeIdReceived(aXmlParser->GetStringAttribute(_L8("lastnodeid")));
 
 			if(aXmlParser->MoveToElement(_L8("settings"))) {
 				iSettingConnectionMode = aXmlParser->GetIntAttribute(_L8("apmode"));
@@ -3047,11 +3055,8 @@ void CBuddycloudLogic::LoadSettingsAndItemsL() {
 				if(aXmlParser->MoveToElement(_L8("account"))) {
 					iSettingFullName.Copy(aTextUtilities->Utf8ToUnicodeL(aXmlParser->GetStringAttribute(_L8("fullname"))));	
 					iSettingEmailAddress.Copy(aTextUtilities->Utf8ToUnicodeL(aXmlParser->GetStringAttribute(_L8("email"))));
-					iSettingPhoneNumber.Copy(aTextUtilities->Utf8ToUnicodeL(aXmlParser->GetStringAttribute(_L8("phonenum"))));
 					iSettingUsername.Copy(aTextUtilities->Utf8ToUnicodeL(aXmlParser->GetStringAttribute(_L8("username"))));
-					iSettingPassword.Copy(aTextUtilities->Utf8ToUnicodeL(aXmlParser->GetStringAttribute(_L8("password"))));					
-					
-					iSettingUsernameOnly.Set(iSettingUsername);
+					iSettingPassword.Copy(aTextUtilities->Utf8ToUnicodeL(aXmlParser->GetStringAttribute(_L8("password"))));										
 					
 					iSettingServerId = aXmlParser->GetIntAttribute(_L8("serverid"));
 
@@ -3099,7 +3104,8 @@ void CBuddycloudLogic::LoadSettingsAndItemsL() {
 					}
 					
 					iSettingAutoStart = aXmlParser->GetBoolAttribute(_L8("autostart"));
-					iSettingGroupNotification = aXmlParser->GetIntAttribute(_L8("groupnotify"));
+					iSettingNotifyChannelsFollowing = aXmlParser->GetIntAttribute(_L8("notifyfollowing"));
+					iSettingNotifyChannelsModerating = aXmlParser->GetIntAttribute(_L8("notifymoderating"), 1);
 					iSettingNotifyReplyTo = aXmlParser->GetBoolAttribute(_L8("replyto"));
 					iSettingShowName = aXmlParser->GetBoolAttribute(_L8("showname"));
 					iSettingShowContacts = aXmlParser->GetBoolAttribute(_L8("showcontacts"));
@@ -3156,55 +3162,56 @@ void CBuddycloudLogic::LoadSettingsAndItemsL() {
 
 			while(aXmlParser->MoveToElement(_L8("item"))) {
 				TPtrC8 pTimeAttribute = aXmlParser->GetStringAttribute(_L8("last"));
-				TInt aAvatarId = aXmlParser->GetIntAttribute(_L8("avatar_id"));
+				TInt aIconId = aXmlParser->GetIntAttribute(_L8("iconid"));
 				
 				CXmlParser* aItemXml = CXmlParser::NewLC(aXmlParser->GetStringData());
 
 				if(aItemXml->MoveToElement(_L8("notice"))) {
-					CFollowingNoticeItem* aNoticeItem = CFollowingNoticeItem::NewLC();
+					CFollowingItem* aNoticeItem = CFollowingItem::NewLC();
 					aNoticeItem->SetItemId(iNextItemId++);
-					aNoticeItem->SetJidL(aTextUtilities->Utf8ToUnicodeL(aItemXml->GetStringAttribute(_L8("jid"))), TJidType(aItemXml->GetIntAttribute(_L8("type"))));
+					aNoticeItem->SetIdL(aTextUtilities->Utf8ToUnicodeL(aItemXml->GetStringAttribute(_L8("jid"))), TIdType(aItemXml->GetIntAttribute(_L8("type"))));
 					aNoticeItem->SetTitleL(aTextUtilities->Utf8ToUnicodeL(aItemXml->GetStringAttribute(_L8("name"))));
 					aNoticeItem->SetDescriptionL(aTextUtilities->Utf8ToUnicodeL(aItemXml->GetStringAttribute(_L8("description"))));
 					
-					iMasterFollowingList->AddItem(aNoticeItem);
+					iFollowingList->AddItem(aNoticeItem);
 					CleanupStack::Pop(); // aNoticeItem
 				}
 				else if(aItemXml->MoveToElement(_L8("group"))) {
 					CFollowingChannelItem* aChannelItem = CFollowingChannelItem::NewLC();
 					aChannelItem->SetItemId(iNextItemId++);
-					aChannelItem->SetExternal(aItemXml->GetBoolAttribute(_L8("external")));						
 					aChannelItem->SetRank(aItemXml->GetIntAttribute(_L8("rank")), aItemXml->GetIntAttribute(_L8("shift")));						
-					aChannelItem->SetJidL(aTextUtilities->Utf8ToUnicodeL(aItemXml->GetStringAttribute(_L8("jid"))));
+					aChannelItem->SetIdL(aTextUtilities->Utf8ToUnicodeL(aItemXml->GetStringAttribute(_L8("jid"))));
 					aChannelItem->SetTitleL(aTextUtilities->Utf8ToUnicodeL(aItemXml->GetStringAttribute(_L8("name"))));
 					aChannelItem->SetDescriptionL(aTextUtilities->Utf8ToUnicodeL(aItemXml->GetStringAttribute(_L8("description"))));
+					aChannelItem->SetAccessModel((TXmppPubsubAccessModel)aItemXml->GetIntAttribute(_L8("access")));
 
-					if(aAvatarId != 0) {
-						aChannelItem->SetAvatarId(aAvatarId);
+					if(aIconId != 0) {
+						aChannelItem->SetIconId(aIconId);
 					}
 					
 					if(pTimeAttribute.Length() > 0) {
 						aChannelItem->SetLastUpdated(aTimeUtilities->DecodeL(pTimeAttribute));
 					}
 
-					CDiscussion* aDiscussion = iMessagingManager->GetDiscussionL(aChannelItem->GetJid());
-					aDiscussion->AddMessageReadObserver(aChannelItem);
-					aDiscussion->AddDiscussionReadObserver(this, aChannelItem);
-					aDiscussion->SetUnreadMessages(aItemXml->GetIntAttribute(_L8("unread")), aItemXml->GetIntAttribute(_L8("replies")));
+					CDiscussion* aDiscussion = iDiscussionManager->GetDiscussionL(aChannelItem->GetId());
+					aDiscussion->SetDiscussionReadObserver(this, aChannelItem->GetItemId());		
+					aDiscussion->SetUnreadData(aItemXml->GetIntAttribute(_L8("unreadentries")), aItemXml->GetIntAttribute(_L8("unreadreplies")));
+					
+					aChannelItem->SetUnreadData(aDiscussion);
 
-					iMasterFollowingList->AddItem(aChannelItem);
+					iFollowingList->AddItem(aChannelItem);
 					CleanupStack::Pop(); // aChannelItem
 				}
 				else if(aItemXml->MoveToElement(_L8("roster"))) {
 					CFollowingRosterItem* aRosterItem = CFollowingRosterItem::NewLC();
 					aRosterItem->SetItemId(iNextItemId++);
-					aRosterItem->SetJidL(aTextUtilities->Utf8ToUnicodeL(aItemXml->GetStringAttribute(_L8("jid"))));
+					aRosterItem->SetIdL(aTextUtilities->Utf8ToUnicodeL(aItemXml->GetStringAttribute(_L8("jid"))));
 					aRosterItem->SetTitleL(aTextUtilities->Utf8ToUnicodeL(aItemXml->GetStringAttribute(_L8("name"))));
 					aRosterItem->SetDescriptionL(aTextUtilities->Utf8ToUnicodeL(aItemXml->GetStringAttribute(_L8("description"))));
-					aRosterItem->SetIsOwn(aItemXml->GetBoolAttribute(_L8("own")));
+					aRosterItem->SetOwnItem(aItemXml->GetBoolAttribute(_L8("own")));
 
-					if(aAvatarId != 0) {
-						aRosterItem->SetAvatarId(aAvatarId);
+					if(aIconId != 0) {
+						aRosterItem->SetIconId(aIconId);
 					}
 					
 					// Addressbook Id
@@ -3213,43 +3220,45 @@ void CBuddycloudLogic::LoadSettingsAndItemsL() {
 						aRosterItem->SetAddressbookId(aItemXml->GetIntAttribute(_L8("abid")));
 					}
 					
-					CDiscussion* aDiscussion = iMessagingManager->GetDiscussionL(aRosterItem->GetJid());
-					aDiscussion->AddMessageReadObserver(aRosterItem);
-					aDiscussion->AddDiscussionReadObserver(this, aRosterItem);
-					aDiscussion->SetUnreadMessages(aItemXml->GetIntAttribute(_L8("unread")));
+					CDiscussion* aDiscussion = iDiscussionManager->GetDiscussionL(aRosterItem->GetId());
+					aDiscussion->SetDiscussionReadObserver(this, aRosterItem->GetItemId());			
+					aDiscussion->SetUnreadData(aItemXml->GetIntAttribute(_L8("unreadprivate")));
+					
+					aRosterItem->SetUnreadData(aDiscussion);
 					
 					// Channel
 					if(aItemXml->MoveToElement(_L8("channel"))) {
 						aRosterItem->SetRank(aItemXml->GetIntAttribute(_L8("rank")), aItemXml->GetIntAttribute(_L8("shift")));						
-						aRosterItem->SetJidL(aTextUtilities->Utf8ToUnicodeL(aItemXml->GetStringAttribute(_L8("jid"))), EJidChannel);
+						aRosterItem->SetIdL(aTextUtilities->Utf8ToUnicodeL(aItemXml->GetStringAttribute(_L8("jid"))), EIdChannel);
 						
-						aDiscussion = iMessagingManager->GetDiscussionL(aRosterItem->GetJid(EJidChannel));
-						aDiscussion->AddMessageReadObserver(aRosterItem);
-						aDiscussion->AddDiscussionReadObserver(this, aRosterItem);
-						aDiscussion->SetUnreadMessages(aItemXml->GetIntAttribute(_L8("unread")), aItemXml->GetIntAttribute(_L8("replies")));							
+						aDiscussion = iDiscussionManager->GetDiscussionL(aRosterItem->GetId(EIdChannel));
+						aDiscussion->SetDiscussionReadObserver(this, aRosterItem->GetItemId());			
+						aDiscussion->SetUnreadData(aItemXml->GetIntAttribute(_L8("unreadentries")), aItemXml->GetIntAttribute(_L8("unreadreplies")));
+						
+						aRosterItem->SetUnreadData(aDiscussion, EIdChannel);
 					}
 
 					// Location
 					while(aItemXml->MoveToElement(_L8("location"))) {
-						// Type
-						CBuddycloudBasicPlace* aNewPlace = CBuddycloudBasicPlace::NewLC();
-						TInt aPlaceType = aItemXml->GetIntAttribute(_L8("type"));
-						aNewPlace->SetPlaceNameL(aTextUtilities->Utf8ToUnicodeL(aItemXml->GetStringAttribute(_L8("text"))));
-						aRosterItem->SetPlaceL(TBuddycloudPlaceType(aPlaceType), aNewPlace);
-						CleanupStack::Pop(); // aNewPlace
+						TGeolocItemType aGeolocItem = TGeolocItemType(aItemXml->GetIntAttribute(_L8("type")));
+						
+						if(aGeolocItem < EGeolocItemBroad) {
+							CGeolocData* aGeoloc = aRosterItem->GetGeolocItem(aGeolocItem);
+							aGeoloc->SetStringL(EGeolocText, aTextUtilities->Utf8ToUnicodeL(aItemXml->GetStringAttribute(_L8("text"))));
+						}
 					}
 
-					if(aRosterItem->GetIsOwn()) {
+					if(aRosterItem->OwnItem()) {
 						iOwnItem = aRosterItem;
 
-						iMasterFollowingList->InsertItem(0, aRosterItem);
+						iFollowingList->InsertItem(0, aRosterItem);
 
 						if(iStatusObserver) {
 							iStatusObserver->JumpToItem(aRosterItem->GetItemId());
 						}
 					}
 					else {
-						iMasterFollowingList->AddItem(aRosterItem);
+						iFollowingList->AddItem(aRosterItem);
 					}
 
 					CleanupStack::Pop();
@@ -3266,7 +3275,6 @@ void CBuddycloudLogic::LoadSettingsAndItemsL() {
 	}
 	else {
 		iSettingNewInstall = true;
-		iLastReceivedAt -= TTimeIntervalMinutes(30);
 	}
 }
 
@@ -3291,24 +3299,22 @@ void CBuddycloudLogic::SaveSettingsAndItemsL() {
 		CTimeUtilities* aTimeUtilities = CTimeUtilities::NewLC();
 		TFormattedTimeDesc aTime;
 
-		aFile.WriteL(_L8("<?xml version='1.0' encoding='UTF-8'?>"));
-		aFile.WriteL(_L8("<logicstate last='"));
-		aTimeUtilities->EncodeL(iLastReceivedAt, aTime);
-		aFile.WriteL(aTime);
-
-		WriteToLog(aTime);
+		aFile.WriteL(_L8("<?xml version='1.0' encoding='UTF-8'?>\r\n"));
+		aFile.WriteL(_L8("\t<logicstate version='"));
 		
 		HBufC* aVersion = CEikonEnv::Static()->AllocReadResourceLC(R_STRING_APPVERSION);
-		aFile.WriteL(_L8("' version='"));
 		aFile.WriteL(aTextUtilities->UnicodeToUtf8L(*aVersion));
-		aFile.WriteL(_L8("'>"));
 		CleanupStack::PopAndDestroy(); // aVersion
+		
+		aFile.WriteL(_L8("' lastnodeid='"));
+		aFile.WriteL(*iLastNodeIdReceived);
+		aFile.WriteL(_L8("'>\r\n"));
 
 		// Settings
-		aBuf.Format(_L8("<settings apmode='%d' apid='%d' apname='"), iSettingConnectionMode, iSettingConnectionModeId);
+		aBuf.Format(_L8("\t\t<settings apmode='%d' apid='%d' apname='"), iSettingConnectionMode, iSettingConnectionModeId);
 		aFile.WriteL(aBuf);
 		aFile.WriteL(aTextUtilities->UnicodeToUtf8L(iXmppEngine->GetConnectionName()));
-		aFile.WriteL(_L8("'><account"));
+		aFile.WriteL(_L8("'>\r\n\t\t\t<account"));
 
 		if(iSettingFullName.Length() > 0) {
 			aFile.WriteL(_L8(" fullname='"));
@@ -3319,12 +3325,6 @@ void CBuddycloudLogic::SaveSettingsAndItemsL() {
 		if(iSettingEmailAddress.Length() > 0) {
 			aFile.WriteL(_L8(" email='"));
 			aFile.WriteL(aTextUtilities->UnicodeToUtf8L(iSettingEmailAddress));
-			aFile.WriteL(_L8("'"));
-		}
-
-		if(iSettingPhoneNumber.Length() > 0) {
-			aFile.WriteL(_L8(" phonenum='"));
-			aFile.WriteL(aTextUtilities->UnicodeToUtf8L(iSettingPhoneNumber));
 			aFile.WriteL(_L8("'"));
 		}
 
@@ -3341,11 +3341,11 @@ void CBuddycloudLogic::SaveSettingsAndItemsL() {
 		}
 		
 		// Preferences
-		aBuf.Format(_L8(" serverid='%d'/><preferences language='%d' autostart='%d' groupnotify='%d' accesspoint='%d' replyto='%d' showname='%d' showcontacts='%d' messageblocking='%d'/>"), iSettingServerId, iSettingPreferredLanguage, iSettingAutoStart, iSettingGroupNotification, iSettingAccessPoint, iSettingNotifyReplyTo, iSettingShowName, iSettingShowContacts, iSettingMessageBlocking);
+		aBuf.Format(_L8(" serverid='%d'/>\r\n\t\t\t<preferences language='%d' autostart='%d' notifyfollowing='%d' notifymoderating='%d' accesspoint='%d' replyto='%d' showname='%d' showcontacts='%d' messageblocking='%d'/>\r\n"), iSettingServerId, iSettingPreferredLanguage, iSettingAutoStart, iSettingNotifyChannelsFollowing, iSettingNotifyChannelsModerating, iSettingAccessPoint, iSettingNotifyReplyTo, iSettingShowName, iSettingShowContacts, iSettingMessageBlocking);
 		aFile.WriteL(aBuf);
 		
 		// Notifications
-		aBuf.Format(_L8("<notifications pmt_id='%d' cmt_id='%d' drt_id='%d' pmt_file='"), iSettingPrivateMessageTone, iSettingChannelPostTone, iSettingDirectReplyTone);
+		aBuf.Format(_L8("\t\t\t<notifications pmt_id='%d' cmt_id='%d' drt_id='%d' pmt_file='"), iSettingPrivateMessageTone, iSettingChannelPostTone, iSettingDirectReplyTone);
 		aFile.WriteL(aBuf);
 		aFile.WriteL(aTextUtilities->UnicodeToUtf8L(iSettingPrivateMessageToneFile));
 		aFile.WriteL(_L8("' cmt_file='"));
@@ -3354,78 +3354,77 @@ void CBuddycloudLogic::SaveSettingsAndItemsL() {
 		aFile.WriteL(aTextUtilities->UnicodeToUtf8L(iSettingDirectReplyToneFile));
 		
 		// Beacons
-		aBuf.Format(_L8("'/><beacons cell='%d' wlan='%d' bt='%d' gps='%d'/><communities>"), iSettingCellOn, iSettingWlanOn, iSettingBtOn, iSettingGpsOn);
+		aBuf.Format(_L8("'/>\r\n\t\t\t<beacons cell='%d' wlan='%d' bt='%d' gps='%d'/>\r\n\t\t\t<communities>\r\n"), iSettingCellOn, iSettingWlanOn, iSettingBtOn, iSettingGpsOn);
 		aFile.WriteL(aBuf);
 		
 		// Communities
 		if(iSettingTwitterUsername.Length() > 0) {
-			aFile.WriteL(_L8("<twitter username='"));
+			aFile.WriteL(_L8("\t\t\t\t<twitter username='"));
 			aFile.WriteL(aTextUtilities->UnicodeToUtf8L(iSettingTwitterUsername));
 			aFile.WriteL(_L8("' password='"));
 			aFile.WriteL(aTextUtilities->UnicodeToUtf8L(iSettingTwitterPassword));
-			aFile.WriteL(_L8("'/>"));
+			aFile.WriteL(_L8("'/>\r\n"));
 		}
 		
-		aFile.WriteL(_L8("</communities></settings>"));
+		aFile.WriteL(_L8("\t\t\t</communities>\r\n\t\t</settings>\r\n"));
 
 		// Write Unsent Messages
 		CXmppOutbox* aUnsentOutbox = iXmppEngine->GetMessageOutbox();
 
 		if(aUnsentOutbox->Count() > 0) {
-			aFile.WriteL(_L8("<unsent>"));
+			aFile.WriteL(_L8("\t\t<unsent>"));
 
 			for(TInt i = 0; i < aUnsentOutbox->Count(); i++) {
 				CXmppOutboxMessage* aMessage = aUnsentOutbox->GetMessage(i);
 				
 				if(aMessage->GetPersistance()) {
+					aFile.WriteL(_L8("\t\t\t"));
 					aFile.WriteL(aMessage->GetStanza());
 				}
 			}
 
-			aFile.WriteL(_L8("</unsent>"));
+			aFile.WriteL(_L8("\t\t</unsent>\r\n"));
 		}
 
-		for(TInt i = 0; i < iMasterFollowingList->Count();i++) {
-			CFollowingItem* aItem = iMasterFollowingList->GetItemByIndex(i);
+		for(TInt i = 0; i < iFollowingList->Count();i++) {
+			CFollowingItem* aItem = static_cast <CFollowingItem*> (iFollowingList->GetItemByIndex(i));
+			
+			aFile.WriteL(_L8("\t\t<item last='"));
+			aTimeUtilities->EncodeL(aItem->GetLastUpdated(), aTime);
+			aFile.WriteL(aTime);
+			aBuf.Format(_L8("' iconid='%d'>\r\n"), aItem->GetIconId());
+			aFile.WriteL(aBuf);		
 
 			if(aItem->GetItemType() == EItemNotice) {
-				CFollowingNoticeItem* aNoticeItem = static_cast <CFollowingNoticeItem*> (aItem);
-				
-				aFile.WriteL(_L8("<item last='"));
-				aTimeUtilities->EncodeL(aItem->GetLastUpdated(), aTime);
-				aFile.WriteL(aTime);
-				aBuf.Format(_L8("'><notice type='%d' jid='"), aNoticeItem->GetJidType());
+				aBuf.Format(_L8("\t\t\t<notice type='%d' jid='"), aItem->GetIdType());
 				aFile.WriteL(aBuf);
 
-				aFile.WriteL(aTextUtilities->UnicodeToUtf8L(aNoticeItem->GetJid()));
+				aFile.WriteL(aTextUtilities->UnicodeToUtf8L(aItem->GetId()));
 				aFile.WriteL(_L8("'"));
 
-				if(aNoticeItem->GetTitle().Length() > 0) {
+				if(aItem->GetTitle().Length() > 0) {
 					aFile.WriteL(_L8(" name='"));
-					aFile.WriteL(aTextUtilities->UnicodeToUtf8L(aNoticeItem->GetTitle()));
+					aFile.WriteL(aTextUtilities->UnicodeToUtf8L(aItem->GetTitle()));
 					aFile.WriteL(_L8("'"));
 				}
 
-				if(aNoticeItem->GetDescription().Length() > 0) {
+				if(aItem->GetDescription().Length() > 0) {
 					aFile.WriteL(_L8(" description='"));
-					aFile.WriteL(aTextUtilities->UnicodeToUtf8L(aNoticeItem->GetDescription()));
+					aFile.WriteL(aTextUtilities->UnicodeToUtf8L(aItem->GetDescription()));
 					aFile.WriteL(_L8("'"));
 				}
 				
-				aFile.WriteL(_L8("/></item>"));
+				aFile.WriteL(_L8("/>\r\n"));
 			}
 			else if(aItem->GetItemType() == EItemChannel) {
 				CFollowingChannelItem* aChannelItem = static_cast <CFollowingChannelItem*> (aItem);
 
-				aFile.WriteL(_L8("<item last='"));
-				aTimeUtilities->EncodeL(aItem->GetLastUpdated(), aTime);
-				aFile.WriteL(aTime);
-				aBuf.Format(_L8("' avatar_id='%d'><group external='%d' rank='%d' shift='%d'"), aChannelItem->GetAvatarId(), aChannelItem->IsExternal(), aChannelItem->GetRank(), aChannelItem->GetRankShift());
+				aBuf.Format(_L8("\t\t\t<group rank='%d' shift='%d' access='%d'"), aChannelItem->GetRank(), aChannelItem->GetRankShift(), aChannelItem->GetAccessModel());
 				aFile.WriteL(aBuf);
 
-				if(aChannelItem->GetJid().Length() > 0) {
+				if(aChannelItem->GetId().Length() > 0) {
 					aFile.WriteL(_L8(" jid='"));
-					aFile.WriteL(aTextUtilities->UnicodeToUtf8L(aChannelItem->GetJid()));
+					aFile.WriteL(aTextUtilities->UnicodeToUtf8L(aChannelItem->GetId()));
 					aFile.WriteL(_L8("'"));
 				}
 
@@ -3441,28 +3440,24 @@ void CBuddycloudLogic::SaveSettingsAndItemsL() {
 					aFile.WriteL(_L8("'"));
 				}
 				
-				CDiscussion* aDiscussion = iMessagingManager->GetDiscussionL(aChannelItem->GetJid());
+				CDiscussion* aDiscussion = iDiscussionManager->GetDiscussionL(aChannelItem->GetId());
 
-				if(aDiscussion->GetUnreadMessages() > 0) {
-					aBuf.Format(_L8(" unread='%d' replies='%d'"), aDiscussion->GetUnreadMessages(), aDiscussion->GetUnreadReplies());
+				if(aDiscussion->GetUnreadEntries() > 0) {
+					aBuf.Format(_L8(" unreadentries='%d' unreadreplies='%d'"), aDiscussion->GetUnreadEntries(), aDiscussion->GetUnreadReplies());
 					aFile.WriteL(aBuf);
 				}
 
-				aFile.WriteL(_L8("/></item>"));
+				aFile.WriteL(_L8("/>\r\n"));
 			}
 			else if(aItem->GetItemType() == EItemRoster) {
 				CFollowingRosterItem* aRosterItem = static_cast <CFollowingRosterItem*> (aItem);
 				
-				if(!iRosterSynchronized || aRosterItem->GetSubscriptionType() > ESubscriptionNone) {
-					aFile.WriteL(_L8("<item last='"));
-					aTimeUtilities->EncodeL(aItem->GetLastUpdated(), aTime);
-					aFile.WriteL(aTime);
-					aBuf.Format(_L8("' avatar_id='%d'><roster"), aRosterItem->GetAvatarId());
-					aFile.WriteL(aBuf);
+				if(!iRosterSynchronized || aRosterItem->GetSubscription() > EPresenceSubscriptionNone) {
+					aFile.WriteL(_L8("\t\t\t<roster"));
 
-					if(aRosterItem->GetJid().Length() > 0) {
+					if(aRosterItem->GetId().Length() > 0) {
 						aFile.WriteL(_L8(" jid='"));
-						aFile.WriteL(aTextUtilities->UnicodeToUtf8L(aRosterItem->GetJid()));
+						aFile.WriteL(aTextUtilities->UnicodeToUtf8L(aRosterItem->GetId()));
 						aFile.WriteL(_L8("'"));
 					}
 					
@@ -3478,7 +3473,7 @@ void CBuddycloudLogic::SaveSettingsAndItemsL() {
 						aFile.WriteL(_L8("'"));
 					}
 
-					aBuf.Format(_L8(" own='%d'"), aRosterItem->GetIsOwn());
+					aBuf.Format(_L8(" own='%d'"), aRosterItem->OwnItem());
 					aFile.WriteL(aBuf);
 
 					if(aRosterItem->GetAddressbookId() != -1) {
@@ -3486,56 +3481,58 @@ void CBuddycloudLogic::SaveSettingsAndItemsL() {
 						aFile.WriteL(aBuf);
 					}
 					
-					CDiscussion* aDiscussion = iMessagingManager->GetDiscussionL(aRosterItem->GetJid());
+					CDiscussion* aDiscussion = iDiscussionManager->GetDiscussionL(aRosterItem->GetId());
 
-					if(aDiscussion->GetUnreadMessages() > 0) {
-						aBuf.Format(_L8(" unread='%d'"), aDiscussion->GetUnreadMessages());
+					if(aDiscussion->GetUnreadEntries() > 0) {
+						aBuf.Format(_L8(" unreadprivate='%d'"), aDiscussion->GetUnreadEntries());
 						aFile.WriteL(aBuf);
 					}
 
-					aFile.WriteL(_L8(">"));
+					aFile.WriteL(_L8(">\r\n"));
 
-					if(aRosterItem->GetJid(EJidChannel).Length() > 0) {
-						aBuf.Format(_L8("<channel rank='%d' shift='%d' jid='"), aRosterItem->GetRank(), aRosterItem->GetRankShift());
+					if(aRosterItem->GetId(EIdChannel).Length() > 0) {
+						aBuf.Format(_L8("\t\t\t\t<channel rank='%d' shift='%d' jid='"), aRosterItem->GetRank(), aRosterItem->GetRankShift());
 						aFile.WriteL(aBuf);
-						aFile.WriteL(aTextUtilities->UnicodeToUtf8L(aRosterItem->GetJid(EJidChannel)));
+						aFile.WriteL(aTextUtilities->UnicodeToUtf8L(aRosterItem->GetId(EIdChannel)));
 						aFile.WriteL(_L8("'"));
 						
-						aDiscussion = iMessagingManager->GetDiscussionL(aRosterItem->GetJid(EJidChannel));
+						aDiscussion = iDiscussionManager->GetDiscussionL(aRosterItem->GetId(EIdChannel));
 
-						if(aDiscussion->GetUnreadMessages() > 0) {
-							aBuf.Format(_L8(" unread='%d' replies='%d'"), aDiscussion->GetUnreadMessages(), aDiscussion->GetUnreadReplies());
+						if(aDiscussion->GetUnreadEntries() > 0) {
+							aBuf.Format(_L8(" unreadentries='%d' unreadreplies='%d'"), aDiscussion->GetUnreadEntries(), aDiscussion->GetUnreadReplies());
 							aFile.WriteL(aBuf);
 						}
 						
-						aFile.WriteL(_L8("/>"));
+						aFile.WriteL(_L8("/>\r\n"));
 					}
 
 					// Place
-					if(aRosterItem->GetPlace(EPlacePrevious)->GetPlaceName().Length() > 0) {
-						aFile.WriteL(_L8("<location type='0' text='"));
-						aFile.WriteL(aTextUtilities->UnicodeToUtf8L(aRosterItem->GetPlace(EPlacePrevious)->GetPlaceName()));
-						aFile.WriteL(_L8("'/>"));
+					if(aRosterItem->GetGeolocItem(EGeolocItemPrevious)->GetString(EGeolocText).Length() > 0) {
+						aFile.WriteL(_L8("\t\t\t\t<location type='0' text='"));
+						aFile.WriteL(aTextUtilities->UnicodeToUtf8L(aRosterItem->GetGeolocItem(EGeolocItemPrevious)->GetString(EGeolocText)));
+						aFile.WriteL(_L8("'/>\r\n"));
 					}
 
-					if(aRosterItem->GetPlace(EPlaceCurrent)->GetPlaceName().Length() > 0) {
-						aFile.WriteL(_L8("<location type='1' text='"));
-						aFile.WriteL(aTextUtilities->UnicodeToUtf8L(aRosterItem->GetPlace(EPlaceCurrent)->GetPlaceName()));
-						aFile.WriteL(_L8("'/>"));
+					if(aRosterItem->GetGeolocItem(EGeolocItemCurrent)->GetString(EGeolocText).Length() > 0) {
+						aFile.WriteL(_L8("\t\t\t\t<location type='1' text='"));
+						aFile.WriteL(aTextUtilities->UnicodeToUtf8L(aRosterItem->GetGeolocItem(EGeolocItemCurrent)->GetString(EGeolocText)));
+						aFile.WriteL(_L8("'/>\r\n"));
 					}
 
-					if(aRosterItem->GetPlace(EPlaceNext)->GetPlaceName().Length() > 0) {
-						aFile.WriteL(_L8("<location type='2' text='"));
-						aFile.WriteL(aTextUtilities->UnicodeToUtf8L(aRosterItem->GetPlace(EPlaceNext)->GetPlaceName()));
-						aFile.WriteL(_L8("'/>"));
+					if(aRosterItem->GetGeolocItem(EGeolocItemFuture)->GetString(EGeolocText).Length() > 0) {
+						aFile.WriteL(_L8("\t\t\t\t<location type='2' text='"));
+						aFile.WriteL(aTextUtilities->UnicodeToUtf8L(aRosterItem->GetGeolocItem(EGeolocItemFuture)->GetString(EGeolocText)));
+						aFile.WriteL(_L8("'/>\r\n"));
 					}
 
-					aFile.WriteL(_L8("</roster></item>"));
+					aFile.WriteL(_L8("\t\t\t</roster>\r\n"));
 				}
 			}
+			
+			aFile.WriteL(_L8("\t\t</item>\r\n"));
 		}
 
-		aFile.WriteL(_L8("</logicstate></?xml?>"));
+		aFile.WriteL(_L8("\t</logicstate>\r\n</?xml?>"));
 		
 		WriteToLog(_L8("BL    Externalize Logic State -- End"));
 
@@ -3544,20 +3541,21 @@ void CBuddycloudLogic::SaveSettingsAndItemsL() {
 	}
 }
 
-void CBuddycloudLogic::AddChannelItemL(TPtrC aJid, TPtrC aName, TPtrC aTopic, TInt aRank) {
-	if( !IsSubscribedTo(aJid, EItemChannel) ) {
+void CBuddycloudLogic::AddChannelItemL(TPtrC aId, TPtrC aName, TPtrC aTopic, TInt aRank) {
+	if(!IsSubscribedTo(aId, EItemChannel)) {
 		CFollowingChannelItem* aChannelItem = CFollowingChannelItem::NewLC();
 		aChannelItem->SetItemId(iNextItemId++);
-		aChannelItem->SetJidL(aJid);
+		aChannelItem->SetIdL(aId);
 		aChannelItem->SetTitleL(aName);
 		aChannelItem->SetDescriptionL(aTopic);
 		aChannelItem->SetRank(aRank);
 		
-		CDiscussion* aDiscussion = iMessagingManager->GetDiscussionL(aChannelItem->GetJid());
-		aDiscussion->AddMessageReadObserver(aChannelItem);
-		aDiscussion->AddDiscussionReadObserver(this, aChannelItem);
+		CDiscussion* aDiscussion = iDiscussionManager->GetDiscussionL(aChannelItem->GetId());
+		aDiscussion->SetDiscussionReadObserver(this, aChannelItem->GetItemId());			
+		
+		aChannelItem->SetUnreadData(aDiscussion);
 	
-		iMasterFollowingList->InsertItem(GetBubbleToPosition(aChannelItem), aChannelItem);
+		iFollowingList->InsertItem(GetBubbleToPosition(aChannelItem), aChannelItem);
 		CleanupStack::Pop(); // aChannelItem
 	}
 }
@@ -3603,24 +3601,18 @@ void CBuddycloudLogic::LoadPlaceItemsL() {
 			while(aXmlParser->MoveToElement(_L8("place"))) {
 				CBuddycloudExtendedPlace* aPlace = CBuddycloudExtendedPlace::NewLC();
 
-				aPlace->SetPlaceId(aXmlParser->GetIntAttribute(_L8("id")));
-				aPlace->SetRevision(aXmlParser->GetIntAttribute(_L8("revision"), -1));
-				aPlace->SetPlaceNameL(aTextUtilities->Utf8ToUnicodeL(aXmlParser->GetStringAttribute(_L8("name"))));
+				aPlace->SetItemId(aXmlParser->GetIntAttribute(_L8("id")));
+				aPlace->SetRevision(aXmlParser->GetIntAttribute(_L8("rev"), -1));
 				aPlace->SetShared(aXmlParser->GetBoolAttribute(_L8("public")));
 
-				if(aXmlParser->MoveToElement(_L8("address"))) {
-					aPlace->SetPlaceStreetL(aTextUtilities->Utf8ToUnicodeL(aXmlParser->GetStringAttribute(_L8("street"))));
-					aPlace->SetPlaceAreaL(aTextUtilities->Utf8ToUnicodeL(aXmlParser->GetStringAttribute(_L8("area"))));
-					aPlace->SetPlaceCityL(aTextUtilities->Utf8ToUnicodeL(aXmlParser->GetStringAttribute(_L8("city"))));
-					aPlace->SetPlacePostcodeL(aTextUtilities->Utf8ToUnicodeL(aXmlParser->GetStringAttribute(_L8("postcode"))));
-					aPlace->SetPlaceRegionL(aTextUtilities->Utf8ToUnicodeL(aXmlParser->GetStringAttribute(_L8("region"))));
-					aPlace->SetPlaceCountryL(aTextUtilities->Utf8ToUnicodeL(aXmlParser->GetStringAttribute(_L8("country"))));
-				}
-				
-				if(aXmlParser->MoveToElement(_L8("extended"))) {
-					aPlace->SetDescriptionL(aTextUtilities->Utf8ToUnicodeL(aXmlParser->GetStringAttribute(_L8("description"))));
-					aPlace->SetWebsiteL(aTextUtilities->Utf8ToUnicodeL(aXmlParser->GetStringAttribute(_L8("site"))));
-					aPlace->SetWikiL(aTextUtilities->Utf8ToUnicodeL(aXmlParser->GetStringAttribute(_L8("wiki"))));
+				if(aXmlParser->MoveToElement(_L8("geoloc"))) {
+					CXmppGeolocParser* aGeolocParser = CXmppGeolocParser::NewLC();
+					CGeolocData* aGeoloc = aGeolocParser->XmlToGeolocLC(aXmlParser->GetStringData());
+					
+					aPlace->CopyGeolocL(aGeoloc);
+					aPlace->UpdateFromGeolocL();
+					
+					CleanupStack::PopAndDestroy(2); // aGeoloc, aGeolocParser
 				}
 
 				if(aXmlParser->MoveToElement(_L8("visit"))) {
@@ -3631,27 +3623,7 @@ void CBuddycloudLogic::LoadPlaceItemsL() {
 					aPlace->SetTotalSeconds(aXmlParser->GetIntAttribute(_L8("totalsecs")));
 				}
 
-				if(aXmlParser->MoveToElement(_L8("position"))) {
-					// Latitude
-					TPtrC8 pAttributeLatitude = aXmlParser->GetStringAttribute(_L8("latitude"));
-					if(pAttributeLatitude.Length() > 0) {
-						TLex8 aPlaceLatitude(pAttributeLatitude);
-						TReal aLatitude;
-						aPlaceLatitude.Val(aLatitude);
-						aPlace->SetPlaceLatitude(aLatitude);
-					}
-
-					// Longitude
-					TPtrC8 pAttributeLongitude = aXmlParser->GetStringAttribute(_L8("longitude"));
-					if(pAttributeLongitude.Length() > 0) {
-						TLex8 aPlaceLongitude(pAttributeLongitude);
-						TReal aLongitude;
-						aPlaceLongitude.Val(aLongitude);
-						aPlace->SetPlaceLongitude(aLongitude);
-					}
-				}
-
-				iMasterPlaceList->AddPlace(aPlace);
+				iPlaceList->AddItem(aPlace);
 				CleanupStack::Pop(); // aPlace
 			}
 		}
@@ -3668,7 +3640,7 @@ void CBuddycloudLogic::SavePlaceItemsL() {
 
 	RFs aSession = CCoeEnv::Static()->FsSession();	
 	RFileWriteStream aFile;
-	TBuf8<128> aBuf;
+	TBuf8<256> aBuf;
 
 	TFileName aFilePath(_L("PlaceStoreItems.xml"));
 	CFileUtilities::CompleteWithApplicationPath(aSession, aFilePath);
@@ -3682,53 +3654,41 @@ void CBuddycloudLogic::SavePlaceItemsL() {
 		CTimeUtilities* aTimeUtilities = CTimeUtilities::NewLC();
 		TFormattedTimeDesc aTime;
 
-		aFile.WriteL(_L8("<?xml version='1.0' encoding='UTF-8'?><places>"));
+		aFile.WriteL(_L8("<?xml version='1.0' encoding='UTF-8'?>\r\n\t<places>\r\n"));
 
 		TTime aTimeNow;
 		aTimeNow.UniversalTime();
 
-		for(TInt i = 0;i < iMasterPlaceList->CountPlaces();i++) {
-			CBuddycloudExtendedPlace* aPlace = iMasterPlaceList->GetPlaceByIndex(i);
+		for(TInt i = 0;i < iPlaceList->Count();i++) {
+			CBuddycloudExtendedPlace* aPlace = static_cast <CBuddycloudExtendedPlace*> (iPlaceList->GetItemByIndex(i));
 
-			if(aPlace && aPlace->GetPlaceId() > 0) {
+			if(aPlace && aPlace->GetItemId() > 0) {
 				// Place
-				aBuf.Format(_L8("<place id='%d' revision='%d' public='%d'"), aPlace->GetPlaceId(), aPlace->GetRevision(), aPlace->GetShared());
+				aBuf.Format(_L8("\t\t<place id='%d' rev='%d' public='%d'>\r\n"), aPlace->GetItemId(), aPlace->GetRevision(), aPlace->Shared());
 				aFile.WriteL(aBuf);
 
-				aFile.WriteL(_L8(" name='"));
-				aFile.WriteL(aTextUtilities->UnicodeToUtf8L(aPlace->GetPlaceName()));
-
-				// Address
-				aFile.WriteL(_L8("'><address street='"));
-				aFile.WriteL(aTextUtilities->UnicodeToUtf8L(aPlace->GetPlaceStreet()));
-
-				aFile.WriteL(_L8("' area='"));
-				aFile.WriteL(aTextUtilities->UnicodeToUtf8L(aPlace->GetPlaceArea()));
-
-				aFile.WriteL(_L8("' city='"));
-				aFile.WriteL(aTextUtilities->UnicodeToUtf8L(aPlace->GetPlaceCity()));
-				
-				aFile.WriteL(_L8("' postcode='"));
-				aFile.WriteL(aTextUtilities->UnicodeToUtf8L(aPlace->GetPlacePostcode()));
-
-				aFile.WriteL(_L8("' region='"));
-				aFile.WriteL(aTextUtilities->UnicodeToUtf8L(aPlace->GetPlaceRegion()));
-
-				aFile.WriteL(_L8("' country='"));
-				aFile.WriteL(aTextUtilities->UnicodeToUtf8L(aPlace->GetPlaceCountry()));
-				
-				// Extended
-				aFile.WriteL(_L8("'/><extended description='"));
-				aFile.WriteL(aTextUtilities->UnicodeToUtf8L(aPlace->GetDescription()));
-
-				aFile.WriteL(_L8("' site='"));
-				aFile.WriteL(aTextUtilities->UnicodeToUtf8L(aPlace->GetWebsite()));
-
-				aFile.WriteL(_L8("' wiki='"));
-				aFile.WriteL(aTextUtilities->UnicodeToUtf8L(aPlace->GetWiki()));
+				// Geoloc
+				aFile.WriteL(_L8("\t\t\t<geoloc xmlns='http://jabber.org/protocol/geoloc'>\r\n\t\t\t\t<uri>"));
+				aFile.WriteL(aTextUtilities->UnicodeToUtf8L(aPlace->GetGeoloc()->GetString(EGeolocUri)));
+				aFile.WriteL(_L8("</uri>\r\n\t\t\t\t<text>"));
+				aFile.WriteL(aTextUtilities->UnicodeToUtf8L(aPlace->GetGeoloc()->GetString(EGeolocText)));
+				aFile.WriteL(_L8("</text>\r\n\t\t\t\t<street>"));
+				aFile.WriteL(aTextUtilities->UnicodeToUtf8L(aPlace->GetGeoloc()->GetString(EGeolocStreet)));
+				aFile.WriteL(_L8("</street>\r\n\t\t\t\t<area>"));
+				aFile.WriteL(aTextUtilities->UnicodeToUtf8L(aPlace->GetGeoloc()->GetString(EGeolocArea)));
+				aFile.WriteL(_L8("</area>\r\n\t\t\t\t<locality>"));
+				aFile.WriteL(aTextUtilities->UnicodeToUtf8L(aPlace->GetGeoloc()->GetString(EGeolocLocality)));
+				aFile.WriteL(_L8("</locality>\r\n\t\t\t\t<postalcode>"));
+				aFile.WriteL(aTextUtilities->UnicodeToUtf8L(aPlace->GetGeoloc()->GetString(EGeolocPostalcode)));
+				aFile.WriteL(_L8("</postalcode>\r\n\t\t\t\t<region>"));
+				aFile.WriteL(aTextUtilities->UnicodeToUtf8L(aPlace->GetGeoloc()->GetString(EGeolocRegion)));
+				aFile.WriteL(_L8("</region>\r\n\t\t\t\t<country>"));
+				aFile.WriteL(aTextUtilities->UnicodeToUtf8L(aPlace->GetGeoloc()->GetString(EGeolocCountry)));
+				aBuf.Format(_L8("</country>\r\n\t\t\t\t<lat>%.6f</lat>\r\n\t\t\t\t<lon>%.6f</lon>\r\n\t\t\t\t<accuracy>%.3f</accuracy>\r\n\t\t\t</geoloc>\r\n"), aPlace->GetGeoloc()->GetReal(EGeolocLatitude), aPlace->GetGeoloc()->GetReal(EGeolocLongitude), aPlace->GetGeoloc()->GetReal(EGeolocAccuracy));
+				aFile.WriteL(aBuf);
 
 				// Visit
-				aBuf.Format(_L8("'/><visit count='%d'"), aPlace->GetVisits());
+				aBuf.Format(_L8("\t\t\t<visit count='%d'"), aPlace->GetVisits());
 				aFile.WriteL(aBuf);
 
 				if(aPlace->GetPlaceSeen() == EPlaceHere || aPlace->GetPlaceSeen() == EPlaceFlux) {
@@ -3743,16 +3703,12 @@ void CBuddycloudLogic::SavePlaceItemsL() {
 				aTimeUtilities->EncodeL(aPlace->GetLastSeen(), aTime);
 				aFile.WriteL(aTime);
 
-				aBuf.Format(_L8("' lastsecs='%d' totalsecs='%d'/>"), aPlace->GetVisitSeconds(), aPlace->GetTotalSeconds());
-				aFile.WriteL(aBuf);
-
-				// Position
-				aBuf.Format(_L8("<position latitude='%.6f' longitude='%.6f'/></place>"), aPlace->GetPlaceLatitude(), aPlace->GetPlaceLongitude());
+				aBuf.Format(_L8("' lastsecs='%d' totalsecs='%d'/>\r\n\t\t</place>\r\n"), aPlace->GetVisitSeconds(), aPlace->GetTotalSeconds());
 				aFile.WriteL(aBuf);
 			}
 		}
 
-		aFile.WriteL(_L8("</places></?xml?>"));
+		aFile.WriteL(_L8("\t</places>\r\n</?xml?>"));
 
 		CleanupStack::PopAndDestroy(2); // aTimeUtilities, aTextUtilities
 		CleanupStack::PopAndDestroy(&aFile);
@@ -3868,66 +3824,43 @@ void CBuddycloudLogic::RemoveStatusObserver() {
 ----------------------------------------------------------------------------
 */
 
-CBuddycloudFollowingStore* CBuddycloudLogic::GetFollowingStore() {
-	return iMasterFollowingList;
+CBuddycloudListStore* CBuddycloudLogic::GetFollowingStore() {
+	return iFollowingList;
 }
 
 CFollowingRosterItem* CBuddycloudLogic::GetOwnItem() {
 	return iOwnItem;
 }
 
-void CBuddycloudLogic::DeleteItemL(TInt aItemId) {
+void CBuddycloudLogic::UnfollowItemL(TInt aItemId) {
 #ifdef _DEBUG
-	WriteToLog(_L8("BL    CBuddycloudLogic::DeleteItemL"));
+	WriteToLog(_L8("BL    CBuddycloudLogic::UnfollowItemL"));
 #endif
 
-	CFollowingItem* aItem = iMasterFollowingList->GetItemById(aItemId);
+	CFollowingItem* aItem = static_cast <CFollowingItem*> (iFollowingList->GetItemById(aItemId));
 
 	if(aItem) {
 		if(aItem->GetItemType() == EItemRoster) {
 			CFollowingRosterItem* aRosterItem = static_cast <CFollowingRosterItem*> (aItem);
 
-			if(!aRosterItem->GetIsOwn()) {
-				if(aRosterItem->GetSubscriptionType() > ESubscriptionRemove) {
-					// Create subscription remove stanza
-					CTextUtilities* aTextUtilities = CTextUtilities::NewLC();
-					TPtrC8 aEncJid(aTextUtilities->UnicodeToUtf8L(aRosterItem->GetJid()));
-	
-					_LIT8(KStanza, "<iq type='set' id='remove1'><query xmlns='jabber:iq:roster'><item subscription='remove' jid=''/></query></iq>\r\n");
-					HBufC8* aStanza = HBufC8::NewLC(KStanza().Length() + aEncJid.Length());
-					TPtr8 pStanza(aStanza->Des());
-					pStanza.Append(KStanza);
-					pStanza.Insert(93, aEncJid);
-					
-					iXmppEngine->SendAndForgetXmppStanza(pStanza, true);
-					CleanupStack::PopAndDestroy(2); // aStanza, aTextUtilities
-					
-					// Remove from my personal channel membership
-					ChangeUsersChannelAffiliationL(aRosterItem->GetJid(), iOwnItem->GetJid(EJidChannel), EAffiliationNone);
-				}
-				
-				// Unfollow their personal channel
-				UnfollowChannelL(aItemId);
+			if(!aRosterItem->OwnItem() && aRosterItem->GetSubscription() > EPresenceSubscriptionRemove) {
+				// Remove roster subscription
+				CTextUtilities* aTextUtilities = CTextUtilities::NewLC();
+				TPtrC8 aEncJid(aTextUtilities->UnicodeToUtf8L(aRosterItem->GetId()));
 
-				// Unpair and remove item
-				if(aRosterItem->GetAddressbookId() != KErrNotFound) {
-					UnpairItemsL(aItemId);
-				}
-			
-				// Delete discussion and remove item
-				iMessagingManager->DeleteDiscussionL(aRosterItem->GetJid());
-				iMasterFollowingList->DeleteItemById(aItemId);
+				_LIT8(KStanza, "<iq type='set' id='remove1'><query xmlns='jabber:iq:roster'><item subscription='remove' jid=''/></query></iq>\r\n");
+				HBufC8* aStanza = HBufC8::NewLC(KStanza().Length() + aEncJid.Length());
+				TPtr8 pStanza(aStanza->Des());
+				pStanza.Append(KStanza);
+				pStanza.Insert(93, aEncJid);
 				
-				NotifyNotificationObservers(ENotificationFollowingItemDeleted, aItemId);
-				
-				iSettingsSaveNeeded = true;
+				iXmppEngine->SendAndForgetXmppStanza(pStanza, true);
+				CleanupStack::PopAndDestroy(2); // aStanza, aTextUtilities
 			}
 		}
 		else if(aItem->GetItemType() == EItemChannel) {
 			UnfollowChannelL(aItemId);
 		}		
-		
-		iSettingsSaveNeeded = true;
 	}
 }
 
@@ -3939,42 +3872,26 @@ void CBuddycloudLogic::DeleteItemL(TInt aItemId) {
 ----------------------------------------------------------------------------
 */
 
-TPtrC CBuddycloudLogic::GetRawJid(TDesC& aJid) {
-	TPtrC pJid(aJid);
-	TInt aSearch = pJid.Locate('/');
-	
-	if(aSearch != KErrNotFound) {
-		return pJid.Left(aSearch);
-	}
-	
-	return pJid;
-}
-
-TInt CBuddycloudLogic::IsSubscribedTo(const TDesC& aJid, TInt aItemOptions) {
-	for(TInt i = 0; i < iMasterFollowingList->Count(); i++) {
-		CFollowingItem* aItem = iMasterFollowingList->GetItemByIndex(i);
+TInt CBuddycloudLogic::IsSubscribedTo(const TDesC& aId, TInt aItemOptions) {
+	for(TInt i = 0; i < iFollowingList->Count(); i++) {
+		CFollowingItem* aItem = static_cast <CFollowingItem*> (iFollowingList->GetItemByIndex(i));
 		
-		if(aItemOptions & EItemNotice && aItem->GetItemType() == EItemNotice) {
-			CFollowingNoticeItem* aNoticeItem = static_cast <CFollowingNoticeItem*> (aItem);
+		if((aItem->GetItemType() == EItemNotice && aItemOptions & EItemNotice) ||
+				(aItem->GetItemType() == EItemChannel && aItemOptions & EItemChannel) ||
+				(aItem->GetItemType() == EItemRoster && aItemOptions & EItemRoster)) {
 			
-			if(aNoticeItem->GetJid().CompareF(aJid) == 0) {
-				// Check notice jid
-				return aItem->GetItemId();
-			}		
-		}
-		else if(aItem->GetItemType() >= EItemRoster) {
-			CFollowingChannelItem* aChannelItem = static_cast <CFollowingChannelItem*> (aItem);
-			
-			if(aItemOptions & EItemChannel && aChannelItem->GetJid().CompareF(aJid) == 0) {
-				// Check topic & personal channel jids
-				return aItem->GetItemId();
+			if(aItem->GetItemType() != EItemRoster) {
+				if(aItem->GetId().CompareF(aId) == 0) {
+					// Check id
+					return aItem->GetItemId();
+				}		
 			}
-			else if(aItemOptions & EItemRoster && aItem->GetItemType() == EItemRoster) {
+			else {
 				CFollowingRosterItem* aRosterItem = static_cast <CFollowingRosterItem*> (aItem);
 				
-				if(aRosterItem->GetJid().CompareF(aJid) == 0) {
+				if(aRosterItem->GetId().CompareF(aId) == 0) {
 					// Check roster jid
-					if(aRosterItem->GetSubscriptionType() >= ESubscriptionTo) {
+					if(aRosterItem->GetSubscription() >= EPresenceSubscriptionTo) {
 						return aItem->GetItemId();
 					}
 					else {
@@ -3994,317 +3911,163 @@ void CBuddycloudLogic::RespondToNoticeL(TInt aItemId, TNoticeResponse aResponse)
 #endif
 	
 	if(iOwnItem) {
-		CFollowingItem* aItem = iMasterFollowingList->GetItemById(aItemId);
+		CFollowingItem* aItem = static_cast <CFollowingItem*> (iFollowingList->GetItemById(aItemId));
 		
 		if(aItem && aItem->GetItemType() == EItemNotice) {
-			CFollowingNoticeItem* aNoticeItem = static_cast <CFollowingNoticeItem*> (aItem);
-			
-			if(aNoticeItem->GetJidType() == EJidChannel) {
-				if(aResponse == ENoticeAccept) {
-					TPtrC pDescription(aNoticeItem->GetDescription());
-					TInt aSearchResult = pDescription.Locate(':');
-					
-					if(aSearchResult != KErrNotFound) {
-						pDescription.Set(pDescription.Mid(aSearchResult + 2));
-					}
-					
-					FollowTopicChannelL(aNoticeItem->GetJid(), pDescription);
-				}
-				else if(aResponse == ENoticeDecline) {
-					DeclineChannelInviteL(aNoticeItem->GetJid());
-				}
-			}
-			else if(aNoticeItem->GetJidType() == EJidRoster) {
+			if(aItem->GetIdType() == EIdRoster) {
 				CTextUtilities* aTextUtilities = CTextUtilities::NewLC();
 				
-				HBufC8* aEncJid = aTextUtilities->UnicodeToUtf8L(aNoticeItem->GetJid()).AllocLC();
-				TPtr8 pEncJid(aEncJid->Des());
-				
 				if(aResponse <= ENoticeAcceptAndFollow) {
-					// Update personal channel affiliation
-					ChangeUsersChannelAffiliationL(aNoticeItem->GetJid(), iOwnItem->GetJid(EJidChannel), EAffiliationMember);		
-									
 					// Accept request
-					_LIT8(KAcceptStanza, "<presence to='' type='subscribed'/>\r\n");
-					HBufC8* aAcceptStanza = HBufC8::NewLC(KAcceptStanza().Length() + pEncJid.Length());
-					TPtr8 pAcceptStanza(aAcceptStanza->Des());
-					pAcceptStanza.Append(KAcceptStanza);
-					pAcceptStanza.Insert(14, pEncJid);
-	
-					iXmppEngine->SendAndForgetXmppStanza(pAcceptStanza, true);
-					CleanupStack::PopAndDestroy(); // aAcceptStanza				
+					SendPresenceSubscriptionL(aTextUtilities->UnicodeToUtf8L(aItem->GetId()), _L8("subscribed"));
 					
 					if(aResponse == ENoticeAcceptAndFollow) {
 						// Follow requester back
-						FollowContactL(aNoticeItem->GetJid());
+						FollowContactL(aItem->GetId());
 					}
 				}
 				else {
-					// Deny user to access personal channel
-					ChangeUsersChannelAffiliationL(aNoticeItem->GetJid(), iOwnItem->GetJid(EJidChannel), EAffiliationNone);
-	
 					// Unsubscribe to presence
-					_LIT8(KStanza, "<presence to='' type='unsubscribed'/>\r\n");
-					HBufC8* aStanza = HBufC8::NewLC(KStanza().Length() + pEncJid.Length());
-					TPtr8 pStanza(aStanza->Des());
-					pStanza.Append(KStanza);
-					pStanza.Insert(14, pEncJid);
-	
-					iXmppEngine->SendAndForgetXmppStanza(pStanza, true);
-					CleanupStack::PopAndDestroy(); // aStanza
+					SendPresenceSubscriptionL(aTextUtilities->UnicodeToUtf8L(aItem->GetId()), _L8("unsubscribed"));
 				}
 				
-				CleanupStack::PopAndDestroy(2); // aEncJid, aTextUtilities
+				CleanupStack::PopAndDestroy(); // aTextUtilities
 			}
 			
-			iMasterFollowingList->DeleteItemById(aItemId);
+			iFollowingList->DeleteItemById(aItemId);
 			
 			NotifyNotificationObservers(ENotificationFollowingItemDeleted, aItemId);
 		}
 	}
 }
 
-void CBuddycloudLogic::MediaPostRequestL(const TDesC& aJid) {
+void CBuddycloudLogic::MediaPostRequestL(TInt aItemId) {
 #ifdef _DEBUG
 	WriteToLog(_L8("BL    CBuddycloudLogic::MediaPostRequestL"));
 #endif
 
-	if(iOwnItem) {
-		CTextUtilities* aTextUtilities = CTextUtilities::NewLC();
+	CFollowingItem* aItem = static_cast <CFollowingItem*> (iFollowingList->GetItemById(aItemId));
+	
+	if(iOwnItem && aItem && aItem->GetItemId() >= EItemRoster) {
+		CFollowingChannelItem* aChannelItem = static_cast <CFollowingChannelItem*> (aItem);
 		
-		HBufC8* aEncJid = aTextUtilities->UnicodeToUtf8L(aJid).AllocLC();
-		TPtr8 pEncJid(aEncJid->Des());
-		TInt aLocate = pEncJid.Locate('@');
-		
-		if(aLocate != KErrNotFound) {
-			CBuddycloudBasicPlace* aPlace = iOwnItem->GetPlace(EPlaceCurrent);
-		
-			_LIT8(KMediaStanza, "<iq to='media.buddycloud.com' type='set' id='mediareq_'><media xmlns='http://buddycloud.com/media#request'><placeid>%d</placeid><lat>%.6f</lat><lon>%.6f</lon><channeljid></channeljid></media></iq>\r\n");
-			HBufC8* aMediaStanza = HBufC8::NewLC(KMediaStanza().Length() + aLocate + pEncJid.Length() + 32 + 22);
+		if(aChannelItem->GetId().Length() > 0) {		
+			CGeolocData* aGeoloc = iOwnItem->GetGeolocItem(EGeolocItemCurrent);
+			
+			CTextUtilities* aTextUtilities = CTextUtilities::NewLC();
+					
+			HBufC8* aEncId = aTextUtilities->UnicodeToUtf8L(aChannelItem->GetId()).AllocLC();
+			TPtr8 pEncId(aEncId->Des());
+			
+			_LIT8(KMediaStanza, "<iq to='media.buddycloud.com' type='set' id='mediareq:%d'><media xmlns='http://buddycloud.com/media#request'><placeid>%d</placeid><lat>%.6f</lat><lon>%.6f</lon><node></node></media></iq>\r\n");
+			HBufC8* aMediaStanza = HBufC8::NewLC(KMediaStanza().Length() + pEncId.Length() + 32 + 22);
 			TPtr8 pMediaStanza(aMediaStanza->Des());
-			pMediaStanza.Format(KMediaStanza, iStablePlaceId, aPlace->GetPlaceLatitude(), aPlace->GetPlaceLongitude());
-			pMediaStanza.Insert(pMediaStanza.Length() - 28, pEncJid);
-			pMediaStanza.Insert(54, pEncJid.Left(aLocate));
+			pMediaStanza.Format(KMediaStanza, aItem->GetItemId(), iStablePlaceId, aGeoloc->GetReal(EGeolocLatitude),  aGeoloc->GetReal(EGeolocLongitude));
+			pMediaStanza.Insert(pMediaStanza.Length() - 22, pEncId);
 		
 			iXmppEngine->SendAndAcknowledgeXmppStanza(pMediaStanza, this, true);
-			CleanupStack::PopAndDestroy(); // aMediaStanza
+			CleanupStack::PopAndDestroy(3); // aMediaStanza, aEncId, aTextUtilities
 		}
-		CleanupStack::PopAndDestroy(2); // aEncJid, aTextUtilities
 	}
 }
 
 CDiscussion* CBuddycloudLogic::GetDiscussion(const TDesC& aJid) {
-	return iMessagingManager->GetDiscussionL(aJid);			
+	return iDiscussionManager->GetDiscussionL(aJid);			
 }
 
-void CBuddycloudLogic::SetTopicL(TDesC& aTopic, TDesC& aToJid, TBool aIsChannel) {
+void CBuddycloudLogic::PostMessageL(TInt aItemId, TDesC& aId, TDesC& aContent, const TDesC8& aReferenceId) {
 #ifdef _DEBUG
-	WriteToLog(_L8("BL    CBuddycloudLogic::SetTopicL"));
-#endif
-
-	CTextUtilities* aTextUtilities = CTextUtilities::NewLC();
-
-	HBufC8* aEncTopic = aTextUtilities->UnicodeToUtf8L(aTopic).AllocLC();
-	TPtr8 pEncTopic = aEncTopic->Des();
-
-	HBufC8* aEncJid = aTextUtilities->UnicodeToUtf8L(aToJid).AllocLC();
-	TPtr8 pEncJid(aEncJid->Des());
-
-	_LIT8(KStanza, "<message type='' to='' id='message'><subject></subject></message>\r\n");
-	HBufC8* aStanza = HBufC8::NewLC(KStanza().Length() + pEncJid.Length() + pEncTopic.Length() + KMessageTypeGroupchat().Length());
-	TPtr8 pStanza(aStanza->Des());
-	pStanza.Append(KStanza);
-	pStanza.Insert(45, pEncTopic);
-	pStanza.Insert(21, pEncJid);
-
-	if(aIsChannel) {
-		pStanza.Insert(15, KMessageTypeGroupchat);
-	}
-	else {
-		pStanza.Insert(15, KMessageTypeChat);
-	}
-
-	iXmppEngine->SendAndForgetXmppStanza(pStanza, true);
-	CleanupStack::PopAndDestroy(4); // aStanza, aEncJid, aEncTopic, aTextUtilities
-}
-
-void CBuddycloudLogic::BuildNewMessageL(TDesC& aToJid, TDesC& aMessageText, TBool aIsChannel, CMessage* aReferenceMessage) {
-#ifdef _DEBUG
-	WriteToLog(_L8("BL    CBuddycloudLogic::BuildNewMessageL"));
+	WriteToLog(_L8("BL    CBuddycloudLogic::PostMessageL"));
 #endif
 	
-	CTextUtilities* aTextUtilities = CTextUtilities::NewLC();	
-
-	HBufC8* aEncJid = aTextUtilities->UnicodeToUtf8L(aToJid).AllocLC();
-	TPtr8 pEncJid(aEncJid->Des());
+	CFollowingItem* aItem = static_cast <CFollowingItem*> (iFollowingList->GetItemById(aItemId));
 	
-	HBufC8* aEncMessage = aTextUtilities->UnicodeToUtf8L(aMessageText).AllocLC();
-	TPtr8 pEncMessage(aEncMessage->Des());
-
-	_LIT8(KMessageStanza, "<message type='' to='' id='message'><body></body></message>\r\n");
-	HBufC8* aStanza = HBufC8::NewL(KMessageStanza().Length() + pEncJid.Length() + pEncMessage.Length() + KMessageTypeGroupchat().Length());
-	TPtr8 pStanza(aStanza->Des());
-	pStanza.Append(KMessageStanza);
-	pStanza.Insert(42, pEncMessage);
-	pStanza.Insert(21, pEncJid);
-	
-	if(aIsChannel) {
-		pStanza.Insert(15, KMessageTypeGroupchat);
+	if(iOwnItem && aItem && aItem->GetItemType() >= EItemRoster) {
+		CFollowingChannelItem* aChannelItem = static_cast <CFollowingChannelItem*> (aItem);
 		
-		// Thread
-		_LIT8(KThreadElement, "<thread></thread>");
-
-		if(aReferenceMessage && aReferenceMessage->GetThread().Length() > 0) {
-			aStanza = aStanza->ReAlloc(pStanza.Length() + KThreadElement().Length() + aReferenceMessage->GetThread().Length());
-			pStanza.Set(aStanza->Des());
-			pStanza.Insert(pStanza.Length() - 12, KThreadElement);
-			pStanza.Insert(pStanza.Length() - 12 - 9, aReferenceMessage->GetThread());
+		CTextUtilities* aTextUtilities = CTextUtilities::NewLC();	
+		
+		HBufC8* aEncId = aTextUtilities->UnicodeToUtf8L(aId).AllocLC();
+		TPtr8 pEncId(aEncId->Des());
+				
+		if(aItem->GetItemType() == EItemRoster && aItem->GetId().Compare(aId) != 0) {	
+			// Send private message
+			TBuf8<20> aThreadData(aReferenceId.Left(20));
+			TTime aCurrentTime = TimeStamp();
+			
+			if(aThreadData.Length() == 0) {
+				// Generate thread id
+				CTimeUtilities::EncodeL(aCurrentTime, aThreadData);
+			}
+			
+			HBufC8* aEncContent = aTextUtilities->UnicodeToUtf8L(aContent).AllocLC();
+			TPtr8 pEncContent(aEncContent->Des());
+			
+			CXmppGeolocParser* aGeolocParser = CXmppGeolocParser::NewLC();
+			TPtrC8 aGeolocXml(aGeolocParser->GeolocToXmlL(iOwnItem->GetGeolocItem(EGeolocItemCurrent)));
+			
+			_LIT8(KMessageStanza, "<message type='chat' to='' id='message'><body></body><thread></thread></message>\r\n");
+			HBufC8* aMessageStanza = HBufC8::NewLC(KMessageStanza().Length() + pEncId.Length() + pEncContent.Length() + aThreadData.Length() + aGeolocXml.Length());
+			TPtr8 pMessageStanza(aMessageStanza->Des());
+			pMessageStanza.Append(KMessageStanza);
+			pMessageStanza.Insert(70, aGeolocXml);
+			pMessageStanza.Insert(61, aThreadData);
+			pMessageStanza.Insert(46, pEncContent);
+			pMessageStanza.Insert(25, pEncId);
+			
+			iXmppEngine->SendAndForgetXmppStanza(pMessageStanza, true, EXmppPriorityHigh);			
+			CleanupStack::PopAndDestroy(3); // aMessageStanza, aGeolocParser, aEncContent
+			
+			// Generate entry id
+			CTimeUtilities::EncodeL(aCurrentTime, aThreadData);
+			
+			// Store private message
+			CAtomEntryData* aAtomEntry = CAtomEntryData::NewLC();
+			aAtomEntry->SetIdL(aThreadData);
+			aAtomEntry->SetPublishTime(aCurrentTime);
+			aAtomEntry->SetAuthorJidL(iOwnItem->GetId(), false);	
+			aAtomEntry->GetLocation()->SetStringL(EGeolocText, *iBroadLocationText);			
+			aAtomEntry->SetContentL(aContent);			
+			aAtomEntry->SetIconId(iOwnItem->GetIconId());	
+			aAtomEntry->SetPrivate(true);
+			aAtomEntry->SetRead(true);
+			
+			if(aItem->GetId().Compare(iOwnItem->GetId()) == 0) {
+				aAtomEntry->SetAuthorAffiliation(EPubsubAffiliationOwner);
+			}
+			
+			// Add to discussion
+			CDiscussion* aDiscussion = iDiscussionManager->GetDiscussionL(aId);
+			aDiscussion->AddEntryOrCommentLD(aAtomEntry, aReferenceId);
 		}
 		else {
-			TPtrC8 aThread(GenerateNewThreadLC());
+			// Channel post			
+			CGeolocData* aGeoloc = iOwnItem->GetGeolocItem(EGeolocItemCurrent);
 			
-			aStanza = aStanza->ReAlloc(pStanza.Length() + KThreadElement().Length() + aThread.Length());
-			pStanza.Set(aStanza->Des());
-			pStanza.Insert(pStanza.Length() - 12, KThreadElement);
-			pStanza.Insert(pStanza.Length() - 12 - 9, aThread);
-					
-			CleanupStack::PopAndDestroy();
-		}
-	}
-	else {
-		pStanza.Insert(15, KMessageTypeChat);
-		
-		// Insert message into discussion
-		CMessage* aMessage = CMessage::NewLC();
-		aMessage->SetReceivedAt(TimeStamp());
-		aMessage->SetPrivate(true);
-		aMessage->SetRead(true);
-		aMessage->SetOwn(true);
-		aMessage->SetJidL(iOwnItem->GetJid(), EMessageJidRoster);
-	
-		if(iSettingFullName.Length() > 0) {
-			aMessage->SetNameL(iSettingFullName);
-		}
-		else {
-			aMessage->SetNameL(iSettingUsernameOnly);
-		}
-		
-		aMessage->SetBodyL(aMessageText, iSettingUsernameOnly);
-		aMessage->SetLocationL(*iBroadLocationText);
+			CAtomEntryData* aAtomEntry = CAtomEntryData::NewLC();
+			aAtomEntry->GetLocation()->SetStringL(EGeolocText, *iBroadLocationText);			
+			aAtomEntry->GetLocation()->SetStringL(EGeolocLocality, aGeoloc->GetString(EGeolocLocality));			
+			aAtomEntry->GetLocation()->SetStringL(EGeolocCountry, aGeoloc->GetString(EGeolocCountry));			
+			aAtomEntry->SetAuthorJidL(iOwnItem->GetId(), false);	
+			aAtomEntry->SetContentL(aContent);			
 
-		iMessagingManager->GetDiscussionL(aToJid)->AddMessageLD(aMessage);
-	}
-		
-	// Geoloc
-	if(iOwnItem) {
-		CBuddycloudBasicPlace* aPlace = iOwnItem->GetPlace(EPlaceCurrent);
-		
-		if(aPlace->GetPlaceCity().Length() > 0 || aPlace->GetPlaceCountry().Length() > 0) {
-			_LIT8(KGeolocStanza, "<geoloc xmlns='http://jabber.org/protocol/geoloc'><locality></locality><country></country></geoloc>");
-			HBufC8* aEncCity = aTextUtilities->UnicodeToUtf8L(aPlace->GetPlaceCity()).AllocLC();
-			TPtrC8 pEncCity(aEncCity->Des());
+			CXmppAtomEntryParser* aAtomEntryParser = CXmppAtomEntryParser::NewLC();
+			TPtrC8 aAtomEntryXml(aAtomEntryParser->AtomEntryToXmlL(aAtomEntry, aReferenceId));
 			
-			HBufC8* aEncCountry = aTextUtilities->UnicodeToUtf8L(aPlace->GetPlaceCountry()).AllocLC();
-			TPtrC8 pEncCountry(aEncCountry->Des());
+			_LIT8(KPublishStanza, "<iq to='' type='set' id='publish:%02d'><pubsub xmlns='http://jabber.org/protocol/pubsub'><publish node=''><item></item></publish></pubsub></iq>\r\n");
+			HBufC8* aPublishStanza = HBufC8::NewLC(KPublishStanza().Length() + KBuddycloudPubsubServer().Length() + pEncId.Length() + aAtomEntryXml.Length());
+			TPtr8 pPublishStanza(aPublishStanza->Des());
+			pPublishStanza.AppendFormat(KPublishStanza, GetNewIdStamp());
+			pPublishStanza.Insert(110, aAtomEntryXml);
+			pPublishStanza.Insert(102, pEncId);
+			pPublishStanza.Insert(8, KBuddycloudPubsubServer);
 			
-			aStanza = aStanza->ReAlloc(pStanza.Length() + KGeolocStanza().Length() + pEncCity.Length() + pEncCountry.Length());
-			pStanza.Set(aStanza->Des());
-			pStanza.Insert((pStanza.Length() - 12), KGeolocStanza);
-			pStanza.Insert((pStanza.Length() - 12 - 39), pEncCity);
-			pStanza.Insert((pStanza.Length() - 12 - 19), pEncCountry);
-			
-			CleanupStack::PopAndDestroy(2); // aEncCountry, aEncCity
+			iXmppEngine->SendAndForgetXmppStanza(pPublishStanza, true, EXmppPriorityHigh);			
+			CleanupStack::PopAndDestroy(3); // aPublishStanza, aAtomEntryXml, aPublishStanza
 		}
-	}
-	
-	// Chatstate
-	if(!aIsChannel) {		
-		_LIT8(KChatstateElement, "<active xmlns='http://jabber.org/protocol/chatstates'/>");
-		aStanza = aStanza->ReAlloc(pStanza.Length() + KChatstateElement().Length());
-		pStanza.Set(aStanza->Des());
-		pStanza.Insert(pStanza.Length() - 12, KChatstateElement);
-	}
-	
-	// Nick
-	if(iSettingFullName.Length() > 0 && (iSettingShowName || !aIsChannel)) {
-		_LIT8(KNickElement, "<nick xmlns='http://jabber.org/protocol/nick'></nick>");
-		HBufC8* aEncFullName = aTextUtilities->UnicodeToUtf8L(iSettingFullName).AllocLC();
-		TPtr8 pEncFullName(aEncFullName->Des());
-
-		aStanza = aStanza->ReAlloc(pStanza.Length() + KNickElement().Length() + pEncFullName.Length());
-		pStanza.Set(aStanza->Des());
-		pStanza.Insert(pStanza.Length() - 12, KNickElement);
-		pStanza.Insert(pStanza.Length() - 12 - 7, pEncFullName);
 		
-		CleanupStack::PopAndDestroy(); // aEncFullName
-	}
-
-	iXmppEngine->SendAndForgetXmppStanza(pStanza, true);
-	
-	if(aStanza) {
-		delete aStanza;
-	}
-	
-	CleanupStack::PopAndDestroy(3); // aEncJid, aEncMessage, aTextUtilities
-	
-	if(iState == ELogicOffline) {
-		HBufC* aMessage = CEikonEnv::Static()->AllocReadResourceLC(R_LOCALIZED_STRING_NOTE_MESSAGEQUEUED);
-		CAknInformationNote* aDialog = new (ELeave) CAknInformationNote();		
-		aDialog->ExecuteLD(*aMessage);
-		CleanupStack::PopAndDestroy(); // aMessage
-	}
-}
-
-void CBuddycloudLogic::SetChatStateL(TMessageChatState aChatState, TDesC& aToJid) {
-	if(iState == ELogicOnline) {
-		CTextUtilities* aTextUtilities = CTextUtilities::NewLC();
-		TPtrC8 aEncJid(aTextUtilities->UnicodeToUtf8L(aToJid));
-
-		_LIT8(KMessageStanza, "<message to='' type='chat' id='chatstate'>< xmlns='http://jabber.org/protocol/chatstates'/></message>\r\n");
-		HBufC8* aStanza = HBufC8::NewLC(KMessageStanza().Length() + aEncJid.Length() + KChatstateComposing().Length() + KMessageTypeGroupchat().Length());
-		TPtr8 pStanza(aStanza->Des());
-		pStanza.Append(KMessageStanza);
-
-		// Add chatstate
-		if(aChatState == EChatActive) {
-			pStanza.Insert(43, KChatstateActive);
-		}
-		else if(aChatState == EChatComposing) {
-			pStanza.Insert(43, KChatstateComposing);
-		}
-		else if(aChatState == EChatInactive) {
-			pStanza.Insert(43, KChatstateInactive);
-		}
-		else if(aChatState == EChatPaused) {
-			pStanza.Insert(43, KChatstatePaused);
-		}
-		else {
-			pStanza.Insert(43, KChatstateGone);
-		}				
-
-		pStanza.Insert(13, aEncJid);
-
-		iXmppEngine->SendAndForgetXmppStanza(pStanza, false);
-		CleanupStack::PopAndDestroy(2); // aStanza, aTextUtilities
-	}
-}
-
-TDesC8& CBuddycloudLogic::GenerateNewThreadLC() {
-	HBufC8* aDest = HBufC8::NewLC(64);
-	TPtr8 pDest(aDest->Des());
-	
-	CTextUtilities* aTextUtilities = CTextUtilities::NewLC();	
-	HBufC8* aSrc = HBufC8::NewLC(pDest.MaxLength() / 2);
-	TPtr8 pSrc(aSrc->Des());
-	
-	pSrc.AppendNum(TimeStamp().Int64());
-	pSrc.Insert((pSrc.Length() / 2), aTextUtilities->UnicodeToUtf8L(iSettingUsername).Left(pSrc.MaxLength() - pSrc.Length()));
-	
-	aTextUtilities->Base64Encode(pSrc, pDest);
-	
-	CleanupStack::PopAndDestroy(2); // aSrc, aTextUtilities
-	
-	return *aDest;
+		CleanupStack::PopAndDestroy(2); // aEncId, aTextUtilities
+	}	
 }
 
 /*
@@ -4381,7 +4144,7 @@ TInt CBuddycloudLogic::GetMyPatternQuality() {
 }
 
 CBuddycloudPlaceStore* CBuddycloudLogic::GetPlaceStore() {
-	return iMasterPlaceList;
+	return iPlaceList;
 }
 
 void CBuddycloudLogic::SendEditedPlaceDetailsL(TBool aSearchOnly) {
@@ -4391,60 +4154,62 @@ void CBuddycloudLogic::SendEditedPlaceDetailsL(TBool aSearchOnly) {
 	
 	iPlacesSaveNeeded = true;
 	
-	CBuddycloudExtendedPlace * aEditingPlace = iMasterPlaceList->GetEditedPlace();
+	CBuddycloudExtendedPlace* aEditingPlace = static_cast <CBuddycloudExtendedPlace*> (iPlaceList->GetEditedPlace());
 	
 	// Send New/Updated place to server
 	if(aEditingPlace) {
 		CTextUtilities* aTextUtilities = CTextUtilities::NewLC();
+		
+		CGeolocData* aGeoloc = aEditingPlace->GetGeoloc();
 
 		// -----------------------------------------------------------------
 		// Get data from edit
 		// -----------------------------------------------------------------
 		// Name
-		HBufC8* aPlaceName = aTextUtilities->UnicodeToUtf8L(aEditingPlace->GetPlaceName()).AllocLC();
+		HBufC8* aPlaceName = aTextUtilities->UnicodeToUtf8L(aGeoloc->GetString(EGeolocText)).AllocLC();
 		TPtr8 pPlaceName(aPlaceName->Des());
 
 		// Street
-		HBufC8* aPlaceStreet = aTextUtilities->UnicodeToUtf8L(aEditingPlace->GetPlaceStreet()).AllocLC();
+		HBufC8* aPlaceStreet = aTextUtilities->UnicodeToUtf8L(aGeoloc->GetString(EGeolocStreet)).AllocLC();
 		TPtr8 pPlaceStreet(aPlaceStreet->Des());
 
 		// Area
-		HBufC8* aPlaceArea = aTextUtilities->UnicodeToUtf8L(aEditingPlace->GetPlaceArea()).AllocLC();
+		HBufC8* aPlaceArea = aTextUtilities->UnicodeToUtf8L(aGeoloc->GetString(EGeolocArea)).AllocLC();
 		TPtr8 pPlaceArea(aPlaceArea->Des());
 
 		// City
-		HBufC8* aPlaceCity = aTextUtilities->UnicodeToUtf8L(aEditingPlace->GetPlaceCity()).AllocLC();
+		HBufC8* aPlaceCity = aTextUtilities->UnicodeToUtf8L(aGeoloc->GetString(EGeolocLocality)).AllocLC();
 		TPtr8 pPlaceCity(aPlaceCity->Des());
 
 		// Postcode
-		HBufC8* aPlacePostcode = aTextUtilities->UnicodeToUtf8L(aEditingPlace->GetPlacePostcode()).AllocLC();
+		HBufC8* aPlacePostcode = aTextUtilities->UnicodeToUtf8L(aGeoloc->GetString(EGeolocPostalcode)).AllocLC();
 		TPtr8 pPlacePostcode(aPlacePostcode->Des());
 
 		// Region
-		HBufC8* aPlaceRegion = aTextUtilities->UnicodeToUtf8L(aEditingPlace->GetPlaceRegion()).AllocLC();
+		HBufC8* aPlaceRegion = aTextUtilities->UnicodeToUtf8L(aGeoloc->GetString(EGeolocRegion)).AllocLC();
 		TPtr8 pPlaceRegion(aPlaceRegion->Des());
 
 		// Country
-		HBufC8* aPlaceCountry = aTextUtilities->UnicodeToUtf8L(aEditingPlace->GetPlaceCountry()).AllocLC();
+		HBufC8* aPlaceCountry = aTextUtilities->UnicodeToUtf8L(aGeoloc->GetString(EGeolocCountry)).AllocLC();
 		TPtr8 pPlaceCountry(aPlaceCountry->Des());
 		
-		if(aEditingPlace->GetPlaceId() < 0) {
-			if(aEditingPlace->GetPlaceLatitude() == 0.0 && aEditingPlace->GetPlaceLongitude() == 0.0) {
+		if(aEditingPlace->GetItemId() < 0) {
+			if(aGeoloc->GetReal(EGeolocLatitude) == 0.0 && aGeoloc->GetReal(EGeolocLongitude) == 0.0) {
 				TReal aLatitude, aLongitude;
 				
 				iLocationEngine->GetGpsPosition(aLatitude, aLongitude);
-				aEditingPlace->SetPlaceLatitude(aLatitude);
-				aEditingPlace->SetPlaceLongitude(aLongitude);
+				aGeoloc->SetRealL(EGeolocLatitude, aLatitude);
+				aGeoloc->SetRealL(EGeolocLongitude, aLongitude);
 			}
 		}
 		
 		// Latitude
 		TBuf8<16> aPlaceLatitude;
-		aPlaceLatitude.Format(_L8("%.6f"), aEditingPlace->GetPlaceLatitude());
+		aPlaceLatitude.Format(_L8("%.6f"), aGeoloc->GetReal(EGeolocLatitude));
 
 		// Longitude
 		TBuf8<16> aPlaceLongitude;
-		aPlaceLongitude.Format(_L8("%.6f"), aEditingPlace->GetPlaceLongitude());
+		aPlaceLongitude.Format(_L8("%.6f"), aGeoloc->GetReal(EGeolocLongitude));
 		
 		// Build core form stanza
 		_LIT8(KLatitudeElement, "<lat></lat>");
@@ -4464,7 +4229,7 @@ void CBuddycloudLogic::SendEditedPlaceDetailsL(TBool aSearchOnly) {
 		pCoreStanza.Insert(137, pPlaceStreet);
 		pCoreStanza.Insert(122, pPlaceName);
 	
-		if(aEditingPlace->GetPlaceLatitude() != 0.0 || aEditingPlace->GetPlaceLongitude() != 0.0) {
+		if(aGeoloc->GetReal(EGeolocLatitude) != 0.0 || aGeoloc->GetReal(EGeolocLongitude) != 0.0) {
 			pCoreStanza.Insert(pCoreStanza.Length() - 23, KLongitudeElement);
 			pCoreStanza.Insert(pCoreStanza.Length() - 29, aPlaceLongitude);
 			pCoreStanza.Insert(pCoreStanza.Length() - 23, KLatitudeElement);
@@ -4484,9 +4249,9 @@ void CBuddycloudLogic::SendEditedPlaceDetailsL(TBool aSearchOnly) {
 		}
 		else {		
 			TBuf8<20> aSharedElement;
-			aSharedElement.Format(_L8("<shared>%d</shared>"), aEditingPlace->GetShared());
+			aSharedElement.Format(_L8("<shared>%d</shared>"), aEditingPlace->Shared());
 			
-			if(aEditingPlace->GetPlaceId() < 0) {
+			if(aEditingPlace->GetItemId() < 0) {
 				HBufC8* aCreateStanza = HBufC8::NewLC(pCoreStanza.Length() + (KPlaceCreate().Length() * 2) + aSharedElement.Length() + KIqTypeSet().Length());
 				TPtr8 pCreateStanza(aCreateStanza->Des());							
 				pCreateStanza.Append(pCoreStanza);
@@ -4499,7 +4264,7 @@ void CBuddycloudLogic::SendEditedPlaceDetailsL(TBool aSearchOnly) {
 				CleanupStack::PopAndDestroy(); // aCreateStanza
 	
 				// Delete New Place (will be recollected)
-				iMasterPlaceList->DeletePlaceById(aEditingPlace->GetPlaceId());
+				iPlaceList->DeleteItemById(aEditingPlace->GetItemId());
 				
 				// Set Activity Status
 				if(iState == ELogicOnline) {
@@ -4508,7 +4273,7 @@ void CBuddycloudLogic::SendEditedPlaceDetailsL(TBool aSearchOnly) {
 			}
 			else {
 				TBuf8<64> aIdElement;
-				aIdElement.Format(_L8("<id>http://buddycloud.com/places/%d</id>"), aEditingPlace->GetPlaceId());
+				aIdElement.Format(_L8("<id>http://buddycloud.com/places/%d</id>"), aEditingPlace->GetItemId());
 				
 				HBufC8* aEditStanza = HBufC8::NewLC(pCoreStanza.Length() + (KPlaceEdit().Length() * 2) + aSharedElement.Length() + aIdElement.Length() + KIqTypeSet().Length());
 				TPtr8 pEditStanza(aEditStanza->Des());							
@@ -4522,7 +4287,7 @@ void CBuddycloudLogic::SendEditedPlaceDetailsL(TBool aSearchOnly) {
 				iXmppEngine->SendAndAcknowledgeXmppStanza(pEditStanza, this, true);
 				CleanupStack::PopAndDestroy(); // aEditStanza
 				
-				iMasterPlaceList->SetEditedPlace(KErrNotFound);
+				iPlaceList->SetEditedPlace(KErrNotFound);
 			}
 		}
 
@@ -4545,27 +4310,23 @@ void CBuddycloudLogic::HandlePlaceQueryResultL(const TDesC8& aStanza, const TDes
 		TPtrC8 aAttributeXmlns = aXmlParser->GetStringAttribute(_L8("xmlns"));
 		
 		while(aXmlParser->MoveToElement(_L8("place"))) {
+			TPtrC8 aPlaceData(aXmlParser->GetStringData());
+			
 			CBuddycloudExtendedPlace* aPlace = CBuddycloudExtendedPlace::NewLC();
-			CXmlParser* aPlaceXmlParser = CXmlParser::NewLC(aXmlParser->GetStringData());
+			
+			// Parse generic geoloc data for place
+			CXmppGeolocParser* aXmppGeolocParser = CXmppGeolocParser::NewLC();
+			aPlace->CopyGeolocL(aXmppGeolocParser->XmlToGeolocLC(aPlaceData));
+			CleanupStack::PopAndDestroy(2); // aGeoloc, aXmppGeolocParser
+			
+			// Parse place specific data
+			CXmlParser* aPlaceXmlParser = CXmlParser::NewLC(aPlaceData);
 			
 			do {
 				TPtrC8 aElementName = aPlaceXmlParser->GetElementName();
 				TPtrC aElementData = aTextUtilities->Utf8ToUnicodeL(aPlaceXmlParser->GetStringData());
 				
-				if(aElementName.Compare(_L8("id")) == 0) {
-					TInt aResult = aElementData.LocateReverse('/');
-					
-					if(aResult != KErrNotFound) {
-						aElementData.Set(aElementData.Mid(aResult + 1));
-						
-						TLex aLex(aElementData);
-						
-						if(aLex.Val(aResult) == KErrNone) {
-							aPlace->SetPlaceId(aResult);
-						}
-					}
-				}
-				else if(aElementName.Compare(_L8("revision")) == 0) {
+				if(aElementName.Compare(_L8("revision")) == 0) {
 					aPlace->SetRevision(aPlaceXmlParser->GetIntData());
 				}
 				else if(aElementName.Compare(_L8("population")) == 0) {
@@ -4574,57 +4335,11 @@ void CBuddycloudLogic::HandlePlaceQueryResultL(const TDesC8& aStanza, const TDes
 				else if(aElementName.Compare(_L8("shared")) == 0) {
 					aPlace->SetShared(aPlaceXmlParser->GetBoolData());
 				}
-				else if(aElementName.Compare(_L8("name")) == 0) {
-					aPlace->SetPlaceNameL(aElementData);
-				}
-				else if(aElementName.Compare(_L8("description")) == 0) {
-					aPlace->SetDescriptionL(aElementData);
-				}
-				else if(aElementName.Compare(_L8("lat")) == 0) {
-					TLex8 aLatitudeLex(aPlaceXmlParser->GetStringData());
-					TReal aLatitude = 0.0;
-
-					if(aLatitudeLex.Val(aLatitude) == KErrNone) {
-						aPlace->SetPlaceLatitude(aLatitude);
-					}
-				}
-				else if(aElementName.Compare(_L8("lon")) == 0) {
-					TLex8 aLongitudeLex(aPlaceXmlParser->GetStringData());
-					TReal aLongitude = 0.0;
-
-					if(aLongitudeLex.Val(aLongitude) == KErrNone) {
-						aPlace->SetPlaceLongitude(aLongitude);
-					}
-				}
-				else if(aElementName.Compare(_L8("street")) == 0) {
-					aPlace->SetPlaceStreetL(aElementData);
-				}
-				else if(aElementName.Compare(_L8("area")) == 0) {
-					aPlace->SetPlaceAreaL(aElementData);
-				}
-				else if(aElementName.Compare(_L8("city")) == 0) {
-					aPlace->SetPlaceCityL(aElementData);
-				}
-				else if(aElementName.Compare(_L8("region")) == 0) {
-					aPlace->SetPlaceRegionL(aElementData);
-				}
-				else if(aElementName.Compare(_L8("country")) == 0) {
-					aPlace->SetPlaceCountryL(aElementData);
-				}
-				else if(aElementName.Compare(_L8("postalcode")) == 0) {
-					aPlace->SetPlacePostcodeL(aElementData);
-				}
-				else if(aElementName.Compare(_L8("site")) == 0) {
-					aPlace->SetWebsiteL(aElementData);
-				}
-				else if(aElementName.Compare(_L8("wiki")) == 0) {
-					aPlace->SetWikiL(aElementData);
-				}	
 			} while(aPlaceXmlParser->MoveToNextElement());
 			
 			CleanupStack::PopAndDestroy(); // aPlaceXmlParser
 			
-			aPlaceStore->AddPlace(aPlace);
+			aPlaceStore->AddItem(aPlace);
 			CleanupStack::Pop(); // aPlace			
 		}
 		
@@ -4634,49 +4349,45 @@ void CBuddycloudLogic::HandlePlaceQueryResultL(const TDesC8& aStanza, const TDes
 		else if(aId.Compare(_L8("searchplacequery1")) == 0) {
 			ProcessPlaceSearchL(aPlaceStore);
 		}
-		else if(aPlaceStore->CountPlaces() > 0) {
-			CBuddycloudExtendedPlace* aResultPlace = aPlaceStore->GetPlaceByIndex(0);
+		else if(aPlaceStore->Count() > 0) {
+			CBuddycloudExtendedPlace* aResultPlace = static_cast <CBuddycloudExtendedPlace*> (aPlaceStore->GetItemByIndex(0));
 						
-			if(aResultPlace->GetPlaceId() > 0) {				
-				CBuddycloudExtendedPlace* aPlace = iMasterPlaceList->GetPlaceById(aResultPlace->GetPlaceId());
+			if(aResultPlace->GetItemId() > 0) {				
+				CBuddycloudExtendedPlace* aPlace = static_cast <CBuddycloudExtendedPlace*> (iPlaceList->GetItemById(aResultPlace->GetItemId()));
 
 				if(aAttributeType.Compare(_L8("error")) != 0) {
 					// Valid result returned, process					
 					if(aPlace == NULL) {
 						// Add to place to 'my place' list
-						iMasterPlaceList->AddPlace(aResultPlace);
-						aPlaceStore->RemovePlaceByIndex(0);
+						iPlaceList->AddItem(aResultPlace);
+						aPlaceStore->RemoveItemByIndex(0);
 					}
 					else if(aId.Compare(_L8("placedetails1")) == 0) {
 						// New place details received, copy to existing place
-						aPlace->CopyDetailsL(aResultPlace);
+						aPlace->CopyGeolocL(aResultPlace->GetGeoloc());
+						aPlace->UpdateFromGeolocL();
 						
 						// Extra data
-						aPlace->SetShared(aResultPlace->GetShared());
+						aPlace->SetShared(aResultPlace->Shared());
 						aPlace->SetRevision(aResultPlace->GetRevision());
-						
-						// Extended data
-						aPlace->SetWikiL(aResultPlace->GetWiki());
-						aPlace->SetWebsiteL(aResultPlace->GetWebsite());
-						aPlace->SetDescriptionL(aResultPlace->GetDescription());
 						aPlace->SetPopulation(aResultPlace->GetPopulation());
 					}
 					
 					// Current place set by placeid
 					if(aId.Compare(_L8("currentplacequery1")) == 0) {
-						HandleLocationServerResult(EMotionStationary, 100, aResultPlace->GetPlaceId());
+						HandleLocationServerResult(EMotionStationary, 100, aResultPlace->GetItemId());
 						SetActivityStatus(_L(""));
 					}
 					else if(aId.Compare(_L8("createplacequery1")) == 0) {
-						SetCurrentPlaceL(aResultPlace->GetPlaceId());
+						SetCurrentPlaceL(aResultPlace->GetItemId());
 					}
 				
 					// Bubble place to top if it's our current location
-					if(aResultPlace->GetPlaceId() == iStablePlaceId) {
-						iMasterPlaceList->MovePlaceById(iStablePlaceId, 0);
+					if(aResultPlace->GetItemId() == iStablePlaceId) {
+						iPlaceList->MoveItemById(iStablePlaceId, 0);
 					}
 					
-					NotifyNotificationObservers(ENotificationPlaceItemsUpdated, aResultPlace->GetPlaceId());
+					NotifyNotificationObservers(ENotificationPlaceItemsUpdated, aResultPlace->GetItemId());
 				}
 				else {
 					// Result returned error condition
@@ -4684,7 +4395,7 @@ void CBuddycloudLogic::HandlePlaceQueryResultL(const TDesC8& aStanza, const TDes
 						// User is no longer authorized to see this place, remove
 						if(aPlace) {
 							aPlace->SetShared(true);
-							EditMyPlacesL(aResultPlace->GetPlaceId(), false);
+							EditMyPlacesL(aResultPlace->GetItemId(), false);
 						}
 						
 						NotifyNotificationObservers(ENotificationPlaceItemsUpdated);
@@ -4704,7 +4415,7 @@ void CBuddycloudLogic::GetPlaceDetailsL(TInt aPlaceId) {
 	WriteToLog(_L8("BL    CBuddycloudLogic::GetPlaceDetailsL"));
 #endif
 	
-	CBuddycloudExtendedPlace* aPlace = iMasterPlaceList->GetPlaceById(aPlaceId);
+	CBuddycloudExtendedPlace* aPlace = static_cast <CBuddycloudExtendedPlace*> (iPlaceList->GetItemById(aPlaceId));
 
 	if(aPlace) {
 		// Set minimal revision to avoid any detail re-requests
@@ -4726,14 +4437,14 @@ void CBuddycloudLogic::EditMyPlacesL(TInt aPlaceId, TBool aAddPlace) {
 	WriteToLog(_L8("BL    CBuddycloudLogic::EditMyPlacesL"));
 #endif
 	
-	CBuddycloudExtendedPlace* aPlace = iMasterPlaceList->GetPlaceById(aPlaceId);
+	CBuddycloudExtendedPlace* aPlace = static_cast <CBuddycloudExtendedPlace*> (iPlaceList->GetItemById(aPlaceId));
 
 	if(aAddPlace && aPlace == NULL) {
 		// Add place to 'my places'
 		SendPlaceQueryL(aPlaceId, KPlaceAdd, true);
 	}
 	else if(!aAddPlace && aPlace) {
-		if(aPlace->GetShared()) {
+		if(aPlace->Shared()) {
 			// Remove place from 'my places'
 			SendPlaceQueryL(aPlaceId, KPlaceRemove);
 		}
@@ -4743,7 +4454,7 @@ void CBuddycloudLogic::EditMyPlacesL(TInt aPlaceId, TBool aAddPlace) {
 		}
 		
 		// Remove place
-		iMasterPlaceList->DeletePlaceById(aPlaceId);
+		iPlaceList->DeleteItemById(aPlaceId);
 	}
 	
 	NotifyNotificationObservers(ENotificationPlaceItemsUpdated, aPlaceId);
@@ -4763,11 +4474,11 @@ void CBuddycloudLogic::ProcessMyPlacesL(CBuddycloudPlaceStore* aPlaceStore) {
 	WriteToLog(_L8("BL    CBuddycloudLogic::ProcessMyPlacesL"));
 #endif
 	
-	for(TInt i = (iMasterPlaceList->CountPlaces() - 1); i >= 0; i--) {
-		CBuddycloudExtendedPlace* aLocalPlace = iMasterPlaceList->GetPlaceByIndex(i);
-		CBuddycloudExtendedPlace* aStorePlace = aPlaceStore->GetPlaceById(aLocalPlace->GetPlaceId());
+	for(TInt i = (iPlaceList->Count() - 1); i >= 0; i--) {
+		CBuddycloudExtendedPlace* aLocalPlace = static_cast <CBuddycloudExtendedPlace*> (iPlaceList->GetItemByIndex(i));
+		CBuddycloudExtendedPlace* aStorePlace = static_cast <CBuddycloudExtendedPlace*> (aPlaceStore->GetItemById(aLocalPlace->GetItemId()));
 		
-		if(aLocalPlace->GetPlaceId() != 0) {
+		if(aLocalPlace->GetItemId() != 0) {
 			if(aStorePlace) {
 				// Place in 'my places'
 				aLocalPlace->SetPopulation(aStorePlace->GetPopulation());
@@ -4776,25 +4487,25 @@ void CBuddycloudLogic::ProcessMyPlacesL(CBuddycloudPlaceStore* aPlaceStore) {
 						aLocalPlace->GetRevision() < aStorePlace->GetRevision()) {
 					
 					// Revision out of date, recollect
-					GetPlaceDetailsL(aLocalPlace->GetPlaceId());
+					GetPlaceDetailsL(aLocalPlace->GetItemId());
 				}
 				
-				aPlaceStore->DeletePlaceById(aStorePlace->GetPlaceId());
+				aPlaceStore->DeleteItemById(aStorePlace->GetItemId());
 			}
 			else {
 				// Place removed from 'my places'
-				iMasterPlaceList->DeletePlaceByIndex(i);
+				iPlaceList->DeleteItemByIndex(i);
 			}
 		}
 	}
 	
-	while(aPlaceStore->CountPlaces() > 0) {
+	while(aPlaceStore->Count() > 0) {
 		// Place added to 'my places'
-		CBuddycloudExtendedPlace* aPlace = aPlaceStore->GetPlaceByIndex(0);
+		CBuddycloudExtendedPlace* aPlace = static_cast <CBuddycloudExtendedPlace*> (aPlaceStore->GetItemByIndex(0));
 		aPlace->SetRevision(KErrNotFound);
 		
-		iMasterPlaceList->AddPlace(aPlace);
-		aPlaceStore->RemovePlaceByIndex(0);
+		iPlaceList->AddItem(aPlace);
+		aPlaceStore->RemoveItemByIndex(0);
 	}
 	
 	iPlacesSaveNeeded = true;
@@ -4809,43 +4520,38 @@ void CBuddycloudLogic::ProcessPlaceSearchL(CBuddycloudPlaceStore* aPlaceStore) {
 
 	SetActivityStatus(_L(""));
 	
-	CBuddycloudExtendedPlace* aEditingPlace = iMasterPlaceList->GetEditedPlace();
+	CBuddycloudExtendedPlace* aEditingPlace = static_cast <CBuddycloudExtendedPlace*> (iPlaceList->GetEditedPlace());
 	
 	if(aEditingPlace) {	
-		if(aPlaceStore->CountPlaces() > 0) {
+		TInt aEditingPlaceId = aEditingPlace->GetItemId();
+		
+		if(aPlaceStore->Count() > 0) {
+			CTextUtilities* aTextUtilities = CTextUtilities::NewLC();
+			
 			// Multiple results
-			for(TInt i = 0; i < aPlaceStore->CountPlaces(); i++) {
-				CBuddycloudExtendedPlace* aResultPlace = aPlaceStore->GetPlaceByIndex(i);
+			for(TInt i = 0; i < aPlaceStore->Count(); i++) {
+				CBuddycloudExtendedPlace* aResultPlace = static_cast <CBuddycloudExtendedPlace*> (aPlaceStore->GetItemByIndex(i));
 	
 				if(aResultPlace) {
+					CGeolocData* aGeoloc = aResultPlace->GetGeoloc();
+					
 					_LIT(KResultText, "Result %d of %d:\n\n");
-					HBufC* aMessage = HBufC::NewLC(KResultText().Length() + aResultPlace->GetPlaceName().Length() + aResultPlace->GetPlaceStreet().Length() + aResultPlace->GetPlaceCity().Length() + aResultPlace->GetPlacePostcode().Length() + 5);
+					
+					// Prepare message
+					HBufC* aMessage = HBufC::NewLC(KResultText().Length() + aGeoloc->GetString(EGeolocText).Length() + aGeoloc->GetString(EGeolocStreet).Length() + aGeoloc->GetString(EGeolocLocality).Length() + aGeoloc->GetString(EGeolocPostalcode).Length() + 5);
 					TPtr pMessage(aMessage->Des());
-					pMessage.AppendFormat(KResultText, (i + 1), aPlaceStore->CountPlaces());
-					pMessage.Append(aResultPlace->GetPlaceName());
-	
-					if(pMessage.Length() > 0 && aResultPlace->GetPlaceStreet().Length() > 0) {
-						pMessage.Append(_L(",\n"));
-					}
-	
-					pMessage.Append(aResultPlace->GetPlaceStreet());
-	
-					if(pMessage.Length() > 0 && (aResultPlace->GetPlaceCity().Length() > 0 || aResultPlace->GetPlacePostcode().Length() > 0)) {
-						pMessage.Append(_L(",\n"));						
-					}
-	
-					pMessage.Append(aResultPlace->GetPlaceCity());
 					
-					if(pMessage.Length() > 0 && aResultPlace->GetPlaceCity().Length() > 0) {
-						pMessage.Append(_L(" "));
-					}
-					
-					pMessage.Append(aResultPlace->GetPlacePostcode());
-	
+					pMessage.AppendFormat(KResultText, (i + 1), aPlaceStore->Count());
+					aTextUtilities->AppendToString(pMessage, aGeoloc->GetString(EGeolocText), _L(""));
+					aTextUtilities->AppendToString(pMessage, aGeoloc->GetString(EGeolocStreet), _L(",\n"));
+					aTextUtilities->AppendToString(pMessage, aGeoloc->GetString(EGeolocLocality), _L(",\n"));
+					aTextUtilities->AppendToString(pMessage, aGeoloc->GetString(EGeolocPostalcode), _L(" "));
+						
+					// Prepare dialog
 					CSearchResultMessageQueryDialog* iDidYouMeanDialog = new (ELeave) CSearchResultMessageQueryDialog();
 					iDidYouMeanDialog->PrepareLC(R_DIDYOUMEAN_DIALOG);
 					iDidYouMeanDialog->HasPreviousResult((i > 0));
-					iDidYouMeanDialog->HasNextResult((i < aPlaceStore->CountPlaces() - 1));					
+					iDidYouMeanDialog->HasNextResult((i < aPlaceStore->Count() - 1));					
 					iDidYouMeanDialog->SetMessageTextL(pMessage);
 					
 					TInt aDialogResult = iDidYouMeanDialog->RunLD();
@@ -4857,19 +4563,15 @@ void CBuddycloudLogic::ProcessPlaceSearchL(CBuddycloudPlaceStore* aPlaceStore) {
 					}
 					else if(aDialogResult == EMenuSelectCommand) {
 						// Select place						
-						aEditingPlace->CopyDetailsL(aResultPlace);
+						aEditingPlace->CopyGeolocL(aGeoloc);
+						aEditingPlace->UpdateFromGeolocL();
 						
-						// Extended data
-						aEditingPlace->SetWikiL(aResultPlace->GetWiki());
-						aEditingPlace->SetWebsiteL(aResultPlace->GetWebsite());
-						aEditingPlace->SetDescriptionL(aResultPlace->GetDescription());
-						
-						if(aEditingPlace->GetPlaceId() < 0 && aResultPlace->GetPlaceId() > 0) {
+						if(aEditingPlaceId < 0 && aResultPlace->GetItemId() > 0) {
 							// Existing place (has id) selected
-							iMasterPlaceList->DeletePlaceById(aEditingPlace->GetPlaceId());
+							iPlaceList->DeleteItemById(aEditingPlaceId);
 							
 							// Set place as current
-							SetCurrentPlaceL(aResultPlace->GetPlaceId());
+							SetCurrentPlaceL(aResultPlace->GetItemId());
 							
 							NotifyNotificationObservers(ENotificationEditPlaceCompleted);
 						}
@@ -4889,6 +4591,8 @@ void CBuddycloudLogic::ProcessPlaceSearchL(CBuddycloudPlaceStore* aPlaceStore) {
 					}
 				}
 			}
+			
+			CleanupStack::PopAndDestroy(); // aTextUtilities
 		}
 		else {
 			// No results
@@ -4931,85 +4635,39 @@ void CBuddycloudLogic::SendPlaceQueryL(TInt aPlaceId, const TDesC8& aAction, TBo
 */
 
 void CBuddycloudLogic::TimerExpired(TInt /*aExpiryId*/) {
-	if(iTimerState & ETimeoutStartConnection) {
+	if(iTimerState == ETimeoutStartConnection) {
 		// Startup connection
 		ConnectL();
 	}
-	
-	if(iTimerState & ETimeoutConnected) {
-		// Clear online activity
-		SetActivityStatus(_L(""));
-		
-		iTimerState -= ETimeoutConnected;
-		iTimerState |= ETimeoutSaveSettings;
-	}
-	
-	if(iTimerState & ETimeoutSendPresence) {
-		// Send next presence
-		TInt aSentCount = 0;
-		
-		// Get last update time
-		TFormattedTimeDesc aFormattedTime;
-		CTimeUtilities::EncodeL(iHistoryFrom, aFormattedTime);
-		
-		_LIT8(KSinceElement, "<history since=''/>");
-		HBufC8* aHistoryElement = HBufC8::NewLC(KSinceElement().Length() + aFormattedTime.Length());
-		TPtr8 pHistoryElement(aHistoryElement->Des());
-		pHistoryElement.Copy(KSinceElement);
-		pHistoryElement.Insert(16, aFormattedTime);		
-		
-		for(TInt i = 0; i < iMasterFollowingList->Count(); i++) {
-			CFollowingItem* aItem = iMasterFollowingList->GetItemByIndex(i);
-
-			if(aItem->GetItemType() >= EItemRoster) {
-				CFollowingChannelItem* aChannelItem = static_cast <CFollowingChannelItem*> (aItem);
-				
-				if(aChannelItem->GetPresence() == EPresenceOffline && aChannelItem->GetJid().Length() > 0) {
-					aChannelItem->SetPresence(EPresenceSent);
-					
-					aSentCount++;
-					
-					SendChannelPresenceL(aChannelItem->GetJid(), pHistoryElement);
-					
-					if(aSentCount == 1) {
-						break;
-					}
-				}
-			}
-		}
-		
-		CleanupStack::PopAndDestroy(); // aHistoryElement
-		
-		if(aSentCount == 0) {
-			iTimerState -= ETimeoutSendPresence;
+	else {
+		if(iTimerState == ETimeoutConnected) {
+			// Clear online activity
+			SetActivityStatus(_L(""));
 			
-			iXmppEngine->SendQueuedXmppStanzas();
+			iTimerState = ETimeoutSaveSettings;
 		}
-		else {
-			iTimer->After(500000);
-		}
-	}
+		else if(iTimerState == ETimeoutSaveSettings) {
+			// Save settings
+			if(iSettingsSaveNeeded) {
+				SaveSettingsAndItemsL();
+				
+				iSettingsSaveNeeded = false;
+			}
 	
-	if(iTimerState == ETimeoutSaveSettings) {
-		// Save settings
-		if(iSettingsSaveNeeded) {
-			SaveSettingsAndItemsL();			
+			iTimerState = ETimeoutSavePlaces;
+		}
+		else if(iTimerState == ETimeoutSavePlaces) {
+			// Save places
+			if(iPlacesSaveNeeded) {
+				SavePlaceItemsL();	
+				
+				iPlacesSaveNeeded = false;
+			}
+			
+			iTimerState = ETimeoutSaveSettings;
 		}
 		
-		iSettingsSaveNeeded = false;	
-
-		iTimerState = ETimeoutSavePlaces;
-		iTimer->After(300000000);
-	}
-	else if(iTimerState == ETimeoutSavePlaces) {
-		// Save places
-		if(iPlacesSaveNeeded) {
-			SavePlaceItemsL();			
-		}
-		
-		iPlacesSaveNeeded = false;
-		iTimerState = ETimeoutSaveSettings;
-		iTimer->After(300000000);
+		iTimer->After(150000000);
 	}
 }
 
@@ -5058,8 +4716,8 @@ void CBuddycloudLogic::HandleLocationServerResult(TLocationMotionState aMotionSt
 	TBool aNearbyRefreshNeeded = false;
 
 	// Get places
-	CBuddycloudExtendedPlace* aLastPlace = iMasterPlaceList->GetPlaceById(iStablePlaceId);
-	CBuddycloudExtendedPlace* aCurrentPlace = iMasterPlaceList->GetPlaceById(aPlaceId);
+	CBuddycloudExtendedPlace* aLastPlace = static_cast <CBuddycloudExtendedPlace*> (iPlaceList->GetItemById(iStablePlaceId));
+	CBuddycloudExtendedPlace* aCurrentPlace = static_cast <CBuddycloudExtendedPlace*> (iPlaceList->GetItemById(aPlaceId));
 	
 	// Check motion state
 	if(aMotionState < iLastMotionState) {
@@ -5071,7 +4729,7 @@ void CBuddycloudLogic::HandleLocationServerResult(TLocationMotionState aMotionSt
 	if(aPlaceId > 0) {
 		if(aCurrentPlace) {
 			// Bubble place to top
-			iMasterPlaceList->MovePlaceById(aPlaceId, 0);
+			iPlaceList->MoveItemById(aPlaceId, 0);
 		}
 		else {
 			// Collect unlisted place
@@ -5082,7 +4740,7 @@ void CBuddycloudLogic::HandleLocationServerResult(TLocationMotionState aMotionSt
 		if(aPlaceId != iStablePlaceId) {
 			// Remove top placeholder
 			if(iStablePlaceId <= 0) {
-				iMasterPlaceList->DeletePlaceById(iStablePlaceId);
+				iPlaceList->DeleteItemById(iStablePlaceId);
 				aLastPlace = NULL;
 			}
 
@@ -5130,8 +4788,7 @@ void CBuddycloudLogic::HandleLocationServerResult(TLocationMotionState aMotionSt
 			aCurrentPlace->SetShared(true);
 			aCurrentPlace->SetRevision(0);
 			
-			iMasterPlaceList->AddPlace(aCurrentPlace);
-			iMasterPlaceList->MovePlaceById(aPlaceId, 0);
+			iPlaceList->InsertItem(0, aCurrentPlace);
 		}
 		
 		// Set current place to recent place
@@ -5149,7 +4806,7 @@ void CBuddycloudLogic::HandleLocationServerResult(TLocationMotionState aMotionSt
 	// Refresh nearby list
 	if(aNearbyRefreshNeeded) {
 		CTextUtilities* aTextUtilities = CTextUtilities::NewLC();
-		TPtrC8 aReferenceJid = aTextUtilities->UnicodeToUtf8L(iOwnItem->GetJid());
+		TPtrC8 aReferenceJid = aTextUtilities->UnicodeToUtf8L(iOwnItem->GetId());
 		
 		_LIT8(KNearbyStanza, "<iq to='butler.buddycloud.com' type='get' id='nearbyplaces1'><query xmlns='urn:oslo:nearbyobjects'><reference type='person' id=''/><options limit='10'/><request var='place'/></query></iq>\r\n");
 		HBufC8* aNearbyStanza = HBufC8::NewLC(KNearbyStanza().Length() + aReferenceJid.Length());
@@ -5159,10 +4816,6 @@ void CBuddycloudLogic::HandleLocationServerResult(TLocationMotionState aMotionSt
 		
 		iXmppEngine->SendAndAcknowledgeXmppStanza(pNearbyStanza, this);	
 		CleanupStack::PopAndDestroy(2); // aNearbyStanza, aTextUtilities
-	}
-
-	if(iState == ELogicOnline) {
-		iLastReceivedAt = TimeStamp();
 	}
 
 	NotifyNotificationObservers(ENotificationLocationUpdated, aPlaceId);
@@ -5217,7 +4870,6 @@ void CBuddycloudLogic::XmppStateChanged(TXmppEngineState aState) {
 		// XMPP state changes to an Online state
 		iState = ELogicOnline;
 		iOwnerObserver->StateChanged(iState);
-		iHistoryFrom = iLastReceivedAt;
 		iXmppEngine->GetConnectionMode(iSettingConnectionMode, iSettingConnectionModeId);
 		iLastMotionState = EMotionUnknown;
 		
@@ -5229,15 +4881,24 @@ void CBuddycloudLogic::XmppStateChanged(TXmppEngineState aState) {
 		SetActivityStatus(R_LOCALIZED_STRING_NOTE_ONLINE);
 
 		if(iConnectionCold) {		
-			// Collect my channels & places
-			CollectMyChannelsL();
+			if(iPubsubSubscribedTo) {
+				// Collect pubsub subscriptions
+				CollectPubsubSubscriptionsL();
+				
+				// Recollect own /geoloc/current
+				CollectUserPubsubNodeL(iOwnItem->GetId(), _L("/geo/current"));
+			}
+			
+			// Collect my places
 			CollectMyPlacesL();
 			
 			iConnectionCold = false;
 		}
 		else {
-			iTimerState |= ETimeoutSendPresence;
+			// TODO: Send direct presence to pubsub
 		}
+		
+		iXmppEngine->SendQueuedXmppStanzas();
 		
 		// Set timer
 		iTimer->After(3000000);
@@ -5246,26 +4907,11 @@ void CBuddycloudLogic::XmppStateChanged(TXmppEngineState aState) {
 	}
 	else if(aState == EXmppConnecting || aState == EXmppReconnect) {
 		// XMPP state changes to (re)connecting
-		if(iTimerState & ETimeoutSendPresence) {
-			iTimerState -= ETimeoutSendPresence;
-		}
-		
 		SetActivityStatus(R_LOCALIZED_STRING_NOTE_CONNECTING);
 		
 		if(aState == EXmppReconnect) {
 			// Set offline
 			iOffsetReceived = false;
-			
-			// Reset channels (topic & personal)
-			for(TInt i = 0; i < iMasterFollowingList->Count(); i++) {
-				CFollowingItem* aItem = iMasterFollowingList->GetItemByIndex(i);
-
-				if(aItem->GetItemType() >= EItemRoster) {
-					CFollowingChannelItem* aChannelItem = static_cast <CFollowingChannelItem*> (aItem);
-					
-					aChannelItem->SetPresence(EPresenceOffline);
-				}
-			}
 			
 			if(iState != ELogicConnecting) {
 				// Notify observers
@@ -5273,7 +4919,7 @@ void CBuddycloudLogic::XmppStateChanged(TXmppEngineState aState) {
 				NotifyNotificationObservers(ENotificationConnectivityChanged);
 				
 				// Save state
-				iMessagingManager->CompressMessagesL();
+				iDiscussionManager->CompressDiscussionL(true);
 				
 				SaveSettingsAndItemsL();
 				SavePlaceItemsL();
@@ -5288,7 +4934,8 @@ void CBuddycloudLogic::XmppStateChanged(TXmppEngineState aState) {
 		iTimer->Stop();
 		iTimerState = ETimeoutNone;
 		iOffsetReceived = false;
-		
+		iPubsubSubscribedTo = false;
+				
 		if(iSettingAccessPoint) {
 			iSettingConnectionMode = 0;
 			iSettingConnectionModeId = 0;
@@ -5302,34 +4949,15 @@ void CBuddycloudLogic::XmppStateChanged(TXmppEngineState aState) {
 		SetActivityStatus(R_LOCALIZED_STRING_NOTE_OFFLINE);
 
 		if(iState == ELogicOnline) {			
-			for(TInt i = 0; i < iMasterFollowingList->Count(); i++) {
-				CFollowingItem* aItem = iMasterFollowingList->GetItemByIndex(i);
+			for(TInt i = 0; i < iFollowingList->Count(); i++) {
+				CFollowingItem* aItem = static_cast <CFollowingItem*> (iFollowingList->GetItemByIndex(i));
 
-				if(aItem->GetItemType() >= EItemRoster) {
-					CFollowingChannelItem* aChannelItem = static_cast <CFollowingChannelItem*> (aItem);
-					
-					// Reset channels (topic & personal)
-					aChannelItem->SetPresence(EPresenceOffline);
+				if(aItem && aItem->GetItemType() == EItemRoster) {
+					CFollowingRosterItem* aRosterItem = static_cast <CFollowingRosterItem*> (aItem);	
 
-					if(aChannelItem->GetJid().Length() > 0) {
-						CDiscussion* aDiscussion = iMessagingManager->GetDiscussionL(aChannelItem->GetJid());
-						
-						// Remove all participants from discussion
-						aDiscussion->GetParticipants()->RemoveAllParticipants();
-					}
-					
-					// Reset roster
-					if(aItem->GetItemType() == EItemRoster) {
-						CFollowingRosterItem* aRosterItem = static_cast <CFollowingRosterItem*> (aItem);	
-						CDiscussion* aDiscussion = iMessagingManager->GetDiscussionL(aRosterItem->GetJid());
-
-						// Reset presence & pubsub
-						aRosterItem->SetPresence(EPresenceOffline);
-						aRosterItem->SetPubsubCollected(false);
-						
-						// Remove all participants from discussion
-						aDiscussion->GetParticipants()->RemoveAllParticipants();
-					}
+					// Reset presence & pubsub
+					aRosterItem->SetPresence(EPresenceOffline);
+					aRosterItem->SetPubsubCollected(false);
 				}
 			}
 		}
@@ -5354,25 +4982,22 @@ void CBuddycloudLogic::XmppUnhandledStanza(const TDesC8& aStanza) {
 	CTextUtilities* aTextUtilities = CTextUtilities::NewLC();
 	CXmlParser* aXmlParser = CXmlParser::NewLC(aStanza);
 	
-	TPtrC8 pAttributeFrom = aXmlParser->GetStringAttribute(_L8("from"));
-	TPtrC8 pAttributeType = aXmlParser->GetStringAttribute(_L8("type"));
-	TPtrC8 pAttributeId = aXmlParser->GetStringAttribute(_L8("id"));
+	TPtrC8 aAttributeFrom = aXmlParser->GetStringAttribute(_L8("from"));
+	TPtrC8 aAttributeType = aXmlParser->GetStringAttribute(_L8("type"));
+	TPtrC8 aAttributeId = aXmlParser->GetStringAttribute(_L8("id"));
 
 	if(aXmlParser->MoveToElement(_L8("iq"))) {
 		if(aXmlParser->MoveToElement(_L8("pubsub"))) {
-			if(pAttributeType.Compare(_L8("result")) == 0) {
+			if(aAttributeType.Compare(_L8("result")) == 0) {
 				// Pubsub query result
-				RosterPubsubEventL(aTextUtilities->Utf8ToUnicodeL(pAttributeFrom), aXmlParser->GetStringData(), false);
+				HandlePubsubEventL(aStanza, false);
 			}
-			else if(pAttributeType.Compare(_L8("error")) == 0) {
-				// Pubsub query error
-				if(aXmlParser->MoveToElement(_L8("items"))) {
-					RosterPubsubDeleteL(aTextUtilities->Utf8ToUnicodeL(pAttributeFrom), aXmlParser->GetStringAttribute(_L8("node")));
-				}
+			else if(aAttributeType.Compare(_L8("error")) == 0) {		
+				// TODO: Handle pubsub query error
 			}
 		}
 		else if(aXmlParser->MoveToElement(_L8("time"))) {
-			if(pAttributeType.Compare(_L8("result")) == 0) {			
+			if(aAttributeType.Compare(_L8("result")) == 0) {			
 				if(aXmlParser->MoveToElement(_L8("utc"))) {
 					if( !iOffsetReceived ) {
 						iOffsetReceived = true;
@@ -5420,7 +5045,7 @@ void CBuddycloudLogic::XmppUnhandledStanza(const TDesC8& aStanza) {
 			}
 		}
 		else if(aXmlParser->MoveToElement(_L8("query"))) {			
-			if(pAttributeType.Compare(_L8("set")) == 0) {
+			if(aAttributeType.Compare(_L8("set")) == 0) {
 				TPtrC8 aAttributeXmlns = aXmlParser->GetStringAttribute(_L8("xmlns"));
 
 				if(aAttributeXmlns.Compare(_L8("jabber:iq:roster")) == 0) {
@@ -5431,14 +5056,14 @@ void CBuddycloudLogic::XmppUnhandledStanza(const TDesC8& aStanza) {
 		}
 		else if(aXmlParser->MoveToElement(_L8("place"))) {
 			// Population push
-			if(pAttributeType.Compare(_L8("set")) == 0) {			
+			if(aAttributeType.Compare(_L8("set")) == 0) {			
 				if(aXmlParser->MoveToElement(_L8("id"))) {
 					TInt aPlaceId = aXmlParser->GetIntData();
 					
 					if(aPlaceId > 0 && aXmlParser->MoveToElement(_L8("population"))) {
-						CBuddycloudExtendedPlace* aPlace = iMasterPlaceList->GetPlaceById(aPlaceId);
+						CBuddycloudExtendedPlace* aPlace = static_cast <CBuddycloudExtendedPlace*> (iPlaceList->GetItemById(aPlaceId));
 	
-						if(aPlace != NULL) {
+						if(aPlace) {
 							aPlace->SetPopulation(aXmlParser->GetIntData());
 	
 							NotifyNotificationObservers(ENotificationPlaceItemsUpdated);
@@ -5449,12 +5074,38 @@ void CBuddycloudLogic::XmppUnhandledStanza(const TDesC8& aStanza) {
 		}
 	}
 	else if(aXmlParser->MoveToElement(_L8("message"))) {
-		if(pAttributeType.Compare(_L8("error")) != 0) {
-			HandleIncomingMessageL(aTextUtilities->Utf8ToUnicodeL(pAttributeFrom), aStanza);
+		if(aAttributeType.Compare(_L8("error")) != 0 && aAttributeType.Compare(_L8("groupchat")) != 0) {
+			// Pass new message to correct handler
+			if(aAttributeFrom.Compare(KBuddycloudPubsubServer) == 0) {				
+				if(aXmlParser->MoveToElement(_L8("event"))) {
+					TPtrC8 aAttributeXmlns = aXmlParser->GetStringAttribute(_L8("xmlns"));
+					
+					if(aAttributeXmlns.Compare(_L8("http://jabber.org/protocol/pubsub#event")) == 0) {
+						// Handle a pubsub event
+						HandlePubsubEventL(aStanza, true);
+					}
+				}
+				
+				// TODO: Handle subscription request message
+			}
+			else {
+				HandleIncomingMessageL(aTextUtilities->Utf8ToUnicodeL(aAttributeFrom), aStanza);
+			}
 		}
 	}
 	else if(aXmlParser->MoveToElement(_L8("presence"))) {
-		HandleIncomingPresenceL(aTextUtilities->Utf8ToUnicodeL(pAttributeFrom), aStanza);
+		if(aAttributeType.Compare(_L8("subscribe")) == 0) {
+			if(aAttributeFrom.Compare(KBuddycloudPubsubServer) == 0) {
+				// Accept pubsub subscription
+				SendPresenceSubscriptionL(KBuddycloudPubsubServer, _L8("subscribed"));
+			}
+			else {
+				ProcessPresenceSubscriptionL(aTextUtilities->Utf8ToUnicodeL(aAttributeFrom), aStanza);
+			}
+		}
+		else {
+			HandleIncomingPresenceL(aTextUtilities->Utf8ToUnicodeL(aAttributeFrom), aStanza);
+		}
 	}
 
 	CleanupStack::PopAndDestroy(2); // aXmlParser, aTextUtilities
@@ -5474,9 +5125,6 @@ void CBuddycloudLogic::XmppError(TXmppEngineError aError) {
 		HBufC8* aEncEmailAddress = aTextUtilities->UnicodeToUtf8L(iSettingEmailAddress).AllocLC();
 		TPtrC8 pEncEmailAddress(aEncEmailAddress->Des());
 		
-		HBufC8* aEncPhoneNumber = aTextUtilities->UnicodeToUtf8L(iSettingPhoneNumber).AllocLC();
-		TPtrC8 pEncPhoneNumber(aEncPhoneNumber->Des());
-		
 		HBufC8* aEncFullName = aTextUtilities->UnicodeToUtf8L(iSettingFullName).AllocLC();
 		TPtrC8 pEncFirstName(aEncFullName->Des());
 		TPtrC8 pEncLastName;
@@ -5490,43 +5138,36 @@ void CBuddycloudLogic::XmppError(TXmppEngineError aError) {
 		_LIT8(KFirstNameElement, "<firstname></firstname>");
 		_LIT8(KLastNameElement, "<lastname></lastname>");
 		_LIT8(KEmailElement, "<email></email>");
-		_LIT8(KPhoneElement, "<mobilenum></mobilenum>");
 		
 		_LIT8(KRegisterStanza, "<iq type='set' id='registration1'><query xmlns='jabber:iq:register'><username></username><password></password></query></iq>\r\n");
-		HBufC8* aRegisterStanza = HBufC8::NewLC(KRegisterStanza().Length() + pEncUsername.Length() + pEncPassword.Length() + KFirstNameElement().Length() + pEncFirstName.Length() + KLastNameElement().Length() + pEncLastName.Length() + KEmailElement().Length() + pEncEmailAddress.Length() + KPhoneElement().Length() + pEncPhoneNumber.Length());
+		HBufC8* aRegisterStanza = HBufC8::NewLC(KRegisterStanza().Length() + pEncUsername.Length() + pEncPassword.Length() + KFirstNameElement().Length() + pEncFirstName.Length() + KLastNameElement().Length() + pEncLastName.Length() + KEmailElement().Length() + pEncEmailAddress.Length());
 		TPtr8 pRegisterStanza(aRegisterStanza->Des());
 		pRegisterStanza.Copy(KRegisterStanza);
 		
 		// TODO: WA: This is a mod_register fix
 		// First name
-//		if(pEncFirstName.Length() > 0) {
+		if(pEncFirstName.Length() > 0) {
 			pRegisterStanza.Insert(pRegisterStanza.Length() - 15, KFirstNameElement);
 			pRegisterStanza.Insert(pRegisterStanza.Length() - 15 - 12, pEncFirstName);
-//		}
+		}
 		
 		// Last name
-//		if(pEncLastName.Length() > 0) {
+		if(pEncLastName.Length() > 0) {
 			pRegisterStanza.Insert(pRegisterStanza.Length() - 15, KLastNameElement);
 			pRegisterStanza.Insert(pRegisterStanza.Length() - 15 - 11, pEncLastName);
-//		}
+		}
 		
 		// Email
-//		if(pEncEmailAddress.Length() > 0) {
+		if(pEncEmailAddress.Length() > 0) {
 			pRegisterStanza.Insert(pRegisterStanza.Length() - 15, KEmailElement);
 			pRegisterStanza.Insert(pRegisterStanza.Length() - 15 - 8, pEncEmailAddress);
-//		}
-		
-		// Phone
-//		if(pEncPhoneNumber.Length() > 0) {
-			pRegisterStanza.Insert(pRegisterStanza.Length() - 15, KPhoneElement);
-			pRegisterStanza.Insert(pRegisterStanza.Length() - 15 - 12, pEncPhoneNumber);
-//		}
+		}
 		
 		pRegisterStanza.Insert(99, pEncPassword);
 		pRegisterStanza.Insert(78, pEncUsername);
 
 		iXmppEngine->SendAndAcknowledgeXmppStanza(pRegisterStanza, this, false, EXmppPriorityHigh);
-		CleanupStack::PopAndDestroy(7); // aRegisterStanza, aEncFullName, aEncPhoneNumber, aEncEmailAddress, aEncPassword, aEncUsername, aTextUtilities
+		CleanupStack::PopAndDestroy(6); // aRegisterStanza, aEncFullName, aEncEmailAddress, aEncPassword, aEncUsername, aTextUtilities
 	}
 	else if(aError != EXmppAlreadyConnected) {	
 		SetActivityStatus(R_LOCALIZED_STRING_NOTE_OFFLINE);
@@ -5555,123 +5196,173 @@ void CBuddycloudLogic::XmppDebug(const TDesC8& aMessage) {
 ----------------------------------------------------------------------------
 */
 
-void CBuddycloudLogic::RosterItemsL(const TDesC8& aItems, TBool aUpdate) {
+void CBuddycloudLogic::RosterItemsL(const TDesC8& aItems, TBool aPush) {
 #ifdef _DEBUG
 	WriteToLog(_L8("BL    CBuddycloudLogic::RosterItemsL"));
 #endif
-
-	// Initialize Parser
-	CXmlParser* aXmlParser = CXmlParser::NewLC(aItems);
+	
+	TInt aNotifyId = KErrNotFound;
+	
+	CBuddycloudListStore* aRosterItemStore = CBuddycloudListStore::NewLC();
+	
 	CTextUtilities* aTextUtilities = CTextUtilities::NewLC();
-
+	CXmlParser* aXmlParser = CXmlParser::NewLC(aItems);
+	
+	// Collect roster items
 	while(aXmlParser->MoveToElement(_L8("item"))) {
-		TBool aItemFound = false;
-
-		// Collect attributes
-		TPtrC aEncJid(aTextUtilities->Utf8ToUnicodeL(aXmlParser->GetStringAttribute(_L8("jid"))));
-
-		TPtrC8 pAttributeSubscription = aXmlParser->GetStringAttribute(_L8("subscription"));
-		TPtrC8 pAttributeAsk = aXmlParser->GetStringAttribute(_L8("ask"));
-		TPtrC8 pAttributeName = aXmlParser->GetStringAttribute(_L8("name"));
+		TPtrC8 aJid(aXmlParser->GetStringAttribute(_L8("jid")));
 		
-		// Determine subscription type
-		TSubscriptionType aSubscription;
-
-		if(pAttributeSubscription.Compare(KRosterSubscriptionBoth) == 0) {
-			aSubscription = ESubscriptionBoth;
-		}
-		else if(pAttributeSubscription.Compare(KRosterSubscriptionFrom) == 0) {
-			aSubscription = ESubscriptionFrom;
-		}
-		else if(pAttributeSubscription.Compare(KRosterSubscriptionTo) == 0) {
-			aSubscription = ESubscriptionTo;
-		}
-		else if(pAttributeSubscription.Compare(KRosterSubscriptionRemove) == 0) {
-			aSubscription = ESubscriptionRemove;
-		}
-		else {
-			aSubscription = ESubscriptionNone;
-		}		
-			
-		if(pAttributeAsk.Length() == 0) {
-			// Find existing Item
-			for(TInt i = 0; i < iMasterFollowingList->Count(); i++) {
-				CFollowingItem* aItem = iMasterFollowingList->GetItemByIndex(i);
-	
-				if(aItem->GetItemType() == EItemRoster) {
-					CFollowingRosterItem* aRosterItem = static_cast <CFollowingRosterItem*> (aItem);
-	
-					if(aRosterItem->GetJid().CompareF(aEncJid) == 0) {
-						if(aSubscription == ESubscriptionRemove || aSubscription == ESubscriptionNone) {							
-							// Delete Item if no subscription or request exists
-							DeleteItemL(aRosterItem->GetItemId());
-						}
-						else {
-							// Mark item for pubsub recollection
-							if(aRosterItem->GetSubscriptionType() < aSubscription) {
-								aRosterItem->SetPubsubCollected(false);
-							}
-							
-							aRosterItem->SetSubscriptionType(aSubscription);
-												
-							// Check if roster update shows user now following added user
-							if(aUpdate && (aSubscription == ESubscriptionTo || aSubscription == ESubscriptionBoth)) {
-								// Follow users personal channel
-								FollowPersonalChannelL(aRosterItem->GetItemId());
-							}
-						}
-	
-						aItemFound = true;
-						break;
-					}
+		CFollowingRosterItem* aRosterItem = CFollowingRosterItem::NewLC();
+		aRosterItem->SetTitleL(aTextUtilities->Utf8ToUnicodeL(aXmlParser->GetStringAttribute(_L8("name"))));	
+		aRosterItem->SetIdL(aTextUtilities->Utf8ToUnicodeL(aJid));
+		aRosterItem->SetSubscription(CXmppEnumerationConverter::PresenceSubscription(aXmlParser->GetStringAttribute(_L8("subscription"))));
+		
+		aRosterItemStore->AddItem(aRosterItem);
+		CleanupStack::Pop(aRosterItem); 
+		
+		// Determine if is pubsub subscription
+		if(aJid.Compare(KBuddycloudPubsubServer) == 0) {					
+			if(!aPush || aRosterItem->GetSubscription() == EPresenceSubscriptionBoth) {			
+				if(aPush && !iPubsubSubscribedTo) {
+					// Collect pubsub subscriptions
+					CollectPubsubSubscriptionsL();
 				}
-			}
-	
-			if(!aItemFound && aSubscription > ESubscriptionNone) {
-				// Add Item
-				CFollowingRosterItem* aRosterItem = CFollowingRosterItem::NewLC();
-				aRosterItem->SetItemId(iNextItemId++);
-				aRosterItem->SetJidL(aEncJid);
-				aRosterItem->SetSubscriptionType(aSubscription);
-	
-				if(pAttributeName.Length() > 0) {
-					aRosterItem->SetTitleL(aTextUtilities->Utf8ToUnicodeL(pAttributeName));
-				}
-	
-				CDiscussion* aDiscussion = iMessagingManager->GetDiscussionL(aRosterItem->GetJid());
-				aDiscussion->AddMessageReadObserver(aRosterItem);
-				aDiscussion->AddDiscussionReadObserver(this, aRosterItem);
-	
-				iMasterFollowingList->InsertItem(GetBubbleToPosition(aRosterItem), aRosterItem);
-				CleanupStack::Pop();
 				
-				if(aUpdate) {
-					if(aSubscription == ESubscriptionTo || aSubscription == ESubscriptionBoth) {
-						// Follow users personal channel
-						FollowPersonalChannelL(aRosterItem->GetItemId());
+				// Pubsub is subscribed to
+				iPubsubSubscribedTo = true;
+			}
+			
+			aRosterItemStore->DeleteItemByIndex(aRosterItemStore->Count() - 1);
+		}
+	}
+	
+	CleanupStack::PopAndDestroy(2); // aXmlParser, aTextUtilities
+	
+	if(!aPush && !iPubsubSubscribedTo) {
+		// Subscribe to pubsub server		
+		SendPresenceSubscriptionL(KBuddycloudPubsubServer, _L8("subscribe"));
+	}
+	
+	// Synchronize local roster to received roster
+	for(TInt i = (iFollowingList->Count() - 1); i >= 1; i--) {
+		CFollowingItem* aItem = static_cast <CFollowingItem*> (iFollowingList->GetItemByIndex(i));
+
+		if(aItem && aItem->GetItemType() == EItemRoster) {
+			CFollowingRosterItem* aLocalItem = static_cast <CFollowingRosterItem*> (aItem);
+			
+			TBool aItemFound = false;
+			
+			for(TInt x = (aRosterItemStore->Count() - 1); x >= 0; x--) {
+				CFollowingRosterItem* aRosterItem = static_cast <CFollowingRosterItem*> (aRosterItemStore->GetItemByIndex(x));
+				
+				if(aRosterItem->GetId().Compare(aLocalItem->GetId()) == 0) {
+					aNotifyId = aItem->GetItemId();
+					
+					if(aPush && iPubsubSubscribedTo) {
+						// Check user node subscription
+						if(aLocalItem->GetSubscription() < EPresenceSubscriptionFrom && 
+								aRosterItem->GetSubscription() >= EPresenceSubscriptionFrom) {
+							
+							// Add user to my node subscribers
+							SetPubsubNodeAffiliationL(aLocalItem->GetId(), iOwnItem->GetId(EIdChannel), EPubsubAffiliationPublisher);							
+						}
+						else if(aLocalItem->GetSubscription() >= EPresenceSubscriptionFrom && 
+								aRosterItem->GetSubscription() < EPresenceSubscriptionFrom) {
+							
+							// Remove user from my node subscribers
+							SetPubsubNodeSubscriptionL(aLocalItem->GetId(), iOwnItem->GetId(EIdChannel), EPubsubSubscriptionNone);
+							
+							if(aLocalItem->GetPubsubAffiliation() != EPubsubAffiliationNone && 
+									aLocalItem->GetPubsubSubscription() > EPubsubSubscriptionNone) {
+								
+								// Remove me from users node subscribers
+								SetPubsubNodeSubscriptionL(iOwnItem->GetId(), aLocalItem->GetId(EIdChannel), EPubsubSubscriptionNone);
+							}
+						}
 					}
 					
-					if(aSubscription == ESubscriptionFrom) {
-						// Subscription requested			
-						// Update personal channel affiliation
-						ChangeUsersChannelAffiliationL(aEncJid, iOwnItem->GetJid(EJidChannel), EAffiliationMember);		
+					if(aRosterItem->GetSubscription() > EPresenceSubscriptionNone) {						
+						// Update
+						aLocalItem->SetSubscription(aRosterItem->GetSubscription());
 					}
+					else {
+						// Remove (no subscription)
+						UnfollowChannelL(aLocalItem->GetItemId());
+						
+						iDiscussionManager->DeleteDiscussionL(aLocalItem->GetId());
+						iFollowingList->DeleteItemByIndex(i);
+						
+						NotifyNotificationObservers(ENotificationFollowingItemDeleted, aNotifyId);
+						
+						iSettingsSaveNeeded = true;
+					}
+					
+					aRosterItemStore->DeleteItemByIndex(x);
+					
+					aItemFound = true;
+					break;
 				}
+			}
+			
+			if(!aPush && !aItemFound) {
+				// Remove no longer subscribed presence (Non-push update only)					
+				UnfollowChannelL(aLocalItem->GetItemId());
+				
+				iDiscussionManager->DeleteDiscussionL(aLocalItem->GetId());
+				iFollowingList->DeleteItemByIndex(i);
+				
+				NotifyNotificationObservers(ENotificationFollowingItemDeleted, aNotifyId);
 				
 				iSettingsSaveNeeded = true;
 			}
 		}
-		else if(aUpdate && aSubscription == ESubscriptionNone) {
-			// Ask subscription to user from outside resource
-			// Update personal channel affiliation
-			ChangeUsersChannelAffiliationL(aEncJid, iOwnItem->GetJid(EJidChannel), EAffiliationMember);		
+	}
+	
+	// Add new roster items
+	while(aRosterItemStore->Count() > 0) {
+		CFollowingRosterItem* aRosterItem = static_cast <CFollowingRosterItem*> (aRosterItemStore->GetItemByIndex(0));
+		
+		if(aRosterItem->GetSubscription() > EPresenceSubscriptionNone) {
+			// Add item to following list
+			aRosterItem->SetItemId(iNextItemId++);
+			
+			if(aRosterItem->GetTitle().Compare(aRosterItem->GetId()) != 0) {
+				// Set friendly name
+				HBufC* aName = HBufC::NewLC(aRosterItem->GetTitle().Length() + 3 + aRosterItem->GetId().Length());
+				TPtr pName(aName->Des());
+				pName.Append(aRosterItem->GetId());
+				pName.Append(_L(" ()"));
+				pName.Insert((pName.Length() - 1), aRosterItem->GetTitle());
+				
+				aRosterItem->SetTitleL(pName);
+				CleanupStack::PopAndDestroy(); // aName
+			}
+			
+			if(aPush && iPubsubSubscribedTo && aRosterItem->GetSubscription() >= EPresenceSubscriptionFrom) {
+				// Add user to my node subscribers
+				SetPubsubNodeAffiliationL(aRosterItem->GetId(), iOwnItem->GetId(EIdChannel), EPubsubAffiliationPublisher);
+			}
+			
+			// Add to discussion manager
+			CDiscussion* aDiscussion = iDiscussionManager->GetDiscussionL(aRosterItem->GetId());
+			aDiscussion->SetDiscussionReadObserver(this, aRosterItem->GetItemId());
+			
+			aRosterItem->SetUnreadData(aDiscussion);
+	
+			iFollowingList->InsertItem(GetBubbleToPosition(aRosterItem), aRosterItem);		
+			aRosterItemStore->RemoveItemByIndex(0);	
+			
+			iSettingsSaveNeeded = true;
+		}
+		else {	
+			aRosterItemStore->DeleteItemByIndex(0);	
 		}
 	}
 	
 	iRosterSynchronized = true;
 
-	CleanupStack::PopAndDestroy(2); // aTextUtilities, aXmlParser
-
+	CleanupStack::PopAndDestroy(); // aRosterItemStore
+	
 	NotifyNotificationObservers(ENotificationFollowingItemsUpdated);
 }
 
@@ -5683,7 +5374,7 @@ void CBuddycloudLogic::RosterOwnJidL(TDesC& aJid) {
 	TBool aItemFound = false;
 
 	if(iOwnItem) {
-		iOwnItem->SetIsOwn(false);
+		iOwnItem->SetOwnItem(false);
 	}
 	
 	// Remove resource from jid
@@ -5694,15 +5385,15 @@ void CBuddycloudLogic::RosterOwnJidL(TDesC& aJid) {
 		pJid.Set(pJid.Left(aSearchResult));
 	}
 
-	for(TInt i = 0; i < iMasterFollowingList->Count(); i++) {
-		CFollowingItem* aItem = iMasterFollowingList->GetItemByIndex(i);
+	for(TInt i = 0; i < iFollowingList->Count(); i++) {
+		CFollowingItem* aItem = static_cast <CFollowingItem*> (iFollowingList->GetItemByIndex(i));
 
-		if(aItem->GetItemType() == EItemRoster) {
+		if(aItem && aItem->GetItemType() == EItemRoster) {
 			CFollowingRosterItem* aRosterItem = static_cast <CFollowingRosterItem*> (aItem);
 
-			if(aRosterItem->GetJid().Compare(pJid) == 0) {
-				aRosterItem->SetIsOwn(true);
-				aRosterItem->SetSubscriptionType(ESubscriptionBoth);
+			if(aRosterItem->GetId().Compare(pJid) == 0) {
+				aRosterItem->SetOwnItem(true);
+				aRosterItem->SetSubscription(EPresenceSubscriptionBoth);
 
 				iOwnItem = aRosterItem;
 
@@ -5712,25 +5403,25 @@ void CBuddycloudLogic::RosterOwnJidL(TDesC& aJid) {
 		}
 	}
 
-	if( !aItemFound ) {
+	if(!aItemFound) {
 		CFollowingRosterItem* aRosterItem = CFollowingRosterItem::NewLC();
-		aRosterItem->SetIsOwn(true);
-		aRosterItem->SetSubscriptionType(ESubscriptionBoth);
+		aRosterItem->SetOwnItem(true);
+		aRosterItem->SetSubscription(EPresenceSubscriptionBoth);
 		aRosterItem->SetItemId(iNextItemId++);
-		aRosterItem->SetJidL(pJid);
+		aRosterItem->SetIdL(pJid);
 		
-		CDiscussion* aDiscussion = iMessagingManager->GetDiscussionL(pJid);
-
 		// Setting the Contact Name
 		if(iSettingFullName.Length() > 0) {
 			aRosterItem->SetTitleL(iSettingFullName);
 		}
-
-		aDiscussion->AddMessageReadObserver(aRosterItem);
-		aDiscussion->AddDiscussionReadObserver(this, aRosterItem);
+		
+		CDiscussion* aDiscussion = iDiscussionManager->GetDiscussionL(pJid);
+		aDiscussion->SetDiscussionReadObserver(this, aRosterItem->GetItemId());
+		
+		aRosterItem->SetUnreadData(aDiscussion);
 		
 		iOwnItem = aRosterItem;
-		iMasterFollowingList->InsertItem(0, aRosterItem);
+		iFollowingList->InsertItem(0, aRosterItem);
 		CleanupStack::Pop();
 
 		if(iStatusObserver) {
@@ -5739,349 +5430,332 @@ void CBuddycloudLogic::RosterOwnJidL(TDesC& aJid) {
 	}
 }
 
-void CBuddycloudLogic::RosterPubsubEventL(TDesC& aFrom, const TDesC8& aData, TBool aNew) {
+void CBuddycloudLogic::XmppStanzaAcknowledgedL(const TDesC8& aStanza, const TDesC8& aId) {
 #ifdef _DEBUG
-	WriteToLog(_L8("BL    CBuddycloudLogic::RosterPubsubEventL"));
+	WriteToLog(_L8("BL    CBuddycloudLogic::XmppStanzaAcknowledgedL"));
 #endif
+
+	CXmlParser* aXmlParser = CXmlParser::NewLC(aStanza);
+	TPtrC8 aAttributeType = aXmlParser->GetStringAttribute(_L8("type"));
 	
-	TInt aNotifyId = KErrNotFound;
+	if(aAttributeType.Compare(_L8("result")) == 0) {
+		if(aId.Compare(_L8("nearbyplaces1")) == 0) {
+			CTextUtilities* aTextUtilities = CTextUtilities::NewLC();
+			
+			// Delete old nearby places
+			for(TInt i = 0; i < iNearbyPlaces.Count(); i++) {
+				delete iNearbyPlaces[i];
+			}
+			
+			iNearbyPlaces.Reset();
 
-	// Remove resource from jid
-	TPtrC pJid(aFrom);
+			// Get new nearby places
+			while(aXmlParser->MoveToElement(_L8("item"))) {
+				TPtrC8 pAttributeId = aXmlParser->GetStringAttribute(_L8("id"));
+				TPtrC8 pAttributeVar = aXmlParser->GetStringAttribute(_L8("var"));
+				TInt aIntValue = pAttributeId.LocateReverse('/');
+				
+				if(aIntValue != KErrNotFound && pAttributeVar.Compare(_L8("place")) == 0) {
+					CXmlParser* aItemXmlParser = CXmlParser::NewLC(aXmlParser->GetStringData());
+					
+					// Convert place id
+					TLex8 aLexValue(pAttributeId.Mid(aIntValue + 1));
+					if(aLexValue.Val(aIntValue) != KErrNone) {
+						aIntValue = 0;
+					}
+					
+					if(aIntValue > 0 && aItemXmlParser->MoveToElement(_L8("name"))) {
+						// Add Place to Nearby List
+						CBuddycloudNearbyPlace* aNewPlace = new (ELeave) CBuddycloudNearbyPlace();
+						CleanupStack::PushL(aNewPlace);
 
-	TInt aSearchResult = pJid.Locate('/');
+						aNewPlace->SetPlaceId(aIntValue);
+						aNewPlace->SetPlaceNameL(aTextUtilities->Utf8ToUnicodeL(aItemXmlParser->GetStringData()));
+						
+						iNearbyPlaces.Append(aNewPlace);
+						CleanupStack::Pop();
+					}
+					
+					CleanupStack::PopAndDestroy(); // aItemXmlParser
+				}
+			}
+			
+			CleanupStack::PopAndDestroy(); // aTextUtilities
+		}
+		else if(aId.Compare(_L8("pubsubsubscriptions")) == 0) {
+			// Handle pubsub subscriptions
+			ProcessPubsubSubscriptionsL(aStanza);
+		}
+		else if(aId.Compare(_L8("pubsubnodesubscribers")) == 0) {
+			// Handle users pubsub node subscribers
+			ProcessUsersPubsubNodeSubscribersL(aStanza);
+		}
+		else if(aId.Compare(_L8("myplaces1")) == 0 || aId.Compare(_L8("addplacequery1")) == 0 || 
+				aId.Compare(_L8("createplacequery1")) == 0 || aId.Compare(_L8("currentplacequery1")) == 0 || 
+				aId.Compare(_L8("searchplacequery1")) == 0 || aId.Compare(_L8("placedetails1")) == 0) {
+			
+			// Handle places query result
+			HandlePlaceQueryResultL(aStanza, aId);
+		}
+		else if(aId.Find(_L8("setmood:")) != KErrNotFound || aId.Compare(_L8("setnext1")) == 0) {
+			// Set mood/next place result
+			SetActivityStatus(_L(""));
+		}
+		else if(aId.Find(_L8("followchannel:")) != KErrNotFound) {
+			// Follow node result
+			if(aXmlParser->MoveToElement(_L8("query"))) {
+				CTextUtilities* aTextUtilities = CTextUtilities::NewLC();
+				
+				TPtrC8 aAttributeNode(aXmlParser->GetStringAttribute(_L8("node")));
+				TPtrC8 aEncId(aTextUtilities->UnicodeToUtf8L(iOwnItem->GetId()));
+				
+				// Send subscribe stanza
+				_LIT8(KSubscribeStanza, "<iq to='' type='set' id='subscribe:%02d'><pubsub xmlns='http://jabber.org/protocol/pubsub'><subscribe node='' jid=''/></pubsub></iq>\r\n");
+				HBufC8* aSubscribeStanza = HBufC8::NewLC(KSubscribeStanza().Length() + KBuddycloudPubsubServer().Length() + aAttributeNode.Length() + aEncId.Length());
+				TPtr8 pSubscribeStanza(aSubscribeStanza->Des());
+				pSubscribeStanza.AppendFormat(KSubscribeStanza, GetNewIdStamp());
+				pSubscribeStanza.Insert(113, aEncId);
+				pSubscribeStanza.Insert(106, aAttributeNode);
+				pSubscribeStanza.Insert(8, KBuddycloudPubsubServer);
+				
+				iXmppEngine->SendAndForgetXmppStanza(pSubscribeStanza, true);
+				CleanupStack::PopAndDestroy(2); // aSubscribeStanza, aTextUtilities
+				
+				// Process disco items
+				ProcessChannelMetadataL(aStanza);					
+			}
+		}
+		else if(aId.Find(_L8("metadata:")) != KErrNotFound) {
+			// Handle (disco#info) metadata result
+			ProcessChannelMetadataL(aStanza);
+		}
+		else if(aId.Compare(_L8("credentials1")) == 0) {
+			// Communities update success
+			HBufC* aMessage = CEikonEnv::Static()->AllocReadResourceLC(R_LOCALIZED_STRING_NOTE_CREDENTIALS_SUCCESS);
+			CAknConfirmationNote* aDialog = new (ELeave) CAknConfirmationNote();		
+			aDialog->ExecuteLD(*aMessage);
+			CleanupStack::PopAndDestroy(); // aMessage				
+		}
+		else if(aId.Compare(_L8("registration1")) == 0) {
+			// Registration success
+			iXmppEngine->SendAuthorization();
+			
+			// Save settings
+			SaveSettingsAndItemsL();
+		}
+		else if(aId.Find(_L8("mediareq:")) != KErrNotFound) {
+			// Media post request
+			if(aXmlParser->MoveToElement(_L8("uploaduri"))) {
+				TInt aItemId = KErrNotFound;
+				TLex8 aLex(aId.Mid(aId.Locate(':') + 1));
+				
+				if(aLex.Val(aItemId) == KErrNone) {
+					CFollowingItem* aItem = static_cast <CFollowingItem*> (iFollowingList->GetItemById(aItemId));
+					
+					if(aItem && aItem->GetItemType() >= EItemRoster) {						
+						// Create discussion entry
+						CAtomEntryData* aAtomEntry = CAtomEntryData::NewLC();
+						aAtomEntry->SetPrivate(true);
+						aAtomEntry->SetDirectReply(true);
+						aAtomEntry->SetIconId(KIconChannel);							
+						aAtomEntry->SetPublishTime(TimeStamp());	
+						aAtomEntry->SetAuthorNameL(_L("Media Uploader"));
+							
+						HBufC* aResourceText = CEikonEnv::Static()->AllocReadResourceLC(R_LOCALIZED_STRING_NOTE_MEDIAUPLOADREADY);
+						
+						CTextUtilities* aTextUtilities = CTextUtilities::NewLC();
+						TPtrC aDataUploaduri = aTextUtilities->Utf8ToUnicodeL(aXmlParser->GetStringData());
+						
+						HBufC* aMessageText = HBufC::NewLC(aResourceText->Des().Length() + aDataUploaduri.Length());
+						TPtr pMessageText(aMessageText->Des());
+						pMessageText.Append(*aResourceText);
+						pMessageText.Replace(pMessageText.Find(_L("$LINK")), 5, aDataUploaduri);							
+						
+						aAtomEntry->SetContentL(pMessageText);
+						CleanupStack::PopAndDestroy(3); // aMessageText, aResourceText, aTextUtilities
+	
+						// Add to discussion
+						CDiscussion* aDiscussion = iDiscussionManager->GetDiscussionL(aItem->GetId());
+						
+						if(aDiscussion->AddEntryOrCommentLD(aAtomEntry)) {									
+							NotifyNotificationObservers(ENotificationMessageNotifiedEvent, aItem->GetItemId());
+						}
+					}
+				}
+			}
+		}
+	}
+	else if(aAttributeType.Compare(_L8("error")) == 0) {
+		if(aId.Compare(_L8("createplacequery1")) == 0 || aId.Compare(_L8("currentplacequery1")) == 0 || 
+				aId.Compare(_L8("editplacequery1")) == 0) {
+			// Handle place query error
+			SetActivityStatus(_L(""));
+			
+			if(aXmlParser->MoveToElement(_L8("text"))) {
+				CTextUtilities* aTextUtilities = CTextUtilities::NewLC();							
+				HBufC* aMessageTitle = CEikonEnv::Static()->AllocReadResourceLC(R_LOCALIZED_STRING_UPDATEFAILED_TITLE);
+				
+				CAknMessageQueryDialog* aDialog = new (ELeave) CAknMessageQueryDialog();
+				aDialog->PrepareLC(R_AUTHERROR_DIALOG);
+				aDialog->SetHeaderTextL(*aMessageTitle);
+				aDialog->SetMessageTextL(aTextUtilities->Utf8ToUnicodeL(aXmlParser->GetStringData()));
+				aDialog->RunLD();
+				
+				CleanupStack::PopAndDestroy(2); // aMessageTitle, aTextUtilities
+			}
+		}
+		else if(aId.Find(_L8("setmood:")) != KErrNotFound || aId.Compare(_L8("setnext1")) == 0) {
+			// Set mood/next place error
+			SetActivityStatus(_L(""));
+		}
+		else if(aId.Compare(_L8("searchplacequery1")) == 0) {
+			// No place search error
+			SetActivityStatus(_L(""));
+
+			HBufC* aMessage = CEikonEnv::Static()->AllocReadResourceLC(R_LOCALIZED_STRING_NOTE_NORESULTSFOUND);
+			CAknInformationNote* aDialog = new (ELeave) CAknInformationNote();		
+			aDialog->ExecuteLD(*aMessage);
+			CleanupStack::PopAndDestroy(); // aMessage
+		}
+		else if(aId.Compare(_L8("placedetails1")) == 0) {
+			// Handle places query error
+			HandlePlaceQueryResultL(aStanza, aId);
+		}
+		else if(aId.Find(_L8("followchannel:")) != KErrNotFound) {
+			// Follow node error
+			TInt aItemId = KErrNotFound;
+			TLex8 aLex(aId.Mid(aId.Locate(':') + 1));
+			
+			if(aLex.Val(aItemId) == KErrNone) {
+				CFollowingItem* aItem = static_cast <CFollowingItem*> (iFollowingList->GetItemById(aItemId));
+				
+				if(aItem && aItem->GetItemType() == EItemChannel) {	
+					CFollowingChannelItem* aChannelItem = static_cast <CFollowingChannelItem*> (aItem);
+					
+					if(aXmlParser->MoveToElement(_L8("item-not-found"))) {
+						// Channel doesn't exist
+						aChannelItem->SetIdL(aChannelItem->GetTitle());
+						aChannelItem->SetItemId(KEditingNewChannelId);
+						
+						NotifyNotificationObservers(ENotificationEditChannelRequested, KEditingNewChannelId);
+					}
+					else {
+						// Delete channel
+						iFollowingList->DeleteItemById(aItemId);
+					}
+				}
+			}
+		}
+		else if(aId.Compare(_L8("credentials1")) == 0) {
+			// Communities update failed
+			HBufC* aMessage = CEikonEnv::Static()->AllocReadResourceLC(R_LOCALIZED_STRING_NOTE_CREDENTIALS_FAIL);
+			CAknErrorNote* aDialog = new (ELeave) CAknErrorNote();	
+			aDialog->SetTimeout(CAknNoteDialog::ENoTimeout);
+			aDialog->ExecuteLD(*aMessage);
+			CleanupStack::PopAndDestroy(); // aMessage	
+		}
+		else if(aId.Compare(_L8("registration1")) == 0) {
+			// Registration failed			
+			CAknMessageQueryDialog* dlg = new (ELeave) CAknMessageQueryDialog();
+			dlg->ExecuteLD(R_AUTHERROR_DIALOG);
+			
+			iXmppEngine->Disconnect();
+			
+			NotifyNotificationObservers(ENotificationAuthenticationFailed);
+		}
+	}
+	
+	CleanupStack::PopAndDestroy(); // aXmlParser
+}
+
+void CBuddycloudLogic::HandleIncomingPresenceL(TDesC& aFrom, const TDesC8& aStanza) {
+#ifdef _DEBUG
+	WriteToLog(_L8("BL    CBuddycloudLogic::HandleIncomingPresenceL"));
+#endif
+
+	TPtrC aJid(aFrom);
+	TPtrC aResource(aFrom);
+
+	TInt aSearchResult = aJid.Locate('/');
 	if(aSearchResult != KErrNotFound) {
-		pJid.Set(pJid.Left(aSearchResult));
+		aJid.Set(aJid.Left(aSearchResult));
+		aResource.Set(aResource.Mid(aSearchResult + 1));
 	}
 
 	// Initialize xml parser
-	CXmlParser* aXmlParser = CXmlParser::NewLC(aData);
-	CTextUtilities* aTextUtilities = CTextUtilities::NewLC();
-
-	for(TInt i = 0; i < iMasterFollowingList->Count(); i++) {
-		CFollowingItem* aItem = iMasterFollowingList->GetItemByIndex(i);
-
-		if(aItem->GetItemType() == EItemRoster) {
+	CXmlParser* aXmlParser = CXmlParser::NewLC(aStanza);
+	
+	for(TInt i = 0; i < iFollowingList->Count(); i++) {
+		CFollowingItem* aItem = static_cast <CFollowingItem*> (iFollowingList->GetItemByIndex(i));
+		
+		if(aItem && aItem->GetItemType() == EItemRoster) {
 			CFollowingRosterItem* aRosterItem = static_cast <CFollowingRosterItem*> (aItem);
-
-			if(aRosterItem->GetJid().CompareF(pJid) == 0) {
-				aNotifyId = aItem->GetItemId();				
-
-				if(aXmlParser->MoveToElement(_L8("items"))) {
-					TPtrC8 pAttributeNode = aXmlParser->GetStringAttribute(_L8("node"));
+			
+			if(aRosterItem->GetId().Compare(aJid) == 0) {
+				TPtrC8 aAttributeType = aXmlParser->GetStringAttribute(_L8("type"));
+				
+				if(aAttributeType.Length() == 0) {
+					// Users presence changes
+					if(aRosterItem->GetPresence() != EPresenceOnline) {
+						aRosterItem->SetPresence(EPresenceOnline);
+							
+//						// Collect pubsub nodes
+//						if(!aRosterItem->PubsubCollected()) {
+//							aRosterItem->SetPubsubCollected(true);
+//		
+//							CollectUserPubsubNodeL(aRosterItem->GetId(), _L("/mood"));
+//							CollectUserPubsubNodeL(aRosterItem->GetId(), _L("/geo/previous"));
+//							CollectUserPubsubNodeL(aRosterItem->GetId(), _L("/geo/current"));
+//							CollectUserPubsubNodeL(aRosterItem->GetId(), _L("/geo/future"));				
+//						}
+					}
 					
-					if(aXmlParser->MoveToElement(_L8("geoloc"))) {
-						// XEP-0080: User Geoloc
-						CBuddycloudBasicPlace* aNewPlace = CBuddycloudBasicPlace::NewLC();
-						TBuddycloudPlaceType aPlaceType = EPlaceCurrent;
+					// Presence has nick
+					if(aXmlParser->MoveToElement(_L8("nick"))) {
+						CTextUtilities* aTextUtilities = CTextUtilities::NewLC();
+						TPtrC aDataNick(aTextUtilities->Utf8ToUnicodeL(aXmlParser->GetStringData()));
 						
-						if(pAttributeNode.Compare(_L8("http://jabber.org/protocol/geoloc-prev")) == 0) {
-							aPlaceType = EPlacePrevious;
-							aNew = false;
-						}
-						else if(pAttributeNode.Compare(_L8("http://jabber.org/protocol/geoloc-next")) == 0) {
-							aPlaceType = EPlaceNext;
-						}
-						
-						CBuddycloudBasicPlace* aOldPlace = aRosterItem->GetPlace(aPlaceType);
-						
-						do {
-							TPtrC8 pElementName = aXmlParser->GetElementName();
-							TPtrC8 pElementData = aXmlParser->GetStringData();
+						if(aDataNick.Length() > 0) {
+							HBufC* aTitle = HBufC::NewLC(aRosterItem->GetId().Length() + aDataNick.Length() + 3);
+							TPtr pTitle(aTitle->Des());
+							pTitle.Append(aRosterItem->GetId());
+							pTitle.Append(_L(" ()"));
+							pTitle.Insert((pTitle.Length() - 1), aDataNick);
 							
-							if(pElementName.Compare(_L8("text")) == 0) {
-								aNewPlace->SetPlaceNameL(aTextUtilities->Utf8ToUnicodeL(pElementData));
-							}
-							else if(pElementName.Compare(_L8("street")) == 0) {
-								aNewPlace->SetPlaceStreetL(aTextUtilities->Utf8ToUnicodeL(pElementData));
-							}
-							else if(pElementName.Compare(_L8("area")) == 0) {
-								aNewPlace->SetPlaceAreaL(aTextUtilities->Utf8ToUnicodeL(pElementData));
-							}
-							else if(pElementName.Compare(_L8("locality")) == 0) {
-								aNewPlace->SetPlaceCityL(aTextUtilities->Utf8ToUnicodeL(pElementData));
-							}
-							else if(pElementName.Compare(_L8("postalcode")) == 0) {
-								aNewPlace->SetPlacePostcodeL(aTextUtilities->Utf8ToUnicodeL(pElementData));
-							}
-							else if(pElementName.Compare(_L8("region")) == 0) {
-								aNewPlace->SetPlaceRegionL(aTextUtilities->Utf8ToUnicodeL(pElementData));
-							}
-							else if(pElementName.Compare(_L8("country")) == 0) {
-								aNewPlace->SetPlaceCountryL(aTextUtilities->Utf8ToUnicodeL(pElementData));
-							}
-							else if(pElementName.Compare(_L8("lat")) == 0) {
-								TLex8 aLatitudeLex(pElementData);
-								TReal aLatitude = 0.0;
-
-								if(aLatitudeLex.Val(aLatitude) == KErrNone) {
-									aNewPlace->SetPlaceLatitude(aLatitude);
-								}
-							}
-							else if(pElementName.Compare(_L8("lon")) == 0) {
-								TLex8 aLongitudeLex(pElementData);
-								TReal aLongitude = 0.0;
-
-								if(aLongitudeLex.Val(aLongitude) == KErrNone) {
-									aNewPlace->SetPlaceLongitude(aLongitude);
-								}
-							}
-						} while(aXmlParser->MoveToNextElement());
-						
-						if(aNew && aOldPlace->GetPlaceName().CompareF(aNewPlace->GetPlaceName()) == 0) {
-							aNew = false;
+							aRosterItem->SetTitleL(pTitle);
+							CleanupStack::PopAndDestroy(); // aTitle
 						}
 						
-						if(aRosterItem->GetIsOwn() && aPlaceType == EPlaceCurrent) {
-							// Broad location
-							HBufC* aNewBroadLocation = HBufC::NewLC(aNewPlace->GetPlaceCity().Length() + 2 + aNewPlace->GetPlaceCountry().Length());
-							TPtr pNewBroadLocation(aNewBroadLocation->Des());
-							
-							pNewBroadLocation.Append(aNewPlace->GetPlaceCity());
-							
-							if(pNewBroadLocation.Length() > 0 && aNewPlace->GetPlaceCountry().Length() > 0) {
-								pNewBroadLocation.Append(_L(", "));
-							}
-							
-							pNewBroadLocation.Append(aNewPlace->GetPlaceCountry());
-							
-							// Compair with old broad location
-							if(pNewBroadLocation.Compare(*iBroadLocationText) != 0) {
-								// Update
-								if(iBroadLocationText)
-									delete iBroadLocationText;
-								
-								iBroadLocationText = aNewBroadLocation;
-								CleanupStack::Pop(); // aEncBroadLocation
-								
-								// Send presence
-								SendPresenceL();
-							}
-							else {
-								CleanupStack::PopAndDestroy(); // aEncBroadLocation
-							}
-							
-							// Reset next
-							if(aRosterItem->GetPlace(EPlaceNext)->GetPlaceName().FindF(aNewPlace->GetPlaceName()) != KErrNotFound) {
-								iXmppEngine->SendAndForgetXmppStanza(_L8("<iq to='butler.buddycloud.com' type='set' id='next2'><query xmlns='http://buddycloud.com/protocol/place#next'><place><name></name></place></query></iq>\r\n"), true);
-							}
-						}
-						
-						aRosterItem->SetPlaceL(aPlaceType, aNewPlace);						
-						CleanupStack::Pop(); // aNewPlace
+						CleanupStack::PopAndDestroy(); // aTextUtilities
 					}
-					else if(aXmlParser->MoveToElement(_L8("mood"))) {
-						// XEP-0107: User mood
-						TPtrC aEncMood;
-						
-						if(aXmlParser->MoveToElement(_L8("text"))) {
-							aEncMood.Set(aTextUtilities->Utf8ToUnicodeL(aXmlParser->GetStringData()));						
-						}
-						
-						if(aNew && aRosterItem->GetDescription().CompareF(aEncMood) == 0) {
-							aNew = false;
-						}
-						
-						aRosterItem->SetDescriptionL(aEncMood);
-					}
-					else if(aXmlParser->MoveToElement(_L8("profile"))) {
-						// XEP-0154: User profile
-						aNew = false;
-
-						if(aXmlParser->MoveToElement(_L8("x"))) {
-							while(aXmlParser->MoveToElement(_L8("field"))) {
-								TPtrC8 pAttributeVar = aXmlParser->GetStringAttribute(_L8("var"));
-
-								if(pAttributeVar.Compare(_L8("full_name")) == 0) {
-									if(aXmlParser->MoveToElement(_L8("value"))) {
-										TPtrC aEncFullName(aTextUtilities->Utf8ToUnicodeL(aXmlParser->GetStringData()));
-										TPtrC aUsername(aRosterItem->GetJid());
-										TInt aLocateResult = aUsername.Locate('@');
-										
-										// Remove '@domain.com'
-										if(aLocateResult != KErrNotFound) {
-											aUsername.Set(aUsername.Left(aLocateResult));
-										}
-																				
-										if(aEncFullName.Length() == 0) {
-											// No full_name set
-											aRosterItem->SetTitleL(aUsername);
-										}
-										else {
-											HBufC* aFormattedName = HBufC::NewLC(aEncFullName.Length() + aUsername.Length() + 3);
-											TPtr pFormattedName(aFormattedName->Des());
-											pFormattedName.Append(aEncFullName);
-											pFormattedName.Trim();
-											
-											if(aUsername.Compare(pFormattedName) != 0) {
-												pFormattedName.Append(_L(" ()"));
-												pFormattedName.Insert(pFormattedName.Length() - 1, aUsername);
-											}
-											
-											aRosterItem->SetTitleL(pFormattedName);
-											CleanupStack::PopAndDestroy(); // aFormattedName
-										}
-									}
-								}
-								else if(pAttributeVar.Compare(_L8("detail")) == 0) {
-									// Check if contact is already paired
-									while(aXmlParser->MoveToElement(_L8("value"))) {
-										if(aRosterItem->GetAddressbookId() < 0) {
-											TPtrC aMobileNumber(aTextUtilities->Utf8ToUnicodeL(aXmlParser->GetStringData()));
-
-											CContactIdArray* aContactIdArray = iContactDatabase->MatchPhoneNumberL(aMobileNumber, 9);
-											CleanupStack::PushL(aContactIdArray);
-
-											// If match found in contact database
-											if(aContactIdArray->Count() == 1) {
-												TContactItemId aContactId = (*aContactIdArray)[0];
-												TInt aMatchedContactItemId = KErrNotFound;
-
-												for(TInt x = 0; x < iMasterFollowingList->Count(); x++) {
-													CFollowingItem* aMatchingItem = iMasterFollowingList->GetItemByIndex(x);
-
-													if(aMatchingItem->GetItemType() == EItemContact) {
-														CFollowingContactItem* aContactItem = static_cast <CFollowingContactItem*> (aMatchingItem);
-
-														// Pair items
-														if(aContactItem->GetAddressbookId() == aContactId) {
-															aMatchedContactItemId = aContactItem->GetItemId();
-															break;
-														}
-													}
-												}
-
-												if(aMatchedContactItemId != KErrNotFound) {
-													// Contact not in following list
-													PairItemIdsL(aRosterItem->GetItemId(), aMatchedContactItemId);
-												}
-												else {
-													// Pair without item id
-													aRosterItem->SetAddressbookId(aContactId);
-												}
-											}
-
-											CleanupStack::PopAndDestroy(); // aContactIdArray
-										}
-									}
-								}
-							}
-						}
-					}
-					else if(aXmlParser->MoveToElement(_L8("metadata"))) {
-						// XEP-0084: User Avatar - Metadata
-					}
-					else if(aXmlParser->MoveToElement(_L8("data"))) {
-						// XEP-0084: User Avatar - Data
-					}
-				}
-
-				if(aNew && !aRosterItem->GetIsOwn()) {
-					aRosterItem->SetLastUpdated(TimeStamp());
 					
-					iMasterFollowingList->RemoveItemByIndex(i);
-					iMasterFollowingList->InsertItem(GetBubbleToPosition(aRosterItem), aRosterItem);
+					// TODO: Handle possible avatar hash
 				}
-
-				break;
-			}
-		}
-	}
-
-	CleanupStack::PopAndDestroy(2); // aXmlParser, aTextUtilities
-
-	if(iState == ELogicOnline) {
-		iLastReceivedAt = TimeStamp();
-	}
-
-	NotifyNotificationObservers(ENotificationFollowingItemsUpdated, aNotifyId);
-}
-
-void CBuddycloudLogic::RosterPubsubDeleteL(TDesC& aFrom, const TDesC8& aNode) {
-#ifdef _DEBUG
-	WriteToLog(_L8("BL    CBuddycloudLogic::RosterPubsubDeleteL"));
-#endif
-
-	TInt aNotifyId = KErrNotFound;
-	TBool aNotifyObserver = false;
-
-	// Remove resource from jid
-	TPtrC pJid(aFrom);
-
-	TInt aSearchResult = pJid.Locate('/');
-	if(aSearchResult != KErrNotFound) {
-		pJid.Set(pJid.Left(aSearchResult));
-	}
-
-	for(TInt i = 0; i < iMasterFollowingList->Count(); i++) {
-		CFollowingItem* aItem = iMasterFollowingList->GetItemByIndex(i);
-
-		if(aItem->GetItemType() == EItemRoster) {
-			CFollowingRosterItem* aRosterItem = static_cast <CFollowingRosterItem*> (aItem);
-
-			if(aRosterItem->GetJid().CompareF(pJid) == 0) {
-				if(aNode.Compare(_L8("http://jabber.org/protocol/mood")) == 0) {
-					if(aRosterItem->GetIsOwn() && iSettingNewInstall) {						
-						// Initial status
-						TBuf<256> aMood;
-						CEikonEnv::Static()->ReadResource(aMood, R_LOCALIZED_STRING_DIALOG_MOODIS);
-						SetMoodL(aMood);					
-					}
-					else if(aRosterItem->GetDescription().Length() > 0) {
-						aNotifyObserver = true;
-						aRosterItem->SetDescriptionL(_L(""));
-					}
-				}
-				else if(aNode.Compare(_L8("http://jabber.org/protocol/geoloc-prev")) == 0) {
-					if(aRosterItem->GetPlace(EPlacePrevious)->GetPlaceName().Length() > 0) {
-						aNotifyObserver = true;
-						aRosterItem->SetPlaceL(EPlacePrevious, CBuddycloudBasicPlace::NewL());
-					}
-				}
-				else if(aNode.Compare(_L8("http://jabber.org/protocol/geoloc")) == 0) {
-					if(aRosterItem->GetPlace(EPlaceCurrent)->GetPlaceName().Length() > 0) {
-						aNotifyObserver = true;
-						aRosterItem->SetPlaceL(EPlaceCurrent, CBuddycloudBasicPlace::NewL());
-					}				
-				}
-				else if(aNode.Compare(_L8("http://jabber.org/protocol/geoloc-next")) == 0) {
-					if(aRosterItem->GetPlace(EPlaceNext)->GetPlaceName().Length() > 0) {
-						aNotifyObserver = true;
-						aRosterItem->SetPlaceL(EPlaceNext, CBuddycloudBasicPlace::NewL());
-					}
-				}
-				else if(aNode.Compare(_L8("http://www.xmpp.org/extensions/xep-0154.html#ns")) == 0) {
-					if(aRosterItem->GetIsOwn()) {
-						// Own profile no longer published
-						PublishUserDataL(NULL, true);
+				else if(aAttributeType.Compare(_L8("unavailable")) == 0) {
+					// User goes offline
+					
+					if(aXmlParser->MoveToElement(_L8("status")) && 
+							aXmlParser->GetStringData().Compare(_L8("Replaced by new connection")) != 0) {
+					
+						// User is not 'replaced by new connection'
+						aRosterItem->SetPresence(EPresenceOffline);
 					}
 				}
 				
-				if(aNotifyObserver) {
-					aNotifyId = aRosterItem->GetItemId();
-					aRosterItem->SetLastUpdated(TimeStamp());
-				}
-
 				break;
 			}
 		}
 	}
-
-	if(iState == ELogicOnline) {
-		iLastReceivedAt = TimeStamp();
-	}
-
-	if(aNotifyObserver) {
-		NotifyNotificationObservers(ENotificationFollowingItemsUpdated, aNotifyId);
-	}
+	
+	CleanupStack::PopAndDestroy(); // aXmlParser
 }
 
-void CBuddycloudLogic::RosterSubscriptionL(TDesC& aJid, const TDesC8& aData) {
+void CBuddycloudLogic::ProcessPresenceSubscriptionL(TDesC& aJid, const TDesC8& aData) {
 #ifdef _DEBUG
-	WriteToLog(_L8("BL    CBuddycloudLogic::RosterSubscriptionL"));
+	WriteToLog(_L8("BL    CBuddycloudLogic::ProcessPresenceSubscriptionL"));
 #endif
 	
-	CFollowingItem* aItem = iMasterFollowingList->GetItemById(IsSubscribedTo(aJid, EItemNotice));
+	CFollowingItem* aItem = static_cast <CFollowingItem*> (iFollowingList->GetItemById(IsSubscribedTo(aJid, EItemNotice)));
 	
 	if(aItem == NULL) {
 		CTextUtilities* aTextUtilities = CTextUtilities::NewLC();				
@@ -6143,586 +5817,18 @@ void CBuddycloudLogic::RosterSubscriptionL(TDesC& aJid, const TDesC8& aData) {
 			pDescription.Replace(aResult, 5, pUserInfo);
 		}
 		
-		CFollowingNoticeItem* aNoticeItem = CFollowingNoticeItem::NewLC();
+		CFollowingItem* aNoticeItem = CFollowingItem::NewLC();
 		aNoticeItem->SetItemId(iNextItemId++);
-		aNoticeItem->SetJidL(aJid, EJidRoster);
+		aNoticeItem->SetIdL(aJid, EIdRoster);
 		aNoticeItem->SetTitleL(*aTitle);
 		aNoticeItem->SetDescriptionL(*aDescription);
 		
-		iMasterFollowingList->InsertItem(GetBubbleToPosition(aNoticeItem), aNoticeItem);
+		iFollowingList->InsertItem(GetBubbleToPosition(aNoticeItem), aNoticeItem);
 		CleanupStack::Pop(); // aNoticeItem
 		
 		NotifyNotificationObservers(ENotificationFollowingItemsUpdated);
 		NotifyNotificationObservers(ENotificationMessageNotifiedEvent);
 		CleanupStack::PopAndDestroy(8); // aDescription, aDescriptionResource, aTitle, aUserInfo, aEncLocation, aEncName, aXmlParser, aTextUtilities 
-	}
-
-	if(iState == ELogicOnline) {
-		iLastReceivedAt = TimeStamp();
-	}
-}
-
-void CBuddycloudLogic::XmppStanzaAcknowledgedL(const TDesC8& aStanza, const TDesC8& aId) {
-#ifdef _DEBUG
-	WriteToLog(_L8("BL    CBuddycloudLogic::XmppStanzaAcknowledgedL"));
-#endif
-
-	CXmlParser* aXmlParser = CXmlParser::NewLC(aStanza);
-	TPtrC8 aAttributeType = aXmlParser->GetStringAttribute(_L8("type"));
-	
-	if(aAttributeType.Compare(_L8("result")) == 0) {
-		if(aId.Compare(_L8("nearbyplaces1")) == 0) {
-			CTextUtilities* aTextUtilities = CTextUtilities::NewLC();
-			
-			// Delete old nearby places
-			for(TInt i = 0; i < iNearbyPlaces.Count(); i++) {
-				delete iNearbyPlaces[i];
-			}
-			
-			iNearbyPlaces.Reset();
-
-			// Get new nearby places
-			while(aXmlParser->MoveToElement(_L8("item"))) {
-				TPtrC8 pAttributeId = aXmlParser->GetStringAttribute(_L8("id"));
-				TPtrC8 pAttributeVar = aXmlParser->GetStringAttribute(_L8("var"));
-				TInt aIntValue = pAttributeId.LocateReverse('/');
-				
-				if(aIntValue != KErrNotFound && pAttributeVar.Compare(_L8("place")) == 0) {
-					CXmlParser* aItemXmlParser = CXmlParser::NewLC(aXmlParser->GetStringData());
-					
-					// Convert place id
-					TLex8 aLexValue(pAttributeId.Mid(aIntValue + 1));
-					if(aLexValue.Val(aIntValue) != KErrNone) {
-						aIntValue = 0;
-					}
-					
-					if(aIntValue > 0 && aItemXmlParser->MoveToElement(_L8("name"))) {
-						// Add Place to Nearby List
-						CBuddycloudNearbyPlace* aNewPlace = new (ELeave) CBuddycloudNearbyPlace();
-						CleanupStack::PushL(aNewPlace);
-
-						aNewPlace->SetPlaceId(aIntValue);
-						aNewPlace->SetPlaceNameL(aTextUtilities->Utf8ToUnicodeL(aItemXmlParser->GetStringData()));
-						
-						iNearbyPlaces.Append(aNewPlace);
-						CleanupStack::Pop();
-					}
-					
-					CleanupStack::PopAndDestroy(); // aItemXmlParser
-				}
-			}
-			
-			CleanupStack::PopAndDestroy(); // aTextUtilities
-		}
-		else if(aId.Compare(_L8("mychannelmembers1")) == 0) {
-			// Handle personal channel members
-			SynchronizePersonalChannelMembersL(aStanza);
-		}
-		else if(aId.Compare(_L8("mychannels1")) == 0) {
-			// Handle my channels list
-			ProcessMyChannelsL(aStanza);
-		}
-		else if(aId.Compare(_L8("myplaces1")) == 0 || aId.Compare(_L8("addplacequery1")) == 0 || 
-				aId.Compare(_L8("createplacequery1")) == 0 || aId.Compare(_L8("currentplacequery1")) == 0 || 
-				aId.Compare(_L8("searchplacequery1")) == 0 || aId.Compare(_L8("placedetails1")) == 0) {
-			
-			// Handle places query result
-			HandlePlaceQueryResultL(aStanza, aId);
-		}
-		else if(aId.Compare(_L8("setmood1")) == 0 || aId.Compare(_L8("setnext1")) == 0) {
-			// Set mood/next place result
-			SetActivityStatus(_L(""));
-		}
-		else if(aId.Compare(_L8("channelinfo1")) == 0) {
-			// Channel lookup success, confirm channel follow
-			CTextUtilities* aTextUtilities = CTextUtilities::NewLC();
-			TPtrC aChannelJid = aTextUtilities->Utf8ToUnicodeL(aXmlParser->GetStringAttribute(_L8("from")));
-			
-			CDiscussion* aDiscussion = iMessagingManager->GetDiscussionL(aChannelJid);
-			CFollowingItem* aItem = aDiscussion->GetFollowingItem();
-			
-			if(aItem && aItem->GetItemType() >= EItemRoster) {
-				CFollowingChannelItem* aChannelItem = static_cast <CFollowingChannelItem*> (aItem);	
-				
-				if(aItem->GetItemType() == EItemRoster) {
-					// Channel info for a personal channel
-					// Send initial presence to channel
-					iSettingsSaveNeeded = true;			
-					SendChannelPresenceL(aChannelItem->GetJid(),  _L8("<history maxstanzas='30'/>"));
-				}
-				else if(aItem->GetItemType() == EItemChannel) {
-					// Channel info for a topic channel
-					if(aXmlParser->MoveToElement(_L8("identity"))) {
-						// Get friendly name of channel
-						TPtrC8 aChannelName = aXmlParser->GetStringAttribute(_L8("name"));
-						
-						aChannelItem->SetTitleL(aTextUtilities->Utf8ToUnicodeL(aChannelName));
-					}
-					
-					CAknMessageQueryDialog* aMessageDialog = new (ELeave) CAknMessageQueryDialog();
-					aMessageDialog->PrepareLC(R_FOLLOWING_DIALOG);
-					
-					HBufC* aMessageResource = CEikonEnv::Static()->AllocReadResourceLC(R_LOCALIZED_STRING_CHANNELFOLLOWING_TEXT);
-					TPtrC pMessageResource(aMessageResource->Des());
-					
-					HBufC* aMessageBody = HBufC::NewLC(pMessageResource.Length() + aChannelItem->GetTitle().Length());
-					TPtr pMessageBody(aMessageBody->Des());
-					pMessageBody.Append(pMessageResource);
-					
-					TInt aFindResult = pMessageBody.Find(_L("$CHANNEL"));			
-					if(aFindResult != KErrNotFound) {
-						pMessageBody.Replace(aFindResult, 8, aChannelItem->GetTitle());
-					}
-					
-					aMessageDialog->SetMessageText(pMessageBody);
-					CleanupStack::PopAndDestroy(2); // aMessageBody, aMessageResource
-					
-					if(aMessageDialog->RunLD() != 0) {
-						// Send initial presence to channel
-						SendChannelPresenceL(aChannelItem->GetJid(), _L8("<history maxstanzas='30'/>"));
-					}
-					else {
-						// Delete discussion & channel						
-						iMessagingManager->DeleteDiscussionL(aChannelJid);
-						iMasterFollowingList->DeleteItemById(aItem->GetItemId());
-						
-						NotifyNotificationObservers(ENotificationFollowingItemDeleted, aItem->GetItemId());
-						
-						iSettingsSaveNeeded = true;			
-					}
-				}
-			}
-			else {
-				// Delete discussion
-				iMessagingManager->GetDiscussionL(aChannelJid);
-			}
-			
-			CleanupStack::PopAndDestroy(); // aTextUtilities
-		}
-		else if(aId.Compare(_L8("credentials1")) == 0) {
-			// Communities update success
-			HBufC* aMessage = CEikonEnv::Static()->AllocReadResourceLC(R_LOCALIZED_STRING_NOTE_CREDENTIALS_SUCCESS);
-			CAknConfirmationNote* aDialog = new (ELeave) CAknConfirmationNote();		
-			aDialog->ExecuteLD(*aMessage);
-			CleanupStack::PopAndDestroy(); // aMessage				
-		}
-		else if(aId.Compare(_L8("registration1")) == 0) {
-			// Registration success
-			iXmppEngine->SendAuthorization();
-			
-			// Save settings
-			SaveSettingsAndItemsL();
-		}
-		else if(aId.Find(_L8("mediareq_")) != KErrNotFound) {
-			// Media post request
-			if(aXmlParser->MoveToElement(_L8("uploaduri"))) {
-				CTextUtilities* aTextUtilities = CTextUtilities::NewLC();
-				TPtrC aChannelRoomname = aTextUtilities->Utf8ToUnicodeL(aId.Mid(aId.Locate('_') + 1));
-				
-				// Format jid
-				HBufC* aChannelJid = HBufC::NewLC(aChannelRoomname.Length() + KBuddycloudChannelsServer().Length());
-				TPtr pChannelJid(aChannelJid->Des());
-				pChannelJid.Append(aChannelRoomname);
-				pChannelJid.Append(KBuddycloudChannelsServer);
-				
-				// Get discussion
-				CDiscussion* aDiscussion = iMessagingManager->GetDiscussionL(pChannelJid);
-				CFollowingItem* aItem = aDiscussion->GetFollowingItem();
-				
-				if(aItem && aItem->GetItemType() >= EItemRoster) {
-					// Create response message
-					CMessage* aMessage = CMessage::NewLC();								
-					aMessage->SetPrivate(true);
-					aMessage->SetDirectReply(true);
-					aMessage->SetAvatarId(KIconChannel);							
-					aMessage->SetReceivedAt(TimeStamp());	
-					aMessage->SetNameL(_L("Media Uploader"));
-
-					HBufC* aResourceText = CEikonEnv::Static()->AllocReadResourceLC(R_LOCALIZED_STRING_NOTE_MEDIAUPLOADREADY);
-					TPtrC aDataUploaduri = aTextUtilities->Utf8ToUnicodeL(aXmlParser->GetStringData());
-					
-					HBufC* aMessageText = HBufC::NewLC(2 + iSettingUsernameOnly.Length() + aResourceText->Des().Length() + aDataUploaduri.Length());
-					TPtr pMessageText(aMessageText->Des());
-					pMessageText.Append(_L("@ "));
-					pMessageText.Insert(1, iSettingUsernameOnly);
-					pMessageText.Append(*aResourceText);
-					pMessageText.Replace(pMessageText.Find(_L("$LINK")), 5, aDataUploaduri);							
-					aMessage->SetBodyL(pMessageText, iSettingUsernameOnly);
-					CleanupStack::PopAndDestroy(2); // aMessageText, aResourceText
-
-					aDiscussion->AddMessageLD(aMessage);					
-					
-					NotifyNotificationObservers(ENotificationMessageNotifiedEvent, aItem->GetItemId());
-				}
-				
-				CleanupStack::PopAndDestroy(2); // aChannelJid, aTextUtilities
-			}
-		}
-	}
-	else if(aAttributeType.Compare(_L8("error")) == 0) {
-		if(aId.Compare(_L8("mychannels1")) == 0) {
-			// Error collecting my channels
-			// Send presence to channels
-			iTimerState |= ETimeoutSendPresence;
-			TimerExpired(0);
-			
-			if(iOwnItem->GetJid(EJidChannel).Length() == 0) {
-				// No personal channel, create
-				FollowPersonalChannelL(iOwnItem->GetItemId());
-			}
-		}		
-		else if(aId.Compare(_L8("channelinfo1")) == 0) {
-			// Channel item lookup failed, item does not exist
-			CTextUtilities* aTextUtilities = CTextUtilities::NewLC();
-			TPtrC aChannelJid = aTextUtilities->Utf8ToUnicodeL(aXmlParser->GetStringAttribute(_L8("from")));
-			
-			CDiscussion* aDiscussion = iMessagingManager->GetDiscussionL(aChannelJid);
-			CFollowingItem* aItem = aDiscussion->GetFollowingItem();
-			
-			if(aItem && aItem->GetItemType() >= EItemRoster) {						
-				CFollowingChannelItem* aChannelItem = static_cast <CFollowingChannelItem*> (aItem);			
-
-				if(aChannelItem->GetItemType() == EItemRoster) {
-					// Personal channel doesn't exist
-					if(aChannelItem->GetIsOwn()) {
-						// Send initial presence to channel (creating new channel)
-						SendChannelPresenceL(aChannelItem->GetJid(), _L8("<history maxstanzas='30'/>"));
-					}
-					else {
-						// Remove personal channel						
-						iMessagingManager->DeleteDiscussionL(aChannelJid);
-						aChannelItem->SetJidL(_L(""));
-						
-						NotifyNotificationObservers(ENotificationFollowingItemDeleted, aItem->GetItemId());
-					}
-				}
-				else if(aChannelItem->GetItemType() == EItemChannel) {
-					// Topic channel doesn't exist
-					if(aXmlParser->MoveToElement(_L8("item-not-found"))) {					
-						// Send initial presence to channel (creating new channel)
-						SendChannelPresenceL(aChannelItem->GetJid(), _L8("<history maxstanzas='30'/>"));
-					}
-					else {
-						// Delete discussion & channel
-						iMessagingManager->DeleteDiscussionL(aChannelJid);
-						iMasterFollowingList->DeleteItemById(aItem->GetItemId());
-						
-						NotifyNotificationObservers(ENotificationFollowingItemDeleted, aItem->GetItemId());
-						
-						iSettingsSaveNeeded = true;			
-					}
-				}
-			}
-			else {
-				// Item does not exist
-				iMessagingManager->DeleteDiscussionL(aChannelJid);
-			}
-			
-			CleanupStack::PopAndDestroy(); // aTextUtilities
-		}
-		else if(aId.Compare(_L8("createplacequery1")) == 0 || aId.Compare(_L8("currentplacequery1")) == 0 || 
-				aId.Compare(_L8("editplacequery1")) == 0) {
-			// Handle place query error
-			SetActivityStatus(_L(""));
-			
-			if(aXmlParser->MoveToElement(_L8("text"))) {
-				CTextUtilities* aTextUtilities = CTextUtilities::NewLC();							
-				HBufC* aMessageTitle = CEikonEnv::Static()->AllocReadResourceLC(R_LOCALIZED_STRING_UPDATEFAILED_TITLE);
-				
-				CAknMessageQueryDialog* aDialog = new (ELeave) CAknMessageQueryDialog();
-				aDialog->PrepareLC(R_AUTHERROR_DIALOG);
-				aDialog->SetHeaderTextL(*aMessageTitle);
-				aDialog->SetMessageTextL(aTextUtilities->Utf8ToUnicodeL(aXmlParser->GetStringData()));
-				aDialog->RunLD();
-				
-				CleanupStack::PopAndDestroy(2); // aMessageTitle, aTextUtilities
-			}
-		}
-		else if(aId.Compare(_L8("setmood1")) == 0 || aId.Compare(_L8("setnext1")) == 0) {
-			// Set mood/next place error
-			SetActivityStatus(_L(""));
-		}
-		else if(aId.Compare(_L8("searchplacequery1")) == 0) {
-			// No place search error
-			SetActivityStatus(_L(""));
-
-			HBufC* aMessage = CEikonEnv::Static()->AllocReadResourceLC(R_LOCALIZED_STRING_NOTE_NORESULTSFOUND);
-			CAknInformationNote* aDialog = new (ELeave) CAknInformationNote();		
-			aDialog->ExecuteLD(*aMessage);
-			CleanupStack::PopAndDestroy(); // aMessage
-		}
-		else if(aId.Compare(_L8("placedetails1")) == 0) {
-			// Handle places query error
-			HandlePlaceQueryResultL(aStanza, aId);
-		}
-		else if(aId.Compare(_L8("credentials1")) == 0) {
-			// Communities update failed
-			HBufC* aMessage = CEikonEnv::Static()->AllocReadResourceLC(R_LOCALIZED_STRING_NOTE_CREDENTIALS_FAIL);
-			CAknErrorNote* aDialog = new (ELeave) CAknErrorNote();	
-			aDialog->SetTimeout(CAknNoteDialog::ENoTimeout);
-			aDialog->ExecuteLD(*aMessage);
-			CleanupStack::PopAndDestroy(); // aMessage	
-		}
-		else if(aId.Compare(_L8("registration1")) == 0) {
-			// Registration failed			
-			CAknMessageQueryDialog* dlg = new (ELeave) CAknMessageQueryDialog();
-			dlg->ExecuteLD(R_AUTHERROR_DIALOG);
-			
-			iXmppEngine->Disconnect();
-			
-			NotifyNotificationObservers(ENotificationAuthenticationFailed);
-		}
-	}
-	
-	CleanupStack::PopAndDestroy(); // aXmlParser
-}
-
-void CBuddycloudLogic::HandleIncomingPresenceL(TDesC& aFrom, const TDesC8& aData) {
-#ifdef _DEBUG
-	WriteToLog(_L8("BL    CBuddycloudLogic::HandleIncomingPresenceL"));
-#endif
-	
-	TBool aNotifyObserver = false;
-//	TBool aBubbleItem = false;
-
-	// Attribute aFrom contains both JID@SERVER/RESOURCE
-	// It the case of a Group presence it will be ROOM@SERVER/JID
-	TPtrC pJid(aFrom);
-	TPtrC pResource(aFrom);
-
-	TInt aSearchResult = pJid.Locate('/');
-	if(aSearchResult != KErrNotFound) {
-		pJid.Set(pJid.Left(aSearchResult));
-		pResource.Set(pResource.Mid(aSearchResult + 1));
-	}
-
-	// Initialize xml parser
-	CXmlParser* aXmlParser = CXmlParser::NewLC(aData);
-	CTextUtilities* aTextUtilities = CTextUtilities::NewLC();
-	
-	TPtrC8 pAttributeType = aXmlParser->GetStringAttribute(_L8("type"));
-	
-	if(pAttributeType.Compare(_L8("subscribe")) == 0) {
-		RosterSubscriptionL(aFrom, aXmlParser->GetStringData());					
-	}
-	else {
-		CDiscussion* aDiscussion = iMessagingManager->GetDiscussionL(pJid);
-		CFollowingItem* aItem = aDiscussion->GetFollowingItem();
-		
-		if(aItem && aItem->GetItemType() >= EItemRoster) {
-			CFollowingChannelItem* aChannelItem = static_cast <CFollowingChannelItem*> (aItem);	
-			
-			if(pAttributeType.Compare(_L8("unavailable")) == 0) {
-				// Remove participant from discussion
-				TBool aIsReplaced = false;
-				
-				if(aXmlParser->MoveToElement(_L8("status"))) {
-					TPtrC8 pStatusData = aXmlParser->GetStringData();
-					
-					if(pStatusData.Compare(_L8("Replaced by new connection")) == 0) {
-						aIsReplaced = true;
-					}
-				}
-				
-				if( !aIsReplaced ) {						
-					aDiscussion->GetParticipants()->RemoveParticipant(aFrom);
-					
-					if(aItem->GetItemType() == EItemRoster) {	
-						CFollowingRosterItem* aRosterItem = static_cast <CFollowingRosterItem*> (aItem);
-						
-						aRosterItem->SetPresence(EPresenceOffline);
-					}
-				}
-			}
-			else if(pAttributeType.Length() == 0) {
-				CMessagingParticipant* aParticipant = aDiscussion->GetParticipants()->AddParticipant(aFrom);
-				
-				if(pJid.Compare(aChannelItem->GetJid()) == 0) {
-					// Is a channel presence
-					aChannelItem->SetPresence(EPresenceOnline);
-					
-					if(aXmlParser->MoveToElement(_L8("item"))) {
-						// Item's jid
-						aParticipant->SetJidL(aTextUtilities->Utf8ToUnicodeL(aXmlParser->GetStringAttribute(_L8("jid"))));
-						
-						// Item's affiliation
-						TPtrC8 pAttributeAffiliation = aXmlParser->GetStringAttribute(_L8("affiliation"));
-						TMucAffiliation aChannelAffiliation = EAffiliationOutcast;
-						
-						if(pAttributeAffiliation.Compare(KAffiliationNone) == 0) {
-							aChannelAffiliation = EAffiliationNone;
-						}
-						else if(pAttributeAffiliation.Compare(KAffiliationMember) == 0) {
-							aChannelAffiliation = EAffiliationMember;
-						}
-						else if(pAttributeAffiliation.Compare(KAffiliationAdmin) == 0) {
-							aChannelAffiliation = EAffiliationAdmin;
-						}
-						else if(pAttributeAffiliation.Compare(KAffiliationOwner) == 0) {
-							aChannelAffiliation = EAffiliationOwner;
-						}
-						
-						// Item's role
-						TPtrC8 pAttributeRole = aXmlParser->GetStringAttribute(_L8("role"));
-						TMucRole aChannelRole = ERoleVisitor;
-						
-						if(pAttributeRole.Compare(KRoleNone) == 0) {
-							aChannelRole = ERoleNone;
-						}
-						else if(pAttributeRole.Compare(KRoleParticipant) == 0) {
-							aChannelRole = ERoleParticipant;
-						}
-						else if(pAttributeRole.Compare(KRoleModerator) == 0) {
-							aChannelRole = ERoleModerator;
-						}
-						
-						aParticipant->SetRole(aChannelRole);
-						aParticipant->SetAffiliation(aChannelAffiliation);
-						
-						// Set users role & affiliation of the group
-						if(pResource.Compare(iSettingUsernameOnly) == 0) {
-							aDiscussion->SetMyRoleAndAffiliation(aChannelRole, aChannelAffiliation);
-							
-							if(aChannelItem->GetIsOwn() && !iMyChannelMembersRequested) {
-								// Own presence in own personal channel
-								// Collect personal channel members
-								TPtrC8 aEncOwnChannelJid = aTextUtilities->UnicodeToUtf8L(iOwnItem->GetJid(EJidChannel));
-									
-								_LIT8(KChannelMembersStanza, "<iq to='' type='get' id='mychannelmembers1'><query xmlns='http://jabber.org/protocol/muc#admin'><item affiliation='member'/></query></iq>\r\n");
-								HBufC8* aChannelMembersStanza = HBufC8::NewLC(KChannelMembersStanza().Length() + aEncOwnChannelJid.Length());
-								TPtr8 pChannelMembersStanza(aChannelMembersStanza->Des());
-								pChannelMembersStanza.Append(KChannelMembersStanza);
-								pChannelMembersStanza.Insert(8, aEncOwnChannelJid);
-
-								iXmppEngine->SendAndAcknowledgeXmppStanza(pChannelMembersStanza, this, false);
-								CleanupStack::PopAndDestroy(); // aChannelMembersStanza
-								
-								iMyChannelMembersRequested = true;
-							}
-						}						
-					}
-				}
-				else if(aChannelItem->GetItemType() == EItemRoster) {
-					CFollowingRosterItem* aRosterItem = static_cast <CFollowingRosterItem*> (aItem);
-					
-					if(aRosterItem->GetPresence() != EPresenceOnline) {
-						aRosterItem->SetPresence(EPresenceOnline);
-						
-						aParticipant->SetJidL(aRosterItem->GetJid());
-						aParticipant->SetAvatarId(aRosterItem->GetAvatarId());						
-						
-						// Collect Pubsub nodes
-						if(!aRosterItem->GetPubsubCollected()) {
-							aRosterItem->SetPubsubCollected(true);
-
-							CollectPubsubNodesL(aRosterItem->GetJid());
-						}
-					}
-				}
-			}
-			
-			aXmlParser->ResetElementPointer();							
-				
-			while(aXmlParser->MoveToElement(_L8("status"))) {
-				TInt aAttributeCode = aXmlParser->GetIntAttribute(_L8("code"));
-				
-				if(aAttributeCode == 201) {
-					if(aItem->GetItemType() == EItemChannel) {
-						// Topic channel created
-						TBuf<256> aChannelDescription;
-
-						CAknTextQueryDialog* aDialog = CAknTextQueryDialog::NewL(aChannelDescription);
-						aDialog->PrepareLC(R_MOOD_DIALOG);
-						aDialog->SetPredictiveTextInputPermitted(true);
-						
-						HBufC* aMessageText = CEikonEnv::Static()->AllocReadResourceLC(R_LOCALIZED_STRING_DIALOG_CREATECHANNELDESCRIPTION);
-						aDialog->SetPromptL(*aMessageText);
-						CleanupStack::PopAndDestroy(); // aMessageText
-						
-						if(aDialog->RunLD() != 0) {
-							aItem->SetDescriptionL(aChannelDescription);
-							
-							// Configure new channel
-							SendChannelConfigurationL(aItem->GetItemId());
-							
-							// Set new channel topic
-							SetTopicL(aChannelDescription, pJid, true);
-						}
-						else {						
-							// First have to configure before deleting
-							SendChannelConfigurationL(aItem->GetItemId());
-							
-							// Destroy channel
-							UnfollowChannelL(aItem->GetItemId());
-						}
-					}
-					else {
-						// Accept default configuration
-						TPtrC8 aEncChannelJid = aTextUtilities->UnicodeToUtf8L(pJid);
-						
-						_LIT8(KConfigStanza, "<iq to='' type='set' id='channelconfig1'><query xmlns='http://jabber.org/protocol/muc#owner'><x xmlns='jabber:x:data' type='submit'/></query></iq>\r\n");
-						HBufC8* aConfigStanza = HBufC8::NewLC(KConfigStanza().Length() + aEncChannelJid.Length());
-						TPtr8 pConfigStanza(aConfigStanza->Des());
-						pConfigStanza.Append(KConfigStanza);
-						pConfigStanza.Insert(8, aEncChannelJid);
-						
-						iXmppEngine->SendAndForgetXmppStanza(pConfigStanza, true);
-						CleanupStack::PopAndDestroy(); // aConfigStanza		
-						
-						// Add first message into personal channel
-						CMessage* aMessage = CMessage::NewLC();								
-						aMessage->SetPrivate(true);
-						aMessage->SetAvatarId(KIconChannel);							
-						aMessage->SetReceivedAt(TimeStamp());	
-						aMessage->SetNameL(_L("Buddycloud Channels"));
-
-						HBufC* aResourceText = CEikonEnv::Static()->AllocReadResourceLC(R_LOCALIZED_STRING_NOTE_PERSONALCHANNELCREATED);
-						HBufC* aMessageText = HBufC::NewLC(aResourceText->Des().Length() + iSettingUsernameOnly.Length());
-						TPtr pMessageText(aMessageText->Des());
-						pMessageText.Append(*aResourceText);
-						pMessageText.Replace(pMessageText.Find(_L("$USER")), 5, iSettingUsernameOnly);							
-						aMessage->SetBodyL(pMessageText, iSettingUsernameOnly);
-						CleanupStack::PopAndDestroy(2); // aMessageText, aResourceText
-
-						aDiscussion->AddMessageLD(aMessage);
-					}
-				}
-				else if(aAttributeCode == 307 || aAttributeCode == 301) {
-					TInt aResourceId = R_LOCALIZED_STRING_NOTE_USERBANNEDFROMGROUP;
-					
-					if(aAttributeCode == 307) {
-						aResourceId = R_LOCALIZED_STRING_NOTE_USERKICKEDFROMGROUP;
-					}
-
-					CMessage* aMessage = CMessage::NewLC();
-					aMessage->SetAvatarId(KIconChannel);
-					aMessage->SetRead(true);
-						
-					HBufC* aResourceText = CEikonEnv::Static()->AllocReadResourceLC(aResourceId);
-					HBufC* aMessageText = HBufC::NewLC(aResourceText->Des().Length() + pResource.Length());
-					TPtr pMessageText(aMessageText->Des());
-					pMessageText.Append(*aResourceText);
-					pMessageText.Replace(pMessageText.Find(_L("$USER")), 5, pResource);
-						
-					aMessage->SetBodyL(pMessageText, iSettingUsernameOnly, EMessageUserAction);
-					CleanupStack::PopAndDestroy(2); // aMessageText, aResourceText
-
-					aDiscussion->AddMessageLD(aMessage);
-					
-					NotifyNotificationObservers(ENotificationMessageSilentEvent, aItem->GetItemId());
-				}
-			}	
-		}
-	}	
-	
-	CleanupStack::PopAndDestroy(2); // aTextUtilities, aXmlParser
-
-	if(iState == ELogicOnline) {
-		iLastReceivedAt = TimeStamp();
-	}
-
-	if(aNotifyObserver) {
-		NotifyNotificationObservers(ENotificationFollowingItemsUpdated);
 	}
 }
 
@@ -6730,449 +5836,111 @@ void CBuddycloudLogic::HandleIncomingMessageL(TDesC& aFrom, const TDesC8& aData)
 #ifdef _DEBUG
 	WriteToLog(_L8("BL    CBuddycloudLogic::HandleIncomingMessageL"));
 #endif
-
-	CTextUtilities* aTextUtilities = CTextUtilities::NewLC();
-	CXmlParser* aXmlParser = CXmlParser::NewLC(aData);
-	TPtrC8 aAttributeType = aXmlParser->GetStringAttribute(_L8("type"));	
-	TBool aNonMessageEvent = false;
-
-	// ---------------------------------------------------------------------
-	// Handle event data
-	// ---------------------------------------------------------------------
-	if(aXmlParser->MoveToElement(_L8("event"))) {
-		TPtrC8 pAttributeXmlns = aXmlParser->GetStringAttribute(_L8("xmlns"));
-
-		if(pAttributeXmlns.Compare(_L8("http://jabber.org/protocol/pubsub#event")) == 0) {
-			// Pubsub notification event received
-			TPtrC8 pItemData = aXmlParser->GetStringData();
-			
-			aNonMessageEvent = true;			
-
-			if(aXmlParser->MoveToElement(_L8("items"))) {
-				TPtrC8 pAttributeNode = aXmlParser->GetStringAttribute(_L8("node"));
-
-				if(aXmlParser->MoveToElement(_L8("retract"))) {
-					RosterPubsubDeleteL(aFrom, pAttributeNode);
-				}
-				else  {
-					RosterPubsubEventL(aFrom, pItemData, true);
-				}
-			}
-		}
-	}
-	else if(aXmlParser->MoveToElement(_L8("x"))) {
-		if(aXmlParser->MoveToElement(_L8("invite"))) {
-			aNonMessageEvent = true;
-			
-			if( !IsSubscribedTo(aFrom) ) {
-				TPtrC8 pDataReason;
-				
-				if(aXmlParser->MoveToElement(_L8("reason"))) {
-					pDataReason.Set(aXmlParser->GetStringData());
-				}
-				
-				// Get body if reason is empty
-				if(pDataReason.Length() == 0) {
-					aXmlParser->ResetElementPointer();
-					
-					if(aXmlParser->MoveToElement(_L8("body"))) {
-						pDataReason.Set(aXmlParser->GetStringData());
-					}
-				}
-				
-				// Process invite
-				if(pDataReason.Length() > 0) {
-					HBufC* aTitle = CEikonEnv::Static()->AllocReadResourceLC(R_LOCALIZED_STRING_CHANNELINVITE_TITLE);
-					HBufC* aDescription = aTextUtilities->Utf8ToUnicodeL(pDataReason).AllocLC();
-					
-					CFollowingNoticeItem* aNoticeItem = CFollowingNoticeItem::NewLC();
-					aNoticeItem->SetItemId(iNextItemId++);
-					aNoticeItem->SetJidL(aFrom, EJidChannel);
-					aNoticeItem->SetTitleL(*aTitle);
-					aNoticeItem->SetDescriptionL(*aDescription);
-					
-					iMasterFollowingList->InsertItem(GetBubbleToPosition(aNoticeItem), aNoticeItem);
-					CleanupStack::Pop(); // aNoticeItem
-									
-					NotifyNotificationObservers(ENotificationFollowingItemsUpdated);
-					NotifyNotificationObservers(ENotificationMessageNotifiedEvent);
-					
-					CleanupStack::PopAndDestroy(2); // aDescription, aTitle
-				}
-				else {
-					DeclineChannelInviteL(aFrom);
-				}
-			}
-			else {
-				DeclineChannelInviteL(aFrom);
-			}
-		}
-	}
-
-	if( !aNonMessageEvent ) {
-		// -----------------------------------------------------------------
-		// Seperate resource from jid
-		//
-		// Attribute aFrom contains both JID@SERVER/RESOURCE
-		// It the case of a Group presence it will be ROOM@SERVER/JID
-		// -----------------------------------------------------------------
-		TPtrC pJid(aFrom);
-
-		TInt aSearchResult = pJid.Locate('/');
-		if(aSearchResult != KErrNotFound) {
-			pJid.Set(pJid.Left(aSearchResult));
-		}
-		
-		CDiscussion* aDiscussion = iMessagingManager->GetDiscussionL(pJid);
-		CFollowingItem* aItem = aDiscussion->GetFollowingItem();
-		
-		if(aItem) {
-			ProcessNewMessageL(aFrom, aData);
-		}
-		else if((!iSettingMessageBlocking || pJid.Locate('@') == KErrNotFound) && 
-				aAttributeType.Compare(_L8("groupchat")) != 0 && aXmlParser->MoveToElement(_L8("body"))) {
-			
-			// Add tempmorary item
-			CFollowingRosterItem* aRosterItem = CFollowingRosterItem::NewLC();
-			aRosterItem->SetItemId(iNextItemId++);
-			aRosterItem->SetJidL(pJid);
-
-			if(aXmlParser->MoveToElement(_L8("nick"))) {
-				aRosterItem->SetTitleL(aTextUtilities->Utf8ToUnicodeL(aXmlParser->GetStringData()));
-			}
-
-			CDiscussion* aDiscussion = iMessagingManager->GetDiscussionL(pJid);
-			aDiscussion->AddMessageReadObserver(aRosterItem);
-			aDiscussion->AddDiscussionReadObserver(this, aRosterItem);
-			
-			CMessagingParticipant* aParticipant = aDiscussion->GetParticipants()->AddParticipant(iOwnItem->GetJid());
-			aParticipant->SetJidL(iOwnItem->GetJid());
-			aParticipant->SetAvatarId(iOwnItem->GetAvatarId());
-
-			iMasterFollowingList->AddItem(aRosterItem);
-			CleanupStack::Pop();			
-			
-			// Process message
-			ProcessNewMessageL(aFrom, aData);
-		}
-	}
-
-	CleanupStack::PopAndDestroy(2); // aXmlParser, aTextUtilities
-}
-
-void CBuddycloudLogic::ProcessNewMessageL(TDesC& aFrom, const TDesC8& aData) {
-#ifdef _DEBUG
-	WriteToLog(_L8("BL    CBuddycloudLogic::ProcessNewMessageL"));
-#endif
-
-	TInt aNotifyId = KErrNotFound;
-	TInt aAudioId = KErrNotFound;
 	
-	TBool aNotifyArrival = false;
-	TBool aBubbleArrival = false;
-	TBool aIsChannel = false;
+	TBuf8<32> aReferenceId;
+
+	TPtrC aJid(aFrom);
+	TInt aSearchResult = aJid.Locate('/');
 	
-	// Initialize xml parser
-	CTextUtilities* aTextUtilities = CTextUtilities::NewLC();
-	CXmlParser* aXmlParser = CXmlParser::NewLC(aData);
-	TPtrC8 aAttributeType = aXmlParser->GetStringAttribute(_L8("type"));
-
-	// -----------------------------------------------------------------
-	// Convert Delay time (if delayed)
-	// -----------------------------------------------------------------
-	TTime aTime = TimeStamp();
-	TBool aDelayed = false;
-
-	if(aXmlParser->MoveToElement(_L8("x"))) {
-		TPtrC8 aAttributeStamp = aXmlParser->GetStringAttribute(_L8("stamp"));
-		
-		if(aAttributeStamp.Length() > 0) {
-			// Delayed
-			CTimeUtilities* aTimeUtilities = CTimeUtilities::NewLC();
-			aTime = aTimeUtilities->DecodeL(aAttributeStamp);
-			CleanupStack::PopAndDestroy(); // aTimeUtilities
-	
-			aDelayed = true;	
-		}
-		
-		aXmlParser->ResetElementPointer();
-	}
-
-	// -----------------------------------------------------------------
-	// Seperate resource from jid
-	//
-	// Attribute aFrom contains both JID@SERVER/RESOURCE
-	// It the case of a Group presence it will be ROOM@SERVER/JID
-	// -----------------------------------------------------------------
-	TPtrC pJid(aFrom);
-	TPtrC pResource;
-
-	TInt aSearchResult = pJid.Locate('/');
 	if(aSearchResult != KErrNotFound) {
-		pResource.Set(pJid.Mid(aSearchResult + 1));
-		pJid.Set(pJid.Left(aSearchResult));
+		aJid.Set(aJid.Left(aSearchResult));
 	}
 	
-	CDiscussion* aDiscussion = iMessagingManager->GetDiscussionL(pJid);
-	CFollowingItem* aItem = aDiscussion->GetFollowingItem();
+	CAtomEntryData* aAtomEntry = CAtomEntryData::NewLC();
+	aAtomEntry->SetPublishTime(TimeStamp());
+	aAtomEntry->SetAuthorJidL(aJid, false);
+	aAtomEntry->SetPrivate(true);
 	
-	if(aItem && aItem->GetItemType() >= EItemRoster) {
-		CFollowingChannelItem* aChannelItem = static_cast <CFollowingChannelItem*> (aItem);
-		CMessagingParticipant* aParticipant = aDiscussion->GetParticipants()->GetParticipant(aFrom);
-
-		if(pJid.CompareF(aChannelItem->GetJid()) == 0) {
-			aIsChannel = true;
+	// Parse message
+	CTextUtilities* aTextUtilities = CTextUtilities::NewLC();
+	CXmlParser* aXmlParser = CXmlParser::NewLC(aData);
+	
+	do {
+		TPtrC8 aElementName = aXmlParser->GetElementName();
+		
+		if(aElementName.Compare(_L8("body")) == 0) {
+			aAtomEntry->SetContentL(aTextUtilities->Utf8ToUnicodeL(aXmlParser->GetStringData()));
 		}
-		
-		aNotifyId = aItem->GetItemId();	
-		aItem->SetLastUpdated(TimeStamp());
-
-		// -----------------------------------------------------
-		// Get senders name
-		// -----------------------------------------------------
-		TBuf<256> aContactName;
-		
-		if(iSettingShowName && aXmlParser->MoveToElement(_L8("nick"))) {
-			// Get nick
-			aContactName.Copy(aTextUtilities->Utf8ToUnicodeL(aXmlParser->GetStringData()).Left(aContactName.MaxLength()));
+		else if(aElementName.Compare(_L8("thread")) == 0) {
+			aReferenceId.Copy(aXmlParser->GetStringData().Left(32));
+		}
+		else if(aElementName.Compare(_L8("geoloc")) == 0) {
+			CXmppGeolocParser* aGeolocParser = CXmppGeolocParser::NewLC();
+			CGeolocData* aGeoloc = aGeolocParser->XmlToGeolocLC(aXmlParser->GetStringData());
 			
-			aXmlParser->ResetElementPointer();
-		}
-		else {
-			if(aIsChannel) {
-				aContactName.Copy(pResource.Left(aContactName.MaxLength()));
+			aAtomEntry->GetLocation()->SetStringL(EGeolocText, aGeoloc->GetString(EGeolocText));
+			aAtomEntry->GetLocation()->SetStringL(EGeolocLocality, aGeoloc->GetString(EGeolocLocality));
+			aAtomEntry->GetLocation()->SetStringL(EGeolocCountry, aGeoloc->GetString(EGeolocCountry));
+			
+			if(aGeoloc->GetString(EGeolocText).Length() == 0) {
+				HBufC* aLocation = HBufC::NewLC(aGeoloc->GetString(EGeolocLocality).Length() + 2 + aGeoloc->GetString(EGeolocCountry).Length());
+				TPtr pLocation(aLocation->Des());
+				aTextUtilities->AppendToString(pLocation, aGeoloc->GetString(EGeolocLocality), _L(""));
+				aTextUtilities->AppendToString(pLocation, aGeoloc->GetString(EGeolocCountry), _L(", "));
 				
-				if((aSearchResult = aContactName.LocateReverse('/')) != KErrNotFound) {
-					aContactName.Delete(0, aSearchResult + 1);
-				}							
+				aAtomEntry->GetLocation()->SetStringL(EGeolocText, pLocation);
+				CleanupStack::PopAndDestroy(); // aLocation
+			}
+			
+			CleanupStack::PopAndDestroy(2); // aGeoloc, aGeolocParser
+		}
+		else if(aElementName.Compare(_L8("x")) == 0 || aElementName.Compare(_L8("delay")) == 0) {
+			TPtrC8 aAttributeStamp = aXmlParser->GetStringAttribute(_L8("stamp"));
+			
+			if(aAttributeStamp.Length() > 0) {
+				aAtomEntry->SetPublishTime(CTimeUtilities::DecodeL(aAttributeStamp));
+			}
+		}
+	} while(aXmlParser->MoveToNextElement());
+	
+	CleanupStack::PopAndDestroy(2); // aXmlParser, aTextUtilities
+	
+	// Add to discussion
+	CDiscussion* aDiscussion = iDiscussionManager->GetDiscussionL(aJid);
+	CFollowingRosterItem* aRosterItem = static_cast <CFollowingRosterItem*> (iFollowingList->GetItemById(aDiscussion->GetItemId()));
+	
+	if(aRosterItem == NULL && (!iSettingMessageBlocking || aJid.Locate('@') == KErrNotFound) && 
+			aAtomEntry->GetContent().Length() > 0) {
+
+		// Add sender to roster
+		aRosterItem = CFollowingRosterItem::NewLC();
+		aRosterItem->SetItemId(iNextItemId++);
+		aRosterItem->SetIdL(aJid);
+		aRosterItem->SetUnreadData(aDiscussion);
+		
+		aDiscussion->SetDiscussionReadObserver(this, aRosterItem->GetItemId());
+
+		iFollowingList->AddItem(aRosterItem);
+		CleanupStack::Pop();			
+	}
+	
+	if(aRosterItem) {		
+		if(aRosterItem->GetId().Compare(aJid) == 0) {
+			aAtomEntry->SetAuthorAffiliation(EPubsubAffiliationOwner);
+		}
+		
+		if(aDiscussion->AddEntryOrCommentLD(aAtomEntry, aReferenceId)) {
+			if(!aRosterItem->OwnItem()) {
+				// Bubble item
+				iFollowingList->RemoveItemByIndex(iFollowingList->GetIndexById(aRosterItem->GetItemId()));
+				iFollowingList->InsertItem(GetBubbleToPosition(aRosterItem), aRosterItem);
+				
+				NotifyNotificationObservers(ENotificationFollowingItemsUpdated, aRosterItem->GetItemId());
+			}
+			
+			// Notify arrival
+			if(aDiscussion->Notify() && !iTelephonyEngine->IsTelephonyBusy()) {
+				NotifyNotificationObservers(ENotificationMessageNotifiedEvent, aRosterItem->GetItemId());
+				
+				iNotificationEngine->NotifyL(ESettingItemPrivateMessageTone);
 			}
 			else {
-				aContactName.Copy(pJid.Left(aContactName.MaxLength()));
-				
-				if((aSearchResult = aContactName.Locate('@')) != KErrNotFound) {
-					aContactName.Delete(aSearchResult, aContactName.Length());
-				}							
+				NotifyNotificationObservers(ENotificationMessageSilentEvent, aRosterItem->GetItemId());
 			}
 		}
-
-		// -----------------------------------------------------
-		// Subject
-		// -----------------------------------------------------
-		if(aXmlParser->MoveToElement(_L8("subject"))) {
-			// Set topic
-			TPtrC aEncSubject(aTextUtilities->Utf8ToUnicodeL(aXmlParser->GetStringData()));
-			
-			if(aItem->GetItemType() == EItemChannel) {
-				aItem->SetDescriptionL(aEncSubject);
-			}
-
-			if(pResource.Length() > 0) {
-				// Only add non-delayed subject messages to discussion
-				_LIT(KSubjectChange, " has changed the topic to ''");
-				HBufC* aSubjectBody = HBufC::NewLC(aContactName.Length() + KSubjectChange().Length() + aEncSubject.Length());
-				TPtr pSubjectBody(aSubjectBody->Des());
-
-				pSubjectBody.Append(aContactName);
-				pSubjectBody.Append(KSubjectChange);
-				pSubjectBody.Insert(pSubjectBody.Length() - 1, aEncSubject);
-
-				CMessage* aMessage = CMessage::NewLC();
-				aMessage->SetReceivedAt(aTime);
-				aMessage->SetAvatarId(KIconChannel);
-				aMessage->SetBodyL(pSubjectBody, iSettingUsernameOnly, EMessageUserAction);
-				aMessage->SetRead(true);
-
-				aDiscussion->AddMessageLD(aMessage, aDelayed);
-				CleanupStack::PopAndDestroy(); // aSubjectBody
-			}
-		}
-
-		// -----------------------------------------------------
-		// Body
-		// -----------------------------------------------------
-		if(pResource.Compare(_L("adserver")) == 0) {
-			if(aXmlParser->MoveToElement(_L8("html"))) {
-				if(aXmlParser->MoveToElement(_L8("body"))) {
-					if(aXmlParser->MoveToElement(_L8("a"))) {
-						CMessage* aMessage = CMessage::NewLC();
-						aMessage->SetReceivedAt(aTime);
-						aMessage->SetRead(true);
-
-						// Link
-						TPtrC8 aLink = aXmlParser->GetStringAttribute(_L8("href"));								
-						TPtrC8 aBody = aXmlParser->GetStringData();
-
-						if(aBody.Length() == 0 && aXmlParser->MoveToElement(_L8("img"))) {
-							aBody.Set(aXmlParser->GetStringAttribute(_L8("alt")));
-						}
-						
-						HBufC8* aMessageBody = HBufC8::NewLC(aBody.Length() + 1 + aLink.Length());
-						TPtr8 pMessageBody(aMessageBody->Des());
-						pMessageBody.Append(aBody);
-						pMessageBody.Append(_L8("\n"));
-						pMessageBody.Append(aLink);
-						
-						aMessage->SetBodyL(aTextUtilities->Utf8ToUnicodeL(pMessageBody), iSettingUsernameOnly, EMessageAdvertisment);
-						CleanupStack::PopAndDestroy(); // aMessageBody
-
-						aDiscussion->AddMessageLD(aMessage, aDelayed);
-					}
-				}
-			}
-		}
-		else {
-			if(aXmlParser->MoveToElement(_L8("body"))) {
-				if(!aIsChannel || pResource.Length() > 0) {
-					TPtrC aDataBody = aTextUtilities->Utf8ToUnicodeL(aXmlParser->GetStringData());
-					
-					if(aDataBody.Length() > 0) {
-						CMessage* aMessage = CMessage::NewLC();								
-						aMessage->SetReceivedAt(aTime);	
-						aMessage->SetNameL(aContactName);
-						aMessage->SetJidL(aFrom, EMessageJidRoom);
-						
-						// Set message privacy
-						if(aAttributeType.Compare(_L8("groupchat")) != 0) {
-							aMessage->SetPrivate(true);
-						}
-						
-						// Set participants jid & avatar
-						if(aParticipant) {
-							if(aParticipant->GetJid().Length() > 0) {
-								aMessage->SetJidL(aParticipant->GetJid(), EMessageJidRoster);
-							}
-							
-							aMessage->SetAvatarId(aParticipant->GetAvatarId());							
-						}
-						
-						aNotifyArrival = true;
-						
-						// Check if an event
-						if(aIsChannel && pResource.Compare(_L("events@butler.buddycloud.com")) == 0) {
-							aMessage->SetRead(true);
-							aMessage->SetAvatarId(KIconPlace);
-							aMessage->SetBodyL(aDataBody, iSettingUsernameOnly, EMessageUserEvent);
-							
-							aNotifyArrival = false;
-						}
-						else {
-							aMessage->SetBodyL(aDataBody, iSettingUsernameOnly);
-						}
-													
-						// Set read if own
-						if(iSettingUsernameOnly.CompareF(pResource) == 0) {
-							aMessage->SetRead(true);
-							aMessage->SetOwn(true);
-							aNotifyArrival = false;
-						}
-						
-						// Thread data
-						if(aXmlParser->MoveToElement(_L8("thread"))) {
-							aMessage->SetThreadL(aXmlParser->GetStringData());
-						}
-						
-						// Location data
-						if(aXmlParser->MoveToElement(_L8("geoloc"))) {
-							if(aXmlParser->MoveToElement(_L8("locality"))) {
-								aMessage->SetLocationL(aTextUtilities->Utf8ToUnicodeL(aXmlParser->GetStringData()));
-							}
-							
-							if(aXmlParser->MoveToElement(_L8("country"))) {
-								aMessage->SetLocationL(aTextUtilities->Utf8ToUnicodeL(aXmlParser->GetStringData()), true);
-							}
-						}
-						
-						// Check reply to & notification validation
-						if(aNotifyArrival) {
-							aNotifyArrival = aDiscussion->GetNotificationOn();
-							
-							// Notify if @username reply found or channel notification setting applies
-							if(aIsChannel) {
-								if(iSettingNotifyReplyTo && aMessage->GetDirectReply()) {									
-									// @reply to user
-									aNotifyArrival = true;									
-									aAudioId = ESettingItemDirectReplyTone;
-								}
-								else if(aNotifyArrival && (iSettingGroupNotification == 1 || 
-										(iSettingGroupNotification == 0 && aDiscussion->GetUnreadMessages() == 0))) {									
-									
-									// Channel notification on
-									aNotifyArrival = true;									
-									aAudioId = ESettingItemChannelPostTone;
-								}
-								else {
-									// Channel notification off
-									aNotifyArrival = false;
-								}
-							}
-							else if(aNotifyArrival) {
-								// Private message notification
-								aAudioId = ESettingItemPrivateMessageTone;
-							}
-						}
-
-						if(aDiscussion->AddMessageLD(aMessage, aDelayed)) {
-							aBubbleArrival = true;
-						}
-						else {
-							aNotifyArrival = false;
-						}
-					}
-				}
-			}
-		}
-
-		// -----------------------------------------------------
-		// Chat State
-		// -----------------------------------------------------
-		if(!aIsChannel && aParticipant) {
-			if(aXmlParser->MoveToElement(KChatstateActive) || aXmlParser->MoveToElement(KChatstateInactive) ||
-					aXmlParser->MoveToElement(KChatstateComposing) || aXmlParser->MoveToElement(KChatstatePaused)) {
-	
-				TPtrC8 pChatState = aXmlParser->GetElementName();
-				TMessageChatState aState = EChatGone;
-	
-				if(pChatState.Compare(KChatstateActive) == 0) {
-					aState = EChatActive;
-				}
-				else if(pChatState.Compare(KChatstateInactive) == 0) {
-					aState = EChatInactive;
-				}
-				else if(pChatState.Compare(KChatstateComposing) == 0) {
-					aState = EChatComposing;
-				}
-				else if(pChatState.Compare(KChatstatePaused) == 0) {
-					aState = EChatPaused;
-				}
-	
-				aParticipant->SetChatState(aState);
-			}
-		}
-
-		if(aBubbleArrival) {
-			if(!aItem->GetIsOwn()) {
-				iMasterFollowingList->RemoveItemByIndex(iMasterFollowingList->GetIndexById(aItem->GetItemId()));
-				iMasterFollowingList->InsertItem(GetBubbleToPosition(aItem), aItem);
-			}
-			
-			NotifyNotificationObservers(ENotificationFollowingItemsUpdated, aNotifyId);
-		}
-	}
-	
-	if(iState == ELogicOnline) {
-		iLastReceivedAt = TimeStamp();
-	}
-
-	if(aNotifyArrival && !iTelephonyEngine->IsTelephonyBusy()) {
-		NotifyNotificationObservers(ENotificationMessageNotifiedEvent, aNotifyId);
-		
-		iNotificationEngine->NotifyL(aAudioId);
 	}
 	else {
-		NotifyNotificationObservers(ENotificationMessageSilentEvent, aNotifyId);
+		// Dispose of message
+		CleanupStack::PopAndDestroy(); // aAtomEntry
 	}
-
-	CleanupStack::PopAndDestroy(2); // aXmlParser, aTextUtilities
 }
-
-// End of File

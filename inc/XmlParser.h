@@ -34,6 +34,7 @@ class CXmlParser : public CBase {
 		
 	private:
 		TBool EvaluateAsBool(const TDesC8& aText);
+		TReal EvaluateAsReal(const TDesC8& aText, TReal aDefault);
 		TInt EvaluateAsInt(const TDesC8& aText, TInt aDefault);
 
 	public: // Element traversing
@@ -51,6 +52,7 @@ class CXmlParser : public CBase {
 		
 		TPtrC8 GetStringData();
 		TBool GetBoolData();
+		TReal GetRealData(TReal aDefault = 0);
 		TInt GetIntData(TInt aDefault = 0);
 
 	private:

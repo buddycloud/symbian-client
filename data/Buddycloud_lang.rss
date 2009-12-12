@@ -74,6 +74,12 @@ RESOURCE AVKON_VIEW r_editplace_view
 	cba = R_AVKON_SOFTKEYS_OPTIONS_CANCEL;
 }
 
+RESOURCE AVKON_VIEW r_editchannel_view
+{
+	menubar = r_settings_options_menubar;
+	cba = R_AVKON_SOFTKEYS_OPTIONS_CANCEL;
+}
+
 // ---------------------------------------------------------------------------- 
 //
 // RESOURCE CBA
@@ -226,14 +232,14 @@ RESOURCE AVKON_TOOLBAR r_messaging_toolbar
 		TBAR_CTRL
 		{
 			type = EAknCtButton;
-			id = EMenuReplyToMessageCommand;
+			id = EMenuAddCommentCommand;
 			control = AVKON_BUTTON
 			{
 				states =
 				{
 					AVKON_BUTTON_STATE
 					{
-						helptxt = r_string_options_replytomessage;
+						helptxt = r_string_item_addcomment;
 					    bmpfile = "\\resource\\apps\\Buddycloud_Toolbar.mif";
 					    bmpid = EMbmToolbariconidsMessagereply;
 					    bmpmask = EMbmToolbariconidsMessagereply;
@@ -244,7 +250,7 @@ RESOURCE AVKON_TOOLBAR r_messaging_toolbar
 		TBAR_CTRL
 		{
 			type = EAknCtButton;
-			id = EMenuPostMessageCommand;
+			id = EMenuWritePostCommand;
 			control = AVKON_BUTTON
 			{
 				states =
@@ -255,24 +261,6 @@ RESOURCE AVKON_TOOLBAR r_messaging_toolbar
 					    bmpfile = "\\resource\\apps\\Buddycloud_Toolbar.mif";
 					    bmpid = EMbmToolbariconidsMessage;
 					    bmpmask = EMbmToolbariconidsMessage;
-					}
-				};
-			};
-		},
-		TBAR_CTRL
-		{
-			type = EAknCtButton;
-			id = EMenuInviteCommand;
-			control = AVKON_BUTTON
-			{
-				states =
-				{
-					AVKON_BUTTON_STATE
-					{
-						helptxt = r_string_options_invitetochannel;
-					    bmpfile = "\\resource\\apps\\Buddycloud_Toolbar.mif";
-					    bmpid = EMbmToolbariconidsInvite;
-					    bmpmask = EMbmToolbariconidsInvite;
 					}
 				};
 			};
@@ -614,7 +602,7 @@ RESOURCE MENU_PANE r_status_options_menu
 		},
 		MENU_ITEM
 		{ 
-			command = EMenuInviteCommand; 
+			command = EMenuAddContactCommand; 
 			txt = r_string_options_invite;
 		},
 		MENU_ITEM
@@ -658,17 +646,12 @@ RESOURCE MENU_PANE r_status_options_item_menu
 		},
 		MENU_ITEM
 		{ 
-			command = EMenuInviteToGroupCommand; 
-			txt = r_string_options_invitetochannel;
-		},
-		MENU_ITEM
-		{ 
 			command = EMenuGetPlaceInfoCommand; 
 			txt = r_string_item_showplacedetails;
 		},
 		MENU_ITEM
 		{ 
-			command = EMenuGetChannelInfoCommand; 
+			command = EMenuChannelInfoCommand; 
 			txt = r_string_item_showchanneldetails;
 		},
 		MENU_ITEM
@@ -735,7 +718,7 @@ RESOURCE MENU_PANE r_status_options_update_menu
 		},
 		MENU_ITEM
 		{ 
-			command = EMenuGetChannelInfoCommand; 
+			command = EMenuChannelInfoCommand; 
 			txt = r_string_item_showchanneldetails;
 		}
 	};
@@ -797,7 +780,12 @@ RESOURCE MENU_PANE r_messaging_options_menu
 	{
 		MENU_ITEM
 		{ 
-			command = EMenuPostMessageCommand; 
+			command = EMenuRequestToPostCommand; 
+			txt = r_string_options_postrequest;
+		},
+		MENU_ITEM
+		{ 
+			command = EMenuWritePostCommand; 
 			txt = r_string_options_postmessage;
 		},
 		MENU_ITEM
@@ -813,7 +801,7 @@ RESOURCE MENU_PANE r_messaging_options_menu
 		},
 		MENU_ITEM
 		{ 
-			command = EMenuOptionsGroupCommand; 
+			command = EMenuOptionsChannelCommand; 
 			cascade = r_messaging_options_group_menu; 
 			txt = r_string_options_itemgroup;
 		},
@@ -846,8 +834,13 @@ RESOURCE MENU_PANE r_messaging_options_item_menu
 	{
 		MENU_ITEM
 		{ 
-			command = EMenuReplyToMessageCommand; 
-			txt = r_string_options_replytomessage;
+			command = EMenuAddCommentCommand; 
+			txt = r_string_item_addcomment;
+		},
+		MENU_ITEM
+		{ 
+			command = EMenuLikePostCommand; 
+			txt = r_string_item_likepost;
 		},
 		MENU_ITEM
 		{ 
@@ -856,22 +849,22 @@ RESOURCE MENU_PANE r_messaging_options_item_menu
 		},
 		MENU_ITEM
 		{ 
-			command = EMenuInviteToGroupCommand; 
-			txt = r_string_options_invitetootherchannel;
+			command = EMenuCopyPostCommand; 
+			txt = r_string_item_copypost;
 		},
 		MENU_ITEM
 		{ 
-			command = EMenuBanCommand; 
-			txt = r_string_item_banfromgroup;
+			command = EMenuReportPostCommand; 
+			txt = r_string_item_reportpost;
 		},
 		MENU_ITEM
 		{ 
-			command = EMenuKickCommand; 
-			txt = r_string_item_kickfromgroup;
+			command = EMenuDeletePostCommand; 
+			txt = r_string_item_deletepost;
 		},
 		MENU_ITEM
 		{ 
-			command = EMenuChangeRoleCommand; 
+			command = EMenuChangePermissionCommand; 
 			txt = r_string_item_changerole;
 		}
 	};
@@ -881,16 +874,6 @@ RESOURCE MENU_PANE r_messaging_options_group_menu
 {
 	items =
 	{
-		MENU_ITEM
-		{ 
-			command = EMenuSetTopicCommand; 
-			txt = r_string_options_settopic;
-		},
-		MENU_ITEM
-		{ 
-			command = EMenuInviteCommand; 
-			txt = r_string_options_invitefriendtochannel;
-		},
 		MENU_ITEM
 		{ 
 			command = EMenuSeeFollowersCommand; 
@@ -1054,7 +1037,7 @@ RESOURCE MENU_PANE r_explorer_options_menu
 		},
 		MENU_ITEM
 		{ 
-			command = EMenuJoinGroupCommand; 
+			command = EMenuEditChannelCommand; 
 			txt = r_string_item_newgroup;
 		},
 		MENU_ITEM
@@ -1201,12 +1184,6 @@ RESOURCE AVKON_SETTING_ITEM_LIST r_account_settings_item_list
 		},
 		AVKON_SETTING_ITEM
 		{
-			identifier = ESettingAccountPhoneNumber;
-			setting_page_resource = r_settings_item_phonenumber_page;
-			name = r_string_settings_itemlist_phonenumber;
-		},
-		AVKON_SETTING_ITEM
-		{
 			identifier = ESettingAccountUsername;
 			setting_page_resource = r_settings_item_username_page;
 			name = r_string_settings_itemlist_username;
@@ -1231,7 +1208,7 @@ RESOURCE AVKON_SETTING_PAGE r_settings_item_fullname_page
 {
 	label = r_string_settings_itemlist_fullname;
 	type = EEikCtEdwin;
-	editor_resource_id = r_settings_text_edwin;
+	editor_resource_id = r_text64_edwin;
 	hint_text = r_string_settings_itemlist_fullname_hint;
 }
 
@@ -1239,23 +1216,15 @@ RESOURCE AVKON_SETTING_PAGE r_settings_item_email_page
 {
 	label = r_string_settings_itemlist_email;
 	type = EEikCtEdwin;
-	editor_resource_id = r_settings_text_edwin;
+	editor_resource_id = r_text64_edwin;
 	hint_text = r_string_settings_itemlist_email_hint;
-}
-
-RESOURCE AVKON_SETTING_PAGE r_settings_item_phonenumber_page
-{
-	label = r_string_settings_itemlist_phonenumber;
-	type = EEikCtEdwin;
-	editor_resource_id = r_settings_number_edwin;
-	hint_text = r_string_settings_itemlist_phonenumber_hint;
 }
 
 RESOURCE AVKON_SETTING_PAGE r_settings_item_username_page
 {
 	label = r_string_settings_itemlist_username;
 	type = EEikCtEdwin;
-	editor_resource_id = r_settings_username_edwin;
+	editor_resource_id = r_username_edwin;
 	hint_text = r_string_settings_itemlist_username_hint;
 }
 
@@ -1263,7 +1232,7 @@ RESOURCE AVKON_SETTING_PAGE r_settings_item_password_page
 {
 	label = r_string_settings_itemlist_password;
 	type = EEikCtSecretEd;
-	editor_resource_id = r_settings_password_edwin;
+	editor_resource_id = r_password_edwin;
 	hint_text = r_string_settings_itemlist_password_hint;
 }
 
@@ -1444,10 +1413,17 @@ RESOURCE AVKON_SETTING_ITEM_LIST r_notifications_settings_item_list
 	{
 		AVKON_SETTING_ITEM
 		{
-			identifier = ESettingNotificationsGroupNotification;
-			setting_page_resource = r_settings_item_groupnotification_page;
-			associated_resource = r_settings_item_groupnotification_assoc;
-			name = r_string_settings_itemlist_groupnotification;
+			identifier = ESettingNotificationsNotifyChannelsModerating;
+			setting_page_resource = r_settings_item_channelsmoderating_page;
+			associated_resource = r_settings_item_channelnotification_assoc;
+			name = r_string_settings_itemlist_notifymoderating;
+		},
+		AVKON_SETTING_ITEM
+		{
+			identifier = ESettingNotificationsNotifyChannelsFollowing;
+			setting_page_resource = r_settings_item_channelsfollowing_page;
+			associated_resource = r_settings_item_channelnotification_assoc;
+			name = r_string_settings_itemlist_notifyfollowing;
 		},
 		AVKON_SETTING_ITEM
 		{
@@ -1480,20 +1456,27 @@ RESOURCE AVKON_SETTING_ITEM_LIST r_notifications_settings_item_list
 	};
 }
 
-RESOURCE AVKON_SETTING_PAGE r_settings_item_groupnotification_page
+RESOURCE AVKON_SETTING_PAGE r_settings_item_channelsmoderating_page
 {
-	label = r_string_settings_itemlist_groupnotification;
+	label = r_string_settings_itemlist_notifymoderating;
 	type = EAknCtPopupSettingList;
 	editor_resource_id = r_binary_editor;
 }
 
-RESOURCE AVKON_POPUP_SETTING_TEXTS r_settings_item_groupnotification_assoc
+RESOURCE AVKON_SETTING_PAGE r_settings_item_channelsfollowing_page
 {
-	flags = 0;
-	setting_texts_resource = r_settings_item_groupnotification_texts;
+	label = r_string_settings_itemlist_notifyfollowing;
+	type = EAknCtPopupSettingList;
+	editor_resource_id = r_binary_editor;
 }
 
-RESOURCE ARRAY r_settings_item_groupnotification_texts
+RESOURCE AVKON_POPUP_SETTING_TEXTS r_settings_item_channelnotification_assoc
+{
+	flags = 0;
+	setting_texts_resource = r_settings_item_channelnotification_texts;
+}
+
+RESOURCE ARRAY r_settings_item_channelnotification_texts
 {
 	items =
         {
@@ -1702,49 +1685,49 @@ RESOURCE AVKON_SETTING_PAGE r_editplace_item_name_page
 {
 	label = r_string_editplace_itemlist_name_hint;
 	type = EEikCtEdwin;
-	editor_resource_id = r_editplace_text_edwin;
+	editor_resource_id = r_text256_edwin;
 }
 
 RESOURCE AVKON_SETTING_PAGE r_editplace_item_street_page
 {
 	label = r_string_editplace_itemlist_street_hint;
 	type = EEikCtEdwin;
-	editor_resource_id = r_editplace_text_edwin;
+	editor_resource_id = r_text256_edwin;
 }
 
 RESOURCE AVKON_SETTING_PAGE r_editplace_item_area_page
 {
 	label = r_string_editplace_itemlist_area_hint;
 	type = EEikCtEdwin;
-	editor_resource_id = r_editplace_text_edwin;
+	editor_resource_id = r_text256_edwin;
 }
 
 RESOURCE AVKON_SETTING_PAGE r_editplace_item_city_page
 {
 	label = r_string_editplace_itemlist_city_hint;
 	type = EEikCtEdwin;
-	editor_resource_id = r_editplace_text_edwin;
+	editor_resource_id = r_text256_edwin;
 }
 
 RESOURCE AVKON_SETTING_PAGE r_editplace_item_postcode_page
 {
 	label = r_string_editplace_itemlist_postcode_hint;
 	type = EEikCtEdwin;
-	editor_resource_id = r_editplace_text_edwin;
+	editor_resource_id = r_text256_edwin;
 }
 
 RESOURCE AVKON_SETTING_PAGE r_editplace_item_region_page
 {
 	label = r_string_editplace_itemlist_region_hint;
 	type = EEikCtEdwin;
-	editor_resource_id = r_editplace_text_edwin;
+	editor_resource_id = r_text256_edwin;
 }
 
 RESOURCE AVKON_SETTING_PAGE r_editplace_item_country_page
 {
 	label = r_string_editplace_itemlist_country_hint;
 	type = EEikCtEdwin;
-	editor_resource_id = r_editplace_text_edwin;
+	editor_resource_id = r_text256_edwin;
 }
 
 RESOURCE AVKON_SETTING_PAGE r_editplace_item_visibility_page
@@ -1778,12 +1761,103 @@ RESOURCE ARRAY r_editplace_item_visibility_texts
 }
 
 // -----------------------------------------------------------------------------
+//   
+// Define Edit Channel Items and Pages
+//   
+// -----------------------------------------------------------------------------
+//   
+RESOURCE AVKON_SETTING_ITEM_LIST r_editchannel_item_list
+{
+	flags = EAknSettingItemIncludeHiddenInOrdinal;
+	title = r_string_editchannel_itemlist_title;
+	items = 
+	{
+		AVKON_SETTING_ITEM
+		{
+			identifier = EEditChannelItemTitle;
+			setting_page_resource = r_editchannel_item_title_page;
+			name = r_string_editchannel_itemlist_title;
+		},
+		AVKON_SETTING_ITEM
+		{
+			identifier = EEditChannelItemId;
+			setting_page_resource = r_editchannel_item_id_page;
+			name = r_string_editchannel_itemlist_id;
+		},
+		AVKON_SETTING_ITEM
+		{
+			identifier = EEditChannelItemDescription;
+			setting_page_resource = r_editchannel_item_description_page;
+			name = r_string_editchannel_itemlist_description;
+		},
+		AVKON_SETTING_ITEM
+		{
+			identifier = EEditChannelItemAccess;
+			setting_page_resource = r_editchannel_item_access_page;
+			associated_resource = r_editchannel_item_access_assoc;
+			name = r_string_editchannel_itemlist_access;
+		}
+	};
+}
+
+RESOURCE AVKON_SETTING_PAGE r_editchannel_item_title_page
+{
+	label = r_string_editchannel_itemlist_title_hint;
+	type = EEikCtEdwin;
+	editor_resource_id = r_text64_edwin;
+}
+
+RESOURCE AVKON_SETTING_PAGE r_editchannel_item_id_page
+{
+	label = r_string_editchannel_itemlist_id_hint;
+	type = EEikCtEdwin;
+	editor_resource_id = r_text64_edwin;
+}
+
+RESOURCE AVKON_SETTING_PAGE r_editchannel_item_description_page
+{
+	label = r_string_editchannel_itemlist_description_hint;
+	type = EEikCtEdwin;
+	editor_resource_id = r_text256_edwin;
+}
+
+RESOURCE AVKON_SETTING_PAGE r_editchannel_item_access_page
+{
+	label = r_string_editchannel_itemlist_access;
+	type = EAknCtPopupSettingList;
+	editor_resource_id = r_binary_editor;
+}
+
+RESOURCE AVKON_POPUP_SETTING_TEXTS r_editchannel_item_access_assoc
+{
+	flags = 0;
+	setting_texts_resource = r_editchannel_item_access_texts;
+ }
+
+RESOURCE ARRAY r_editchannel_item_access_texts
+{
+	items =
+        {
+		AVKON_ENUMERATED_TEXT
+		{
+			value = 0;
+			text = r_string_editchannel_itemlist_access_open;
+		},
+		AVKON_ENUMERATED_TEXT
+		{
+			value = 1;
+			text = r_string_editchannel_itemlist_access_whitelist;
+		}
+	};
+}
+
+// -----------------------------------------------------------------------------
 //
 // Edwin Resources
 //
 // -----------------------------------------------------------------------------
 //
-RESOURCE EDWIN r_settings_number_edwin
+RESOURCE EDWIN r_number_edwin
 {
 	lines = 1;
 	maxlength = 32;
@@ -1791,18 +1865,7 @@ RESOURCE EDWIN r_settings_number_edwin
 	allowed_input_modes = EAknEditorNumericInputMode;
 }
 
-RESOURCE EDWIN r_settings_text_edwin
-{
-	lines = 1;
-	maxlength = 64;
-	default_case = EAknEditorTextCase;
-	allowed_case_modes = EAknEditorAllCaseModes;
-	numeric_keymap = EAknEditorStandardNumberModeKeymap;
-	default_input_mode = EAknEditorTextInputMode;
-	allowed_input_modes = EAknEditorAllInputModes;
-}
-
-RESOURCE EDWIN r_settings_username_edwin
+RESOURCE EDWIN r_username_edwin
 {
 	lines = 1;
 	maxlength = 32;
@@ -1813,12 +1876,23 @@ RESOURCE EDWIN r_settings_username_edwin
 	allowed_input_modes = EAknEditorTextInputMode;
 }
 
-RESOURCE SECRETED r_settings_password_edwin
+RESOURCE SECRETED r_password_edwin
 {
 	num_letters = 32;
 }
 
-RESOURCE EDWIN r_editplace_text_edwin
+RESOURCE EDWIN r_text64_edwin
+{
+	lines = 1;
+	maxlength = 64;
+	default_case = EAknEditorTextCase;
+	allowed_case_modes = EAknEditorAllCaseModes;
+	numeric_keymap = EAknEditorStandardNumberModeKeymap;
+	default_input_mode = EAknEditorTextInputMode;
+	allowed_input_modes = EAknEditorAllInputModes;
+}
+
+RESOURCE EDWIN r_text256_edwin
 {
 	lines = 5;
 	maxlength = 256;
@@ -1884,24 +1958,17 @@ RESOURCE TBUF r_localized_string_item_newgroup { buf = r_string_item_newgroup; }
 RESOURCE TBUF r_localized_string_item_newplace { buf = r_string_item_newplace; }
 RESOURCE TBUF r_localized_string_item_placeinfo { buf = r_string_item_placeinfo; }
 RESOURCE TBUF r_localized_string_dialog_moodis { buf = r_string_dialog_moodis; }
+RESOURCE TBUF r_localized_string_dialog_newcomment { buf = r_string_dialog_newcomment; }
 RESOURCE TBUF r_localized_string_dialog_setnextlocation { buf = r_string_dialog_setnextlocation; }
-RESOURCE TBUF r_localized_string_kickconfirmation_title { buf = r_string_item_kickfromgroup; }
-RESOURCE TBUF r_localized_string_kickconfirmation_text { buf = r_string_dialog_kickconfirmation; }
-RESOURCE TBUF r_localized_string_banconfirmation_title { buf = r_string_item_banfromgroup; }
-RESOURCE TBUF r_localized_string_banconfirmation_text { buf = r_string_dialog_banconfirmation; }
 RESOURCE TBUF r_localized_string_relearnplace_title { buf = r_string_item_relearnplace; }
 RESOURCE TBUF r_localized_string_relearnplace_text { buf = r_string_dialog_relearnplace; }
 RESOURCE TBUF r_localized_string_invitemessage_title { buf = r_string_invitemessage_title; }
 RESOURCE TBUF r_localized_string_invitemessage_text { buf = r_string_invitemessage_text; }
 RESOURCE TBUF r_localized_string_sendplacemessage_title { buf = r_string_sendplacemessage_title; }
 RESOURCE TBUF r_localized_string_sendplacemessage_text { buf = r_string_sendplacemessage_text; }
-RESOURCE TBUF r_localized_string_groupinvite_text { buf = r_string_groupinvite_text; }
 RESOURCE TBUF r_localized_string_note_followinglistempty { buf = r_string_note_followinglistempty; }
 RESOURCE TBUF r_localized_string_followingrequest_title { buf = r_string_followingrequest_title; }
 RESOURCE TBUF r_localized_string_followingrequest_text { buf = r_string_followerrequest_text; }
-RESOURCE TBUF r_localized_string_channelinvite_title { buf = r_string_channelinvite_title; }
-RESOURCE TBUF r_localized_string_dialog_createchanneldescription { buf = r_string_dialog_createchanneldescription; }
-RESOURCE TBUF r_localized_string_channelfollowing_text { buf = r_string_channelfollowing_text; }
 
 // Settings
 RESOURCE TBUF r_localized_string_newplace_title { buf = r_string_newplace_title; }
@@ -1926,9 +1993,15 @@ RESOURCE TBUF r_localized_string_note_messagequeued { buf = r_string_note_messag
 RESOURCE TBUF r_localized_string_note_offlinerequired { buf = r_string_note_offlinerequired; }
 RESOURCE TBUF r_localized_string_note_credentials_success { buf = r_string_settings_credentials_success; }
 RESOURCE TBUF r_localized_string_note_credentials_fail { buf = r_string_settings_credentials_fail; }
-RESOURCE TBUF r_localized_string_note_userkickedfromgroup { buf = r_string_note_userkickedfromgroup; }
-RESOURCE TBUF r_localized_string_note_userbannedfromgroup { buf = r_string_note_userbannedfromgroup; }
-RESOURCE TBUF r_localized_string_note_changerolefailed { buf = r_string_note_changerolefailed; }
+
+// New/Edit channel
+RESOURCE TBUF r_localized_string_newchannel_title { buf = r_string_newchannel_title; }
+RESOURCE TBUF r_localized_string_editchannel_title { buf = r_string_editchannel_title; }
+RESOURCE TBUF r_localized_string_editchannel_title_title { buf = r_string_editchannel_itemlist_title; }
+RESOURCE TBUF r_localized_string_editchannel_id_title { buf = r_string_editchannel_itemlist_id; }
+RESOURCE TBUF r_localized_string_editchannel_description_title { buf = r_string_editchannel_itemlist_description; }
+RESOURCE TBUF r_localized_string_editchannel_access_title { buf = r_string_editchannel_itemlist_access; }
+RESOURCE TBUF r_localized_string_note_channelexists { buf = r_string_note_channelexists; }
 
 // Channels
 RESOURCE TBUF r_localized_string_options_explore { buf = r_string_options_explore; }
@@ -1948,13 +2021,22 @@ RESOURCE TBUF r_localized_string_note_mediauploadready { buf = r_string_note_med
 RESOURCE TBUF r_localized_string_note_requesting { buf = r_string_note_requesting; }
 RESOURCE TBUF r_localized_string_note_channelrank { buf = r_string_note_channelrank; }
 
+RESOURCE TBUF r_localized_string_note_affiliationoutcast { buf = r_string_note_affiliationoutcast; }
+RESOURCE TBUF r_localized_string_note_affiliationmember { buf = r_string_note_affiliationmember; }
+RESOURCE TBUF r_localized_string_note_affiliationpublisher { buf = r_string_note_affiliationpublisher; }
+RESOURCE TBUF r_localized_string_note_affiliationmoderator { buf = r_string_note_affiliationmoderator; }
+
+RESOURCE TBUF r_localized_string_note_subscriptionpending { buf = r_string_note_subscriptionpending; }
+RESOURCE TBUF r_localized_string_note_subscriptionaccepted { buf = r_string_note_subscriptionaccepted; }
+RESOURCE TBUF r_localized_string_note_subscriptionrejected { buf = r_string_note_subscriptionrejected; }
+
+
 // Places
 RESOURCE TBUF r_localized_string_note_placelastseen { buf = r_string_note_placelastseen; }
 RESOURCE TBUF r_localized_string_note_placevisits { buf = r_string_note_placevisits; }
 RESOURCE TBUF r_localized_string_note_placepopulation { buf = r_string_note_placepopulation; }
 RESOURCE TBUF r_localized_string_note_learningplace { buf = r_string_note_learningplace; }
 RESOURCE TBUF r_localized_string_note_updatingplace { buf = r_string_note_updatingplace; }
-RESOURCE TBUF r_localized_string_note_noplaceaddress { buf = r_string_note_noplaceaddress; }
 RESOURCE TBUF r_localized_string_note_placeslistempty { buf = r_string_note_placeslistempty; }
 
 // Activity Notes
@@ -2310,37 +2392,6 @@ RESOURCE DIALOG r_mood_dialog
 
 // ---------------------------------------------------------------------------- 
 //
-// r_topic_dialog
-//
-// ---------------------------------------------------------------------------- 
-//
-RESOURCE DIALOG r_topic_dialog 
-{
-	flags = EGeneralQueryFlags; 
-	buttons = R_AVKON_SOFTKEYS_OK_CANCEL;
-	items = 
-	{
-		DLG_LINE 
-		{
-			type = EAknCtQuery;
-			id = EGeneralQuery;
-			control = AVKON_DATA_QUERY
-			{
-				layout = EDataLayout;
-				label = r_string_dialog_settopic;
-				control = EDWIN
-				{
-					width = 256;
-					lines = 3;
-					maxlength = 256;
-				};
-			};
-		}
-	};
-}
-
-// ---------------------------------------------------------------------------- 
-//
 // R_CREATECHANNEL_DIALOG
 //
 // ---------------------------------------------------------------------------- 
@@ -2464,11 +2515,11 @@ RESOURCE DIALOG r_messaging_upper_dialog
 
 // ---------------------------------------------------------------------------- 
 //
-// r_list_changerole
+// r_list_changepermission
 //
 // ---------------------------------------------------------------------------- 
 //
-RESOURCE DIALOG r_list_owner_changerole
+RESOURCE DIALOG r_list_changepermission
 {
 	flags = EGeneralQueryFlags;
 	buttons = R_AVKON_SOFTKEYS_OK_CANCEL;
@@ -2481,25 +2532,26 @@ RESOURCE DIALOG r_list_owner_changerole
 			control = AVKON_LIST_QUERY_CONTROL
 			{
 				listtype = EAknCtSinglePopupMenuListBox;
-				heading = r_string_list_changerole_title;
+				heading = r_string_item_changerole;
 				listbox = LISTBOX
 				{
 					flags = EAknListBoxMenuList;
-					height = 3;
+					height = 4;
 					width = 10;
-					array_id = r_array_owner_changerole;
+					array_id = r_array_changepermission;
 				};
 			};
 		}
 	};
 }
 
-RESOURCE ARRAY r_array_owner_changerole
+RESOURCE ARRAY r_array_changepermission
 {
 	items =
 	{
-//		LBUF {txt = r_string_changerole_itemlist_visitor; },
-		LBUF {txt = r_string_changerole_itemlist_contributor; },
+		LBUF {txt = r_string_changerole_itemlist_outcast; },
+		LBUF {txt = r_string_changerole_itemlist_follower; },
+		LBUF {txt = r_string_changerole_itemlist_publisher; },
 		LBUF {txt = r_string_changerole_itemlist_moderator; }
 	};
 }

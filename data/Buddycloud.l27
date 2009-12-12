@@ -13,7 +13,6 @@
 CHARACTER_SET UTF8
 
 rls_string r_string_app_caption "buddycloud"
-rls_string r_string_groupinvite_text " invited you to join channel: "
 // DO NOT TRANSLATE
 
 rls_string r_string_langcode "pl"
@@ -88,7 +87,7 @@ rls_string r_string_item_showchanneldetails "Pokaż szczegóły kanału"
 rls_string r_string_item_call "Dzwoń do kontaktu"
 rls_string r_string_item_sendplacebysms "Wyślij miejsce przez SMS"
 rls_string r_string_item_sendinvite "Zaproś do buddycloud"
-rls_string r_string_item_delete "Usunąć"
+rls_string r_string_item_delete "Remove"
 rls_string r_string_item_noticeaccept "Akceptuj"
 rls_string r_string_item_noticeacceptandfollow "Akceptuj i śledź"
 rls_string r_string_item_noticedecline "Odrzuć(?)"
@@ -101,17 +100,18 @@ rls_string r_string_settings_clearconnection "Zmień połączenie"
 rls_string r_string_note_followinglistempty "Nie śledzisz niczego.\n\nUżyj Kanały zakładek Kanały i Explorerby wyszukać rzeczy do śledzenia."
 
 // Menu: Messaging
-rls_string r_string_options_openlink "Otwórz link"
-rls_string r_string_options_postmessage "Dodaj wiadomość"
+rls_string r_string_options_postrequest "Request to post"
+rls_string r_string_options_postmessage "Write new post"
 rls_string r_string_options_postmedia "Dodaj media"
-rls_string r_string_options_replytomessage "Odpowiedz bezpośrednio"
-rls_string r_string_options_settopic "Ustaw temat"
 rls_string r_string_options_jumptounread "Skocz do nieprzeczytanych"
-rls_string r_string_options_invitetochannel "Zaproś do kanału"
-rls_string r_string_options_invitetootherchannel "Zaproś do innego kanału"
-rls_string r_string_options_invitefriendtochannel "Zaproś śledzącego"
 rls_string r_string_options_notificationon "Włącz powiadomienie"
 rls_string r_string_options_notificationoff "Wyłącz powiadomienie"
+
+rls_string r_string_item_addcomment "Write comment"
+rls_string r_string_item_likepost "♥ post"
+rls_string r_string_item_copypost "Copy post"
+rls_string r_string_item_reportpost "Report post"
+rls_string r_string_item_deletepost "Delete post"
 
 // Menu: Places
 rls_string r_string_options_setcurrent "Zapisz nowe miejsce"
@@ -127,7 +127,6 @@ rls_string r_string_note_placevisits "Wizyty"
 rls_string r_string_note_placepopulation "Populacja"
 rls_string r_string_note_learningplace "Nauka miejsca"
 rls_string r_string_note_updatingplace "Aktualizacja miejsca..."
-rls_string r_string_note_noplaceaddress "Adres nie zdefiniowany"
 rls_string r_string_note_placeslistempty "Nie masz zapisanych miejsc.\n\nBy uczyć tego miejsca wybierz\n'Opcje > Ucz miejsca'"
 
 // Menu: Nearby
@@ -171,33 +170,35 @@ rls_string r_string_item_unfollow "Nie śledź"
 // Channel: Settings & Configuration
 rls_string r_string_note_personalchannelcreated "Zapraszamy na kanałach buddycloud $USER!\n\nJest to twój bardzo osobisty kanał na buddycloud. Ten kanał jest twój i pozwala na nadawanie do twoich śledzących!"
 rls_string r_string_note_mediauploadready "Teraz możesz uploadować swoje multimedia tutaj: $LINK"
-rls_string r_string_note_userkickedfromgroup "$USER został wyproszony z kanału."
-rls_string r_string_note_userbannedfromgroup "$USER został usunięty z kanału."
-rls_string r_string_dialog_kickconfirmation "Wyprosić tą osobę z kanału (może powrócić przy nast. logowaniu)?"
-rls_string r_string_dialog_banconfirmation "Zakazać tej osobie oglądania kanału?"
-rls_string r_string_item_banfromgroup "Usuń z kanału"
-rls_string r_string_item_kickfromgroup "Wyproś z kanału"
-rls_string r_string_item_changerole "Zmień rolę"
-rls_string r_string_list_changerole_title "Zmień rolę na:"
-rls_string r_string_changerole_itemlist_moderator "Moderator"
-rls_string r_string_changerole_itemlist_contributor "Śledzący"
-rls_string r_string_changerole_itemlist_visitor "Gość"
-rls_string r_string_note_changerolefailed "Nie masz uprawnień, aby zmienić rolę tej osoby"
 
-// Settings Item List
+rls_string r_string_item_changerole "Change permission"
+rls_string r_string_changerole_itemlist_outcast "Usunąć"
+rls_string r_string_changerole_itemlist_follower "Śledzący"
+rls_string r_string_changerole_itemlist_publisher "Publisher"
+rls_string r_string_changerole_itemlist_moderator "Moderator"
+
+rls_string r_string_note_affiliationoutcast "You have been banned from the channel. You now cannot read or post in this channel's content."
+rls_string r_string_note_affiliationmember "You have become a follower of this channel. You can now read, but not post in this channel's content."
+rls_string r_string_note_affiliationpublisher "You have become a publisher of this channel. You can now read and post in this channel's content."
+rls_string r_string_note_affiliationmoderator "You have become a moderator of this channel. You can now read, post, and manage this channel's content."
+
+rls_string r_string_note_subscriptionpending "Your subscription request has been sent to the channel's producer."
+rls_string r_string_note_subscriptionaccepted "Your subscription to this channel has been accepted."
+rls_string r_string_note_subscriptionrejected "Your subscription to this channel has been rejected."
+
+// Account settings
 rls_string r_string_settings_account_title "Konto"
 rls_string r_string_settings_itemlist_fullname "Pełna nazwa"
 rls_string r_string_settings_itemlist_fullname_hint "Imię i nazwisko"
 rls_string r_string_settings_itemlist_email "Adres e-mail"
 rls_string r_string_settings_itemlist_email_hint "Twój adres e-mail"
-rls_string r_string_settings_itemlist_phonenumber "Numer telefonu"
-rls_string r_string_settings_itemlist_phonenumber_hint "Twój główny numer telefonu"
 rls_string r_string_settings_itemlist_username "Login"
 rls_string r_string_settings_itemlist_username_hint "XMPP server username"
 rls_string r_string_settings_itemlist_password "Hasło"
 rls_string r_string_settings_itemlist_password_hint "XMPP server password"
 rls_string r_string_settings_itemlist_server "XMPP server"
 
+// Preference settings
 rls_string r_string_settings_itemlist_language "Język wyświetlania"
 rls_string r_string_settings_itemlist_blocking "Show private messages"
 rls_string r_string_settings_itemlist_blockingalwaysshow "From anyone"
@@ -209,18 +210,23 @@ rls_string r_string_settings_itemlist_accesspointalwaysask "Zawsze pytaj"
 rls_string r_string_settings_itemlist_autostart "Uruchom przy starcie"
 rls_string r_string_settings_itemlist_showcontacts "Pokaż kontakty telefonu"
 
+// Notification settings
 rls_string r_string_settings_notifications_title "Powiadomienia"
-rls_string r_string_settings_itemlist_groupnotification "Powiadamiaj o postach"
+rls_string r_string_settings_itemlist_notifyfollowing "Channels I follow"
+rls_string r_string_settings_itemlist_notifymoderating "Channels I moderate"
+rls_string r_string_settings_itemlist_notifyreply "Replies to my post"
+
 rls_string r_string_settings_itemlist_groupnever "Nigdy nie powiadamiaj"
 rls_string r_string_settings_itemlist_groupfirstonly "Tylko pierwszy post"
 rls_string r_string_settings_itemlist_groupallmessages "Wszystkie posty"
-rls_string r_string_settings_itemlist_notifyreply "Powiadamiaj mnie o @odpowiedziach:"
+
 rls_string r_string_settings_itemlist_privatemessagetone "Dźwięk prywatnej wiadomości"
 rls_string r_string_settings_itemlist_channelposttone "Dźwięk wiadomości na kanale"
-rls_string r_string_settings_itemlist_directreplytone "Dźwięk @odpowiedzi"
+rls_string r_string_settings_itemlist_directreplytone "Replied comment tone"
 rls_string r_string_settings_itemlist_tonenone "Bez dźwięku"
 rls_string r_string_settings_itemlist_tonedefault "Dźwięk domyślny"
 
+// Positioning settings
 rls_string r_string_settings_beacons_title "Pozycjonowanie"
 rls_string r_string_settings_itemlist_cell "Wieże GSM (BTSy)"
 rls_string r_string_settings_itemlist_wlan "WIFI"
@@ -257,16 +263,24 @@ rls_string r_string_editplace_itemlist_visibility "Inni mogą tu przebywać?"
 rls_string r_string_editplace_itemlist_visibility_public "Współużytkowane"
 rls_string r_string_editplace_itemlist_visibility_private "Osobiste"
 
+// Edit channel list
+rls_string r_string_newchannel_title "New channel"
+rls_string r_string_editchannel_title "Edit channel"
+rls_string r_string_editchannel_itemlist_title "Title"
+rls_string r_string_editchannel_itemlist_title_hint "Channel's title"
+rls_string r_string_editchannel_itemlist_id "#Channel Id"
+rls_string r_string_editchannel_itemlist_id_hint "Channel's unique Id"
+rls_string r_string_editchannel_itemlist_description "Description"
+rls_string r_string_editchannel_itemlist_description_hint "Channel's description"
+rls_string r_string_editchannel_itemlist_access "Access"
+rls_string r_string_editchannel_itemlist_access_open "Open channel"
+rls_string r_string_editchannel_itemlist_access_whitelist "Members only"
+
+rls_string r_string_note_channelexists "This #channel_id already exists. Please enter a unique one."
+
 // Following & Invitations
 rls_string r_string_followingrequest_title "Zapytanie o śledzenie"
 rls_string r_string_followerrequest_text "$USER chce śledzić cię na buddycloud.\n* Pokaż swoją prezentację i status\n* Pokaż swój osobisty kanał\n* Pokaż swoje miejsca"
-
-rls_string r_string_channelinvite_title "Zaproszenie na kanał"
-
-// Create channel
-rls_string r_string_dialog_createchannelname "Nazwa kanału:"
-rls_string r_string_dialog_createchanneldescription "Krótki opis kanału:"
-rls_string r_string_channelfollowing_text "Kanał '$CHANNEL' już istnieje. Czy chcesz, śledzić ten kanał?"
 
 // Exit Confirmation
 rls_string r_string_exit_title "Potwierdzenie wyjścia"
@@ -294,9 +308,9 @@ rls_string r_string_dialog_setmood "Ustaw status:"
 rls_string r_string_dialog_moodis "jest "
 rls_string r_string_dialog_setcurrentlocation "Ustaw moje miejsce:"
 rls_string r_string_dialog_setnextlocation "Ustaw następne miejsce:"
-rls_string r_string_dialog_settopic "Ustaw temat:"
-rls_string r_string_dialog_newmessage "Nowa wiadomość:"
-rls_string r_string_dialog_addcontact "Wprowadź ID buddycloud lub Jabber (np. test@gtalk.com):"
+rls_string r_string_dialog_newmessage "Write post:"
+rls_string r_string_dialog_newcomment "Write comment:"
+rls_string r_string_dialog_addcontact "Enter contact's Id (eg. test@gtalk.com):"
 
 // Notes
 rls_string r_string_note_connecting "Łączenie..."

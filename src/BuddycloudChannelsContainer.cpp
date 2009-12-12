@@ -84,7 +84,7 @@ void CBuddycloudChannelsContainer::ConstructL(const TRect& aRect) {
 void CBuddycloudChannelsContainer::CreateDirectoryItemL(const TDesC& aId, TInt aTitleResource) {
 	CExplorerResultItem* aResultItem = CExplorerResultItem::NewLC();
 	aResultItem->SetResultType(EExplorerItemDirectory);
-	aResultItem->SetAvatarId(KIconChannel);
+	aResultItem->SetIconId(KIconChannel);
 	aResultItem->SetOverlayId(KOverlayDirectory);
 	aResultItem->SetIdL(aId);
 	

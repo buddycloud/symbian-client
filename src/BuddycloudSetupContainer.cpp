@@ -204,9 +204,7 @@ void CBuddycloudSetupContainer::ConstructNextStepL() {
 		iSetupStep = EStep6;
 		ConstructTextL();
 
-		iEdwin->GetText(iBuddycloudLogic->GetDescSetting(ESettingItemEmailAddress));
-		iBuddycloudLogic->LookupUserByEmailL(true);
-		
+		iEdwin->GetText(iBuddycloudLogic->GetDescSetting(ESettingItemEmailAddress));	
 		iEdwin->MakeVisible(false);
 		iEdwin->SetFocus(false);
 	}

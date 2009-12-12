@@ -50,13 +50,6 @@ void CBuddycloudAccountSettingsList::EditCurrentItemL() {
 	EditItemL(ListBox()->CurrentItemIndex(), false);
 }
 
-void CBuddycloudAccountSettingsList::SaveL() {
-	if(iSettingsChanged) {
-		// Update user profile
-		iBuddycloudLogic->PublishUserDataL(NULL, true);
-	}
-}
-
 void CBuddycloudAccountSettingsList::ActivateL(TInt aSelectItem) {
 	CCoeControl::ActivateL();
 	
@@ -73,15 +66,11 @@ TKeyResponse CBuddycloudAccountSettingsList::OfferKeyEventL(const TKeyEvent& aKe
 
 	if(aType == EEventKey) {
 		if(aKeyEvent.iCode == EKeyLeftArrow) {
-			SaveL();
-			
 			iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KBeaconSettingsViewId));
 
 			aResult = EKeyWasConsumed;
 		}
 		else if(aKeyEvent.iCode == EKeyRightArrow) {
-			SaveL();
-
 			iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KPreferencesSettingsViewId));
 
 			aResult = EKeyWasConsumed;
@@ -117,7 +106,7 @@ void CBuddycloudAccountSettingsList::EditItemL(TInt aIndex, TBool aCalledFromMen
 	CAknSettingItemArray* aItemArray = SettingItemArray();
 	TInt aIdentifier = ((*aItemArray)[aIndex])->Identifier();
 	
-	if(aIdentifier > ESettingAccountPhoneNumber && iBuddycloudLogic->GetState() != ELogicOffline) {
+	if(aIdentifier >= ESettingAccountUsername && iBuddycloudLogic->GetState() != ELogicOffline) {
 		HBufC* aMessage = CEikonEnv::Static()->AllocReadResourceLC(R_LOCALIZED_STRING_NOTE_OFFLINEREQUIRED);
 		CAknInformationNote* aDialog = new (ELeave) CAknInformationNote();		
 		aDialog->ExecuteLD(*aMessage);
@@ -134,14 +123,12 @@ void CBuddycloudAccountSettingsList::EditItemL(TInt aIndex, TBool aCalledFromMen
 		
 		if(iCurrentItemData.Compare(aItemArray->MdcaPoint(aIndex).Left(64)) != 0) {
 			// Data changed
-			iSettingsChanged = true;
-			
 			if(aIdentifier == ESettingAccountUsername) {
 				iBuddycloudLogic->ValidateUsername();
 				
 				if(iCurrentItemData.Compare(iBuddycloudLogic->GetDescSetting(ESettingItemUsername)) != 0) {
 					// Username is changed
-					iBuddycloudLogic->MasterResetL();
+					iBuddycloudLogic->ResetStoredDataL();
 				}
 			}
 		}
@@ -159,10 +146,6 @@ CAknSettingItem* CBuddycloudAccountSettingsList::CreateSettingItemL (TInt aIdent
 		case ESettingAccountEmailAddress:
 			aSettingItem = new (ELeave) CAknTextSettingItem(aIdentifier, iBuddycloudLogic->GetDescSetting(ESettingItemEmailAddress));
 			aSettingItem->SetSettingPageFlags(CAknTextSettingPage::EZeroLengthAllowed | CAknTextSettingPage::EPredictiveTextEntryPermitted);
-			break;
-		case ESettingAccountPhoneNumber:
-			aSettingItem = new (ELeave) CAknTextSettingItem(aIdentifier, iBuddycloudLogic->GetDescSetting(ESettingItemPhoneNumber));
-			aSettingItem->SetSettingPageFlags(CAknTextSettingPage::EZeroLengthAllowed);
 			break;
 		case ESettingAccountUsername:
 			aSettingItem = new (ELeave) CAknTextSettingItem(aIdentifier, iBuddycloudLogic->GetDescSetting(ESettingItemUsername));

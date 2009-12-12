@@ -71,16 +71,15 @@ void CBuddycloudMessagingView::DoActivateL(const TVwsViewId& /*aPrevViewId*/, TU
 		TMessagingViewObjectPckg aObjectPckg(aObject);
 		aObjectPckg.Copy(aCustomMessage);
 		
-		if(aObject.iJid.Length() == 0) {
+		if(aObject.iId.Length() == 0) {
 			// No jid referenced, get channel jid as default
-			CFollowingItem* aItem = iBuddycloudLogic->GetFollowingStore()->GetItemById(aCustomMessageId.iUid);
+			CBuddycloudListStore* aItemStore = iBuddycloudLogic->GetFollowingStore();
+			CFollowingItem* aItem = static_cast <CFollowingItem*> (aItemStore->GetItemById(aCustomMessageId.iUid));
 					
 			if(aItem && aItem->GetItemType() >= EItemRoster) {
-				CFollowingChannelItem* aChannelItem = static_cast <CFollowingChannelItem*> (aItem);
-				
-				aObject.iFollowerId = aChannelItem->GetItemId();
-				aObject.iJid = aChannelItem->GetJid();
-				aObject.iTitle = aChannelItem->GetTitle();
+				aObject.iFollowerId = aItem->GetItemId();
+				aObject.iId = aItem->GetId();
+				aObject.iTitle = aItem->GetTitle();
 			}
 		}
 	

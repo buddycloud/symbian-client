@@ -14,6 +14,8 @@
 #define BUDDYCLOUDPLACES_H_
 
 #include <e32base.h>
+#include "BuddycloudList.h"
+#include "GeolocData.h"
 
 const TInt KEditingNewPlaceId = -9999;
 
@@ -24,10 +26,6 @@ const TInt KEditingNewPlaceId = -9999;
 --
 ----------------------------------------------------------------------------
 */
-
-enum TBuddycloudPlaceType {
-	EPlacePrevious, EPlaceCurrent, EPlaceNext
-};
 
 enum TBuddycloudPlaceSeen {
 	EPlaceNotSeen, EPlaceHere, EPlaceRecent, EPlaceFlux
@@ -41,73 +39,34 @@ enum TBuddycloudPlaceSeen {
 ----------------------------------------------------------------------------
 */
 
-class CBuddycloudBasicPlace : public CBase {
+class CBuddycloudPlace : public CBuddycloudListItem {
 	public:
-		static CBuddycloudBasicPlace* NewL();
-		static CBuddycloudBasicPlace* NewLC();
-		~CBuddycloudBasicPlace();
+		static CBuddycloudPlace* NewL();
+		static CBuddycloudPlace* NewLC();
+		~CBuddycloudPlace();
 		
 	protected:
-		CBuddycloudBasicPlace();
+		CBuddycloudPlace();
 		void ConstructL();
 
 	public: 
-		TInt GetPlaceId();
-		void SetPlaceId(TInt aPlaceId);
-
-		TBool GetShared();
+		TBool Shared();
 		void SetShared(TBool aPublic);
 		
 		TInt GetRevision();
 		void SetRevision(TInt aRevision);
-
-	public: // Descriptive Values
-		TDesC& GetPlaceName();
-		void SetPlaceNameL(TDesC& aPlaceName);
-
-		TDesC& GetPlaceStreet();
-		void SetPlaceStreetL(TDesC& aPlaceStreet);
-
-		TDesC& GetPlaceArea();
-		void SetPlaceAreaL(TDesC& aPlaceArea);
-
-		TDesC& GetPlaceCity();
-		void SetPlaceCityL(TDesC& aPlaceCity);
-
-		TDesC& GetPlacePostcode();
-		void SetPlacePostcodeL(TDesC& aPlacePostcode);
-
-		TDesC& GetPlaceRegion();
-		void SetPlaceRegionL(TDesC& aPlaceRegion);
-
-		TDesC& GetPlaceCountry();
-		void SetPlaceCountryL(TDesC& aPlaceCountry);
-
-	public: // Position
-		TReal GetPlaceLatitude();
-		void SetPlaceLatitude(TReal aLatitude);
-
-		TReal GetPlaceLongitude();
-		void SetPlaceLongitude(TReal aLongitude);
 		
-	public: // Copy
-		void CopyDetailsL(CBuddycloudBasicPlace* aPlace);
-	
+	public:
+		CGeolocData* GetGeoloc();
+		void CopyGeolocL(CGeolocData* aGeoloc);
+		
+		void UpdateFromGeolocL();
+		
 	protected:
-		TInt iPlaceId;
 		TBool iPublic;
 		TInt iRevision;
-		
-		HBufC* iPlaceName;
-		HBufC* iPlaceStreet;
-		HBufC* iPlaceArea;
-		HBufC* iPlaceCity;
-		HBufC* iPlacePostcode;
-		HBufC* iPlaceRegion;
-		HBufC* iPlaceCountry;
-
-		TReal iLatitude;
-		TReal iLongitude;
+	
+		CGeolocData* iGeoloc;
 };
 
 /*
@@ -118,25 +77,13 @@ class CBuddycloudBasicPlace : public CBase {
 ----------------------------------------------------------------------------
 */
 
-class CBuddycloudExtendedPlace : public CBuddycloudBasicPlace {
+class CBuddycloudExtendedPlace : public CBuddycloudPlace {
 	public:
 		static CBuddycloudExtendedPlace* NewL();
 		static CBuddycloudExtendedPlace* NewLC();
-		~CBuddycloudExtendedPlace();
 
 	private:
 		CBuddycloudExtendedPlace();
-		void ConstructL();
-
-	public:
-		TDesC& GetDescription();
-		void SetDescriptionL(TDesC& aDescription);
-		
-		TDesC& GetWebsite();
-		void SetWebsiteL(TDesC& aWebsite);
-		
-		TDesC& GetWiki();
-		void SetWikiL(TDesC& aWiki);
 	
 	public:
 		TBuddycloudPlaceSeen GetPlaceSeen();
@@ -160,10 +107,6 @@ class CBuddycloudExtendedPlace : public CBuddycloudBasicPlace {
 		void SetPopulation(TInt aPopulation);
 
 	protected:
-		HBufC* iDescription;
-		HBufC* iWebsite;
-		HBufC* iWiki;
-		
 		TBuddycloudPlaceSeen iPlaceSeen;
 		TTime iLastSeen;
 
@@ -182,42 +125,22 @@ class CBuddycloudExtendedPlace : public CBuddycloudBasicPlace {
 ----------------------------------------------------------------------------
 */
 
-class CBuddycloudPlaceStore : public CBase {
+class CBuddycloudPlaceStore : public CBuddycloudListStore {
 	public:
 		static CBuddycloudPlaceStore* NewL();
 		static CBuddycloudPlaceStore* NewLC();
-		~CBuddycloudPlaceStore();
-
+	
 	private:
 		CBuddycloudPlaceStore();
-
-	public: // Get places & indexes
-		CBuddycloudExtendedPlace* GetPlaceByIndex(TInt aIndex);
-		CBuddycloudExtendedPlace* GetPlaceById(TInt aPlaceId);
-		TInt GetIndexById(TInt aPlaceId);
-
-	public:
-		TInt CountPlaces();
-		void AddPlace(CBuddycloudExtendedPlace* aPlace);
 		
 	public: // Editing place
-		CBuddycloudExtendedPlace* GetEditedPlace();
+		CBuddycloudListItem* GetEditedPlace();
 		void SetEditedPlace(TInt aPlaceId);
-
-	public:
-		void MovePlaceById(TInt aPlaceId, TInt aPosition);
 		
-	public: // Removing (not deleted)
-		void RemovePlaceByIndex(TInt aIndex);
-		void RemovePlaceById(TInt aPlaceId);
-
-	public: // Deleting
-		void DeletePlaceByIndex(TInt aIndex);
-		void DeletePlaceById(TInt aPlaceId);
+	public: // From CBuddycloudListStore
+		void DeleteItemById(TInt aItemId);
 
 	protected:
-		RPointerArray<CBuddycloudExtendedPlace> iPlaceStore;
-		
 		TInt iEditedPlaceId;
 };
 

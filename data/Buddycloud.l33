@@ -13,7 +13,6 @@
 CHARACTER_SET UTF8
 
 rls_string r_string_app_caption "buddycloud"
-rls_string r_string_groupinvite_text " invited you to join channel: "
 // DO NOT TRANSLATE
 
 rls_string r_string_langcode "th"
@@ -88,7 +87,7 @@ rls_string r_string_item_showchanneldetails "แสดงรายละเอ�
 rls_string r_string_item_call "โทรหาผู้ติดต่อ"
 rls_string r_string_item_sendplacebysms "ส่งสถานที่นี้ทาง sms"
 rls_string r_string_item_sendinvite "เชิญเข้าร่วม buddycloud"
-rls_string r_string_item_delete "ลบออก"
+rls_string r_string_item_delete "Remove"
 rls_string r_string_item_noticeaccept "ยอมรับ"
 rls_string r_string_item_noticeacceptandfollow "ยอมรับและติดตาม"
 rls_string r_string_item_noticedecline "ปฏิเสธ"
@@ -101,17 +100,18 @@ rls_string r_string_settings_clearconnection "เปลี่ยนแปลง�
 rls_string r_string_note_followinglistempty "คุณไม่ได้ติดตามใครหรืออะไรอยู่เลย ใช้ ช่อง และ แท็บการค้นหา เพื่อค้นหาสิ่งที่คุณสนใจเพื่อติดตาม"
 
 // Menu: Messaging
-rls_string r_string_options_openlink "เปิดลิงก์"
-rls_string r_string_options_postmessage "โพสต์ข้อความ"
+rls_string r_string_options_postrequest "Request to post"
+rls_string r_string_options_postmessage "Write new post"
 rls_string r_string_options_postmedia "โพสต์ภาพ,เสียง"
-rls_string r_string_options_replytomessage "ตอบกลับหา"
-rls_string r_string_options_settopic "ตั้งหัวข้อ"
 rls_string r_string_options_jumptounread "ไปยังข้อความที่ยังไม่ได้อ่าน"
-rls_string r_string_options_invitetochannel "เชิญเข้าร่วม สถานี"
-rls_string r_string_options_invitetootherchannel "เชิญเข้าร่วม สถานีอื่นๆ"
-rls_string r_string_options_invitefriendtochannel "เชิญผู้ที่ติดตามคุณ"
 rls_string r_string_options_notificationon "เปิดการสั่นเตือน"
 rls_string r_string_options_notificationoff "ปิดการสั่นเตือน"
+
+rls_string r_string_item_addcomment "Write comment"
+rls_string r_string_item_likepost "♥ post"
+rls_string r_string_item_copypost "Copy post"
+rls_string r_string_item_reportpost "Report post"
+rls_string r_string_item_deletepost "Delete post"
 
 // Menu: Places
 rls_string r_string_options_setcurrent "บุคมาร์คสถานที่ใหม่"
@@ -127,7 +127,6 @@ rls_string r_string_note_placevisits "จำนวนครั้งที่ม
 rls_string r_string_note_placepopulation "จำนวนผู้คน ณ สถานที่นี้"
 rls_string r_string_note_learningplace "หาข้อมูลสถานที่"
 rls_string r_string_note_updatingplace "อัพเดทสถานที่..."
-rls_string r_string_note_noplaceaddress "ที่อยู่นี้ไม่มีข้อมูล"
 rls_string r_string_note_placeslistempty "คุณไม่มีสถานที่ไหนบุ๊คมาร์คเอาไว้เลย เพื่อหาข้อมูลของสถานที่ปัจจุบัน ไปยัง 'ตัวเลือก > บุ๊คมาร์คสถานที่ใหม่'"
 
 // Menu: Nearby
@@ -171,33 +170,35 @@ rls_string r_string_item_unfollow "ไม่ติดตาม"
 // Channel: Settings & Configuration
 rls_string r_string_note_personalchannelcreated "ยินดีต้อนรับเข้าสู่ช่องของ buddycloud ค่ะ คุณ $USER!\n\nนี่คือช่องส่วนตัวของคุณบน buddycloud เป็นของคุณทั้งหมดเลยและคุณสามารถเผยแพร่สู่ผู้ที่ติดตามคุณได้ด้วย!"
 rls_string r_string_note_mediauploadready "ขณะนี้คุณสามารถอัพโหลดไฟล์ ภาพ,เสียง ได้ที่ $LINK"
-rls_string r_string_note_userkickedfromgroup "$USER โดนเตะออกจากห้องนี้แล้ว"
-rls_string r_string_note_userbannedfromgroup "$USER โดนแบนจากห้องแล้ว"
-rls_string r_string_dialog_kickconfirmation "เตะคนนี้ออกจากสถานีนี้ (เขาจะกลับมาอีกเมื่อล็อกอินครั้งหน้า)?"
-rls_string r_string_dialog_banconfirmation "แบนคนนี้ไม่ให้ดูสถานีนี้ได้อีก?"
-rls_string r_string_item_banfromgroup "แบนจากสถานีนี้"
-rls_string r_string_item_kickfromgroup "เตะออกจากสถานีนี้"
-rls_string r_string_item_changerole "เปลี่ยนบทบาท"
-rls_string r_string_list_changerole_title "เปลี่ยนบทบาทเป็น:"
-rls_string r_string_changerole_itemlist_moderator "ผู้ดูแล"
-rls_string r_string_changerole_itemlist_contributor "ผู้สนับสนุน"
-rls_string r_string_changerole_itemlist_visitor "ผู้เยี่ยมชม"
-rls_string r_string_note_changerolefailed "คุณไม่มีสิทธิ์จะเปลี่ยนบทบาทของคนๆนี้"
 
-// Settings Item List
+rls_string r_string_item_changerole "Change permission"
+rls_string r_string_changerole_itemlist_outcast "ลบออก"
+rls_string r_string_changerole_itemlist_follower "ผู้สนับสนุน"
+rls_string r_string_changerole_itemlist_publisher "Publisher"
+rls_string r_string_changerole_itemlist_moderator "ผู้ดูแล"
+
+rls_string r_string_note_affiliationoutcast "You have been banned from the channel. You now cannot read or post in this channel's content."
+rls_string r_string_note_affiliationmember "You have become a follower of this channel. You can now read, but not post in this channel's content."
+rls_string r_string_note_affiliationpublisher "You have become a publisher of this channel. You can now read and post in this channel's content."
+rls_string r_string_note_affiliationmoderator "You have become a moderator of this channel. You can now read, post, and manage this channel's content."
+
+rls_string r_string_note_subscriptionpending "Your subscription request has been sent to the channel's producer."
+rls_string r_string_note_subscriptionaccepted "Your subscription to this channel has been accepted."
+rls_string r_string_note_subscriptionrejected "Your subscription to this channel has been rejected."
+
+// Account settings
 rls_string r_string_settings_account_title "นามแฝง"
 rls_string r_string_settings_itemlist_fullname "ชื่อจริง"
 rls_string r_string_settings_itemlist_fullname_hint "ชื่อจริงของคุณ"
 rls_string r_string_settings_itemlist_email "E-mail"
 rls_string r_string_settings_itemlist_email_hint "E-mail ของคุณ"
-rls_string r_string_settings_itemlist_phonenumber "เบอร์โทรศัพท์"
-rls_string r_string_settings_itemlist_phonenumber_hint "เบอร์โทรศัพท์หลัก"
 rls_string r_string_settings_itemlist_username "ชื่อผู้ใช้"
 rls_string r_string_settings_itemlist_username_hint "XMPP server username"
 rls_string r_string_settings_itemlist_password "รหัสผ่าน"
 rls_string r_string_settings_itemlist_password_hint "XMPP server password"
 rls_string r_string_settings_itemlist_server "XMPP server"
 
+// Preference settings
 rls_string r_string_settings_itemlist_language "ข้อความแจ้งเตือนจากทางสถานี"
 rls_string r_string_settings_itemlist_blocking "Show private messages"
 rls_string r_string_settings_itemlist_blockingalwaysshow "From anyone"
@@ -209,18 +210,23 @@ rls_string r_string_settings_itemlist_accesspointalwaysask "ถามทุก�
 rls_string r_string_settings_itemlist_autostart "เริ่มโปรแกรมอัตโนมัติเมื่อเปิดมือถือ"
 rls_string r_string_settings_itemlist_showcontacts "แสดงสมุดรายชื่อของโทรศัพท์"
 
+// Notification settings
 rls_string r_string_settings_notifications_title "การแจ้งเตือน"
-rls_string r_string_settings_itemlist_groupnotification "ข้อความแจ้งเตือนจากทางสถานี"
+rls_string r_string_settings_itemlist_notifyfollowing "Channels I follow"
+rls_string r_string_settings_itemlist_notifymoderating "Channels I moderate"
+rls_string r_string_settings_itemlist_notifyreply "Replies to my post"
+
 rls_string r_string_settings_itemlist_groupnever "ไม่ต้องแจ้งเตือน"
 rls_string r_string_settings_itemlist_groupfirstonly "เฉพาะข้อความแรก"
 rls_string r_string_settings_itemlist_groupallmessages "ทุกข้อความ"
-rls_string r_string_settings_itemlist_notifyreply "ตอบกลับ@ข้อความแจ้งเตือน:"
+
 rls_string r_string_settings_itemlist_privatemessagetone "เสียงเตือนเมื่อได้รับข้อความส่วนตัว"
 rls_string r_string_settings_itemlist_channelposttone "โทนเสียงเตือนเมื่อมีผู้โพสต์ลงในช่อง"
-rls_string r_string_settings_itemlist_directreplytone "ฉัน @ตอบกลับ เสียงเตือน"
+rls_string r_string_settings_itemlist_directreplytone "Replied comment tone"
 rls_string r_string_settings_itemlist_tonenone "ไม่มีเสียง"
 rls_string r_string_settings_itemlist_tonedefault "โทนเสียงตั้งต้น"
 
+// Positioning settings
 rls_string r_string_settings_beacons_title "ตำแหน่ง"
 rls_string r_string_settings_itemlist_cell "เสาส่งสัญญาณ"
 rls_string r_string_settings_itemlist_wlan "WIFI"
@@ -257,16 +263,24 @@ rls_string r_string_editplace_itemlist_visibility "คนอื่นๆใช�
 rls_string r_string_editplace_itemlist_visibility_public "แชร์"
 rls_string r_string_editplace_itemlist_visibility_private "ส่วนตัว"
 
+// Edit channel list
+rls_string r_string_newchannel_title "New channel"
+rls_string r_string_editchannel_title "Edit channel"
+rls_string r_string_editchannel_itemlist_title "Title"
+rls_string r_string_editchannel_itemlist_title_hint "Channel's title"
+rls_string r_string_editchannel_itemlist_id "#Channel Id"
+rls_string r_string_editchannel_itemlist_id_hint "Channel's unique Id"
+rls_string r_string_editchannel_itemlist_description "Description"
+rls_string r_string_editchannel_itemlist_description_hint "Channel's description"
+rls_string r_string_editchannel_itemlist_access "Access"
+rls_string r_string_editchannel_itemlist_access_open "Open channel"
+rls_string r_string_editchannel_itemlist_access_whitelist "Members only"
+
+rls_string r_string_note_channelexists "This #channel_id already exists. Please enter a unique one."
+
 // Following & Invitations
 rls_string r_string_followingrequest_title "มีผู้ต้องการติดตาม"
 rls_string r_string_followerrequest_text "$USER ต้องการติดตามคุณบน buddycloud\n* แสดงสถานะของคุณ\n* แสดงสถานีส่วนตัวของคุณ\n* แสดงสถานที่ของคุณ"
-
-rls_string r_string_channelinvite_title "คำเชิญจากสถานี"
-
-// Create channel
-rls_string r_string_dialog_createchannelname "ชื่อสถานี"
-rls_string r_string_dialog_createchanneldescription "ข้อมูลสั้นๆเกี่ยวกับสถานีนี้:"
-rls_string r_string_channelfollowing_text "สถานีชื่อ '$CHANNEL' มีอยู่แล้ว ต้องการจะติดตามสถานีนี้หรือไม่?"
 
 // Exit Confirmation
 rls_string r_string_exit_title "ยืนยัน ต้องการออก"
@@ -294,9 +308,9 @@ rls_string r_string_dialog_setmood "ตั้งค่าสถานะ"
 rls_string r_string_dialog_moodis "คือ "
 rls_string r_string_dialog_setcurrentlocation "ตั้งค่าสถานที่ของฉัน"
 rls_string r_string_dialog_setnextlocation "ตั้งค่าสถานที่ต่อไป"
-rls_string r_string_dialog_settopic "ตั้งค่าหัวข้อ"
-rls_string r_string_dialog_newmessage "ข้อความใหม่"
-rls_string r_string_dialog_addcontact "ใส่ชื่อผู้ใช้บน buddycloud หรือ Jabber (ตัวอย่าง test@gtalk.com):"
+rls_string r_string_dialog_newmessage "Write post:"
+rls_string r_string_dialog_newcomment "Write comment:"
+rls_string r_string_dialog_addcontact "Enter contact's Id (eg. test@gtalk.com):"
 
 // Notes
 rls_string r_string_note_connecting "กำลังเชื่อมต่อ.."

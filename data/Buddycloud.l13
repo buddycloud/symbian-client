@@ -13,7 +13,6 @@
 CHARACTER_SET UTF8
 
 rls_string r_string_app_caption "buddycloud"
-rls_string r_string_groupinvite_text " invited you to join channel: "
 // DO NOT TRANSLATE
 
 rls_string r_string_langcode "pt"
@@ -88,7 +87,7 @@ rls_string r_string_item_showchanneldetails "Mostrar detalhes do canal"
 rls_string r_string_item_call "Telefonar a contacto"
 rls_string r_string_item_sendplacebysms "Mandar sítio via SMS"
 rls_string r_string_item_sendinvite "Convidar para buddycloud"
-rls_string r_string_item_delete "Remover"
+rls_string r_string_item_delete "Remove"
 rls_string r_string_item_noticeaccept "Aceitar"
 rls_string r_string_item_noticeacceptandfollow "Aceite e Siga"
 rls_string r_string_item_noticedecline "Declinar"
@@ -101,17 +100,18 @@ rls_string r_string_settings_clearconnection "Alterar ligação "
 rls_string r_string_note_followinglistempty "Você não está a seguir nada.\n\nUse os Canais e as barras do Explorer para procurar coisas a seguir."
 
 // Menu: Messaging
-rls_string r_string_options_openlink "Abrir link"
-rls_string r_string_options_postmessage "Criar entrada"
+rls_string r_string_options_postrequest "Request to post"
+rls_string r_string_options_postmessage "Write new post"
 rls_string r_string_options_postmedia "Criar entrada de media"
-rls_string r_string_options_replytomessage "Responder a"
-rls_string r_string_options_settopic "Definir tópico"
 rls_string r_string_options_jumptounread "Saltar para Não Lidas"
-rls_string r_string_options_invitetochannel "Convidar para o canal"
-rls_string r_string_options_invitetootherchannel "Convidar para outro canal"
-rls_string r_string_options_invitefriendtochannel "Convidar seguidor"
 rls_string r_string_options_notificationon "Ligar modo de vibração"
 rls_string r_string_options_notificationoff "Desligar modo de vibração"
+
+rls_string r_string_item_addcomment "Write comment"
+rls_string r_string_item_likepost "♥ post"
+rls_string r_string_item_copypost "Copy post"
+rls_string r_string_item_reportpost "Report post"
+rls_string r_string_item_deletepost "Delete post"
 
 // Menu: Places
 rls_string r_string_options_setcurrent "Adicionar aos Marcadores novo sitio"
@@ -127,7 +127,6 @@ rls_string r_string_note_placevisits "Visitas"
 rls_string r_string_note_placepopulation "População "
 rls_string r_string_note_learningplace "Sitio de aprendizagem"
 rls_string r_string_note_updatingplace "A actualizar o sítio"
-rls_string r_string_note_noplaceaddress "Endereço indefinido"
 rls_string r_string_note_placeslistempty "Você não tem sítios marcados.\n\nPara aprender este sitio seleccione 'Opções > Marcar novo sítio'"
 
 // Menu: Nearby
@@ -171,33 +170,35 @@ rls_string r_string_item_unfollow "Deixar de seguir"
 // Channel: Settings & Configuration
 rls_string r_string_note_personalchannelcreated "Seja bemvindo aos canais do buddycloud $USER!\n\nEste é o seu canal pessoal no buddycloud. Este canal é inteiramente seu e permite-lhe fazer  emissões aos seus seguidores!"
 rls_string r_string_note_mediauploadready "Pode fazer upload do seu ficheiro media em $LINK"
-rls_string r_string_note_userkickedfromgroup "$USER foi expulso do canal"
-rls_string r_string_note_userbannedfromgroup "$USER foi banido do canal"
-rls_string r_string_dialog_kickconfirmation "Expulsar esta pessoa do canal (regressará na próximo login?)"
-rls_string r_string_dialog_banconfirmation "Banir esta pessoa de vêr o canal?"
-rls_string r_string_item_banfromgroup "Banir do canal"
-rls_string r_string_item_kickfromgroup "Expulsar do canal"
-rls_string r_string_item_changerole "Alterar perfil"
-rls_string r_string_list_changerole_title "Alterar perfil para:"
-rls_string r_string_changerole_itemlist_moderator "Moderador"
-rls_string r_string_changerole_itemlist_contributor "Seguidor"
-rls_string r_string_changerole_itemlist_visitor "Visitante"
-rls_string r_string_note_changerolefailed "Não tem autorização para alterar o perfil desta pessoa"
 
-// Settings Item List
+rls_string r_string_item_changerole "Change permission"
+rls_string r_string_changerole_itemlist_outcast "Remover"
+rls_string r_string_changerole_itemlist_follower "Seguidor"
+rls_string r_string_changerole_itemlist_publisher "Publisher"
+rls_string r_string_changerole_itemlist_moderator "Moderador"
+
+rls_string r_string_note_affiliationoutcast "You have been banned from the channel. You now cannot read or post in this channel's content."
+rls_string r_string_note_affiliationmember "You have become a follower of this channel. You can now read, but not post in this channel's content."
+rls_string r_string_note_affiliationpublisher "You have become a publisher of this channel. You can now read and post in this channel's content."
+rls_string r_string_note_affiliationmoderator "You have become a moderator of this channel. You can now read, post, and manage this channel's content."
+
+rls_string r_string_note_subscriptionpending "Your subscription request has been sent to the channel's producer."
+rls_string r_string_note_subscriptionaccepted "Your subscription to this channel has been accepted."
+rls_string r_string_note_subscriptionrejected "Your subscription to this channel has been rejected."
+
+// Account settings
 rls_string r_string_settings_account_title "Conta"
 rls_string r_string_settings_itemlist_fullname "Nome completo"
 rls_string r_string_settings_itemlist_fullname_hint "O seu nome completo"
 rls_string r_string_settings_itemlist_email "Endereço de e-mail"
 rls_string r_string_settings_itemlist_email_hint "O seu endereço de e-mail"
-rls_string r_string_settings_itemlist_phonenumber "Número de telefone"
-rls_string r_string_settings_itemlist_phonenumber_hint "O seu numero de telefone principal "
 rls_string r_string_settings_itemlist_username "Nome de utilizador"
 rls_string r_string_settings_itemlist_username_hint "XMPP server username"
 rls_string r_string_settings_itemlist_password "Palavra-chave"
 rls_string r_string_settings_itemlist_password_hint "XMPP server password"
 rls_string r_string_settings_itemlist_server "XMPP server"
 
+// Preference settings
 rls_string r_string_settings_itemlist_language "Mostrar idioma"
 rls_string r_string_settings_itemlist_blocking "Show private messages"
 rls_string r_string_settings_itemlist_blockingalwaysshow "From anyone"
@@ -209,18 +210,23 @@ rls_string r_string_settings_itemlist_accesspointalwaysask "Perguntar sempre"
 rls_string r_string_settings_itemlist_autostart "Activar quando iniciar o telefone"
 rls_string r_string_settings_itemlist_showcontacts "Mostrar Contactos telefónicos"
 
+// Notification settings
 rls_string r_string_settings_notifications_title "Notificações "
-rls_string r_string_settings_itemlist_groupnotification "Notificar entradas do canal"
+rls_string r_string_settings_itemlist_notifyfollowing "Channels I follow"
+rls_string r_string_settings_itemlist_notifymoderating "Channels I moderate"
+rls_string r_string_settings_itemlist_notifyreply "Replies to my post"
+
 rls_string r_string_settings_itemlist_groupnever "Nunca notificar"
 rls_string r_string_settings_itemlist_groupfirstonly "Apenas a primeira entrada"
 rls_string r_string_settings_itemlist_groupallmessages "Todas as entradas"
-rls_string r_string_settings_itemlist_notifyreply "Notificar as minhas @Respostas"
+
 rls_string r_string_settings_itemlist_privatemessagetone "Toque de mensagem privada"
 rls_string r_string_settings_itemlist_channelposttone "Mensagem de voz do canal"
-rls_string r_string_settings_itemlist_directreplytone "O meu toque de @Respostas"
+rls_string r_string_settings_itemlist_directreplytone "Replied comment tone"
 rls_string r_string_settings_itemlist_tonenone "Sem toque"
 rls_string r_string_settings_itemlist_tonedefault "Toque pré-definido"
 
+// Positioning settings
 rls_string r_string_settings_beacons_title "Posicionamento"
 rls_string r_string_settings_itemlist_cell "Torre de telemóvel"
 rls_string r_string_settings_itemlist_wlan "WIFI"
@@ -257,16 +263,24 @@ rls_string r_string_editplace_itemlist_visibility "Podem ser aqui colocados outr
 rls_string r_string_editplace_itemlist_visibility_public "Partilhados"
 rls_string r_string_editplace_itemlist_visibility_private "Pessoal"
 
+// Edit channel list
+rls_string r_string_newchannel_title "New channel"
+rls_string r_string_editchannel_title "Edit channel"
+rls_string r_string_editchannel_itemlist_title "Title"
+rls_string r_string_editchannel_itemlist_title_hint "Channel's title"
+rls_string r_string_editchannel_itemlist_id "#Channel Id"
+rls_string r_string_editchannel_itemlist_id_hint "Channel's unique Id"
+rls_string r_string_editchannel_itemlist_description "Description"
+rls_string r_string_editchannel_itemlist_description_hint "Channel's description"
+rls_string r_string_editchannel_itemlist_access "Access"
+rls_string r_string_editchannel_itemlist_access_open "Open channel"
+rls_string r_string_editchannel_itemlist_access_whitelist "Members only"
+
+rls_string r_string_note_channelexists "This #channel_id already exists. Please enter a unique one."
+
 // Following & Invitations
 rls_string r_string_followingrequest_title "Pedido para o seguir"
 rls_string r_string_followerrequest_text "$USER gostaria de segui-lo em buddycloud.\n* Mostrar a sua presença e estado\n* Mostrar o seu canal pessoal\n* Mostrar os seus sitios"
-
-rls_string r_string_channelinvite_title "Convite para o canal"
-
-// Create channel
-rls_string r_string_dialog_createchannelname "Nome do canal:"
-rls_string r_string_dialog_createchanneldescription "Descrição breve do canal "
-rls_string r_string_channelfollowing_text "O canal '$CHANNEL' já existe. Gostaria de seguir este canal?"
 
 // Exit Confirmation
 rls_string r_string_exit_title "Confirmar saída"
@@ -294,9 +308,9 @@ rls_string r_string_dialog_setmood "Definir estado:"
 rls_string r_string_dialog_moodis "é "
 rls_string r_string_dialog_setcurrentlocation "Definir o meu sítio:"
 rls_string r_string_dialog_setnextlocation "Definir o próximo sítio:"
-rls_string r_string_dialog_settopic "Definir tópico:"
-rls_string r_string_dialog_newmessage "Nova mensagem:"
-rls_string r_string_dialog_addcontact "Introduzir identificação buddycloud ou Jabber (por ex. test@gtalk.com):"
+rls_string r_string_dialog_newmessage "Write post:"
+rls_string r_string_dialog_newcomment "Write comment:"
+rls_string r_string_dialog_addcontact "Enter contact's Id (eg. test@gtalk.com):"
 
 // Notes
 rls_string r_string_note_connecting "A ligar-se..."

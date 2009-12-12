@@ -91,7 +91,7 @@ SOURCE            SearchResultMessageQueryDialog.cpp TextUtilities.cpp PhoneUtil
 SOURCE            BuddycloudChannelsContainer.cpp BuddycloudChannelsView.cpp BuddycloudExplorer.cpp 
 SOURCE            BuddycloudPreferencesSettingsView.cpp BuddycloudPreferencesSettingsList.cpp BuddycloudContactSearcher.cpp 
 SOURCE            BuddycloudCommunitiesView.cpp BuddycloudCommunitiesContainer.cpp BuddycloudFollowing.cpp 
-SOURCE            BuddycloudFollowingContainer.cpp BuddycloudFollowingView.cpp MessagingManager.cpp MessagingParticipants.cpp
-SOURCE            XmppOutbox.cpp BuddycloudNotificationsSettingsView.cpp BuddycloudNotificationsSettingsList.cpp AudioPlayer.cpp TimeUtilities.cpp 
+SOURCE            BuddycloudFollowingContainer.cpp BuddycloudFollowingView.cpp
+SOURCE            XmppOutbox.cpp BuddycloudNotificationsSettingsView.cpp BuddycloudNotificationsSettingsList.cpp AudioPlayer.cpp TimeUtilities.cpp XmppUtilities.cpp GeolocData.cpp BuddycloudList.cpp DiscussionManager.cpp AtomEntryData.cpp BuddycloudEditChannelView.cpp BuddycloudEditChannelList.cpp 
 
 // End of File

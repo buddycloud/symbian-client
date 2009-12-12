@@ -29,6 +29,7 @@ _LIT(KFollowingTab,"FollowingTab");
 _LIT(KCommunitiesTwitter,"CommunitiesTwitter");
 _LIT(KPlacesTab,"PlacesTab");
 _LIT(KPlaceManagement,"PlaceManagement");
+_LIT(KChannelEditing,"ChannelEditing");
 _LIT(KPrivateMessaging,"PrivateMessaging");
 _LIT(KLinkedMessages,"LinkedMessages");
 _LIT(KChannelMessaging,"ChannelMessaging");

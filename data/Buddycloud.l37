@@ -13,7 +13,6 @@
 CHARACTER_SET UTF8
 
 rls_string r_string_app_caption "buddycloud"
-rls_string r_string_groupinvite_text " invited you to join channel: "
 // DO NOT TRANSLATE
 
 rls_string r_string_langcode "ar"
@@ -88,7 +87,7 @@ rls_string r_string_item_showchanneldetails "وتظهر تفاصيل القنا�
 rls_string r_string_item_call "مكالمة الاتصال"
 rls_string r_string_item_sendplacebysms "ارسال مكان عبر الرسائل القصيرة"
 rls_string r_string_item_sendinvite "buddycloud دعوة إلى"
-rls_string r_string_item_delete "يزيل"
+rls_string r_string_item_delete "Remove"
 rls_string r_string_item_noticeaccept "قبول"
 rls_string r_string_item_noticeacceptandfollow "تقبل واتبع"
 rls_string r_string_item_noticedecline "انخفاض"
@@ -101,17 +100,18 @@ rls_string r_string_settings_clearconnection "تغيير اتصال"
 rls_string r_string_note_followinglistempty "انك لم تقم بعد بأي شيء. استخدام القنوات ومستكشف للبحث عن علامات لمتابعة الامور."
 
 // Menu: Messaging
-rls_string r_string_options_openlink "فتح الرابط"
-rls_string r_string_options_postmessage "نشر رسالة"
+rls_string r_string_options_postrequest "Request to post"
+rls_string r_string_options_postmessage "Write new post"
 rls_string r_string_options_postmedia "يقدم الوسائط المتعددة"
-rls_string r_string_options_replytomessage "الرد على"
-rls_string r_string_options_settopic "تعيين الموضوع"
 rls_string r_string_options_jumptounread "القفز الى غير المقروءة"
-rls_string r_string_options_invitetochannel "دعوة إلى قناة"
-rls_string r_string_options_invitetootherchannel "دعوة إلى قناة أخرى"
-rls_string r_string_options_invitefriendtochannel "دعوة أتباع"
 rls_string r_string_options_notificationon "بدوره على شرب حتى الثمالة"
 rls_string r_string_options_notificationoff "بدوره بهرب"
+
+rls_string r_string_item_addcomment "Write comment"
+rls_string r_string_item_likepost "♥ post"
+rls_string r_string_item_copypost "Copy post"
+rls_string r_string_item_reportpost "Report post"
+rls_string r_string_item_deletepost "Delete post"
 
 // Menu: Places
 rls_string r_string_options_setcurrent "تحديد مكان جديد"
@@ -127,7 +127,6 @@ rls_string r_string_note_placevisits "الزيارات"
 rls_string r_string_note_placepopulation "السكان"
 rls_string r_string_note_learningplace "تعلم مكان"
 rls_string r_string_note_updatingplace "تحديث مكان"
-rls_string r_string_note_noplaceaddress "العنوان غير معرووف"
 rls_string r_string_note_placeslistempty "لا يوجد لديك إشارة مرجعية الأماكن. لمعرفة مكان هذه الصحافة 'خيارا > احفظ مكان جديد'"
 
 // Menu: Nearby
@@ -171,37 +170,39 @@ rls_string r_string_item_unfollow "فولو"
 // Channel: Settings & Configuration
 rls_string r_string_note_personalchannelcreated "مرحبا بكم في buddycloud القنوات !$USER هذا هو حسابك الخاص جدا قناة الشخصية على buddycloud. هذه القناة هي كل ما تبذلونه من ويسمح لك لبثت أن أتباعك!"
 rls_string r_string_note_mediauploadready "يمكنك الآن تحميل الملف وسائط بمبلغ $LINK"
-rls_string r_string_note_userkickedfromgroup "تم طردة من القناه $USER"
-rls_string r_string_note_userbannedfromgroup "تم  منعة من القناه $USER"
-rls_string r_string_dialog_kickconfirmation "طرد هذا الشخص من قناة (أنهم سيعودون في الدخول القادم)؟"
-rls_string r_string_dialog_banconfirmation "منع هذا الشخص من رؤيه القناة؟"
-rls_string r_string_item_banfromgroup "منع من القناه"
-rls_string r_string_item_kickfromgroup "من ركلة قناة"
-rls_string r_string_item_changerole "تغير دور"
-rls_string r_string_list_changerole_title ":تغيير دور إلى"
-rls_string r_string_changerole_itemlist_moderator "وسيط"
-rls_string r_string_changerole_itemlist_contributor "أتباع"
-rls_string r_string_changerole_itemlist_visitor "زائر"
-rls_string r_string_note_changerolefailed "ليس لديك الإذن لتغيير هذا الشخص دور"
 
-// Settings Item List
+rls_string r_string_item_changerole "Change permission"
+rls_string r_string_changerole_itemlist_outcast "يزيل"
+rls_string r_string_changerole_itemlist_follower "أتباع"
+rls_string r_string_changerole_itemlist_publisher "Publisher"
+rls_string r_string_changerole_itemlist_moderator "وسيط"
+
+rls_string r_string_note_affiliationoutcast "You have been banned from the channel. You now cannot read or post in this channel's content."
+rls_string r_string_note_affiliationmember "You have become a follower of this channel. You can now read, but not post in this channel's content."
+rls_string r_string_note_affiliationpublisher "You have become a publisher of this channel. You can now read and post in this channel's content."
+rls_string r_string_note_affiliationmoderator "You have become a moderator of this channel. You can now read, post, and manage this channel's content."
+
+rls_string r_string_note_subscriptionpending "Your subscription request has been sent to the channel's producer."
+rls_string r_string_note_subscriptionaccepted "Your subscription to this channel has been accepted."
+rls_string r_string_note_subscriptionrejected "Your subscription to this channel has been rejected."
+
+// Account settings
 rls_string r_string_settings_account_title "الحساب"
 rls_string r_string_settings_itemlist_fullname "الاسم الكامل"
 rls_string r_string_settings_itemlist_fullname_hint "اسمك الكامل"
 rls_string r_string_settings_itemlist_email "عنوانك الألكتروني"
 rls_string r_string_settings_itemlist_email_hint "لديك عنوان بريد إلكتروني"
-rls_string r_string_settings_itemlist_phonenumber "رقم الهاتف"
-rls_string r_string_settings_itemlist_phonenumber_hint "رقم الهاتف الخاص بك"
 rls_string r_string_settings_itemlist_username "اسم المستخدم"
-rls_string r_string_settings_itemlist_username_hint "XMPP server username"
+rls_string r_string_settings_itemlist_username_hint "سرور XMPP المستخدم"
 rls_string r_string_settings_itemlist_password "كلمة السر"
-rls_string r_string_settings_itemlist_password_hint "XMPP server password"
-rls_string r_string_settings_itemlist_server "XMPP server"
+rls_string r_string_settings_itemlist_password_hint "سرور XMPP كلمة السر"
+rls_string r_string_settings_itemlist_server "سرور XMPP"
 
+// Preference settings
 rls_string r_string_settings_itemlist_language "اظهار اللغة"
-rls_string r_string_settings_itemlist_blocking "Show private messages"
-rls_string r_string_settings_itemlist_blockingalwaysshow "From anyone"
-rls_string r_string_settings_itemlist_blockingfollowers "Followers only"
+rls_string r_string_settings_itemlist_blocking "وتظهر رسائل خاصة"
+rls_string r_string_settings_itemlist_blockingalwaysshow "من أي شخص"
+rls_string r_string_settings_itemlist_blockingfollowers "أتباع فقط"
 rls_string r_string_settings_itemlist_showname "وتظهر أسماء في القنوات"
 rls_string r_string_settings_itemlist_accesspoint "نقطة وصول لاستخدام"
 rls_string r_string_settings_itemlist_accesspointuserdefined "الحساب المنشأ"
@@ -209,18 +210,23 @@ rls_string r_string_settings_itemlist_accesspointalwaysask "داما اسئل"
 rls_string r_string_settings_itemlist_autostart "في بداية إطلاق الهاتف"
 rls_string r_string_settings_itemlist_showcontacts "وتظهر الأسماء الهاتف"
 
+// Notification settings
 rls_string r_string_settings_notifications_title "الإخطارات"
-rls_string r_string_settings_itemlist_groupnotification "تخطر قناة الوظائف"
+rls_string r_string_settings_itemlist_notifyfollowing "Channels I follow"
+rls_string r_string_settings_itemlist_notifymoderating "Channels I moderate"
+rls_string r_string_settings_itemlist_notifyreply "Replies to my post"
+
 rls_string r_string_settings_itemlist_groupnever "لم يخطر"
 rls_string r_string_settings_itemlist_groupfirstonly "أول وظيفة فقط"
 rls_string r_string_settings_itemlist_groupallmessages "جميع الملصقات"
-rls_string r_string_settings_itemlist_notifyreply ":يخطر لي @الردود"
+
 rls_string r_string_settings_itemlist_privatemessagetone "رسالة خاصة لهجة"
 rls_string r_string_settings_itemlist_channelposttone "قناة بعد لهجة"
-rls_string r_string_settings_itemlist_directreplytone "@reply أصوات"
+rls_string r_string_settings_itemlist_directreplytone "Replied comment tone"
 rls_string r_string_settings_itemlist_tonenone "أي لهجة"
 rls_string r_string_settings_itemlist_tonedefault "النغمة الافتراضية"
 
+// Positioning settings
 rls_string r_string_settings_beacons_title "المواقع"
 rls_string r_string_settings_itemlist_cell "برج الجوال"
 rls_string r_string_settings_itemlist_wlan "واي فاي"
@@ -257,16 +263,24 @@ rls_string r_string_editplace_itemlist_visibility "اخرى يمكن وضعها 
 rls_string r_string_editplace_itemlist_visibility_public "مشترك"
 rls_string r_string_editplace_itemlist_visibility_private "الشخصية"
 
+// Edit channel list
+rls_string r_string_newchannel_title "New channel"
+rls_string r_string_editchannel_title "Edit channel"
+rls_string r_string_editchannel_itemlist_title "Title"
+rls_string r_string_editchannel_itemlist_title_hint "Channel's title"
+rls_string r_string_editchannel_itemlist_id "#Channel Id"
+rls_string r_string_editchannel_itemlist_id_hint "Channel's unique Id"
+rls_string r_string_editchannel_itemlist_description "Description"
+rls_string r_string_editchannel_itemlist_description_hint "Channel's description"
+rls_string r_string_editchannel_itemlist_access "Access"
+rls_string r_string_editchannel_itemlist_access_open "Open channel"
+rls_string r_string_editchannel_itemlist_access_whitelist "Members only"
+
+rls_string r_string_note_channelexists "This #channel_id already exists. Please enter a unique one."
+
 // Following & Invitations
 rls_string r_string_followingrequest_title "في أعقاب طلب"
 rls_string r_string_followerrequest_text "$USER\nأود أن أضيف لكم\n* اظهر حالتك\n* اظهر قناتك الشخصية\n* اظهر اماكنك"
-
-rls_string r_string_channelinvite_title "دعوة قناة"
-
-// Create channel
-rls_string r_string_dialog_createchannelname ":اسم القناة"
-rls_string r_string_dialog_createchanneldescription ":باختصار وصف القناة"
-rls_string r_string_channelfollowing_text "قناة '$CHANNEL' موجود مسبقا. هل ترغب في متابعة هذه القناة؟"
 
 // Exit Confirmation
 rls_string r_string_exit_title "التأكد من الخروج"
@@ -294,9 +308,9 @@ rls_string r_string_dialog_setmood ":مجموعة المركز"
 rls_string r_string_dialog_moodis "يكون"
 rls_string r_string_dialog_setcurrentlocation ":تعيين مكاني"
 rls_string r_string_dialog_setnextlocation "حيث يقول أذهب المقبل"
-rls_string r_string_dialog_settopic ":تعيين الموضوع"
-rls_string r_string_dialog_newmessage ":رسالة جديدة"
-rls_string r_string_dialog_addcontact "ادخل حسابك في البدي كلاود او جابر "
+rls_string r_string_dialog_newmessage "Write post:"
+rls_string r_string_dialog_newcomment "Write comment:"
+rls_string r_string_dialog_addcontact "Enter contact's Id (eg. test@gtalk.com):"
 
 // Notes
 rls_string r_string_note_connecting "يجري التصال"

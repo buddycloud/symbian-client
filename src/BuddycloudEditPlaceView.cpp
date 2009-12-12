@@ -68,16 +68,16 @@ void CBuddycloudEditPlaceView::HandleCommandL(TInt aCommand) {
 		AppUi()->ActivateViewL(iPrevViewId, iPrevViewMessageId, _L8(""));
 	}
 	else if(aCommand == EAknSoftkeyCancel) {		
-		CBuddycloudExtendedPlace* aPlace = iBuddycloudLogic->GetPlaceStore()->GetEditedPlace();
+		CBuddycloudExtendedPlace* aPlace = static_cast <CBuddycloudExtendedPlace*> (iBuddycloudLogic->GetPlaceStore()->GetEditedPlace());
 		
 		if(aPlace) {
-			if(aPlace->GetPlaceId() > 0) {
+			if(aPlace->GetItemId() > 0) {
 				// Recollect old place details
-				iBuddycloudLogic->GetPlaceDetailsL(aPlace->GetPlaceId());
+				iBuddycloudLogic->GetPlaceDetailsL(aPlace->GetItemId());
 			}
 			else {
 				// Delete editing place
-				iBuddycloudLogic->GetPlaceStore()->DeletePlaceById(aPlace->GetPlaceId());
+				iBuddycloudLogic->GetPlaceStore()->DeleteItemById(aPlace->GetItemId());
 			}
 		}
 		

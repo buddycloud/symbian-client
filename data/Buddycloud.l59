@@ -13,7 +13,6 @@
 CHARACTER_SET UTF8
 
 rls_string r_string_app_caption "buddycloud"
-rls_string r_string_groupinvite_text " invited you to join channel: "
 // DO NOT TRANSLATE
 
 rls_string r_string_langcode "id"
@@ -88,7 +87,7 @@ rls_string r_string_item_showchanneldetails "Tunjukan keterangan saluran"
 rls_string r_string_item_call "Memanggil kontak"
 rls_string r_string_item_sendplacebysms "Kirim tempat melalui sms"
 rls_string r_string_item_sendinvite "Undang ke buddycloud"
-rls_string r_string_item_delete "Menghapus"
+rls_string r_string_item_delete "Remove"
 rls_string r_string_item_noticeaccept "Terima"
 rls_string r_string_item_noticeacceptandfollow "Terima dan Ikuti"
 rls_string r_string_item_noticedecline "Tolak"
@@ -101,17 +100,18 @@ rls_string r_string_settings_clearconnection "Ubah koneksi"
 rls_string r_string_note_followinglistempty "Kamu sekarang tidak sedang mengikuti siapapun.\n\nGunakan Tempat tempat dan jelajah tabel untuk mencari seseorang untuk diikuti."
 
 // Menu: Messaging
-rls_string r_string_options_openlink "Buka link"
-rls_string r_string_options_postmessage "Post pesan"
+rls_string r_string_options_postrequest "Request to post"
+rls_string r_string_options_postmessage "Write new post"
 rls_string r_string_options_postmedia "Post Media"
-rls_string r_string_options_replytomessage "Balas ke"
-rls_string r_string_options_settopic "Atur topic"
 rls_string r_string_options_jumptounread "Loncat ke belum terbaca"
-rls_string r_string_options_invitetochannel "Undang ke saluran"
-rls_string r_string_options_invitetootherchannel "Undang ke saluran yang lain"
-rls_string r_string_options_invitefriendtochannel "Mengundang pengikut"
 rls_string r_string_options_notificationon "Hidupkan getar"
 rls_string r_string_options_notificationoff "Matikan getar"
+
+rls_string r_string_item_addcomment "Write comment"
+rls_string r_string_item_likepost "♥ post"
+rls_string r_string_item_copypost "Copy post"
+rls_string r_string_item_reportpost "Report post"
+rls_string r_string_item_deletepost "Delete post"
 
 // Menu: Places
 rls_string r_string_options_setcurrent "Tandai tempat baru"
@@ -127,7 +127,6 @@ rls_string r_string_note_placevisits "Mengunjungi"
 rls_string r_string_note_placepopulation "Populasi"
 rls_string r_string_note_learningplace "Mempelajari tempat"
 rls_string r_string_note_updatingplace "Memperbaharui tempat..."
-rls_string r_string_note_noplaceaddress "Alamat tidak diketahui"
 rls_string r_string_note_placeslistempty "Anda tidak mempunyai tempat yang ditandai.\n\nUntuk mempelajari kembali tekan\n'Pilihan > Tandai tempat baru'"
 
 // Menu: Nearby
@@ -171,33 +170,35 @@ rls_string r_string_item_unfollow "Berhenti mengikuti"
 // Channel: Settings & Configuration
 rls_string r_string_note_personalchannelcreated "Selamat datang di saluran buddycloud $USER!\n\nIni adalah saluran pribadimu di buddycloud. Channel ini milikmu dan mempersilahkanmu untuk menyiarkan ke seluruh pengikutmu!"
 rls_string r_string_note_mediauploadready "Silahkan mulai upload file media mu di $LINK"
-rls_string r_string_note_userkickedfromgroup "$USER telah ditendang dari saluran ini."
-rls_string r_string_note_userbannedfromgroup "$USER telah dilarang memasuki saluran ini."
-rls_string r_string_dialog_kickconfirmation "Tendang orang ini dari saluran(mereka akan kembali saat login berikutnya)?"
-rls_string r_string_dialog_banconfirmation "Larang orang ini untuk melihat saluran ini?"
-rls_string r_string_item_banfromgroup "Larang dari saluran"
-rls_string r_string_item_kickfromgroup "Tendang dari saluran"
-rls_string r_string_item_changerole "Ubah peran"
-rls_string r_string_list_changerole_title "Ubah peran ke:"
-rls_string r_string_changerole_itemlist_moderator "Moderator"
-rls_string r_string_changerole_itemlist_contributor "Pengikut"
-rls_string r_string_changerole_itemlist_visitor "Pengunjung"
-rls_string r_string_note_changerolefailed "Anda tidak mempunyai izin untuk merubah peranan orang ini"
 
-// Settings Item List
+rls_string r_string_item_changerole "Change permission"
+rls_string r_string_changerole_itemlist_outcast "Menghapus"
+rls_string r_string_changerole_itemlist_follower "Pengikut"
+rls_string r_string_changerole_itemlist_publisher "Publisher"
+rls_string r_string_changerole_itemlist_moderator "Moderator"
+
+rls_string r_string_note_affiliationoutcast "You have been banned from the channel. You now cannot read or post in this channel's content."
+rls_string r_string_note_affiliationmember "You have become a follower of this channel. You can now read, but not post in this channel's content."
+rls_string r_string_note_affiliationpublisher "You have become a publisher of this channel. You can now read and post in this channel's content."
+rls_string r_string_note_affiliationmoderator "You have become a moderator of this channel. You can now read, post, and manage this channel's content."
+
+rls_string r_string_note_subscriptionpending "Your subscription request has been sent to the channel's producer."
+rls_string r_string_note_subscriptionaccepted "Your subscription to this channel has been accepted."
+rls_string r_string_note_subscriptionrejected "Your subscription to this channel has been rejected."
+
+// Account settings
 rls_string r_string_settings_account_title "Akun"
 rls_string r_string_settings_itemlist_fullname "Nama lengkap"
 rls_string r_string_settings_itemlist_fullname_hint "Nama lengkap anda"
 rls_string r_string_settings_itemlist_email "Alamat E-mail"
 rls_string r_string_settings_itemlist_email_hint "Alamat E-mail anda"
-rls_string r_string_settings_itemlist_phonenumber "Nomor telepon"
-rls_string r_string_settings_itemlist_phonenumber_hint "Nomor telepon utama anda"
 rls_string r_string_settings_itemlist_username "Nama penguna"
 rls_string r_string_settings_itemlist_username_hint "XMPP server username"
 rls_string r_string_settings_itemlist_password "Kata sandi"
 rls_string r_string_settings_itemlist_password_hint "XMPP server password"
 rls_string r_string_settings_itemlist_server "XMPP server"
 
+// Preference settings
 rls_string r_string_settings_itemlist_language "Bahasa digunakan"
 rls_string r_string_settings_itemlist_blocking "Show private messages"
 rls_string r_string_settings_itemlist_blockingalwaysshow "From anyone"
@@ -209,18 +210,23 @@ rls_string r_string_settings_itemlist_accesspointalwaysask "Selalu bertanya"
 rls_string r_string_settings_itemlist_autostart "Buka saat telepon dihidupkan"
 rls_string r_string_settings_itemlist_showcontacts "Tunjukkan kontak telepon"
 
+// Notification settings
 rls_string r_string_settings_notifications_title "Notifications"
-rls_string r_string_settings_itemlist_groupnotification "Pemberitahuan saluran"
+rls_string r_string_settings_itemlist_notifyfollowing "Channels I follow"
+rls_string r_string_settings_itemlist_notifymoderating "Channels I moderate"
+rls_string r_string_settings_itemlist_notifyreply "Replies to my post"
+
 rls_string r_string_settings_itemlist_groupnever "Tak pernah beritahukan"
 rls_string r_string_settings_itemlist_groupfirstonly "Pesan pertama yang belum terbaca"
 rls_string r_string_settings_itemlist_groupallmessages "Semua pesan"
-rls_string r_string_settings_itemlist_notifyreply "Memberitahukan @Balasan:"
+
 rls_string r_string_settings_itemlist_privatemessagetone "Private message tone"
 rls_string r_string_settings_itemlist_channelposttone "Channel post tone"
-rls_string r_string_settings_itemlist_directreplytone "My @Replies tone"
+rls_string r_string_settings_itemlist_directreplytone "Replied comment tone"
 rls_string r_string_settings_itemlist_tonenone "No tone"
 rls_string r_string_settings_itemlist_tonedefault "Default tone"
 
+// Positioning settings
 rls_string r_string_settings_beacons_title "Penempatan"
 rls_string r_string_settings_itemlist_cell "Menara selular"
 rls_string r_string_settings_itemlist_wlan "WIFI"
@@ -257,16 +263,24 @@ rls_string r_string_editplace_itemlist_visibility "Yang lain bisa ditempatkan di
 rls_string r_string_editplace_itemlist_visibility_public "Berbagi"
 rls_string r_string_editplace_itemlist_visibility_private "Pribadi"
 
+// Edit channel list
+rls_string r_string_newchannel_title "New channel"
+rls_string r_string_editchannel_title "Edit channel"
+rls_string r_string_editchannel_itemlist_title "Title"
+rls_string r_string_editchannel_itemlist_title_hint "Channel's title"
+rls_string r_string_editchannel_itemlist_id "#Channel Id"
+rls_string r_string_editchannel_itemlist_id_hint "Channel's unique Id"
+rls_string r_string_editchannel_itemlist_description "Description"
+rls_string r_string_editchannel_itemlist_description_hint "Channel's description"
+rls_string r_string_editchannel_itemlist_access "Access"
+rls_string r_string_editchannel_itemlist_access_open "Open channel"
+rls_string r_string_editchannel_itemlist_access_whitelist "Members only"
+
+rls_string r_string_note_channelexists "This #channel_id already exists. Please enter a unique one."
+
 // Following & Invitations
 rls_string r_string_followingrequest_title "Permintaan mengikuti"
 rls_string r_string_followerrequest_text "$USER mau mengikutimu di buddycloud.\n* Perlihatkan kehadiran & statusmu\n* Perlihatkan saluran pribadimu\n* Perlihatkan tempatmu"
-
-rls_string r_string_channelinvite_title "udangan untuk saluran"
-
-// Create channel
-rls_string r_string_dialog_createchannelname "Nama saluran:"
-rls_string r_string_dialog_createchanneldescription "Deskripsi saluran pendek:"
-rls_string r_string_channelfollowing_text "Saluran '$CHANNEL' sudah ada. Apakah anda mau mengikuti saluran ini?"
 
 // Exit Confirmation
 rls_string r_string_exit_title "Konfirmasi untuk keluar"
@@ -294,9 +308,9 @@ rls_string r_string_dialog_setmood "Atur status:"
 rls_string r_string_dialog_moodis "sedang "
 rls_string r_string_dialog_setcurrentlocation "Atur tempat saya:"
 rls_string r_string_dialog_setnextlocation "Atur tujuan berikut:"
-rls_string r_string_dialog_settopic "Atur topic:"
-rls_string r_string_dialog_newmessage "Pesan baru:"
-rls_string r_string_dialog_addcontact "Masukkan Buddycloud or Jabber Id (eg. test@gtalk.com):"
+rls_string r_string_dialog_newmessage "Write post:"
+rls_string r_string_dialog_newcomment "Write comment:"
+rls_string r_string_dialog_addcontact "Enter contact's Id (eg. test@gtalk.com):"
 
 // Notes
 rls_string r_string_note_connecting "Menghubungkan..."

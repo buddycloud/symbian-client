@@ -20,7 +20,7 @@
 --
 ----------------------------------------------------------------------------
 */
-	
+
 CFollowingItem* CFollowingItem::NewL() {
 	CFollowingItem* self = NewLC();
 	CleanupStack::Pop(self);
@@ -35,144 +35,43 @@ CFollowingItem* CFollowingItem::NewLC(){
 }
 
 CFollowingItem::~CFollowingItem() {
-	if(iTitle)
-		delete iTitle;
-	
-	if(iDescription)
-		delete iDescription;
+	if(iId)
+		delete iId;
 }
 
 CFollowingItem::CFollowingItem() {
-	iItemType = EItem;
-
-	iItemId = 0;
-	iIsOwn = false;
-	iLastUpdated = TTime();
-	iIsFiltered = true;
+	iItemType = EItemNotice;
+	iIconId = KIconNotice;
 }
 
 void CFollowingItem::ConstructL() {
-	iTitle = HBufC::NewL(0);
-	iDescription = HBufC::NewL(0);
-}
+	CBuddycloudListItem::ConstructL();
 
-TInt CFollowingItem::GetItemId() {
-	return iItemId;
-}
-
-void CFollowingItem::SetItemId(TInt aId) {
-	iItemId = aId;
+	iId = HBufC::NewL(0);
 }
 
 TFollowingItemType CFollowingItem::GetItemType() {
 	return iItemType;
 }
 
-TBool CFollowingItem::GetIsOwn() {
-	return iIsOwn;
+void CFollowingItem::SetItemType(TFollowingItemType aItemType) {
+	iItemType = aItemType;
 }
 
-void CFollowingItem::SetIsOwn(TBool aIsOwn) {
-	iIsOwn = aIsOwn;
+TDesC& CFollowingItem::GetId(TIdType /*aType*/) {
+	return *iId;
 }
 
-TTime CFollowingItem::GetLastUpdated() {
-	return iLastUpdated;
+void CFollowingItem::SetIdL(const TDesC& aId, TIdType aType) {
+	if(iId)
+		delete iId;
+
+	iId = aId.AllocL();
+	iIdType = aType;
 }
 
-void CFollowingItem::SetLastUpdated(TTime aTime) {
-	iLastUpdated = aTime;
-}
-
-TBool CFollowingItem::IsFiltered() {
-	return iIsFiltered;
-}
-
-void CFollowingItem::SetFiltered(TBool aFilter) {
-	iIsFiltered = aFilter;
-}
-
-TInt CFollowingItem::GetAvatarId() {
-	return iAvatarId;
-}
-
-void CFollowingItem::SetAvatarId(TInt aAvatarId) {
-	iAvatarId = aAvatarId;
-}
-
-TDesC& CFollowingItem::GetTitle() {
-	return *iTitle;
-}
-
-void CFollowingItem::SetTitleL(const TDesC& aTitle) {
-	if(iTitle)
-		delete iTitle;
-
-	iTitle = aTitle.AllocL();
-}
-
-TDesC& CFollowingItem::GetDescription() {
-	return *iDescription;
-}
-
-void CFollowingItem::SetDescriptionL(const TDesC& aDescription) {
-	if(iDescription)
-		delete iDescription;
-
-	iDescription = aDescription.AllocL();
-}
-
-/*
-----------------------------------------------------------------------------
---
--- CFollowingNoticeItem
---
-----------------------------------------------------------------------------
-*/
-
-CFollowingNoticeItem* CFollowingNoticeItem::NewL() {
-	CFollowingNoticeItem* self = NewLC();
-	CleanupStack::Pop(self);
-	return self;
-}
-
-CFollowingNoticeItem* CFollowingNoticeItem::NewLC(){
-	CFollowingNoticeItem* self = new (ELeave) CFollowingNoticeItem();
-	CleanupStack::PushL(self);
-	self->ConstructL();
-	return self;	
-}
-
-CFollowingNoticeItem::~CFollowingNoticeItem() {
-	if(iJid)
-		delete iJid;
-}
-
-CFollowingNoticeItem::CFollowingNoticeItem() {
-	iItemType = EItemNotice;
-	iAvatarId = KIconNotice;
-}
-
-void CFollowingNoticeItem::ConstructL() {
-	CFollowingItem::ConstructL();
-
-	iJid = HBufC::NewL(0);
-}
-
-TDesC& CFollowingNoticeItem::GetJid() {
-	return *iJid;
-}
-
-void CFollowingNoticeItem::SetJidL(const TDesC& aJid, TJidType aType) {
-	if(iJid)
-		delete iJid;
-
-	iJid = aJid.AllocL();
-	iJidType = aType;
-}
-
-TJidType CFollowingNoticeItem::GetJidType() {
-	return iJidType;
+TIdType CFollowingItem::GetIdType() {
+	return iIdType;
 }
 
 /*
@@ -230,47 +129,33 @@ CFollowingChannelItem* CFollowingChannelItem::NewLC(){
 	return self;	
 }
 
-CFollowingChannelItem::~CFollowingChannelItem() {
-	if(iChannelJid)
-		delete iChannelJid;
-}
-
 CFollowingChannelItem::CFollowingChannelItem() {
 	iItemType = EItemChannel;
-	iAvatarId = KIconChannel;
+	iIconId = KIconChannel;
 }
 
-void CFollowingChannelItem::ConstructL() {
-	CFollowingContactItem::ConstructL();
-
-	iChannelJid = HBufC::NewL(0);
+TXmppPubsubAccessModel CFollowingChannelItem::GetAccessModel() {
+	return iAccessModel;
 }
 
-TDesC& CFollowingChannelItem::GetJid(TJidType /*aType*/) {
-	return *iChannelJid;
+void CFollowingChannelItem::SetAccessModel(TXmppPubsubAccessModel aAccessModel) {
+	iAccessModel = aAccessModel;
 }
 
-void CFollowingChannelItem::SetJidL(const TDesC& aJid, TJidType /*aType*/) {
-	if(iChannelJid)
-		delete iChannelJid;
-
-	iChannelJid = aJid.AllocL();
+TXmppPubsubSubscription CFollowingChannelItem::GetPubsubSubscription() {
+	return iPubsubSubscription;
 }
 
-TPresenceState CFollowingChannelItem::GetPresence(TJidType /*aType*/) {
-	return iChannelPresence;
+void CFollowingChannelItem::SetPubsubSubscription(TXmppPubsubSubscription aPubsubSubscription) {
+	iPubsubSubscription = aPubsubSubscription;
 }
 
-void CFollowingChannelItem::SetPresence(TPresenceState aPresence, TJidType /*aType*/) {
-	iChannelPresence = aPresence;
+TXmppPubsubAffiliation CFollowingChannelItem::GetPubsubAffiliation() {
+	return iPubsubAffiliation;
 }
 
-TBool CFollowingChannelItem::IsExternal() {
-	return iExternal;
-}
-
-void CFollowingChannelItem::SetExternal(TBool aExternal) {
-	iExternal = aExternal;
+void CFollowingChannelItem::SetPubsubAffiliation(TXmppPubsubAffiliation aPubsubAffiliation) {
+	iPubsubAffiliation = aPubsubAffiliation;
 }
 
 TInt CFollowingChannelItem::GetRank() {
@@ -292,17 +177,24 @@ void CFollowingChannelItem::SetRank(TInt aRank, TInt aShift) {
 	iRank = aRank;
 }
 
-void CFollowingChannelItem::MessageRead(TDesC& /*aJid*/, TInt /*aMessageId*/, TInt aUnreadMessages, TInt aUnreadReplies) {
-	iChannelUnread = aUnreadMessages;
-	iChannelReplies = aUnreadReplies;
+void CFollowingChannelItem::SetUnreadData(MDiscussionUnreadData* aUnreadData, TIdType /*aType*/) {
+	iChannelUnreadData = aUnreadData;
 }
 
-TInt CFollowingChannelItem::GetUnread(TJidType /*aType*/) {
-	return iChannelUnread;
+TInt CFollowingChannelItem::GetUnread(TIdType /*aType*/) {
+	if(iChannelUnreadData) {
+		return iChannelUnreadData->iUnreadEntries;
+	}
+	
+	return 0;
 }
 
 TInt CFollowingChannelItem::GetReplies() {
-	return iChannelReplies;
+	if(iChannelUnreadData) {
+		return iChannelUnreadData->iUnreadReplies;
+	}
+	
+	return 0;
 }
 
 /*
@@ -327,94 +219,83 @@ CFollowingRosterItem* CFollowingRosterItem::NewLC(){
 }
 
 CFollowingRosterItem::~CFollowingRosterItem() {
-	if(iRosterJid)
-		delete iRosterJid;
+	if(iJid)
+		delete iJid;
 	
-	if(iPlacePrevious)
-		delete iPlacePrevious;
-	
-	if(iPlaceCurrent)
-		delete iPlaceCurrent;
-	
-	if(iPlaceNext)
-		delete iPlaceNext;
+	for(TInt i = 0; i < iGeolocs.Count(); i++) {
+		delete iGeolocs[i];
+	}
+
+	iGeolocs.Close();
 }
 
 CFollowingRosterItem::CFollowingRosterItem() {
 	iItemType = EItemRoster;
-	iAvatarId = KIconPerson;
+	iIconId = KIconPerson;
 
-	iSubscription = ESubscriptionUnknown;
+	iSubscription = EPresenceSubscriptionUnknown;
 	iPubsubCollected = false;
 }
 
 void CFollowingRosterItem::ConstructL() {
 	CFollowingChannelItem::ConstructL();
 	
-	iRosterJid = HBufC::NewL(0);
-
-	iPlacePrevious = CBuddycloudBasicPlace::NewL();
-	iPlaceCurrent = CBuddycloudBasicPlace::NewL();
-	iPlaceNext = CBuddycloudBasicPlace::NewL();
+	iJid = HBufC::NewL(0);
+	
+	for(TInt i = 0; i < EGeolocItemBroad; i++) {
+		iGeolocs.Append(NULL);
+	}
 }
 
-TDesC& CFollowingRosterItem::GetJid(TJidType aType) {
-	if(aType == EJidRoster) {
-		return *iRosterJid;
+TBool CFollowingRosterItem::OwnItem() {
+	return iOwnItem;
+}
+
+void CFollowingRosterItem::SetOwnItem(TBool aIsOwn) {
+	iOwnItem = aIsOwn;
+}
+
+TDesC& CFollowingRosterItem::GetId(TIdType aType) {
+	if(aType == EIdRoster) {
+		return *iJid;
 	}
 	
-	return *iChannelJid;
+	return *iId;
 }
 
-void CFollowingRosterItem::SetJidL(TDesC& aJid, TJidType aType) {
-	if(aType == EJidRoster) {
-		if(iRosterJid)
-			delete iRosterJid;
+void CFollowingRosterItem::SetIdL(TDesC& aId, TIdType aType) {
+	if(aType == EIdRoster) {
+		if(iJid)
+			delete iJid;
 
-		iRosterJid = aJid.AllocL();
+		iJid = aId.AllocL();
 		
 		if(GetTitle().Length() == 0) {
-			TPtrC aName(aJid);
-			TInt aLocate = aName.Locate('@');
-			
-			if(aLocate != KErrNotFound) {
-				aName.Set(aName.Left(aLocate));
-			}
-			
-			SetTitleL(aName);
+			SetTitleL(aId);
 		}
 	}
 	else {
-		CFollowingChannelItem::SetJidL(aJid, aType);
+		CFollowingChannelItem::SetIdL(aId, aType);
 	}
 }
 
-TPresenceState CFollowingRosterItem::GetPresence(TJidType aType) {
-	if(aType == EJidChannel) {
-		return iChannelPresence;
-	}
-	
-	return iRosterPresence;
+TPresenceState CFollowingRosterItem::GetPresence() {
+	return iPresence;
 }
 
-void CFollowingRosterItem::SetPresence(TPresenceState aPresence, TJidType aType) {
-	if(aType == EJidRoster) {	
-		iRosterPresence = aPresence;
-	}
-	else {
-		iChannelPresence = aPresence;
-	}
+void CFollowingRosterItem::SetPresence(TPresenceState aPresence) {
+	iPresence = aPresence;
 }
 
-TSubscriptionType CFollowingRosterItem::GetSubscriptionType() {
+TPresenceSubscription CFollowingRosterItem::GetSubscription() {
 	return iSubscription;
 }
 
-void CFollowingRosterItem::SetSubscriptionType(TSubscriptionType aSubscription) {
+void CFollowingRosterItem::SetSubscription(TPresenceSubscription aSubscription) {
 	iSubscription = aSubscription;
 }
 
-TBool CFollowingRosterItem::GetPubsubCollected() {
+TBool CFollowingRosterItem::PubsubCollected() {
 	return iPubsubCollected;
 }
 
@@ -422,211 +303,38 @@ void CFollowingRosterItem::SetPubsubCollected(TBool aCollected) {
 	iPubsubCollected = aCollected;
 }
 
-CBuddycloudBasicPlace* CFollowingRosterItem::GetPlace(TBuddycloudPlaceType aPlaceType) {
-	switch(aPlaceType) {
-		case EPlacePrevious:
-			return iPlacePrevious;
-		case EPlaceNext:
-			return iPlaceNext;
-		default:
-			return iPlaceCurrent;			
-	}
-}
-
-void CFollowingRosterItem::SetPlaceL(TBuddycloudPlaceType aPlaceType, CBuddycloudBasicPlace* aPlace) {
-	switch(aPlaceType) {
-		case EPlacePrevious:
-			if(iPlacePrevious)
-				delete iPlacePrevious;
-
-			iPlacePrevious = aPlace;
-			break;
-		case EPlaceCurrent:
-			if(iPlaceCurrent)
-				delete iPlaceCurrent;
-
-			iPlaceCurrent = aPlace;
-			break;
-		case EPlaceNext:
-			if(iPlaceNext)
-				delete iPlaceNext;
-
-			iPlaceNext = aPlace;
-			break;
-	}
-}
-
-void CFollowingRosterItem::MessageRead(TDesC& aJid, TInt /*aMessageId*/, TInt aUnreadMessages, TInt aUnreadReplies) {
-	if(aJid.Compare(*iRosterJid) == 0) {
-		iRosterUnread = aUnreadMessages;
-	}
-	else {
-		iChannelUnread = aUnreadMessages;
-		iChannelReplies = aUnreadReplies;
-	}
-}
-
-TInt CFollowingRosterItem::GetUnread(TJidType aType) {
-	if(aType == EJidRoster) {
-		return iRosterUnread;
+CGeolocData* CFollowingRosterItem::GetGeolocItem(TGeolocItemType aGeolocItem) {
+	if(iGeolocs[aGeolocItem] == NULL) {
+		iGeolocs[aGeolocItem] = CGeolocData::NewL();
 	}
 	
-	return iChannelUnread;
+	return iGeolocs[aGeolocItem];
 }
 
-/*
-----------------------------------------------------------------------------
---
--- CBuddycloudFollowingStore
---
-----------------------------------------------------------------------------
-*/
-
-CBuddycloudFollowingStore* CBuddycloudFollowingStore::NewL() {
-	CBuddycloudFollowingStore* self = NewLC();
-	CleanupStack::Pop(self);
-	return self;
-}
-
-CBuddycloudFollowingStore* CBuddycloudFollowingStore::NewLC() {
-	CBuddycloudFollowingStore* self = new (ELeave) CBuddycloudFollowingStore();
-	CleanupStack::PushL(self);
-	return self;
-}
-
-CBuddycloudFollowingStore::~CBuddycloudFollowingStore() {
-	for(TInt i = 0; i < iItemStore.Count();i++) {
-		if(iItemStore[i]->GetItemType() == EItemChannel) {
-			delete (static_cast <CFollowingChannelItem*> (iItemStore[i]));
-		}
-		else if(iItemStore[i]->GetItemType() == EItemRoster) {
-			delete (static_cast <CFollowingRosterItem*> (iItemStore[i]));
-		}
-		else if(iItemStore[i]->GetItemType() == EItemContact) {
-			delete (static_cast <CFollowingContactItem*> (iItemStore[i]));
-		}
-		else if(iItemStore[i]->GetItemType() == EItemNotice) {
-			delete (static_cast <CFollowingNoticeItem*> (iItemStore[i]));
-		}
-		else {
-			delete iItemStore[i];
-		}
+void CFollowingRosterItem::SetGeolocItemL(TGeolocItemType aGeolocItem, CGeolocData* aGeoloc) {
+	if(iGeolocs[aGeolocItem]) {
+		delete iGeolocs[aGeolocItem];
 	}
-
-	iItemStore.Close();
+	
+	iGeolocs[aGeolocItem] = aGeoloc;
 }
 
-TInt CBuddycloudFollowingStore::Count() {
-	return iItemStore.Count();
-}
-
-CFollowingItem* CBuddycloudFollowingStore::GetItemByIndex(TInt aIndex) {
-	if(aIndex >= 0 && aIndex < iItemStore.Count()) {
-		return iItemStore[aIndex];
-	}
-
-	return NULL;
-}
-
-CFollowingItem* CBuddycloudFollowingStore::GetItemById(TInt aItemId) {
-	for(TInt i = 0;i < iItemStore.Count();i++) {
-		if(iItemStore[i]->GetItemId() == aItemId) {
-			return iItemStore[i];
-		}
-	}
-
-	return NULL;
-}
-
-TInt CBuddycloudFollowingStore::GetIdByIndex(TInt aIndex) {
-	if(aIndex >= 0 && aIndex < iItemStore.Count()) {
-		return iItemStore[aIndex]->GetItemId();
-	}
-
-	return 0;
-}
-
-TInt CBuddycloudFollowingStore::GetIndexById(TInt aItemId) {
-	for(TInt i = 0;i < iItemStore.Count();i++) {
-		if(iItemStore[i]->GetItemId() == aItemId) {
-			return i;
-		}
-	}
-
-	return 0;
-}
-
-void CBuddycloudFollowingStore::MoveItemByIndex(TInt aIndex, TInt aPosition) {
-	if(aIndex >= 0 && aIndex < iItemStore.Count()) {
-		CFollowingItem* aItem = iItemStore[aIndex];
-
-		iItemStore.Remove(aIndex);
-		iItemStore.Insert(aItem, aPosition);
-	}
-}
-
-void CBuddycloudFollowingStore::MoveItemById(TInt aItemId, TInt aPosition) {
-	if(aPosition <= iItemStore.Count()) {
-		for(TInt i = 0;i < iItemStore.Count();i++) {
-			if(iItemStore[i]->GetItemId() == aItemId) {
-				CFollowingItem* aItem = iItemStore[i];
-
-				iItemStore.Remove(i);
-				iItemStore.Insert(aItem, aPosition);
-				
-				break;
-			}
-		}
-	}
-}
-
-void CBuddycloudFollowingStore::AddItem(CFollowingItem* aItem) {
-	iItemStore.Append(aItem);
-}
-
-void CBuddycloudFollowingStore::InsertItem(TInt aIndex, CFollowingItem* aItem) {
-	if(aIndex >= 0 && aIndex < iItemStore.Count()) {
-		iItemStore.Insert(aItem, aIndex);
+void CFollowingRosterItem::SetUnreadData(MDiscussionUnreadData* aUnreadData, TIdType aType) {
+	if(aType == EIdRoster) {
+		iRosterUnreadData = aUnreadData;
 	}
 	else {
-		iItemStore.Append(aItem);
+		iChannelUnreadData = aUnreadData;
 	}
 }
 
-void CBuddycloudFollowingStore::RemoveItemByIndex(TInt aIndex) {
-	if(aIndex >= 0 && aIndex < iItemStore.Count()) {
-		iItemStore.Remove(aIndex);
+TInt CFollowingRosterItem::GetUnread(TIdType aType) {
+	if(aType == EIdRoster && iRosterUnreadData) {
+		return iRosterUnreadData->iUnreadEntries;
 	}
-}
-
-void CBuddycloudFollowingStore::RemoveItemById(TInt aItemId) {
-	for(TInt i = 0; i < iItemStore.Count(); i++) {
-		if(iItemStore[i]->GetItemId() == aItemId) {
-			iItemStore.Remove(i);
-			
-			break;
-		}
+	else if(iChannelUnreadData) {
+		return iChannelUnreadData->iUnreadEntries;
 	}
-}
-
-void CBuddycloudFollowingStore::RemoveAll() {
-	iItemStore.Reset();
-}
-
-void CBuddycloudFollowingStore::DeleteItemByIndex(TInt aIndex) {
-	if(aIndex >= 0 && aIndex < iItemStore.Count()) {
-		delete iItemStore[aIndex];
-		iItemStore.Remove(aIndex);
-	}
-}
-
-void CBuddycloudFollowingStore::DeleteItemById(TInt aItemId) {
-	for(TInt i = 0; i < iItemStore.Count(); i++) {
-		if(iItemStore[i]->GetItemId() == aItemId) {
-			delete iItemStore[i];
-			iItemStore.Remove(i);
-			
-			break;
-		}
-	}
+	
+	return 0;
 }

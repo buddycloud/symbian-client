@@ -38,6 +38,7 @@
 */
 const TInt KTimeTimerId = 0;
 const TInt KCallTimerId = 1;
+const TInt KDragTimerId = 2;
 
 class CBuddycloudListComponent : public CCoeControl, MBuddycloudLogicNotificationObserver, 
 		MTimeoutNotification, MEikScrollBarObserver {
@@ -89,7 +90,7 @@ class CBuddycloudListComponent : public CCoeControl, MBuddycloudLogicNotificatio
 		void HandleScrollEventL(CEikScrollBar* aScrollBar, TEikScrollEvent aEventType);
 		
 #ifdef __SERIES60_40__
-	private:
+	protected:
 		void HandlePointerEventL(const TPointerEvent &aPointerEvent);
 #endif
 
@@ -154,8 +155,10 @@ class CBuddycloudListComponent : public CCoeControl, MBuddycloudLogicNotificatio
 		TAknDoubleSpanScrollBarModel iScrollBarVModel;
 		TAknDoubleSpanScrollBarModel iScrollBarHModel;
 		
-		TInt iScrollbarWidth;
-		TInt iScrollbarOffset;
+		TInt iLeftBarSpacer;
+		TInt iRightBarSpacer;
+		TBool iLayoutMirrored;
+		
 		TInt iTotalListSize;
 		TInt iScrollbarHandlePosition;
 		
@@ -163,6 +166,14 @@ class CBuddycloudListComponent : public CCoeControl, MBuddycloudLogicNotificatio
 		TBool iShowMialog;
 		
 #ifdef __SERIES60_40__
+		TBool iDraggingAllowed;
+		TReal iDragVelocity;
+		TTime iLastDragTime;
+		TInt iLastDragPosition;
+		TInt iStartDragPosition;
+		TInt iStartDragHandlePosition;
+		CCustomTimer* iDragTimer;
+		
 		MTouchFeedback* iTouchFeedback;
 		
 		// List item and array

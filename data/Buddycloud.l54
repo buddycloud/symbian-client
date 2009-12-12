@@ -13,7 +13,6 @@
 CHARACTER_SET UTF8
 
 rls_string r_string_app_caption "buddycloud"
-rls_string r_string_groupinvite_text " invited you to join channel: "
 // DO NOT TRANSLATE
 
 rls_string r_string_langcode "gr"
@@ -88,7 +87,7 @@ rls_string r_string_item_showchanneldetails "Show channel details"
 rls_string r_string_item_call "Κάλεσε επαφή"
 rls_string r_string_item_sendplacebysms "Στείλε τοποθεσία μέσω SMS"
 rls_string r_string_item_sendinvite "Προσκάλεσε στο buddycloud"
-rls_string r_string_item_delete "Μετακίνησε"
+rls_string r_string_item_delete "Remove"
 rls_string r_string_item_noticeaccept "Accept"
 rls_string r_string_item_noticeacceptandfollow "Accept and Follow"
 rls_string r_string_item_noticedecline "Decline"
@@ -101,17 +100,18 @@ rls_string r_string_settings_clearconnection "Αλλαγή σύνδεσης"
 rls_string r_string_note_followinglistempty "Δεν ακολουθάς τίποτα.\n\nΧρησιμοποιήσε τα κανάλια και τα Explorer tabs για αναζήτηση αντικειμένων για ακολουθία."
 
 // Menu: Messaging
-rls_string r_string_options_openlink "’νοιξε σύνδεσμο"
-rls_string r_string_options_postmessage "Post message"
+rls_string r_string_options_postrequest "Request to post"
+rls_string r_string_options_postmessage "Write new post"
 rls_string r_string_options_postmedia "Post media"
-rls_string r_string_options_replytomessage "Απάντηση σε"
-rls_string r_string_options_settopic "Ορισε θέμα"
 rls_string r_string_options_jumptounread "Μετάβαση στα αδιάβαστα"
-rls_string r_string_options_invitetochannel "Προσκάλασε σε κανάλι"
-rls_string r_string_options_invitetootherchannel "Προσκάλασε σε άλλο κανάλι"
-rls_string r_string_options_invitefriendtochannel "Προσκάλασε ακόλουθο"
 rls_string r_string_options_notificationon "Ενεργοποίηση δόνησης"
 rls_string r_string_options_notificationoff "Απενεργοποίηση δόνησης"
+
+rls_string r_string_item_addcomment "Write comment"
+rls_string r_string_item_likepost "♥ post"
+rls_string r_string_item_copypost "Copy post"
+rls_string r_string_item_reportpost "Report post"
+rls_string r_string_item_deletepost "Delete post"
 
 // Menu: Places
 rls_string r_string_options_setcurrent "Μάρκαρε νέα τοποθεσία"
@@ -127,7 +127,6 @@ rls_string r_string_note_placevisits "Επισκέψεις"
 rls_string r_string_note_placepopulation "Πληθυσμός"
 rls_string r_string_note_learningplace "Μάθηση τοποθεσίας"
 rls_string r_string_note_updatingplace "Ενημέρωση τοποθεσίας..."
-rls_string r_string_note_noplaceaddress "Απροσδιόριστη διεύθυνση"
 rls_string r_string_note_placeslistempty "Δεν έχεις μαρκαρισμένες τοποθεσίες.\n\nΓια να μάθεις αυτή τη τοποθεσία πάτησε\n'Επιλογές > Μάρκαρε νέα τοποθεσία'"
 
 // Menu: Nearby
@@ -171,33 +170,35 @@ rls_string r_string_item_unfollow "Μην ακολουθάς"
 // Channel: Settings & Configuration
 rls_string r_string_note_personalchannelcreated "Καλώς ήλθατε στα κανάλια buddycloud $USER!\n\nΑυτό είναι το δικό σας προσωπικό κανάλι στο buddycloud. Αυτό το κανάλι είναι όλο δικό σας και σας επιτρέπει να μεταδίδεται στους οπαδούς σας!"
 rls_string r_string_note_mediauploadready "You can now upload your media file at $LINK"
-rls_string r_string_note_userkickedfromgroup "$USER διώχτηκε από το κανάλι."
-rls_string r_string_note_userbannedfromgroup "$USER απαγορεύτηκε από το κανάλι."
-rls_string r_string_dialog_kickconfirmation "Διώξε αυτό το άτομο από το κανάλι (να επιστρέψουν στην επόμενη σύνδεση)?"
-rls_string r_string_dialog_banconfirmation "Απαγόρευσε στο άτομο αυτό ωα δει το κανάλι?"
-rls_string r_string_item_banfromgroup "Απαγόρευσε από κανάλι"
-rls_string r_string_item_kickfromgroup "Διώξε από κανάλι"
-rls_string r_string_item_changerole "Αλλαξε ρόλο"
-rls_string r_string_list_changerole_title "Αλλαξε ρόλο σε"
-rls_string r_string_changerole_itemlist_moderator "Συντονιστής"
-rls_string r_string_changerole_itemlist_contributor "Οπαδός"
-rls_string r_string_changerole_itemlist_visitor "Επισκέπτης"
-rls_string r_string_note_changerolefailed "Δεν έχεις δικαίωμα να αλλάξεις το ρόλο αυτού του ατόμου"
 
-// Settings Item List
+rls_string r_string_item_changerole "Change permission"
+rls_string r_string_changerole_itemlist_outcast "Μετακίνησε"
+rls_string r_string_changerole_itemlist_follower "Οπαδός"
+rls_string r_string_changerole_itemlist_publisher "Publisher"
+rls_string r_string_changerole_itemlist_moderator "Συντονιστής"
+
+rls_string r_string_note_affiliationoutcast "You have been banned from the channel. You now cannot read or post in this channel's content."
+rls_string r_string_note_affiliationmember "You have become a follower of this channel. You can now read, but not post in this channel's content."
+rls_string r_string_note_affiliationpublisher "You have become a publisher of this channel. You can now read and post in this channel's content."
+rls_string r_string_note_affiliationmoderator "You have become a moderator of this channel. You can now read, post, and manage this channel's content."
+
+rls_string r_string_note_subscriptionpending "Your subscription request has been sent to the channel's producer."
+rls_string r_string_note_subscriptionaccepted "Your subscription to this channel has been accepted."
+rls_string r_string_note_subscriptionrejected "Your subscription to this channel has been rejected."
+
+// Account settings
 rls_string r_string_settings_account_title "Λογαριασμός"
 rls_string r_string_settings_itemlist_fullname "Πλήρες όνομα"
 rls_string r_string_settings_itemlist_fullname_hint "Το πλήρες όνομα σας"
 rls_string r_string_settings_itemlist_email "Διεύθυνση e-mail"
 rls_string r_string_settings_itemlist_email_hint "Η διεύθυνση e-mail σας"
-rls_string r_string_settings_itemlist_phonenumber "Αριθμός τηλεφώνου"
-rls_string r_string_settings_itemlist_phonenumber_hint "Ο βασικός σας αριθμός τηλεφώνου"
 rls_string r_string_settings_itemlist_username "Ονομα χρήστη"
 rls_string r_string_settings_itemlist_username_hint "XMPP server username"
 rls_string r_string_settings_itemlist_password "Κωδικός"
 rls_string r_string_settings_itemlist_password_hint "XMPP server password"
 rls_string r_string_settings_itemlist_server "XMPP server"
 
+// Preference settings
 rls_string r_string_settings_itemlist_language "Προβολή γλώσσας"
 rls_string r_string_settings_itemlist_blocking "Show private messages"
 rls_string r_string_settings_itemlist_blockingalwaysshow "From anyone"
@@ -209,18 +210,23 @@ rls_string r_string_settings_itemlist_accesspointalwaysask "Ερώτηση πά�
 rls_string r_string_settings_itemlist_autostart "Εκκίνηση με το άνοιγμα τηλεφώνου"
 rls_string r_string_settings_itemlist_showcontacts "Δες επαφές τηλεφώνου"
 
+// Notification settings
 rls_string r_string_settings_notifications_title "Notifications"
-rls_string r_string_settings_itemlist_groupnotification "Ειδοποίησε για μηνύματα καναλιών"
+rls_string r_string_settings_itemlist_notifyfollowing "Channels I follow"
+rls_string r_string_settings_itemlist_notifymoderating "Channels I moderate"
+rls_string r_string_settings_itemlist_notifyreply "Replies to my post"
+
 rls_string r_string_settings_itemlist_groupnever "Ποτέ μην ειδοποιείς"
 rls_string r_string_settings_itemlist_groupfirstonly "Πρώτο μηνύμα μόνο"
 rls_string r_string_settings_itemlist_groupallmessages "Ολα τα μηνήματα"
-rls_string r_string_settings_itemlist_notifyreply "Ειδοποίησε για τις @Απαντήσεις:"
+
 rls_string r_string_settings_itemlist_privatemessagetone "Private message tone"
 rls_string r_string_settings_itemlist_channelposttone "Channel post tone"
-rls_string r_string_settings_itemlist_directreplytone "My @Replies tone"
+rls_string r_string_settings_itemlist_directreplytone "Replied comment tone"
 rls_string r_string_settings_itemlist_tonenone "No tone"
 rls_string r_string_settings_itemlist_tonedefault "Default tone"
 
+// Positioning settings
 rls_string r_string_settings_beacons_title "Εντοπισμός θέσης"
 rls_string r_string_settings_itemlist_cell "Κεραία δικτύου"
 rls_string r_string_settings_itemlist_wlan "WIFI"
@@ -257,16 +263,24 @@ rls_string r_string_editplace_itemlist_visibility "’λλοι μπορούν ν
 rls_string r_string_editplace_itemlist_visibility_public "Μοιρασμένα"
 rls_string r_string_editplace_itemlist_visibility_private "Προσωπικά"
 
+// Edit channel list
+rls_string r_string_newchannel_title "New channel"
+rls_string r_string_editchannel_title "Edit channel"
+rls_string r_string_editchannel_itemlist_title "Title"
+rls_string r_string_editchannel_itemlist_title_hint "Channel's title"
+rls_string r_string_editchannel_itemlist_id "#Channel Id"
+rls_string r_string_editchannel_itemlist_id_hint "Channel's unique Id"
+rls_string r_string_editchannel_itemlist_description "Description"
+rls_string r_string_editchannel_itemlist_description_hint "Channel's description"
+rls_string r_string_editchannel_itemlist_access "Access"
+rls_string r_string_editchannel_itemlist_access_open "Open channel"
+rls_string r_string_editchannel_itemlist_access_whitelist "Members only"
+
+rls_string r_string_note_channelexists "This #channel_id already exists. Please enter a unique one."
+
 // Following & Invitations
 rls_string r_string_followingrequest_title "Μετά από αίτημα"
 rls_string r_string_followerrequest_text "$USER θα ήθελες να σε ακολουθήσει στο buddycloud.\n* Δείξε την παρουσία σου και τη κατάστασή σου\n* Δείξε το προσωπικό σου κανάλι\n* Δείξε τις τοποθεσίες σου"
-
-rls_string r_string_channelinvite_title "Πρόσκληση σε κανάλι"
-
-// Create channel
-rls_string r_string_dialog_createchannelname "Ονομα καναλιού"
-rls_string r_string_dialog_createchanneldescription "Σύντομη περιγραφή καναλιού:"
-rls_string r_string_channelfollowing_text "Το κανάλι '$CHANNEL' υπάρχει ήδη. Θα θέλατε να ακολουθήσετε αυτό το κανάλι?"
 
 // Exit Confirmation
 rls_string r_string_exit_title "Έξοδος από επιβεβαίωση"
@@ -294,9 +308,9 @@ rls_string r_string_dialog_setmood "Ορισμός κατάστασης:"
 rls_string r_string_dialog_moodis "είναι "
 rls_string r_string_dialog_setcurrentlocation "Ορισμός θέσης μου:"
 rls_string r_string_dialog_setnextlocation "Ορισμός επόμενης θέσης:"
-rls_string r_string_dialog_settopic "Ορισμός θέματος:"
-rls_string r_string_dialog_newmessage "Νεο μήνυμα:"
-rls_string r_string_dialog_addcontact "Εισάγετε buddycloud ή Jabber Id (π.χ. test@gtalk.com):"
+rls_string r_string_dialog_newmessage "Write post:"
+rls_string r_string_dialog_newcomment "Write comment:"
+rls_string r_string_dialog_addcontact "Enter contact's Id (eg. test@gtalk.com):"
 
 // Notes
 rls_string r_string_note_connecting "Σύνδεση..."

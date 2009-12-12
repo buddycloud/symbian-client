@@ -15,20 +15,9 @@
 
 // INCLUDES
 #include <e32base.h>
+#include "XmppConstants.h"
 
 static const TInt QUEUE_INTERVAL = 50000;
-
-/*
-----------------------------------------------------------------------------
---
--- Enumerations
---
-----------------------------------------------------------------------------
-*/
-
-enum TXmppMessagePriority {
-	EXmppPriorityNormal, EXmppPriorityHigh
-};
 
 /*
 ----------------------------------------------------------------------------

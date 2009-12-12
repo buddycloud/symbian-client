@@ -11,6 +11,7 @@
 */
 
 #include "BuddycloudExplorer.h"
+#include "TextUtilities.h"
 
 /*
 ----------------------------------------------------------------------------
@@ -116,25 +117,16 @@ CExplorerResultItem::~CExplorerResultItem() {
 		delete iId;
 	}
 	
-	if(iTitle) {
-		delete iTitle;
-	}
-	
-	if(iDescription) {
-		delete iDescription;
-	}
-	
-	if(iLocation) {
-		delete iLocation;
+	if(iGeoloc) {
+		delete iGeoloc;
 	}
 }
 
 void CExplorerResultItem::ConstructL() {
-	iId = HBufC::NewL(0);
-	iTitle = HBufC::NewL(0);
-	iDescription = HBufC::NewL(0);	
+	CBuddycloudListItem::ConstructL();
 	
-	iLocation = CBuddycloudBasicPlace::NewL();
+	iId = HBufC::NewL(0);
+	iGeoloc = CGeolocData::NewL();
 }
 
 TExplorerItemType CExplorerResultItem::GetResultType() {
@@ -145,28 +137,12 @@ void CExplorerResultItem::SetResultType(TExplorerItemType aResultType) {
 	iResultType = aResultType;
 }
 
-TInt CExplorerResultItem::GetAvatarId() {
-	return iAvatarId;
-}
-
-void CExplorerResultItem::SetAvatarId(TInt aAvatarId) {
-	iAvatarId = aAvatarId;
-}
-
 TInt CExplorerResultItem::GetOverlayId() {
 	return iOverlayId;
 }
 
 void CExplorerResultItem::SetOverlayId(TInt aOverlayId) {
 	iOverlayId = aOverlayId;
-}
-
-TInt CExplorerResultItem::GetDistance() {
-	return iDistance;
-}
-
-void CExplorerResultItem::SetDistance(TInt aDistance) {
-	iDistance = aDistance;
 }
 
 TInt CExplorerResultItem::GetRank() {
@@ -189,35 +165,30 @@ void CExplorerResultItem::SetIdL(const TDesC& aId) {
 	iId = aId.AllocL();	
 }
 
-TDesC& CExplorerResultItem::GetTitle() {
-	return *iTitle;
+CGeolocData* CExplorerResultItem::GetGeoloc() {
+	return iGeoloc;
 }
 
-void CExplorerResultItem::SetTitleL(const TDesC& aTitle) {
-	if(iTitle) {
-		delete iTitle;
-	}
-
-	iTitle = aTitle.AllocL();	
-}
-
-TDesC& CExplorerResultItem::GetDescription() {
-	return *iDescription;
-}
-
-void CExplorerResultItem::SetDescriptionL(const TDesC& aDescription) {
-	if(iDescription) {
-		delete iDescription;
-	}
-
-	iDescription = aDescription.AllocL();	
-}
-
-void CExplorerResultItem::GenerateDescriptionL() {
-	if(iDescription) {
-		delete iDescription;
+void CExplorerResultItem::SetGeolocL(CGeolocData* aGeoloc) {
+	// Set geoloc
+	if(iGeoloc) {
+		delete iGeoloc;
 	}
 	
+	iGeoloc = aGeoloc;
+	
+	// Set id
+	if(iGeoloc->GetString(EGeolocUri).Length() > 0) {
+		TInt aResult = iGeoloc->GetString(EGeolocUri).LocateReverse('/');
+		
+		if(aResult != KErrNotFound) {
+			TLex aLex(iGeoloc->GetString(EGeolocUri).Mid(aResult + 1));
+			aLex.Val(iItemId);
+		}
+	}
+}
+
+void CExplorerResultItem::UpdateFromGeolocL() {
 	// Format distance
 	TBuf<32> aDistance;
 	
@@ -229,37 +200,27 @@ void CExplorerResultItem::GenerateDescriptionL() {
 		_LIT(KDistance, " (%.2fkm)");
 		aDistance.Format(KDistance, (TReal(iDistance) / 1000.0));
 	}
-
-	// Create description string
-	iDescription = HBufC::NewL(iLocation->GetPlaceStreet().Length() + iLocation->GetPlaceArea().Length() + 
-			iLocation->GetPlaceCity().Length() + iLocation->GetPlaceRegion().Length() + 
-			iLocation->GetPlaceCountry().Length() + 8 + aDistance.Length());
+	// Set description
+	CTextUtilities* aTextUtilities = CTextUtilities::NewLC();	
 	
-	// Generate
-	AddDescriptionDelimitedString(iLocation->GetPlaceStreet());
-	AddDescriptionDelimitedString(iLocation->GetPlaceArea());
-	AddDescriptionDelimitedString(iLocation->GetPlaceCity());
-	AddDescriptionDelimitedString(iLocation->GetPlaceRegion());
-	AddDescriptionDelimitedString(iLocation->GetPlaceCountry());
+	HBufC* aDescription = HBufC::NewLC(iGeoloc->GetString(EGeolocStreet).Length() + iGeoloc->GetString(EGeolocArea).Length() + 
+			iGeoloc->GetString(EGeolocLocality).Length() + iGeoloc->GetString(EGeolocPostalcode).Length() + 
+			iGeoloc->GetString(EGeolocRegion).Length() + iGeoloc->GetString(EGeolocCountry).Length() + 9 + aDistance.Length());
+	TPtr pDescription(aDescription->Des());
+	
+	aTextUtilities->AppendToString(pDescription, iGeoloc->GetString(EGeolocStreet), _L(""));
+	aTextUtilities->AppendToString(pDescription, iGeoloc->GetString(EGeolocArea), _L(", "));
+	aTextUtilities->AppendToString(pDescription, iGeoloc->GetString(EGeolocLocality), _L(", "));
+	aTextUtilities->AppendToString(pDescription, iGeoloc->GetString(EGeolocPostalcode), _L(" "));
+	aTextUtilities->AppendToString(pDescription, iGeoloc->GetString(EGeolocRegion), _L(", "));
+	aTextUtilities->AppendToString(pDescription, iGeoloc->GetString(EGeolocCountry), _L(", "));
 	
 	if(iDistance > 0) {
-		TPtr pDescription(iDescription->Des());
 		pDescription.Append(aDistance);
 	}
-}
-
-void CExplorerResultItem::AddDescriptionDelimitedString(TDesC& aString) {
-	TPtr pDescription(iDescription->Des());
 	
-	if(pDescription.Length() > 0 && aString.Length() > 0) {
-		pDescription.Append(_L(", "));
-	}
-	
-	pDescription.Append(aString);
-}
-
-CBuddycloudBasicPlace* CExplorerResultItem::GetLocation() {
-	return iLocation;
+	SetDescriptionL(pDescription);
+	CleanupStack::PopAndDestroy(2); // CExplorerResultItem, aTextUtilities	
 }
 
 /*

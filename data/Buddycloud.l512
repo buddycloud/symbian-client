@@ -13,7 +13,6 @@
 CHARACTER_SET UTF8
 
 rls_string r_string_app_caption "buddycloud"
-rls_string r_string_groupinvite_text " invited you to join channel: "
 // DO NOT TRANSLATE
 
 rls_string r_string_langcode "en"
@@ -88,7 +87,7 @@ rls_string r_string_item_showchanneldetails "Show channel details"
 rls_string r_string_item_call "Call scallywag"
 rls_string r_string_item_sendplacebysms "Send hang-out by bottle"
 rls_string r_string_item_sendinvite "Invit' t' Buddycloud"
-rls_string r_string_item_delete "Keelhaul"
+rls_string r_string_item_delete "Remove"
 rls_string r_string_item_noticeaccept "Accept"
 rls_string r_string_item_noticeacceptandfollow "Accept and Follow"
 rls_string r_string_item_noticedecline "Decline"
@@ -101,17 +100,18 @@ rls_string r_string_settings_clearconnection "Change yer ship"
 rls_string r_string_note_followinglistempty "Yer not lookin aat anythin'.\n\nSpy a view t' th' Chaannels an' Explorer taabs t' scour treasure."
 
 // Menu: Messaging
-rls_string r_string_options_openlink "Open treasure"
-rls_string r_string_options_postmessage "Post message"
+rls_string r_string_options_postrequest "Request to post"
+rls_string r_string_options_postmessage "Write new post"
 rls_string r_string_options_postmedia "Post media"
-rls_string r_string_options_replytomessage "Reply t'"
-rls_string r_string_options_settopic "What ye be talkin'"
 rls_string r_string_options_jumptounread "Jump t' unread"
-rls_string r_string_options_invitetochannel "Invit' t' chaannel"
-rls_string r_string_options_invitetootherchannel "Invit' t' othe' chaannel"
-rls_string r_string_options_invitefriendtochannel "Bring a matey 'ere"
 rls_string r_string_options_notificationon "Raise jolly roger!"
 rls_string r_string_options_notificationoff "Lower jolly roger"
+
+rls_string r_string_item_addcomment "Write comment"
+rls_string r_string_item_likepost "♥ post"
+rls_string r_string_item_copypost "Copy post"
+rls_string r_string_item_reportpost "Report post"
+rls_string r_string_item_deletepost "Delete post"
 
 // Menu: Places
 rls_string r_string_options_setcurrent "X marks the spot"
@@ -127,7 +127,6 @@ rls_string r_string_note_placevisits "Yer been 'ere"
 rls_string r_string_note_placepopulation "'ow many be 'ere"
 rls_string r_string_note_learningplace "Learnin' hang-out"
 rls_string r_string_note_updatingplace "Findin ye map..."
-rls_string r_string_note_noplaceaddress "Unmapp'd island"
 rls_string r_string_note_placeslistempty "Ye hav' ney hang-outs. Ta grab this 'ere land 'Options > X marks the spot'"
 
 // Menu: Nearby
@@ -171,33 +170,35 @@ rls_string r_string_item_unfollow "Keelhaul"
 // Channel: Settings & Configuration
 rls_string r_string_note_personalchannelcreated "Welcome to buddycloud channels $USER!\n\nThis is your very own personal channel on buddycloud. This channel is all your's and allows you to broadcast to your followers!"
 rls_string r_string_note_mediauploadready "You can now upload your media file at $LINK"
-rls_string r_string_note_userkickedfromgroup "$USER got a good floggin'"
-rls_string r_string_note_userbannedfromgroup "$USER be made t' walk th' plank!"
-rls_string r_string_dialog_kickconfirmation "Give ye a floggin' to 'em (he be back lat'r)?"
-rls_string r_string_dialog_banconfirmation "Be ye wantin' to make this scallywag walk tha plank?"
-rls_string r_string_item_banfromgroup "Make walk th' plank!"
-rls_string r_string_item_kickfromgroup "Give a floggin'"
-rls_string r_string_item_changerole "Promote shipmate"
-rls_string r_string_list_changerole_title "Shipmate now be:"
-rls_string r_string_changerole_itemlist_moderator "Cap'n mate"
-rls_string r_string_changerole_itemlist_contributor "Man th' cannon's"
-rls_string r_string_changerole_itemlist_visitor "Deck swabber"
-rls_string r_string_note_changerolefailed "Yer not be cap'n this ship, matey"
 
-// Settings Item List
+rls_string r_string_item_changerole "Change permission"
+rls_string r_string_changerole_itemlist_outcast "Keelhaul"
+rls_string r_string_changerole_itemlist_follower "Man th' cannon's"
+rls_string r_string_changerole_itemlist_publisher "Publisher"
+rls_string r_string_changerole_itemlist_moderator "Cap'n mate"
+
+rls_string r_string_note_affiliationoutcast "You have been banned from the channel. You now cannot read or post in this channel's content."
+rls_string r_string_note_affiliationmember "You have become a follower of this channel. You can now read, but not post in this channel's content."
+rls_string r_string_note_affiliationpublisher "You have become a publisher of this channel. You can now read and post in this channel's content."
+rls_string r_string_note_affiliationmoderator "You have become a moderator of this channel. You can now read, post, and manage this channel's content."
+
+rls_string r_string_note_subscriptionpending "Your subscription request has been sent to the channel's producer."
+rls_string r_string_note_subscriptionaccepted "Your subscription to this channel has been accepted."
+rls_string r_string_note_subscriptionrejected "Your subscription to this channel has been rejected."
+
+// Account settings
 rls_string r_string_settings_account_title "Cap'n"
 rls_string r_string_settings_itemlist_fullname "Yer pirate name"
 rls_string r_string_settings_itemlist_fullname_hint "Yer full pirate name"
 rls_string r_string_settings_itemlist_email "Yer mail address"
 rls_string r_string_settings_itemlist_email_hint "Yer mail address"
-rls_string r_string_settings_itemlist_phonenumber "Yer telephone"
-rls_string r_string_settings_itemlist_phonenumber_hint "Yer main telephone"
 rls_string r_string_settings_itemlist_username "Yer username"
 rls_string r_string_settings_itemlist_username_hint "XMPP server username"
 rls_string r_string_settings_itemlist_password "Yer secret word"
 rls_string r_string_settings_itemlist_password_hint "XMPP server password"
 rls_string r_string_settings_itemlist_server "XMPP server"
 
+// Preference settings
 rls_string r_string_settings_itemlist_language "Wha' ye be speakin'"
 rls_string r_string_settings_itemlist_blocking "Show private messages"
 rls_string r_string_settings_itemlist_blockingalwaysshow "From anyone"
@@ -209,18 +210,23 @@ rls_string r_string_settings_itemlist_accesspointalwaysask "Always ask"
 rls_string r_string_settings_itemlist_autostart "Set sail when ye wake"
 rls_string r_string_settings_itemlist_showcontacts "See me phone Contacts"
 
+// Notification settings
 rls_string r_string_settings_notifications_title "Notifications"
-rls_string r_string_settings_itemlist_groupnotification "No'ify chaannel posts"
+rls_string r_string_settings_itemlist_notifyfollowing "Channels I follow"
+rls_string r_string_settings_itemlist_notifymoderating "Channels I moderate"
+rls_string r_string_settings_itemlist_notifyreply "Replies to my post"
+
 rls_string r_string_settings_itemlist_groupnever "Naay no'ify"
 rls_string r_string_settings_itemlist_groupfirstonly "First post only"
 rls_string r_string_settings_itemlist_groupallmessages "All posts"
-rls_string r_string_settings_itemlist_notifyreply "No'ify me @Replys:"
+
 rls_string r_string_settings_itemlist_privatemessagetone "Private message tone"
 rls_string r_string_settings_itemlist_channelposttone "Channel post tone"
-rls_string r_string_settings_itemlist_directreplytone "My @Replies tone"
+rls_string r_string_settings_itemlist_directreplytone "Replied comment tone"
 rls_string r_string_settings_itemlist_tonenone "No tone"
 rls_string r_string_settings_itemlist_tonedefault "Default tone"
 
+// Positioning settings
 rls_string r_string_settings_beacons_title "Positionin'"
 rls_string r_string_settings_itemlist_cell "Cell Mast"
 rls_string r_string_settings_itemlist_wlan "WIFI"
@@ -257,16 +263,24 @@ rls_string r_string_editplace_itemlist_visibility "Be other scallywags 'ere?"
 rls_string r_string_editplace_itemlist_visibility_public "Pirates be welcome"
 rls_string r_string_editplace_itemlist_visibility_private "Be mine!"
 
+// Edit channel list
+rls_string r_string_newchannel_title "New channel"
+rls_string r_string_editchannel_title "Edit channel"
+rls_string r_string_editchannel_itemlist_title "Title"
+rls_string r_string_editchannel_itemlist_title_hint "Channel's title"
+rls_string r_string_editchannel_itemlist_id "#Channel Id"
+rls_string r_string_editchannel_itemlist_id_hint "Channel's unique Id"
+rls_string r_string_editchannel_itemlist_description "Description"
+rls_string r_string_editchannel_itemlist_description_hint "Channel's description"
+rls_string r_string_editchannel_itemlist_access "Access"
+rls_string r_string_editchannel_itemlist_access_open "Open channel"
+rls_string r_string_editchannel_itemlist_access_whitelist "Members only"
+
+rls_string r_string_note_channelexists "This #channel_id already exists. Please enter a unique one."
+
 // Following & Invitations
 rls_string r_string_followingrequest_title "Matey request"
 rls_string r_string_followerrequest_text "$USER be askin' t' be pirate matey's.\n* See ye around & what be troublin' ya\n* See ye pirate chaannel\n* See ye hang-out's"
-
-rls_string r_string_channelinvite_title "Chaannel invite"
-
-// Create channel
-rls_string r_string_dialog_createchannelname "Chaannel name:"
-rls_string r_string_dialog_createchanneldescription "Short Chaannel scribe:"
-rls_string r_string_channelfollowing_text "Chaannel '$CHANNEL' alreaady be 'ere. Wanna follow chaannel?"
 
 // Exit Confirmation
 rls_string r_string_exit_title "Jummpin' ship"
@@ -294,9 +308,9 @@ rls_string r_string_dialog_setmood "What be troublin' ye:"
 rls_string r_string_dialog_moodis "be "
 rls_string r_string_dialog_setcurrentlocation "Set ma hang-out:"
 rls_string r_string_dialog_setnextlocation "Where be ye next sailin':"
-rls_string r_string_dialog_settopic "Be talkin':"
-rls_string r_string_dialog_newmessage "Yer mark:"
-rls_string r_string_dialog_addcontact "Enter buddycloud or Jabber Id (eg. test@gtalk.com):"
+rls_string r_string_dialog_newmessage "Write post:"
+rls_string r_string_dialog_newcomment "Write comment:"
+rls_string r_string_dialog_addcontact "Enter contact's Id (eg. test@gtalk.com):"
 
 // Notes
 rls_string r_string_note_connecting "Settin' sail..."

@@ -31,12 +31,12 @@ class CTextUtilities : public CBase {
 		static CTextUtilities* NewLC();
 		~CTextUtilities();
 
-	private:
-		void ConstructL();
-
 	public: // Word Wrapping
 		void WrapToArrayL(RPointerArray<HBufC>& aArray, CFont* aFont, const TDesC& aText, TInt aWidth);
-	
+		
+	public: // Append
+		void AppendToString(TDes& aString, TDesC& aAppend, const TDesC& aSeperator);
+		
 	public: // Character coding
 		TDesC& Utf8ToUnicodeL(const TDesC8& aUtf8);
 		TDesC8& UnicodeToUtf8L(const TDesC& aUnicode);

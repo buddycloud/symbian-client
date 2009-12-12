@@ -13,7 +13,6 @@
 CHARACTER_SET UTF8
 
 rls_string r_string_app_caption "buddycloud"
-rls_string r_string_groupinvite_text " invited you to join channel: "
 // DO NOT TRANSLATE
 
 rls_string r_string_langcode "kr"
@@ -88,7 +87,7 @@ rls_string r_string_item_showchanneldetails "Show channel details"
 rls_string r_string_item_call "이 연락처로 전화하기"
 rls_string r_string_item_sendplacebysms "SMS문자로 장소 알려주기"
 rls_string r_string_item_sendinvite "버디클라우드에 초대하기"
-rls_string r_string_item_delete "삭제하기"
+rls_string r_string_item_delete "Remove"
 rls_string r_string_item_noticeaccept "Accept"
 rls_string r_string_item_noticeacceptandfollow "Accept and Follow"
 rls_string r_string_item_noticedecline "Decline"
@@ -101,17 +100,18 @@ rls_string r_string_settings_clearconnection "인터넷 연결 변경하기"
 rls_string r_string_note_followinglistempty "당신은 어떤 것도 따라다니고 있지 않습니다.\n\n따라다닐 것들을 찾기 위해 채널과 탐험탭을 사용하십시오."
 
 // Menu: Messaging
-rls_string r_string_options_openlink "링크 열기"
-rls_string r_string_options_postmessage "Post message"
+rls_string r_string_options_postrequest "Request to post"
+rls_string r_string_options_postmessage "Write new post"
 rls_string r_string_options_postmedia "Post media"
-rls_string r_string_options_replytomessage "답장하기"
-rls_string r_string_options_settopic "토픽 설정하기"
 rls_string r_string_options_jumptounread "읽지 않은 것들로 건너가기"
-rls_string r_string_options_invitetochannel "채널에 초대하기"
-rls_string r_string_options_invitetootherchannel "다른 채널에 초대하기"
-rls_string r_string_options_invitefriendtochannel "추종자 초대하기"
 rls_string r_string_options_notificationon "알림사운드 켜짐"
 rls_string r_string_options_notificationoff "알림사운드 꺼짐"
+
+rls_string r_string_item_addcomment "Write comment"
+rls_string r_string_item_likepost "♥ post"
+rls_string r_string_item_copypost "Copy post"
+rls_string r_string_item_reportpost "Report post"
+rls_string r_string_item_deletepost "Delete post"
 
 // Menu: Places
 rls_string r_string_options_setcurrent "새 장소를 즐겨찾기에 추가하기"
@@ -127,7 +127,6 @@ rls_string r_string_note_placevisits "방문자들"
 rls_string r_string_note_placepopulation "인구"
 rls_string r_string_note_learningplace "장소 파악하기"
 rls_string r_string_note_updatingplace "장소를 업데이트 하는 중..."
-rls_string r_string_note_noplaceaddress "확인되지 않은 주소"
 rls_string r_string_note_placeslistempty "북마크된 장소들이 아직 없습니다 이장소를 파악하기 위해 '선택사항 > 새 장소를 즐겨찾기에 추가하기' 버튼을 누르십시오"
 
 // Menu: Nearby
@@ -171,33 +170,35 @@ rls_string r_string_item_unfollow "따라다니지 않기"
 // Channel: Settings & Configuration
 rls_string r_string_note_personalchannelcreated "$USER 님 버디클라우드 채널에 오신걸 환영합니다!\n\n이곳은 여러분만의 개인 채널입니다. 이 채널은 여러분 소유이시고 여러분의 추종자들에게 여러분을 알리는 것을 도와드릴 것입니다!"
 rls_string r_string_note_mediauploadready "You can now upload your media file at $LINK"
-rls_string r_string_note_userkickedfromgroup "$USER 님은 이 채널에서 강퇴당하셨습니다"
-rls_string r_string_note_userbannedfromgroup "$USER 님은 이 채널에서 금지당하셨습니다"
-rls_string r_string_dialog_kickconfirmation "채널에서 이 사람을 강퇴시킬까요 (다음 로그인할때 들어올 수 있습니다)?"
-rls_string r_string_dialog_banconfirmation "이 사람이 채널 보는것을 금지시키겠습니까?"
-rls_string r_string_item_banfromgroup "채널에서 금지시키기"
-rls_string r_string_item_kickfromgroup "채널에서 강퇴시키기"
-rls_string r_string_item_changerole "역할 변경하기"
-rls_string r_string_list_changerole_title "역할 변경하기: "
-rls_string r_string_changerole_itemlist_moderator "의장"
-rls_string r_string_changerole_itemlist_contributor "추종자들"
-rls_string r_string_changerole_itemlist_visitor "방문자"
-rls_string r_string_note_changerolefailed "이사람의 역할을 바꾸기 위한 허가를 받지 못했습니다"
 
-// Settings Item List
+rls_string r_string_item_changerole "Change permission"
+rls_string r_string_changerole_itemlist_outcast "삭제하기"
+rls_string r_string_changerole_itemlist_follower "추종자들"
+rls_string r_string_changerole_itemlist_publisher "Publisher"
+rls_string r_string_changerole_itemlist_moderator "의장"
+
+rls_string r_string_note_affiliationoutcast "You have been banned from the channel. You now cannot read or post in this channel's content."
+rls_string r_string_note_affiliationmember "You have become a follower of this channel. You can now read, but not post in this channel's content."
+rls_string r_string_note_affiliationpublisher "You have become a publisher of this channel. You can now read and post in this channel's content."
+rls_string r_string_note_affiliationmoderator "You have become a moderator of this channel. You can now read, post, and manage this channel's content."
+
+rls_string r_string_note_subscriptionpending "Your subscription request has been sent to the channel's producer."
+rls_string r_string_note_subscriptionaccepted "Your subscription to this channel has been accepted."
+rls_string r_string_note_subscriptionrejected "Your subscription to this channel has been rejected."
+
+// Account settings
 rls_string r_string_settings_account_title "계정"
 rls_string r_string_settings_itemlist_fullname "성명"
 rls_string r_string_settings_itemlist_fullname_hint "본인의 성명"
 rls_string r_string_settings_itemlist_email "이메일 주소"
 rls_string r_string_settings_itemlist_email_hint "본인의 이메일 주소"
-rls_string r_string_settings_itemlist_phonenumber "전화 번호"
-rls_string r_string_settings_itemlist_phonenumber_hint "본인의 주요 전화번호"
 rls_string r_string_settings_itemlist_username "사용자명"
 rls_string r_string_settings_itemlist_username_hint "XMPP server username"
 rls_string r_string_settings_itemlist_password "비밀번호"
 rls_string r_string_settings_itemlist_password_hint "XMPP server password"
 rls_string r_string_settings_itemlist_server "XMPP server"
 
+// Preference settings
 rls_string r_string_settings_itemlist_language "사용언어"
 rls_string r_string_settings_itemlist_blocking "Show private messages"
 rls_string r_string_settings_itemlist_blockingalwaysshow "From anyone"
@@ -209,18 +210,23 @@ rls_string r_string_settings_itemlist_accesspointalwaysask "항상 물어보기"
 rls_string r_string_settings_itemlist_autostart "전화기가 켜질때 자동으로 시작하기"
 rls_string r_string_settings_itemlist_showcontacts "전화 연락처 보여주기"
 
+// Notification settings
 rls_string r_string_settings_notifications_title "Notifications"
-rls_string r_string_settings_itemlist_groupnotification "채널의 포스트들 알려주기"
+rls_string r_string_settings_itemlist_notifyfollowing "Channels I follow"
+rls_string r_string_settings_itemlist_notifymoderating "Channels I moderate"
+rls_string r_string_settings_itemlist_notifyreply "Replies to my post"
+
 rls_string r_string_settings_itemlist_groupnever "절대로 알려주지 말기"
 rls_string r_string_settings_itemlist_groupfirstonly "첫 포스트만"
 rls_string r_string_settings_itemlist_groupallmessages "모든 포스트들"
-rls_string r_string_settings_itemlist_notifyreply "나의 @답장들 알려주기:"
+
 rls_string r_string_settings_itemlist_privatemessagetone "Private message tone"
 rls_string r_string_settings_itemlist_channelposttone "Channel post tone"
-rls_string r_string_settings_itemlist_directreplytone "My @Replies tone"
+rls_string r_string_settings_itemlist_directreplytone "Replied comment tone"
 rls_string r_string_settings_itemlist_tonenone "No tone"
 rls_string r_string_settings_itemlist_tonedefault "Default tone"
 
+// Positioning settings
 rls_string r_string_settings_beacons_title "위치찾기"
 rls_string r_string_settings_itemlist_cell "기지국"
 rls_string r_string_settings_itemlist_wlan "WIFI"
@@ -257,16 +263,24 @@ rls_string r_string_editplace_itemlist_visibility "다른 사람들에게 이 �
 rls_string r_string_editplace_itemlist_visibility_public "쉐어됨"
 rls_string r_string_editplace_itemlist_visibility_private "개인용"
 
+// Edit channel list
+rls_string r_string_newchannel_title "New channel"
+rls_string r_string_editchannel_title "Edit channel"
+rls_string r_string_editchannel_itemlist_title "Title"
+rls_string r_string_editchannel_itemlist_title_hint "Channel's title"
+rls_string r_string_editchannel_itemlist_id "#Channel Id"
+rls_string r_string_editchannel_itemlist_id_hint "Channel's unique Id"
+rls_string r_string_editchannel_itemlist_description "Description"
+rls_string r_string_editchannel_itemlist_description_hint "Channel's description"
+rls_string r_string_editchannel_itemlist_access "Access"
+rls_string r_string_editchannel_itemlist_access_open "Open channel"
+rls_string r_string_editchannel_itemlist_access_whitelist "Members only"
+
+rls_string r_string_note_channelexists "This #channel_id already exists. Please enter a unique one."
+
 // Following & Invitations
 rls_string r_string_followingrequest_title "추종자 신청"
 rls_string r_string_followerrequest_text "$USER 님은 버디클라우드에서 당신을 따라다니고 싶어합니다\n* 나의 현재 위치와 상황 보여주기\n* 나의 개인채널 보여주기\n* 나의 장소들 보여주기 "
-
-rls_string r_string_channelinvite_title "채널 초대"
-
-// Create channel
-rls_string r_string_dialog_createchannelname "채널명:"
-rls_string r_string_dialog_createchanneldescription "채널 설명 요약:"
-rls_string r_string_channelfollowing_text "'$CHANNEL' 채널은 이미 존재합니다. 이 채널을 따라다니시겠습니까?"
 
 // Exit Confirmation
 rls_string r_string_exit_title "종료 확인 "
@@ -294,9 +308,9 @@ rls_string r_string_dialog_setmood "상태 설정하기:"
 rls_string r_string_dialog_moodis "상태 "
 rls_string r_string_dialog_setcurrentlocation "나의 장소 설정하기:"
 rls_string r_string_dialog_setnextlocation "다음 장소 설정하기:"
-rls_string r_string_dialog_settopic "토픽 설정하기:"
-rls_string r_string_dialog_newmessage "새 메세지:"
-rls_string r_string_dialog_addcontact "버디클라우드 또는 Jabber 아이디 입력하기(예:test@gtalk.com):"
+rls_string r_string_dialog_newmessage "Write post:"
+rls_string r_string_dialog_newcomment "Write comment:"
+rls_string r_string_dialog_addcontact "Enter contact's Id (eg. test@gtalk.com):"
 
 // Notes
 rls_string r_string_note_connecting "연결중..."

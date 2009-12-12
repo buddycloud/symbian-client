@@ -15,7 +15,6 @@
 #define BUDDYCLOUDLOGIC_H_
 
 #include <e32base.h>
-#include <e32std.h>
 #include <cntdb.h>
 #include <cntdbobs.h>
 #include <flogger.h>
@@ -23,12 +22,12 @@
 #include "AvatarRepository.h"
 #include "BuddycloudContactStreamer.h"
 #include "BuddycloudContactSearcher.h"
-#include "MessagingParticipants.h"
 #include "BuddycloudFollowing.h"
+#include "BuddycloudList.h"
 #include "BuddycloudPlaces.h"
 #include "BuddycloudNearby.h"
+#include "DiscussionManager.h"
 #include "LocationEngine.h"
-#include "MessagingManager.h"
 #include "NotificationEngine.h"
 #include "Timer.h"
 #include "TelephonyEngine.h"
@@ -44,14 +43,15 @@
 */
 
 enum TDescSettingItems {
-	ESettingItemFullName, ESettingItemPhoneNumber, ESettingItemEmailAddress, ESettingItemUsername, 
-	ESettingItemPassword, ESettingItemTwitterUsername, ESettingItemTwitterPassword,
-	ESettingItemPrivateMessageToneFile, ESettingItemChannelPostToneFile, ESettingItemDirectReplyToneFile
+	ESettingItemFullName, ESettingItemEmailAddress, ESettingItemUsername, ESettingItemPassword, 
+	ESettingItemPrivateMessageToneFile, ESettingItemChannelPostToneFile, ESettingItemDirectReplyToneFile,
+	ESettingItemTwitterUsername, ESettingItemTwitterPassword
 };
 
 enum TIntSettingItems {
-	ESettingItemGroupNotification, ESettingItemServerId, ESettingItemLanguage, 
-	ESettingItemPrivateMessageTone, ESettingItemChannelPostTone, ESettingItemDirectReplyTone
+	ESettingItemNotifyChannelsFollowing, ESettingItemNotifyChannelsModerating, 
+	ESettingItemPrivateMessageTone, ESettingItemChannelPostTone, ESettingItemDirectReplyTone,
+	ESettingItemServerId, ESettingItemLanguage
 };
 
 enum TBoolSettingItems {
@@ -76,16 +76,12 @@ enum TBuddycloudLogicNotificationType {
 	ENotificationMessageNotifiedEvent, ENotificationMessageSilentEvent, 
 	ENotificationEditPlaceRequested, ENotificationEditPlaceCompleted, 
 	ENotificationActivityChanged, ENotificationConnectivityChanged, 
-	ENotificationTelephonyChanged, ENotificationAuthenticationFailed
+	ENotificationTelephonyChanged, ENotificationAuthenticationFailed,
+	ENotificationEditChannelRequested, ENotificationFollowingChannelEvent
 };
 
 enum TBuddycloudLogicTimeoutState {
-	ETimeoutNone            = 0, 
-	ETimeoutStartConnection = 2, 
-	ETimeoutConnected       = 4, 
-	ETimeoutSendPresence    = 8, 
-	ETimeoutSaveSettings    = 16, 
-	ETimeoutSavePlaces      = 32
+	ETimeoutNone, ETimeoutStartConnection, ETimeoutConnected, ETimeoutSaveSettings, ETimeoutSavePlaces
 };
 
 enum TBuddycloudContactNameOrder {
@@ -169,19 +165,20 @@ class CBuddycloudLogic : public CBase, MContactDbObserver, MLocationEngineNotifi
 
 	private:
 		void ConnectToXmppServerL();
+		
 		void SendPresenceL();
-
+		void SendPresenceSubscriptionL(const TDesC8& aTo, const TDesC8& aType, const TDesC8& aOptionalData = KNullDesC8);
+		
+		TInt GetNewIdStamp();
+		
 	public: // Settings
-		void MasterResetL();
+		void ResetStoredDataL();
 		void ResetConnectionSettings();
 		
 		void SetLocationResource(TBuddycloudLocationResource aResource, TBool aEnable);
 		TBool GetLocationResourceDataAvailable(TBuddycloudLocationResource aResource);
 		
 		void ValidateUsername();
-		void LookupUserByEmailL(TBool aForcePublish = false);
-		void LookupUserByNumberL(TBool aForcePublish = false);
-		void PublishUserDataL(CContactIdArray* aContactIdArray, TBool aForcePublish = false);
 		
 		void LanguageSettingChanged();
 		void NotificationSettingChanged(TIntSettingItems aItem);
@@ -206,36 +203,43 @@ class CBuddycloudLogic : public CBase, MContactDbObserver, MLocationEngineNotifi
 	public: // Friends
 		void SendInviteL(TInt aFollowerId);
 		void SendPlaceL(TInt aFollowerId);
+		
+	public: // Follow & pubsub collect
 		void FollowContactL(const TDesC& aContact);
 		
-		void GetFriendDetailsL(TInt aFollowerId);
+		void RecollectFollowerDetailsL(TInt aFollowerId);
 
-	public: // Channels
-		TInt FollowTopicChannelL(TDesC& aChannelJid, TDesC& aTitle, const TDesC& aDescription = KNullDesC);
-		void FollowPersonalChannelL(TInt aFollowerId);
-		void UnfollowChannelL(TInt aFollowerId);
+	private: // Pubsub
+		void SetLastNodeIdReceived(const TDesC8& aNodeItemId);
 		
-		TInt CreateChannelL(const TDesC& aChannelTitleOrJid);
-		void InviteToChannelL(TInt aChannelId);
-		void InviteToChannelL(TDesC& aToJid, TInt aChannelId = 0);
-		void DeclineChannelInviteL(TDesC& aJid);
+		void CollectPubsubSubscriptionsL();
+		void ProcessPubsubSubscriptionsL(const TDesC8& aStanza);
+		
+		void CollectUsersPubsubNodeSubscribersL();
+		void ProcessUsersPubsubNodeSubscribersL(const TDesC8& aStanza);
+		
+		void CollectLastPubsubNodeItemsL(const TDesC& aNode, const TDesC8& aLastIdReceived);		
+		void CollectUserPubsubNodeL(const TDesC& aJid, const TDesC& aNodeLeaf);
+		
+		void CollectChannelMetadataL(const TDesC& aNode);
+		void ProcessChannelMetadataL(const TDesC8& aStanza);
+		
+	public: // Pubsub
+		void SetPubsubNodeAffiliationL(const TDesC& aJid, const TDesC& aNode, TXmppPubsubAffiliation aAffiliation);
+		void SetPubsubNodeSubscriptionL(const TDesC& aJid, const TDesC& aNode, TXmppPubsubSubscription aSubscription);
+    	
+		void RetractPubsubNodeItemL(const TDesC& aNode, const TDesC8& aNodeItemId);
+		
+    private: // Pubsub handling
+		void HandlePubsubEventL(const TDesC8& aStanza, TBool aNewEvent);
 	
-	private:
-		void CollectMyChannelsL();
-		void ProcessMyChannelsL(const TDesC8& aStanza);
+	public: // Channels
+		void FollowChannelL(const TDesC& aNode);
+		void UnfollowChannelL(TInt aItemId);
 		
-		void SynchronizePersonalChannelMembersL(const TDesC8& aStanza);
+		void PublishChannelMetadataL(TInt aItemId);
 		
-		void SendChannelPresenceL(TDesC& aJid, const TDesC8& aHistory = KNullDesC8);
-		void SendChannelUnavailableL(TDesC& aChannelJid);
-		void SendChannelConfigurationL(TInt aFollowerId);
-		
-		void GetChannelInfoL(TDesC& aChannelJid);
-		void SendChannelInviteL(TDesC& aJid, TInt aChannelId);
-		
-	public:
-		void ChangeUsersChannelAffiliationL(const TDesC& aJid, TDesC& aChannelJid, TMucAffiliation aAffiliation);
-		void ChangeUsersChannelRoleL(const TDesC& aJidOrNick, TDesC& aChannelJid, TMucRole aRole);
+		TInt CreateChannelL(CFollowingChannelItem* aChannelItem);
 
 	public: // User Status & Place
 		void SetMoodL(TDesC& aMood);
@@ -245,11 +249,10 @@ class CBuddycloudLogic : public CBase, MContactDbObserver, MLocationEngineNotifi
 		void SetNextPlaceL(TDesC& aPlace, TInt aPlaceId = KErrNotFound);
 
 	private:
-		void CollectPubsubNodesL(TDesC& aJid);
 		TInt GetBubbleToPosition(CFollowingItem* aBubblingItem);
 
 	public: // From MDiscussionReadObserver
-		void AllMessagesRead(CFollowingItem* aFollowingItem);
+		void DiscussionRead(TDesC& aDiscussionId, TInt aItemId);
 
 	public: // Contact Services
 		void PairItemIdsL(TInt aPairItemId1, TInt aPairItemId2);
@@ -287,7 +290,7 @@ class CBuddycloudLogic : public CBase, MContactDbObserver, MLocationEngineNotifi
 		void LoadSettingsAndItemsL();
 		void SaveSettingsAndItemsL();
 
-		void AddChannelItemL(TPtrC aJid, TPtrC aName, TPtrC aTopic, TInt aRank = 0);
+		void AddChannelItemL(TPtrC aId, TPtrC aName, TPtrC aTopic, TInt aRank = 0);
 
 		void LoadPlaceItems();
 		void LoadPlaceItemsL();
@@ -308,29 +311,23 @@ class CBuddycloudLogic : public CBase, MContactDbObserver, MLocationEngineNotifi
 		void RemoveStatusObserver();
 
 	public: // Friends
-		CBuddycloudFollowingStore* GetFollowingStore();
+		CBuddycloudListStore* GetFollowingStore();
 		
 		CFollowingRosterItem* GetOwnItem();
-		void DeleteItemL(TInt aItemId);
+		void UnfollowItemL(TInt aItemId);
 		
 	public: // Notices
 		void RespondToNoticeL(TInt aItemId, TNoticeResponse aResponse);
 		
 	public: // Media posting
-		void MediaPostRequestL(const TDesC& aJid);
+		void MediaPostRequestL(TInt aItemId);
 
 	public: // Messaging
-		CDiscussion* GetDiscussion(const TDesC& aJid);
+		CDiscussion* GetDiscussion(const TDesC& aId);
 
-		TPtrC GetRawJid(TDesC& aJid);
-		TInt IsSubscribedTo(const TDesC& aJid, TInt aItemOptions = EItemAll);
+		TInt IsSubscribedTo(const TDesC& aId, TInt aItemOptions = EItemAll);
 
-		void SetTopicL(TDesC& aTopic, TDesC& aToJid, TBool aIsChannel);
-		void BuildNewMessageL(TDesC& aToJid, TDesC& aMessageText, TBool aIsChannel, CMessage* aReferenceMessage = NULL);
-		void SetChatStateL(TMessageChatState aChatState, TDesC& aToJid);
-		
-	private:
-		TDesC8& GenerateNewThreadLC();
+		void PostMessageL(TInt aItemId, TDesC& aId, TDesC& aContent, const TDesC8& aReferenceId = KNullDesC8);		
 		
 	public: // Communities
 		void SendCommunityCredentials(TCommunityItems aCommunity);
@@ -388,21 +385,18 @@ class CBuddycloudLogic : public CBase, MContactDbObserver, MLocationEngineNotifi
 		void XmppDebug(const TDesC8& aMessage);
 
     public: // From MXmppRosterObserver
-    	void RosterItemsL(const TDesC8& aItems, TBool aUpdate = false);
+    	void RosterItemsL(const TDesC8& aItems, TBool aPush = false);
     	void RosterOwnJidL(TDesC& aJid);
-		void RosterPubsubEventL(TDesC& aFrom, const TDesC8& aData, TBool aNew);
-		void RosterPubsubDeleteL(TDesC& aFrom, const TDesC8& aNode);
-    	void RosterSubscriptionL(TDesC& aJid, const TDesC8& aData);
 	
     public: // From MXmppStanzaObserver
 		void XmppStanzaAcknowledgedL(const TDesC8& aStanza, const TDesC8& aId);
-
+ 
     private: // Presence handling
-    	void HandleIncomingPresenceL(TDesC& aFrom, const TDesC8& aData);
-    
+    	void HandleIncomingPresenceL(TDesC& aFrom, const TDesC8& aStanza);
+       	void ProcessPresenceSubscriptionL(TDesC& aJid, const TDesC8& aData);
+   
     private: // Message handling
 		void HandleIncomingMessageL(TDesC& aFrom, const TDesC8& aData);
-		void ProcessNewMessageL(TDesC& aFrom, const TDesC8& aData);
 
     protected:
     	MBuddycloudLogicOwnerObserver* iOwnerObserver;
@@ -412,7 +406,7 @@ class CBuddycloudLogic : public CBase, MContactDbObserver, MLocationEngineNotifi
 		CNotificationEngine* iNotificationEngine;
 
 		CCustomTimer* iTimer;
-		TInt iTimerState;
+		TBuddycloudLogicTimeoutState iTimerState;
 
 		CFollowingRosterItem* iOwnItem;
 
@@ -430,15 +424,17 @@ class CBuddycloudLogic : public CBase, MContactDbObserver, MLocationEngineNotifi
 		TBool iConnectionCold;
 		
 		HBufC* iServerActivityText;
-        HBufC* iBroadLocationText;
+        HBufC* iBroadLocationText;        
+        HBufC8* iLastNodeIdReceived;
 
 		// Time Stamps
-		TTime iLastReceivedAt;
-		TTime iHistoryFrom;
 		TTimeIntervalSeconds iServerOffset;
+		
+		TInt iIdStamp;
 		
 		TBool iOffsetReceived;
 		TBool iRosterSynchronized;
+		TBool iPubsubSubscribedTo;
 		TBool iMyChannelMembersRequested;
 
 		CXmppEngine* iXmppEngine;
@@ -456,7 +452,8 @@ class CBuddycloudLogic : public CBase, MContactDbObserver, MLocationEngineNotifi
         TBool iSettingGpsOn;
         
         // Notifications settings
-        TInt iSettingGroupNotification;
+        TInt iSettingNotifyChannelsFollowing;
+        TInt iSettingNotifyChannelsModerating;
         TInt iSettingPrivateMessageTone;
         TFileName iSettingPrivateMessageToneFile;
         TInt iSettingChannelPostTone;
@@ -475,13 +472,10 @@ class CBuddycloudLogic : public CBase, MContactDbObserver, MLocationEngineNotifi
        
         // Account settings
         TBuf<32> iSettingFullName;
-        TBuf<32> iSettingPhoneNumber;
         TBuf<32> iSettingEmailAddress;
         TBuf<32> iSettingUsername;
         TBuf<32> iSettingPassword;
         TInt iSettingServerId;
-        
-        TPtrC iSettingUsernameOnly;
         
         // Community settings
         TBuf<32> iSettingTwitterUsername;
@@ -497,9 +491,9 @@ class CBuddycloudLogic : public CBase, MContactDbObserver, MLocationEngineNotifi
         RPointerArray<CBuddycloudNearbyPlace> iNearbyPlaces;
  
 		// Stores
-        CBuddycloudFollowingStore* iMasterFollowingList;
-        CBuddycloudPlaceStore* iMasterPlaceList;
-        CMessagingManager* iMessagingManager;
+        CBuddycloudListStore* iFollowingList;
+        CBuddycloudPlaceStore* iPlaceList;
+        CDiscussionManager* iDiscussionManager;
        
         TInt iNextItemId;
 

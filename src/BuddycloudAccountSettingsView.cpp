@@ -80,8 +80,6 @@ void CBuddycloudAccountSettingsView::DoActivateL(const TVwsViewId& /*aPrevViewId
 
 void CBuddycloudAccountSettingsView::DoDeactivate() {
 	if (iList) {
-		iList->SaveL();
-		
 		AppUi()->RemoveFromViewStack(*this, iList);
 		delete iList;
 		iList = NULL;
