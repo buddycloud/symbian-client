@@ -210,6 +210,7 @@ class CBuddycloudLogic : public CBase, MContactDbObserver, MLocationEngineNotifi
 		void RecollectFollowerDetailsL(TInt aFollowerId);
 
 	private: // Pubsub
+		void SendPresenceToPubsubL();
 		void SetLastNodeIdReceived(const TDesC8& aNodeItemId);
 		
 		void CollectPubsubSubscriptionsL();
@@ -228,10 +229,13 @@ class CBuddycloudLogic : public CBase, MContactDbObserver, MLocationEngineNotifi
 		void SetPubsubNodeAffiliationL(const TDesC& aJid, const TDesC& aNode, TXmppPubsubAffiliation aAffiliation);
 		void SetPubsubNodeSubscriptionL(const TDesC& aJid, const TDesC& aNode, TXmppPubsubSubscription aSubscription);
     	
+		void RequestPubsubNodeAffiliationL(const TDesC& aNode, TXmppPubsubAffiliation aAffiliation, const TDesC& aText);
+		
 		void RetractPubsubNodeItemL(const TDesC& aNode, const TDesC8& aNodeItemId);
 		
     private: // Pubsub handling
 		void HandlePubsubEventL(const TDesC8& aStanza, TBool aNewEvent);
+		void HandlePubsubRequestL(const TDesC8& aStanza);
 	
 	public: // Channels
 		void FollowChannelL(const TDesC& aNode);
@@ -310,7 +314,7 @@ class CBuddycloudLogic : public CBase, MContactDbObserver, MLocationEngineNotifi
 		void AddStatusObserver(MBuddycloudLogicStatusObserver* aStatusObserver);
 		void RemoveStatusObserver();
 
-	public: // Friends
+	public: // Following
 		CBuddycloudListStore* GetFollowingStore();
 		
 		CFollowingRosterItem* GetOwnItem();

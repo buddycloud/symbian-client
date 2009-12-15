@@ -153,6 +153,7 @@ class CExplorerQueryLevel : public CBase {
 		
 	public:
 		void ClearResultItems();
+		void AppendSortedItem(CExplorerResultItem* aResultItem, TSortByType aSort = ESortByUnsorted);
 	
 	protected:
 		HBufC* iQueryTitle;

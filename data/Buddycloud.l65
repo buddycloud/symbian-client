@@ -32,7 +32,7 @@ rls_string r_string_endcall_menu "End Call"
 rls_string r_string_hide_menu "Hide"
 
 // Item
-rls_string r_string_item_newgroup "새 채널들..."
+rls_string r_string_item_newchannel "새 채널들..."
 rls_string r_string_item_newplace "새 장소..."
 
 // Menu: Call
@@ -45,6 +45,7 @@ rls_string r_string_options_endcall "전화 종료하기"
 // Menu: Settings & Edit place
 rls_string r_string_options_edititem "변경하기"
 rls_string r_string_options_searchplace "자세히 검색하기"
+rls_string r_string_options_remove "삭제하기"
 
 rls_string r_string_note_noresultsfound "결과 없음"
 rls_string r_string_note_requestsent "신청하기 전송됨"
@@ -76,8 +77,6 @@ rls_string r_string_options_exit "종료하기"
 rls_string r_string_options_done "완료"
 rls_string r_string_options_connect "온라인 하기"
 rls_string r_string_options_disconnect "오프라인 하기"
-rls_string r_string_options_itemcontact "연락하기"
-rls_string r_string_options_itemgroup "채널"
 rls_string r_string_options_settings "설정"
 rls_string r_string_item_viewmessages "메세지 보기"
 rls_string r_string_item_viewchannelmessages "채널 보기"
@@ -87,7 +86,6 @@ rls_string r_string_item_showchanneldetails "Show channel details"
 rls_string r_string_item_call "이 연락처로 전화하기"
 rls_string r_string_item_sendplacebysms "SMS문자로 장소 알려주기"
 rls_string r_string_item_sendinvite "버디클라우드에 초대하기"
-rls_string r_string_item_delete "Remove"
 rls_string r_string_item_noticeaccept "Accept"
 rls_string r_string_item_noticeacceptandfollow "Accept and Follow"
 rls_string r_string_item_noticedecline "Decline"
@@ -100,7 +98,7 @@ rls_string r_string_settings_clearconnection "인터넷 연결 변경하기"
 rls_string r_string_note_followinglistempty "당신은 어떤 것도 따라다니고 있지 않습니다.\n\n따라다닐 것들을 찾기 위해 채널과 탐험탭을 사용하십시오."
 
 // Menu: Messaging
-rls_string r_string_options_postrequest "Request to post"
+rls_string r_string_options_postrequest "Request post privilege"
 rls_string r_string_options_postmessage "Write new post"
 rls_string r_string_options_postmedia "Post media"
 rls_string r_string_options_jumptounread "읽지 않은 것들로 건너가기"
@@ -111,7 +109,10 @@ rls_string r_string_item_addcomment "Write comment"
 rls_string r_string_item_likepost "♥ post"
 rls_string r_string_item_copypost "Copy post"
 rls_string r_string_item_reportpost "Report post"
-rls_string r_string_item_deletepost "Delete post"
+rls_string r_string_item_removepost "Delete post"
+
+rls_string r_string_options_itemchannel "채널"
+rls_string r_string_channel_markread "Mark channel read"
 
 // Menu: Places
 rls_string r_string_options_setcurrent "새 장소를 즐겨찾기에 추가하기"
@@ -120,7 +121,7 @@ rls_string r_string_item_relearnplace "이 장소에 대해 다시 파악하기"
 rls_string r_string_dialog_relearnplace "현재 이 장소에 있습니다 이 장소를 다시 파악하시겠습니까?"
 rls_string r_string_item_setnext "다음 장소로 설정하기"
 rls_string r_string_item_editplace "세부사항 편집하기"
-rls_string r_string_item_deleteplace "장소 삭제하기"
+rls_string r_string_options_removeplace "장소 삭제하기"
 
 rls_string r_string_note_placelastseen "보여짐"
 rls_string r_string_note_placevisits "방문자들"
@@ -172,16 +173,20 @@ rls_string r_string_note_personalchannelcreated "$USER 님 버디클라우드 �
 rls_string r_string_note_mediauploadready "You can now upload your media file at $LINK"
 
 rls_string r_string_item_changerole "Change permission"
-rls_string r_string_changerole_itemlist_outcast "삭제하기"
-rls_string r_string_changerole_itemlist_follower "추종자들"
-rls_string r_string_changerole_itemlist_publisher "Publisher"
-rls_string r_string_changerole_itemlist_moderator "의장"
+rls_string r_string_changerole_itemlist_outcast "채널에서 금지시키기"
+rls_string r_string_changerole_itemlist_follower "To follower"
+rls_string r_string_changerole_itemlist_publisher "To publisher"
+rls_string r_string_changerole_itemlist_moderator "To moderator"
+
+rls_string r_string_note_affiliationrequest_title "Publish request"
+rls_string r_string_note_affiliationrequest_text "$USER has requested permission to post in this channel. To approve this request press 'Accept', else press 'Decline'."
 
 rls_string r_string_note_affiliationoutcast "You have been banned from the channel. You now cannot read or post in this channel's content."
 rls_string r_string_note_affiliationmember "You have become a follower of this channel. You can now read, but not post in this channel's content."
 rls_string r_string_note_affiliationpublisher "You have become a publisher of this channel. You can now read and post in this channel's content."
 rls_string r_string_note_affiliationmoderator "You have become a moderator of this channel. You can now read, post, and manage this channel's content."
 
+rls_string r_string_note_subscriptionrequest_text "$USER has requested to follow this channel. To approve this request press 'Accept', else press 'Decline'."
 rls_string r_string_note_subscriptionpending "Your subscription request has been sent to the channel's producer."
 rls_string r_string_note_subscriptionaccepted "Your subscription to this channel has been accepted."
 rls_string r_string_note_subscriptionrejected "Your subscription to this channel has been rejected."
@@ -310,6 +315,7 @@ rls_string r_string_dialog_setcurrentlocation "나의 장소 설정하기:"
 rls_string r_string_dialog_setnextlocation "다음 장소 설정하기:"
 rls_string r_string_dialog_newmessage "Write post:"
 rls_string r_string_dialog_newcomment "Write comment:"
+rls_string r_string_dialog_requestcomment "Request comment:"
 rls_string r_string_dialog_addcontact "Enter contact's Id (eg. test@gtalk.com):"
 
 // Notes

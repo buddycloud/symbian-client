@@ -32,7 +32,7 @@ rls_string r_string_endcall_menu "End Call"
 rls_string r_string_hide_menu "Verbergen"
 
 // Item
-rls_string r_string_item_newgroup "Nieuw kanaal..."
+rls_string r_string_item_newchannel "Nieuw kanaal..."
 rls_string r_string_item_newplace "Nieuwe plaats..."
 
 // Menu: Call
@@ -45,6 +45,7 @@ rls_string r_string_options_endcall "Gesprek beëindigen"
 // Menu: Settings & Edit place
 rls_string r_string_options_edititem "Wijzigen"
 rls_string r_string_options_searchplace "Zoek voor details"
+rls_string r_string_options_remove "Verwijderen"
 
 rls_string r_string_note_noresultsfound "Geen resultaten gevonden"
 rls_string r_string_note_requestsent "Verzoek verstuurd"
@@ -76,8 +77,6 @@ rls_string r_string_options_exit "Afsluiten"
 rls_string r_string_options_done "Klaar"
 rls_string r_string_options_connect "Ga online"
 rls_string r_string_options_disconnect "Ga offline"
-rls_string r_string_options_itemcontact "Contact"
-rls_string r_string_options_itemgroup "Channel"
 rls_string r_string_options_settings "Instellingen"
 rls_string r_string_item_viewmessages "Bericht lezen"
 rls_string r_string_item_viewchannelmessages "Channel kijken"
@@ -87,7 +86,6 @@ rls_string r_string_item_showchanneldetails "Details weergeven"
 rls_string r_string_item_call "Contact bellen"
 rls_string r_string_item_sendplacebysms "Stuur plaats via SMS"
 rls_string r_string_item_sendinvite "Nodig uit voor buddycloud"
-rls_string r_string_item_delete "Remove"
 rls_string r_string_item_noticeaccept "Aanvaard "
 rls_string r_string_item_noticeacceptandfollow "Aanvaard & Volg"
 rls_string r_string_item_noticedecline "Weigeren"
@@ -100,7 +98,7 @@ rls_string r_string_settings_clearconnection "Verbinding wijzigen"
 rls_string r_string_note_followinglistempty "U heeft nog niks.\n\nMaak gebruik van Channels en Verkenner tabben om iets interessant te vinden."
 
 // Menu: Messaging
-rls_string r_string_options_postrequest "Request to post"
+rls_string r_string_options_postrequest "Request post privilege"
 rls_string r_string_options_postmessage "Write new post"
 rls_string r_string_options_postmedia "Media opsturen"
 rls_string r_string_options_jumptounread "Overslaan naar ongelezen bericht"
@@ -111,7 +109,10 @@ rls_string r_string_item_addcomment "Write comment"
 rls_string r_string_item_likepost "♥ post"
 rls_string r_string_item_copypost "Copy post"
 rls_string r_string_item_reportpost "Report post"
-rls_string r_string_item_deletepost "Delete post"
+rls_string r_string_item_removepost "Delete post"
+
+rls_string r_string_options_itemchannel "Channel"
+rls_string r_string_channel_markread "Mark channel read"
 
 // Menu: Places
 rls_string r_string_options_setcurrent "Bewaar nieuwe lokatie"
@@ -120,7 +121,7 @@ rls_string r_string_item_relearnplace "Deze plaats herkennen"
 rls_string r_string_dialog_relearnplace "Bent u nú hier en de positionering wilt aanpassen?"
 rls_string r_string_item_setnext "Als volgende bestemming markeren"
 rls_string r_string_item_editplace "Wijzig details"
-rls_string r_string_item_deleteplace "Plaats verwijderen"
+rls_string r_string_options_removeplace "Plaats verwijderen"
 
 rls_string r_string_note_placelastseen "Gezien"
 rls_string r_string_note_placevisits "Visits"
@@ -172,16 +173,20 @@ rls_string r_string_note_personalchannelcreated "Welcome to buddycloud channels 
 rls_string r_string_note_mediauploadready "You can now upload your media file at $LINK"
 
 rls_string r_string_item_changerole "Change permission"
-rls_string r_string_changerole_itemlist_outcast "Verwijderen"
-rls_string r_string_changerole_itemlist_follower "Aanhangers"
-rls_string r_string_changerole_itemlist_publisher "Publisher"
-rls_string r_string_changerole_itemlist_moderator "Moderator"
+rls_string r_string_changerole_itemlist_outcast "Verwijderen van de channel"
+rls_string r_string_changerole_itemlist_follower "To follower"
+rls_string r_string_changerole_itemlist_publisher "To publisher"
+rls_string r_string_changerole_itemlist_moderator "To moderator"
+
+rls_string r_string_note_affiliationrequest_title "Publish request"
+rls_string r_string_note_affiliationrequest_text "$USER has requested permission to post in this channel. To approve this request press 'Accept', else press 'Decline'."
 
 rls_string r_string_note_affiliationoutcast "You have been banned from the channel. You now cannot read or post in this channel's content."
 rls_string r_string_note_affiliationmember "You have become a follower of this channel. You can now read, but not post in this channel's content."
 rls_string r_string_note_affiliationpublisher "You have become a publisher of this channel. You can now read and post in this channel's content."
 rls_string r_string_note_affiliationmoderator "You have become a moderator of this channel. You can now read, post, and manage this channel's content."
 
+rls_string r_string_note_subscriptionrequest_text "$USER has requested to follow this channel. To approve this request press 'Accept', else press 'Decline'."
 rls_string r_string_note_subscriptionpending "Your subscription request has been sent to the channel's producer."
 rls_string r_string_note_subscriptionaccepted "Your subscription to this channel has been accepted."
 rls_string r_string_note_subscriptionrejected "Your subscription to this channel has been rejected."
@@ -310,6 +315,7 @@ rls_string r_string_dialog_setcurrentlocation "Stel mijn positie in:"
 rls_string r_string_dialog_setnextlocation "Volgende bestemming instellen:"
 rls_string r_string_dialog_newmessage "Write post:"
 rls_string r_string_dialog_newcomment "Write comment:"
+rls_string r_string_dialog_requestcomment "Request comment:"
 rls_string r_string_dialog_addcontact "Enter contact's Id (eg. test@gtalk.com):"
 
 // Notes

@@ -32,7 +32,7 @@ rls_string r_string_endcall_menu "End Call"
 rls_string r_string_hide_menu "Скрыть"
 
 // Item
-rls_string r_string_item_newgroup "Новый канал..."
+rls_string r_string_item_newchannel "Новый канал..."
 rls_string r_string_item_newplace "Новое место..."
 
 // Menu: Call
@@ -45,6 +45,7 @@ rls_string r_string_options_endcall "Завершить звонок"
 // Menu: Settings & Edit place
 rls_string r_string_options_edititem "Изменить"
 rls_string r_string_options_searchplace "Поиск по данным"
+rls_string r_string_options_remove "Удалить"
 
 rls_string r_string_note_noresultsfound "Не найдено"
 rls_string r_string_note_requestsent "Запрос отправлен"
@@ -76,8 +77,6 @@ rls_string r_string_options_exit "Выход"
 rls_string r_string_options_done "Завершить"
 rls_string r_string_options_connect "Подключиться"
 rls_string r_string_options_disconnect "Отключиться"
-rls_string r_string_options_itemcontact "Контакт"
-rls_string r_string_options_itemgroup "Канал"
 rls_string r_string_options_settings "Настройки"
 rls_string r_string_item_viewmessages "Просмотреть сообщения"
 rls_string r_string_item_viewchannelmessages "Просмотр канала"
@@ -87,7 +86,6 @@ rls_string r_string_item_showchanneldetails "Информация о канал�
 rls_string r_string_item_call "Вызвать контакт"
 rls_string r_string_item_sendplacebysms "Отправить координаты по СМС"
 rls_string r_string_item_sendinvite "Пригласить в Buddycloud"
-rls_string r_string_item_delete "Remove"
 rls_string r_string_item_noticeaccept "Принять"
 rls_string r_string_item_noticeacceptandfollow "Принять и последующей"
 rls_string r_string_item_noticedecline "Закат"
@@ -100,7 +98,7 @@ rls_string r_string_settings_clearconnection "Изменить подлкюче�
 rls_string r_string_note_followinglistempty "Вы ни на кого не подписаны.\n\nИспользуйте каналы и пункт меню Обзор для поиска интересующей вас информации."
 
 // Menu: Messaging
-rls_string r_string_options_postrequest "Request to post"
+rls_string r_string_options_postrequest "Request post privilege"
 rls_string r_string_options_postmessage "Write new post"
 rls_string r_string_options_postmedia "Закачать медиа-файл"
 rls_string r_string_options_jumptounread "Перейти к непрочитанному"
@@ -111,7 +109,10 @@ rls_string r_string_item_addcomment "Write comment"
 rls_string r_string_item_likepost "♥ post"
 rls_string r_string_item_copypost "Copy post"
 rls_string r_string_item_reportpost "Report post"
-rls_string r_string_item_deletepost "Delete post"
+rls_string r_string_item_removepost "Delete post"
+
+rls_string r_string_options_itemchannel "Канал"
+rls_string r_string_channel_markread "Mark channel read"
 
 // Menu: Places
 rls_string r_string_options_setcurrent "Отметить новое место"
@@ -120,7 +121,7 @@ rls_string r_string_item_relearnplace "Повторить обзор места"
 rls_string r_string_dialog_relearnplace "Вы сейчас в этом месте и хотите пересмотреть его?"
 rls_string r_string_item_setnext "Задать как место назначения"
 rls_string r_string_item_editplace "Редактировать"
-rls_string r_string_item_deleteplace "Удалить место"
+rls_string r_string_options_removeplace "Удалить место"
 
 rls_string r_string_note_placelastseen "Был"
 rls_string r_string_note_placevisits "Посещений"
@@ -172,16 +173,20 @@ rls_string r_string_note_personalchannelcreated "$USER, приветствуем
 rls_string r_string_note_mediauploadready "Вы можете закачать медиа-файл по ссылке $LINK"
 
 rls_string r_string_item_changerole "Change permission"
-rls_string r_string_changerole_itemlist_outcast "Удалить"
-rls_string r_string_changerole_itemlist_follower "Подписан на"
-rls_string r_string_changerole_itemlist_publisher "Publisher"
-rls_string r_string_changerole_itemlist_moderator "Модератор"
+rls_string r_string_changerole_itemlist_outcast "Заблокирован каналом"
+rls_string r_string_changerole_itemlist_follower "To follower"
+rls_string r_string_changerole_itemlist_publisher "To publisher"
+rls_string r_string_changerole_itemlist_moderator "To moderator"
+
+rls_string r_string_note_affiliationrequest_title "Publish request"
+rls_string r_string_note_affiliationrequest_text "$USER has requested permission to post in this channel. To approve this request press 'Accept', else press 'Decline'."
 
 rls_string r_string_note_affiliationoutcast "You have been banned from the channel. You now cannot read or post in this channel's content."
 rls_string r_string_note_affiliationmember "You have become a follower of this channel. You can now read, but not post in this channel's content."
 rls_string r_string_note_affiliationpublisher "You have become a publisher of this channel. You can now read and post in this channel's content."
 rls_string r_string_note_affiliationmoderator "You have become a moderator of this channel. You can now read, post, and manage this channel's content."
 
+rls_string r_string_note_subscriptionrequest_text "$USER has requested to follow this channel. To approve this request press 'Accept', else press 'Decline'."
 rls_string r_string_note_subscriptionpending "Your subscription request has been sent to the channel's producer."
 rls_string r_string_note_subscriptionaccepted "Your subscription to this channel has been accepted."
 rls_string r_string_note_subscriptionrejected "Your subscription to this channel has been rejected."
@@ -310,6 +315,7 @@ rls_string r_string_dialog_setcurrentlocation "Указать мое место:
 rls_string r_string_dialog_setnextlocation "Задать следующее место:"
 rls_string r_string_dialog_newmessage "Write post:"
 rls_string r_string_dialog_newcomment "Write comment:"
+rls_string r_string_dialog_requestcomment "Request comment:"
 rls_string r_string_dialog_addcontact "Enter contact's Id (eg. test@gtalk.com):"
 
 // Notes

@@ -487,7 +487,7 @@ RESOURCE MENU_PANE r_settings_options_menu
 		MENU_ITEM
 		{ 
 			command = EMenuDeleteCommand; 
-			txt = r_string_item_delete;
+			txt = r_string_options_remove;
 		},
 		MENU_ITEM
 		{ 
@@ -587,7 +587,7 @@ RESOURCE MENU_PANE r_status_options_menu
 		{ 
 			command = EMenuOptionsItemCommand; 
 			cascade = r_status_options_item_menu; 
-			txt = r_string_options_itemcontact;
+			txt = "";
 		},
 		MENU_ITEM
 		{ 
@@ -792,7 +792,7 @@ RESOURCE MENU_PANE r_messaging_options_menu
 		{ 
 			command = EMenuOptionsItemCommand; 
 			cascade = r_messaging_options_item_menu; 
-			txt = r_string_options_itemcontact;
+			txt = "";
 		},
 		MENU_ITEM
 		{ 
@@ -802,8 +802,8 @@ RESOURCE MENU_PANE r_messaging_options_menu
 		MENU_ITEM
 		{ 
 			command = EMenuOptionsChannelCommand; 
-			cascade = r_messaging_options_group_menu; 
-			txt = r_string_options_itemgroup;
+			cascade = r_messaging_options_channel_menu; 
+			txt = r_string_options_itemchannel;
 		},
 		MENU_ITEM
 		{ 
@@ -860,20 +860,35 @@ RESOURCE MENU_PANE r_messaging_options_item_menu
 		MENU_ITEM
 		{ 
 			command = EMenuDeletePostCommand; 
-			txt = r_string_item_deletepost;
+			txt = r_string_item_removepost;
 		},
 		MENU_ITEM
 		{ 
 			command = EMenuChangePermissionCommand; 
 			txt = r_string_item_changerole;
+		},
+		MENU_ITEM
+		{ 
+			command = EMenuAcceptCommand; 
+			txt = r_string_item_noticeaccept;
+		},
+		MENU_ITEM
+		{ 
+			command = EMenuDeclineCommand; 
+			txt = r_string_item_noticedecline;
 		}
 	};
 }
 
-RESOURCE MENU_PANE r_messaging_options_group_menu
+RESOURCE MENU_PANE r_messaging_options_channel_menu
 {
 	items =
 	{
+		MENU_ITEM
+		{ 
+			command = EMenuMarkReadCommand; 
+			txt = r_string_channel_markread;
+		},
 		MENU_ITEM
 		{ 
 			command = EMenuSeeFollowersCommand; 
@@ -886,6 +901,16 @@ RESOURCE MENU_PANE r_messaging_follow_menu
 {
 	items =
 	{
+		MENU_ITEM
+		{ 
+			command = EMenuAcceptCommand; 
+			txt = r_string_item_noticeaccept;
+		},
+		MENU_ITEM
+		{ 
+			command = EMenuDeclineCommand; 
+			txt = r_string_item_noticedecline;
+		},
 		MENU_ITEM
 		{ 
 			command = EMenuFollowLinkCommand; 
@@ -923,7 +948,7 @@ RESOURCE MENU_PANE r_places_options_menu
 		{ 
 			command = EMenuOptionsItemCommand; 
 			cascade = r_places_options_item_menu; 
-			txt = r_string_options_itemcontact;
+			txt = "";
 		},
 		MENU_ITEM
 		{ 
@@ -993,7 +1018,7 @@ RESOURCE MENU_PANE r_places_options_item_menu
 		MENU_ITEM
 		{ 
 			command = EMenuDeletePlaceCommand; 
-			txt = r_string_item_deleteplace;
+			txt = r_string_options_removeplace;
 		}
 	};
 }
@@ -1027,7 +1052,7 @@ RESOURCE MENU_PANE r_explorer_options_menu
 		{ 
 			command = EMenuOptionsItemCommand; 
 			cascade = r_explorer_options_item_menu; 
-			txt = r_string_options_itemcontact;
+			txt = "";
 		},
 		MENU_ITEM
 		{ 
@@ -1038,7 +1063,7 @@ RESOURCE MENU_PANE r_explorer_options_menu
 		MENU_ITEM
 		{ 
 			command = EMenuEditChannelCommand; 
-			txt = r_string_item_newgroup;
+			txt = r_string_item_newchannel;
 		},
 		MENU_ITEM
 		{ 
@@ -1952,13 +1977,13 @@ RESOURCE TBUF r_localized_string_followingtab_hint { buf = r_string_followingtab
 RESOURCE TBUF r_localized_string_placestab_hint { buf = r_string_placestab_hint; }
 RESOURCE TBUF r_localized_string_explorertab_hint { buf = r_string_explorertab_hint; }
 RESOURCE TBUF r_localized_string_channelstab_hint { buf = r_string_channelstab_hint; }
-RESOURCE TBUF r_localized_string_menuitem_contact { buf = r_string_options_itemcontact; }
-RESOURCE TBUF r_localized_string_menuitem_group { buf = r_string_options_itemgroup; }
-RESOURCE TBUF r_localized_string_item_newgroup { buf = r_string_item_newgroup; }
+RESOURCE TBUF r_localized_string_menuitem_group { buf = r_string_options_itemchannel; }
+RESOURCE TBUF r_localized_string_item_newchannel { buf = r_string_item_newchannel; }
 RESOURCE TBUF r_localized_string_item_newplace { buf = r_string_item_newplace; }
 RESOURCE TBUF r_localized_string_item_placeinfo { buf = r_string_item_placeinfo; }
 RESOURCE TBUF r_localized_string_dialog_moodis { buf = r_string_dialog_moodis; }
 RESOURCE TBUF r_localized_string_dialog_newcomment { buf = r_string_dialog_newcomment; }
+RESOURCE TBUF r_localized_string_dialog_requestcomment { buf = r_string_dialog_requestcomment; }
 RESOURCE TBUF r_localized_string_dialog_setnextlocation { buf = r_string_dialog_setnextlocation; }
 RESOURCE TBUF r_localized_string_relearnplace_title { buf = r_string_item_relearnplace; }
 RESOURCE TBUF r_localized_string_relearnplace_text { buf = r_string_dialog_relearnplace; }
@@ -2021,11 +2046,14 @@ RESOURCE TBUF r_localized_string_note_mediauploadready { buf = r_string_note_med
 RESOURCE TBUF r_localized_string_note_requesting { buf = r_string_note_requesting; }
 RESOURCE TBUF r_localized_string_note_channelrank { buf = r_string_note_channelrank; }
 
+RESOURCE TBUF r_localized_string_note_affiliationrequest_title { buf = r_string_note_affiliationrequest_title; }
+RESOURCE TBUF r_localized_string_note_affiliationrequest_text { buf = r_string_note_affiliationrequest_text; }
 RESOURCE TBUF r_localized_string_note_affiliationoutcast { buf = r_string_note_affiliationoutcast; }
 RESOURCE TBUF r_localized_string_note_affiliationmember { buf = r_string_note_affiliationmember; }
 RESOURCE TBUF r_localized_string_note_affiliationpublisher { buf = r_string_note_affiliationpublisher; }
 RESOURCE TBUF r_localized_string_note_affiliationmoderator { buf = r_string_note_affiliationmoderator; }
 
+RESOURCE TBUF r_localized_string_note_subscriptionrequest_text { buf = r_string_note_subscriptionrequest_text; }
 RESOURCE TBUF r_localized_string_note_subscriptionpending { buf = r_string_note_subscriptionpending; }
 RESOURCE TBUF r_localized_string_note_subscriptionaccepted { buf = r_string_note_subscriptionaccepted; }
 RESOURCE TBUF r_localized_string_note_subscriptionrejected { buf = r_string_note_subscriptionrejected; }

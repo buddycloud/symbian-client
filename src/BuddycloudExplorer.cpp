@@ -296,4 +296,18 @@ void CExplorerQueryLevel::ClearResultItems() {
 	iResultItems.Reset();
 }
 
+void CExplorerQueryLevel::AppendSortedItem(CExplorerResultItem* aResultItem, TSortByType aSort) {
+	if(aSort == ESortByDistance) {
+		for(TInt i = 0; i < iResultItems.Count(); i++) {
+			if(aResultItem->GetDistance() < iResultItems[i]->GetDistance()) {
+				iResultItems.Insert(aResultItem, i);
+				
+				return;
+			}
+		}		
+	}
+	
+	iResultItems.Append(aResultItem);
+}
+
 // End of File

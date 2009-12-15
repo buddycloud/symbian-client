@@ -86,7 +86,8 @@ enum TXmppPubsubSubscription {
 };
 
 enum TXmppPubsubEventType {
-	EPubsubEventNone, EPubsubEventItems, EPubsubEventSubscription, EPubsubEventAffiliation, EPubsubEventPurge
+	EPubsubEventNone, EPubsubEventItems, EPubsubEventSubscription, 
+	EPubsubEventAffiliation, EPubsubEventPurge, EPubsubEventDelete
 };
 
 enum TXmppPubsubItemType {

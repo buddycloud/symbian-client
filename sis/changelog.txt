@@ -1,6 +1,50 @@
 Change Log
 ==========
 
+0.05.09
+
+- [bug] Fix /me posts
+- [bug] Fix invalid thread name reference in private message
+
+0.05.08
+
+- [bug] Fix sensoring own author name on posts if a topic channel
+- [bug] Fix PostMessageL to not pre-process outgoing posts
+- Set node subscription if included in affiliation event update
+- [trial] 'Write post' on center d-pad press, not 'Write comment'
+- [bug] Fix a possible (not) bubbling error with channels
+
+0.05.07
+
+- Send direct presence to pubsub with last received node item id (collects old items)
+- Trigger location update after pubsub completing auto-subscription
+- [bug] Fix CBuddycloudMessagingContainer rendering after deleted item (delete frist, render second)
+- [bug] Fix CBuddycloudFollowingContainer not rendering when a pubsub request is received
+- Bubble an item up when you sent a private message
+- Set node affiliation if included in subscription update details
+- Check own subscription to channel when dimming CBuddycloudMessagingContainer menu items
+- [bug] Fix discussion not being configured for a followed channel
+- [bug] Fix and move affiliation request text into the affiliation element
+
+0.05.06
+
+- [bug] Dumb bug, rename clientvar to clientver...
+
+0.05.05
+
+- Sort CBuddycloudExplorerContainer nearby objects by distance
+- When pressing back in CBuddycloudMessagingContainer clear entries before selecting return index
+- Add a 'Mark channel read' channel menu item and implement logic
+- On channel Unfollow/delete, delete channel node if you are the owner, handle delete event
+- Implement 'Request post privilege' logic in CBuddycloudMessagingContainer
+- Add HandlePubsubRequestL for handling message forms from the pubsub service
+- Display request items in a channel, with 'Accept' and 'Decline' options
+- Add clientvar attribute into location query for testing pubsub with the butler
+- Change pubsub component server to broadcaster.buddycloud.com
+- [bug] Fix discussion insert entry point error when load from disk required
+- [bug] Fix in CBuddycloudMessagingContainer not rendering if deleted entry equals selected entry
+- [bug] Fix redrawing of the #channel_id settings item after title is edited CBuddycloudEditChannelList
+
 0.05.04
 
 - Add EvaluateAsReal to XmlParser

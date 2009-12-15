@@ -358,10 +358,10 @@ TBool CDiscussion::DeleteAllEntries() {
 }
 
 TBool CDiscussion::AddEntryOrCommentLD(CAtomEntryData* aEntry, const TDesC8& aEntryReference) {
-	if(aEntry->GetContent().Length() > 0) {
-		TInt aInsertIndex = iEntries.Count();
-			
+	if(aEntry->GetContent().Length() > 0) {		
 		ReadDiscussionToMemoryL();
+		
+		TInt aInsertIndex = iEntries.Count();
 		
 		// Set indexer
 		aEntry->SetIndexerId(iDiscussionIndexer++);

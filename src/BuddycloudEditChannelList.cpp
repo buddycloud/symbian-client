@@ -181,6 +181,10 @@ void CBuddycloudEditChannelList::EditItemL(TInt aIndex, TBool aCalledFromMenu) {
 			iXmppInterface->SendAndAcknowledgeXmppStanza(pDiscoItemsStanza, this, true);
 			CleanupStack::PopAndDestroy(2); // aDiscoItemsStanza, aTextUtilities
 		}
+		
+		if(aIdentifier == EEditChannelItemTitle) {
+			((*aItemArray)[aIndex + 1])->UpdateListBoxTextL();	
+		}	
 	}
 	
 	((*aItemArray)[aIndex])->UpdateListBoxTextL();	

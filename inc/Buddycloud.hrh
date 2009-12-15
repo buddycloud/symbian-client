@@ -95,18 +95,19 @@ enum TSettingsTabs {
 #define EMenuReportPostCommand 258
 #define EMenuDeletePostCommand 259
 #define EMenuChangePermissionCommand 260
+#define EMenuMarkReadCommand 261
 
-#define EMenuSeeFollowersCommand 261
-#define EMenuSeePlacesCommand 262
-#define EMenuSeeFollowingCommand 263
-#define EMenuSeeProducingCommand 264
-#define EMenuSeeNearbyCommand 265
-#define EMenuSeeBeenHereCommand 266
-#define EMenuSeeGoingHereCommand 267
+#define EMenuSeeFollowersCommand 262
+#define EMenuSeePlacesCommand 263
+#define EMenuSeeFollowingCommand 264
+#define EMenuSeeProducingCommand 265
+#define EMenuSeeNearbyCommand 266
+#define EMenuSeeBeenHereCommand 267
+#define EMenuSeeGoingHereCommand 268
 
-#define EMenuAcceptCommand 268
-#define EMenuAcceptAndFollowCommand 269
-#define EMenuDeclineCommand 270
+#define EMenuAcceptCommand 269
+#define EMenuAcceptAndFollowCommand 270
+#define EMenuDeclineCommand 271
 
 // Settings
 enum TSettingsAccountItems {

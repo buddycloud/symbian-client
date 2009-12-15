@@ -1001,8 +1001,8 @@ void CBuddycloudExplorerContainer::XmppStanzaAcknowledgedL(const TDesC8& aStanza
 				
 				CleanupStack::PopAndDestroy(); // aItemXmlParser
 				
-				// Add item
-				iExplorerLevels[aLevel]->iResultItems.Append(aResultItem);
+				// Append sorted item
+				iExplorerLevels[aLevel]->AppendSortedItem(aResultItem, ESortByDistance);
 				CleanupStack::Pop(); // aResultItem
 			}
 		}
@@ -1044,7 +1044,7 @@ void CBuddycloudExplorerContainer::XmppStanzaAcknowledgedL(const TDesC8& aStanza
 				CleanupStack::PopAndDestroy(); // aChannelXmlParser
 				
 				// Add item
-				iExplorerLevels[aLevel]->iResultItems.Append(aResultItem);
+				iExplorerLevels[aLevel]->AppendSortedItem(aResultItem);
 				CleanupStack::Pop(); // aResultItem
 			}
 		}
@@ -1078,7 +1078,7 @@ void CBuddycloudExplorerContainer::XmppStanzaAcknowledgedL(const TDesC8& aStanza
 				CleanupStack::PopAndDestroy(); // aChannelXmlParser
 				
 				// Add item
-				iExplorerLevels[aLevel]->iResultItems.Append(aResultItem);
+				iExplorerLevels[aLevel]->AppendSortedItem(aResultItem);
 				CleanupStack::Pop(); // aResultItem
 			}		
 		}

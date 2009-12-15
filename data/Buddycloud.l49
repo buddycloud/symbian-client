@@ -32,7 +32,7 @@ rls_string r_string_endcall_menu "End Call"
 rls_string r_string_hide_menu "Peida"
 
 // Item
-rls_string r_string_item_newgroup "Uus kanal..."
+rls_string r_string_item_newchannel "Uus kanal..."
 rls_string r_string_item_newplace "Uus asukoht..."
 
 // Menu: Call
@@ -45,6 +45,7 @@ rls_string r_string_options_endcall "Lõpeta kõne"
 // Menu: Settings & Edit place
 rls_string r_string_options_edititem "Muuda"
 rls_string r_string_options_searchplace "Otsi täpsemalt"
+rls_string r_string_options_remove "Eemalda"
 
 rls_string r_string_note_noresultsfound "Tulemuseta"
 rls_string r_string_note_requestsent "Kutse saadetud"
@@ -76,8 +77,6 @@ rls_string r_string_options_exit "Välju"
 rls_string r_string_options_done "Valmis"
 rls_string r_string_options_connect "Mine online"
 rls_string r_string_options_disconnect "Mine offline"
-rls_string r_string_options_itemcontact "Kontakt"
-rls_string r_string_options_itemgroup "Kanal"
 rls_string r_string_options_settings "Asetused"
 rls_string r_string_item_viewmessages "Vaata sõnumeid"
 rls_string r_string_item_viewchannelmessages "Vaata kanalit"
@@ -87,7 +86,6 @@ rls_string r_string_item_showchanneldetails "Näita kanali andmeid"
 rls_string r_string_item_call "Helista kontaktile"
 rls_string r_string_item_sendplacebysms "Saada asukoht sms-iga"
 rls_string r_string_item_sendinvite "Kutsu buddycloudi"
-rls_string r_string_item_delete "Remove"
 rls_string r_string_item_noticeaccept "Nõustu"
 rls_string r_string_item_noticeacceptandfollow "Nõustu ja Järgne"
 rls_string r_string_item_noticedecline "Loobu"
@@ -100,7 +98,7 @@ rls_string r_string_settings_clearconnection "Muuda ühendust"
 rls_string r_string_note_followinglistempty "Sa ei ole järgnemas midagi.\n\nKasutage kanaleid ja Explorer vahekaarte asjade otsimiseks et neile järgneda. "
 
 // Menu: Messaging
-rls_string r_string_options_postrequest "Request to post"
+rls_string r_string_options_postrequest "Request post privilege"
 rls_string r_string_options_postmessage "Write new post"
 rls_string r_string_options_postmedia "Postita meedia"
 rls_string r_string_options_jumptounread "Mine ei loetutesse"
@@ -111,7 +109,10 @@ rls_string r_string_item_addcomment "Write comment"
 rls_string r_string_item_likepost "♥ post"
 rls_string r_string_item_copypost "Copy post"
 rls_string r_string_item_reportpost "Report post"
-rls_string r_string_item_deletepost "Delete post"
+rls_string r_string_item_removepost "Delete post"
+
+rls_string r_string_options_itemchannel "Kanal"
+rls_string r_string_channel_markread "Mark channel read"
 
 // Menu: Places
 rls_string r_string_options_setcurrent "Märgi uus asukoht"
@@ -120,7 +121,7 @@ rls_string r_string_item_relearnplace "Õpi uuest asukohta"
 rls_string r_string_dialog_relearnplace "Sa oled praegu selles asukohas ja soovid seda uuesti õppida?"
 rls_string r_string_item_setnext "Määra järgmine asukoht"
 rls_string r_string_item_editplace "Muuda andmeid"
-rls_string r_string_item_deleteplace "Eemalda asukoht"
+rls_string r_string_options_removeplace "Eemalda asukoht"
 
 rls_string r_string_note_placelastseen "Nähtud"
 rls_string r_string_note_placevisits "Külastusi"
@@ -172,16 +173,20 @@ rls_string r_string_note_personalchannelcreated "Tere tulemast buddycloudi $USER
 rls_string r_string_note_mediauploadready "Sa võid nüüd oma meedia üles laadida $LINK"
 
 rls_string r_string_item_changerole "Change permission"
-rls_string r_string_changerole_itemlist_outcast "Eemalda"
-rls_string r_string_changerole_itemlist_follower "Järgneja"
-rls_string r_string_changerole_itemlist_publisher "Publisher"
-rls_string r_string_changerole_itemlist_moderator "Moderaator"
+rls_string r_string_changerole_itemlist_outcast "Keela selles kanalis"
+rls_string r_string_changerole_itemlist_follower "To follower"
+rls_string r_string_changerole_itemlist_publisher "To publisher"
+rls_string r_string_changerole_itemlist_moderator "To moderator"
+
+rls_string r_string_note_affiliationrequest_title "Publish request"
+rls_string r_string_note_affiliationrequest_text "$USER has requested permission to post in this channel. To approve this request press 'Accept', else press 'Decline'."
 
 rls_string r_string_note_affiliationoutcast "You have been banned from the channel. You now cannot read or post in this channel's content."
 rls_string r_string_note_affiliationmember "You have become a follower of this channel. You can now read, but not post in this channel's content."
 rls_string r_string_note_affiliationpublisher "You have become a publisher of this channel. You can now read and post in this channel's content."
 rls_string r_string_note_affiliationmoderator "You have become a moderator of this channel. You can now read, post, and manage this channel's content."
 
+rls_string r_string_note_subscriptionrequest_text "$USER has requested to follow this channel. To approve this request press 'Accept', else press 'Decline'."
 rls_string r_string_note_subscriptionpending "Your subscription request has been sent to the channel's producer."
 rls_string r_string_note_subscriptionaccepted "Your subscription to this channel has been accepted."
 rls_string r_string_note_subscriptionrejected "Your subscription to this channel has been rejected."
@@ -310,6 +315,7 @@ rls_string r_string_dialog_setcurrentlocation "Määra minu asukoht:"
 rls_string r_string_dialog_setnextlocation "Määra järgmine asukoht:"
 rls_string r_string_dialog_newmessage "Write post:"
 rls_string r_string_dialog_newcomment "Write comment:"
+rls_string r_string_dialog_requestcomment "Request comment:"
 rls_string r_string_dialog_addcontact "Enter contact's Id (eg. test@gtalk.com):"
 
 // Notes

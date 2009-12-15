@@ -32,7 +32,7 @@ rls_string r_string_endcall_menu "End Call"
 rls_string r_string_hide_menu "Hide"
 
 // Item
-rls_string r_string_item_newgroup "New chaannel..."
+rls_string r_string_item_newchannel "New chaannel..."
 rls_string r_string_item_newplace "New hang-out..."
 
 // Menu: Call
@@ -45,6 +45,7 @@ rls_string r_string_options_endcall "Talk no more"
 // Menu: Settings & Edit place
 rls_string r_string_options_edititem "Be changin'"
 rls_string r_string_options_searchplace "Scour fer treasure"
+rls_string r_string_options_remove "Keelhaul"
 
 rls_string r_string_note_noresultsfound "Avast! Chest be empty"
 rls_string r_string_note_requestsent "Yer request be sent"
@@ -76,8 +77,6 @@ rls_string r_string_options_exit "Jump ship"
 rls_string r_string_options_done "Be finish'd"
 rls_string r_string_options_connect "Set sail"
 rls_string r_string_options_disconnect "Drop anchor"
-rls_string r_string_options_itemcontact "Contact"
-rls_string r_string_options_itemgroup "Chaannel"
 rls_string r_string_options_settings "Adjust ye riggin's"
 rls_string r_string_item_viewmessages "See th' messages"
 rls_string r_string_item_viewchannelmessages "See th' chaannel"
@@ -87,7 +86,6 @@ rls_string r_string_item_showchanneldetails "Show channel details"
 rls_string r_string_item_call "Call scallywag"
 rls_string r_string_item_sendplacebysms "Send hang-out by bottle"
 rls_string r_string_item_sendinvite "Invit' t' Buddycloud"
-rls_string r_string_item_delete "Remove"
 rls_string r_string_item_noticeaccept "Accept"
 rls_string r_string_item_noticeacceptandfollow "Accept and Follow"
 rls_string r_string_item_noticedecline "Decline"
@@ -100,7 +98,7 @@ rls_string r_string_settings_clearconnection "Change yer ship"
 rls_string r_string_note_followinglistempty "Yer not lookin aat anythin'.\n\nSpy a view t' th' Chaannels an' Explorer taabs t' scour treasure."
 
 // Menu: Messaging
-rls_string r_string_options_postrequest "Request to post"
+rls_string r_string_options_postrequest "Request post privilege"
 rls_string r_string_options_postmessage "Write new post"
 rls_string r_string_options_postmedia "Post media"
 rls_string r_string_options_jumptounread "Jump t' unread"
@@ -111,7 +109,10 @@ rls_string r_string_item_addcomment "Write comment"
 rls_string r_string_item_likepost "♥ post"
 rls_string r_string_item_copypost "Copy post"
 rls_string r_string_item_reportpost "Report post"
-rls_string r_string_item_deletepost "Delete post"
+rls_string r_string_item_removepost "Delete post"
+
+rls_string r_string_options_itemchannel "Chaannel"
+rls_string r_string_channel_markread "Mark channel read"
 
 // Menu: Places
 rls_string r_string_options_setcurrent "X marks the spot"
@@ -120,7 +121,7 @@ rls_string r_string_item_relearnplace "I be 'ere still"
 rls_string r_string_dialog_relearnplace "Ye be at this hang-out an' wan' te map it again?"
 rls_string r_string_item_setnext "I be goin' 'ere"
 rls_string r_string_item_editplace "Edit th' detail"
-rls_string r_string_item_deleteplace "Keelhaul hang-out"
+rls_string r_string_options_removeplace "Keelhaul hang-out"
 
 rls_string r_string_note_placelastseen "Spot'd"
 rls_string r_string_note_placevisits "Yer been 'ere"
@@ -172,16 +173,20 @@ rls_string r_string_note_personalchannelcreated "Welcome to buddycloud channels 
 rls_string r_string_note_mediauploadready "You can now upload your media file at $LINK"
 
 rls_string r_string_item_changerole "Change permission"
-rls_string r_string_changerole_itemlist_outcast "Keelhaul"
-rls_string r_string_changerole_itemlist_follower "Man th' cannon's"
-rls_string r_string_changerole_itemlist_publisher "Publisher"
-rls_string r_string_changerole_itemlist_moderator "Cap'n mate"
+rls_string r_string_changerole_itemlist_outcast "Make walk th' plank!"
+rls_string r_string_changerole_itemlist_follower "To follower"
+rls_string r_string_changerole_itemlist_publisher "To publisher"
+rls_string r_string_changerole_itemlist_moderator "To moderator"
+
+rls_string r_string_note_affiliationrequest_title "Publish request"
+rls_string r_string_note_affiliationrequest_text "$USER has requested permission to post in this channel. To approve this request press 'Accept', else press 'Decline'."
 
 rls_string r_string_note_affiliationoutcast "You have been banned from the channel. You now cannot read or post in this channel's content."
 rls_string r_string_note_affiliationmember "You have become a follower of this channel. You can now read, but not post in this channel's content."
 rls_string r_string_note_affiliationpublisher "You have become a publisher of this channel. You can now read and post in this channel's content."
 rls_string r_string_note_affiliationmoderator "You have become a moderator of this channel. You can now read, post, and manage this channel's content."
 
+rls_string r_string_note_subscriptionrequest_text "$USER has requested to follow this channel. To approve this request press 'Accept', else press 'Decline'."
 rls_string r_string_note_subscriptionpending "Your subscription request has been sent to the channel's producer."
 rls_string r_string_note_subscriptionaccepted "Your subscription to this channel has been accepted."
 rls_string r_string_note_subscriptionrejected "Your subscription to this channel has been rejected."
@@ -310,6 +315,7 @@ rls_string r_string_dialog_setcurrentlocation "Set ma hang-out:"
 rls_string r_string_dialog_setnextlocation "Where be ye next sailin':"
 rls_string r_string_dialog_newmessage "Write post:"
 rls_string r_string_dialog_newcomment "Write comment:"
+rls_string r_string_dialog_requestcomment "Request comment:"
 rls_string r_string_dialog_addcontact "Enter contact's Id (eg. test@gtalk.com):"
 
 // Notes

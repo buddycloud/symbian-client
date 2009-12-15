@@ -335,7 +335,7 @@ void CLocationEngine::BuildLocationPayload() {
 			!iBtDataHandler->IsWaiting() && !iSignalStrengthDataHandler->IsWaiting()) {
 
 		TPtr8 pLogStanza(iLogStanza->Des());
-		InsertIntoPayload(128, GetCurrentTime(), pLogStanza);
+		InsertIntoPayload(128 + 20, GetCurrentTime(), pLogStanza);
 		InsertIntoPayload(52, *iLangCode, pLogStanza);
 	
 		if(iXmppInterface) {
@@ -365,7 +365,7 @@ void CLocationEngine::TimerExpired(TInt /*aExpiryId*/) {
 				iEngineState = ELocationWaitForResources;
 				iTimer->After(KResourceTimeout);
 
-				_LIT8(KLogStanza, "<iq to='butler.buddycloud.com' type='get' xml:lang='' id='location1'><locationquery xmlns='urn:xmpp:locationquery:0'><timestamp></timestamp><publish>true</publish></locationquery></iq>\r\n");
+				_LIT8(KLogStanza, "<iq to='butler.buddycloud.com' type='get' xml:lang='' id='location1'><locationquery xmlns='urn:xmpp:locationquery:0' clientver='s60/1.0'><timestamp></timestamp><publish>true</publish></locationquery></iq>\r\n");
 				TPtr8 pLogStanza(iLogStanza->Des());
 				pLogStanza.Copy(KLogStanza);
 				
@@ -492,7 +492,7 @@ void CLocationEngine::GpsData(TReal aLatitude, TReal aLongitude, TReal aAccuracy
 		pGpsData.Format(KGpsData, aLatitude, aLongitude, aAccuracy);
 	
 		TPtr8 pLogStanza(iLogStanza->Des());
-		InsertIntoPayload(140, pGpsData, pLogStanza);
+		InsertIntoPayload(140 + 20, pGpsData, pLogStanza);
 		CleanupStack::PopAndDestroy();
 	
 		BuildLocationPayload();

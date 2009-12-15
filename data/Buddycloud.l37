@@ -32,7 +32,7 @@ rls_string r_string_endcall_menu "End Call"
 rls_string r_string_hide_menu "إخفاء"
 
 // Item
-rls_string r_string_item_newgroup "قناة جديدة"
+rls_string r_string_item_newchannel "قناة جديدة"
 rls_string r_string_item_newplace "مكان جديد"
 
 // Menu: Call
@@ -45,6 +45,7 @@ rls_string r_string_options_endcall "إنهأ المكالمه"
 // Menu: Settings & Edit place
 rls_string r_string_options_edititem "تغيير"
 rls_string r_string_options_searchplace "البحث عن تفاصيل"
+rls_string r_string_options_remove "يزيل"
 
 rls_string r_string_note_noresultsfound "لا توجد نتائج"
 rls_string r_string_note_requestsent "طلب إرسال"
@@ -76,8 +77,6 @@ rls_string r_string_options_exit "خروج"
 rls_string r_string_options_done "انتها"
 rls_string r_string_options_connect "الذهاب على الانترنت"
 rls_string r_string_options_disconnect "تذهب حاليا"
-rls_string r_string_options_itemcontact "اتصال"
-rls_string r_string_options_itemgroup "القناة"
 rls_string r_string_options_settings "إعدادات"
 rls_string r_string_item_viewmessages "عرض الرسائل"
 rls_string r_string_item_viewchannelmessages "عرض القناة"
@@ -87,7 +86,6 @@ rls_string r_string_item_showchanneldetails "وتظهر تفاصيل القنا�
 rls_string r_string_item_call "مكالمة الاتصال"
 rls_string r_string_item_sendplacebysms "ارسال مكان عبر الرسائل القصيرة"
 rls_string r_string_item_sendinvite "buddycloud دعوة إلى"
-rls_string r_string_item_delete "Remove"
 rls_string r_string_item_noticeaccept "قبول"
 rls_string r_string_item_noticeacceptandfollow "تقبل واتبع"
 rls_string r_string_item_noticedecline "انخفاض"
@@ -100,7 +98,7 @@ rls_string r_string_settings_clearconnection "تغيير اتصال"
 rls_string r_string_note_followinglistempty "انك لم تقم بعد بأي شيء. استخدام القنوات ومستكشف للبحث عن علامات لمتابعة الامور."
 
 // Menu: Messaging
-rls_string r_string_options_postrequest "Request to post"
+rls_string r_string_options_postrequest "Request post privilege"
 rls_string r_string_options_postmessage "Write new post"
 rls_string r_string_options_postmedia "يقدم الوسائط المتعددة"
 rls_string r_string_options_jumptounread "القفز الى غير المقروءة"
@@ -111,7 +109,10 @@ rls_string r_string_item_addcomment "Write comment"
 rls_string r_string_item_likepost "♥ post"
 rls_string r_string_item_copypost "Copy post"
 rls_string r_string_item_reportpost "Report post"
-rls_string r_string_item_deletepost "Delete post"
+rls_string r_string_item_removepost "Delete post"
+
+rls_string r_string_options_itemchannel "القناة"
+rls_string r_string_channel_markread "Mark channel read"
 
 // Menu: Places
 rls_string r_string_options_setcurrent "تحديد مكان جديد"
@@ -120,7 +121,7 @@ rls_string r_string_item_relearnplace "تتعلم هذا المكان"
 rls_string r_string_dialog_relearnplace "أنت الآن في هذا المكان ، وأنها تريد أن تتعلم؟"
 rls_string r_string_item_setnext "تعيين مكان المقبل"
 rls_string r_string_item_editplace "إظافه تفاصيل"
-rls_string r_string_item_deleteplace "إزالة مكان"
+rls_string r_string_options_removeplace "إزالة مكان"
 
 rls_string r_string_note_placelastseen "المشاهدة"
 rls_string r_string_note_placevisits "الزيارات"
@@ -172,16 +173,20 @@ rls_string r_string_note_personalchannelcreated "مرحبا بكم في buddyclo
 rls_string r_string_note_mediauploadready "يمكنك الآن تحميل الملف وسائط بمبلغ $LINK"
 
 rls_string r_string_item_changerole "Change permission"
-rls_string r_string_changerole_itemlist_outcast "يزيل"
-rls_string r_string_changerole_itemlist_follower "أتباع"
-rls_string r_string_changerole_itemlist_publisher "Publisher"
-rls_string r_string_changerole_itemlist_moderator "وسيط"
+rls_string r_string_changerole_itemlist_outcast "منع من القناه"
+rls_string r_string_changerole_itemlist_follower "To follower"
+rls_string r_string_changerole_itemlist_publisher "To publisher"
+rls_string r_string_changerole_itemlist_moderator "To moderator"
+
+rls_string r_string_note_affiliationrequest_title "Publish request"
+rls_string r_string_note_affiliationrequest_text "$USER has requested permission to post in this channel. To approve this request press 'Accept', else press 'Decline'."
 
 rls_string r_string_note_affiliationoutcast "You have been banned from the channel. You now cannot read or post in this channel's content."
 rls_string r_string_note_affiliationmember "You have become a follower of this channel. You can now read, but not post in this channel's content."
 rls_string r_string_note_affiliationpublisher "You have become a publisher of this channel. You can now read and post in this channel's content."
 rls_string r_string_note_affiliationmoderator "You have become a moderator of this channel. You can now read, post, and manage this channel's content."
 
+rls_string r_string_note_subscriptionrequest_text "$USER has requested to follow this channel. To approve this request press 'Accept', else press 'Decline'."
 rls_string r_string_note_subscriptionpending "Your subscription request has been sent to the channel's producer."
 rls_string r_string_note_subscriptionaccepted "Your subscription to this channel has been accepted."
 rls_string r_string_note_subscriptionrejected "Your subscription to this channel has been rejected."
@@ -310,6 +315,7 @@ rls_string r_string_dialog_setcurrentlocation ":تعيين مكاني"
 rls_string r_string_dialog_setnextlocation "حيث يقول أذهب المقبل"
 rls_string r_string_dialog_newmessage "Write post:"
 rls_string r_string_dialog_newcomment "Write comment:"
+rls_string r_string_dialog_requestcomment "Request comment:"
 rls_string r_string_dialog_addcontact "Enter contact's Id (eg. test@gtalk.com):"
 
 // Notes

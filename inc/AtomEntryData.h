@@ -26,7 +26,7 @@ class CAtomEntryData;
 */
 
 enum TEntryContentType {
-	EEntryContentPost, EEntryContentNotice, EEntryContentAction
+	EEntryContentPost, EEntryContentNotice, EEntryContentAction, EEntryUnprocessed
 };
 
 enum TEntryLinkType {

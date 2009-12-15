@@ -32,7 +32,7 @@ rls_string r_string_endcall_menu "End Call"
 rls_string r_string_hide_menu "Oculto"
 
 // Item
-rls_string r_string_item_newgroup "Nuevo canal..."
+rls_string r_string_item_newchannel "Nuevo canal..."
 rls_string r_string_item_newplace "Nuevo lugar...."
 
 // Menu: Call
@@ -45,6 +45,7 @@ rls_string r_string_options_endcall "Terminar llamada"
 // Menu: Settings & Edit place
 rls_string r_string_options_edititem "Cambiar"
 rls_string r_string_options_searchplace "Buscar detalles"
+rls_string r_string_options_remove "Eliminar"
 
 rls_string r_string_note_noresultsfound "No se encontraron resultados"
 rls_string r_string_note_requestsent "Petición enviada"
@@ -76,8 +77,6 @@ rls_string r_string_options_exit "Salir"
 rls_string r_string_options_done "Hecho"
 rls_string r_string_options_connect "Conectar"
 rls_string r_string_options_disconnect "Desconectar"
-rls_string r_string_options_itemcontact "Contacto"
-rls_string r_string_options_itemgroup "Canal"
 rls_string r_string_options_settings "Parámetros"
 rls_string r_string_item_viewmessages "Ver mensajes"
 rls_string r_string_item_viewchannelmessages "Ver canal"
@@ -87,7 +86,6 @@ rls_string r_string_item_showchanneldetails "Mostrar detalles canal"
 rls_string r_string_item_call "Llamar contacto"
 rls_string r_string_item_sendplacebysms "Enviar lugar por SMS"
 rls_string r_string_item_sendinvite "Invitar a buddycloud"
-rls_string r_string_item_delete "Remove"
 rls_string r_string_item_noticeaccept "Aceptar"
 rls_string r_string_item_noticeacceptandfollow "Acepta y Sigue"
 rls_string r_string_item_noticedecline "Rechazar la invitación"
@@ -100,7 +98,7 @@ rls_string r_string_settings_clearconnection "Cambiar conexión"
 rls_string r_string_note_followinglistempty "No estás siguiendo nada.\n\nUsa los canales y las pestañas del Explorer para buscar cosas que seguir"
 
 // Menu: Messaging
-rls_string r_string_options_postrequest "Request to post"
+rls_string r_string_options_postrequest "Request post privilege"
 rls_string r_string_options_postmessage "Write new post"
 rls_string r_string_options_postmedia "Subir multimedia"
 rls_string r_string_options_jumptounread "Ir a no leídos"
@@ -111,7 +109,10 @@ rls_string r_string_item_addcomment "Write comment"
 rls_string r_string_item_likepost "♥ post"
 rls_string r_string_item_copypost "Copy post"
 rls_string r_string_item_reportpost "Report post"
-rls_string r_string_item_deletepost "Delete post"
+rls_string r_string_item_removepost "Delete post"
+
+rls_string r_string_options_itemchannel "Canal"
+rls_string r_string_channel_markread "Mark channel read"
 
 // Menu: Places
 rls_string r_string_options_setcurrent "Marcar lugar nuevo"
@@ -120,7 +121,7 @@ rls_string r_string_item_relearnplace "Volver a aprender este lugar"
 rls_string r_string_dialog_relearnplace "¿Estás ahora en este lugar y deseas volver a aprenderlo?"
 rls_string r_string_item_setnext "Poner como siguiente lugar"
 rls_string r_string_item_editplace "Modificar detalles"
-rls_string r_string_item_deleteplace "Eliminar lugar"
+rls_string r_string_options_removeplace "Eliminar lugar"
 
 rls_string r_string_note_placelastseen "Visto"
 rls_string r_string_note_placevisits "Visitas"
@@ -172,16 +173,20 @@ rls_string r_string_note_personalchannelcreated "¡Bienvenid@ $USER a canales bu
 rls_string r_string_note_mediauploadready "Ahora puedes subir tus archivos a $LINK"
 
 rls_string r_string_item_changerole "Change permission"
-rls_string r_string_changerole_itemlist_outcast "Eliminar"
-rls_string r_string_changerole_itemlist_follower "Seguidor/a"
-rls_string r_string_changerole_itemlist_publisher "Publisher"
-rls_string r_string_changerole_itemlist_moderator "Moderador"
+rls_string r_string_changerole_itemlist_outcast "Excluir del canal"
+rls_string r_string_changerole_itemlist_follower "To follower"
+rls_string r_string_changerole_itemlist_publisher "To publisher"
+rls_string r_string_changerole_itemlist_moderator "To moderator"
+
+rls_string r_string_note_affiliationrequest_title "Publish request"
+rls_string r_string_note_affiliationrequest_text "$USER has requested permission to post in this channel. To approve this request press 'Accept', else press 'Decline'."
 
 rls_string r_string_note_affiliationoutcast "You have been banned from the channel. You now cannot read or post in this channel's content."
 rls_string r_string_note_affiliationmember "You have become a follower of this channel. You can now read, but not post in this channel's content."
 rls_string r_string_note_affiliationpublisher "You have become a publisher of this channel. You can now read and post in this channel's content."
 rls_string r_string_note_affiliationmoderator "You have become a moderator of this channel. You can now read, post, and manage this channel's content."
 
+rls_string r_string_note_subscriptionrequest_text "$USER has requested to follow this channel. To approve this request press 'Accept', else press 'Decline'."
 rls_string r_string_note_subscriptionpending "Your subscription request has been sent to the channel's producer."
 rls_string r_string_note_subscriptionaccepted "Your subscription to this channel has been accepted."
 rls_string r_string_note_subscriptionrejected "Your subscription to this channel has been rejected."
@@ -310,6 +315,7 @@ rls_string r_string_dialog_setcurrentlocation "Poner mi lugar:"
 rls_string r_string_dialog_setnextlocation "Poner siguiente lugar:"
 rls_string r_string_dialog_newmessage "Write post:"
 rls_string r_string_dialog_newcomment "Write comment:"
+rls_string r_string_dialog_requestcomment "Request comment:"
 rls_string r_string_dialog_addcontact "Enter contact's Id (eg. test@gtalk.com):"
 
 // Notes

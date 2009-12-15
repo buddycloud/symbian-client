@@ -32,7 +32,7 @@ rls_string r_string_endcall_menu "End Call"
 rls_string r_string_hide_menu "Hide"
 
 // Item
-rls_string r_string_item_newgroup "Νέο καναλι..."
+rls_string r_string_item_newchannel "Νέο καναλι..."
 rls_string r_string_item_newplace "Νέα τοποθεσία..."
 
 // Menu: Call
@@ -45,6 +45,7 @@ rls_string r_string_options_endcall "Τερματισμός κλήσης"
 // Menu: Settings & Edit place
 rls_string r_string_options_edititem "Αλλαγή"
 rls_string r_string_options_searchplace "Αναζήτηση λεπτομερειών"
+rls_string r_string_options_remove "Μετακίνησε"
 
 rls_string r_string_note_noresultsfound "Δεν βρέθηκαν αποτελέσματα"
 rls_string r_string_note_requestsent "Αίτηση εστάλθη"
@@ -76,8 +77,6 @@ rls_string r_string_options_exit "Εξοδος"
 rls_string r_string_options_done "Τέλος"
 rls_string r_string_options_connect "Πήγαινε online"
 rls_string r_string_options_disconnect "Πήγαινε offline"
-rls_string r_string_options_itemcontact "Επαφή"
-rls_string r_string_options_itemgroup "Κανάλι"
 rls_string r_string_options_settings "Ρυθμίσεις"
 rls_string r_string_item_viewmessages "Βλέπε μηνυματα"
 rls_string r_string_item_viewchannelmessages "Βλέπε κανάλι"
@@ -87,7 +86,6 @@ rls_string r_string_item_showchanneldetails "Show channel details"
 rls_string r_string_item_call "Κάλεσε επαφή"
 rls_string r_string_item_sendplacebysms "Στείλε τοποθεσία μέσω SMS"
 rls_string r_string_item_sendinvite "Προσκάλεσε στο buddycloud"
-rls_string r_string_item_delete "Remove"
 rls_string r_string_item_noticeaccept "Accept"
 rls_string r_string_item_noticeacceptandfollow "Accept and Follow"
 rls_string r_string_item_noticedecline "Decline"
@@ -100,7 +98,7 @@ rls_string r_string_settings_clearconnection "Αλλαγή σύνδεσης"
 rls_string r_string_note_followinglistempty "Δεν ακολουθάς τίποτα.\n\nΧρησιμοποιήσε τα κανάλια και τα Explorer tabs για αναζήτηση αντικειμένων για ακολουθία."
 
 // Menu: Messaging
-rls_string r_string_options_postrequest "Request to post"
+rls_string r_string_options_postrequest "Request post privilege"
 rls_string r_string_options_postmessage "Write new post"
 rls_string r_string_options_postmedia "Post media"
 rls_string r_string_options_jumptounread "Μετάβαση στα αδιάβαστα"
@@ -111,7 +109,10 @@ rls_string r_string_item_addcomment "Write comment"
 rls_string r_string_item_likepost "♥ post"
 rls_string r_string_item_copypost "Copy post"
 rls_string r_string_item_reportpost "Report post"
-rls_string r_string_item_deletepost "Delete post"
+rls_string r_string_item_removepost "Delete post"
+
+rls_string r_string_options_itemchannel "Κανάλι"
+rls_string r_string_channel_markread "Mark channel read"
 
 // Menu: Places
 rls_string r_string_options_setcurrent "Μάρκαρε νέα τοποθεσία"
@@ -120,7 +121,7 @@ rls_string r_string_item_relearnplace "Ξαναμάθε αυτή τη τοποθ
 rls_string r_string_dialog_relearnplace "Είσαι σε αυτή τη τοποθεσία και θέλεις να τη ξαναμάθεις?"
 rls_string r_string_item_setnext "Ορισμός ως επόμενης τοποθεσίας"
 rls_string r_string_item_editplace "Επεξεργασία στοιχείων"
-rls_string r_string_item_deleteplace "Αφαιρέση τοποθεσίας"
+rls_string r_string_options_removeplace "Αφαιρέση τοποθεσίας"
 
 rls_string r_string_note_placelastseen "Ορατά"
 rls_string r_string_note_placevisits "Επισκέψεις"
@@ -172,16 +173,20 @@ rls_string r_string_note_personalchannelcreated "Καλώς ήλθατε στα 
 rls_string r_string_note_mediauploadready "You can now upload your media file at $LINK"
 
 rls_string r_string_item_changerole "Change permission"
-rls_string r_string_changerole_itemlist_outcast "Μετακίνησε"
-rls_string r_string_changerole_itemlist_follower "Οπαδός"
-rls_string r_string_changerole_itemlist_publisher "Publisher"
-rls_string r_string_changerole_itemlist_moderator "Συντονιστής"
+rls_string r_string_changerole_itemlist_outcast "Απαγόρευσε από κανάλι"
+rls_string r_string_changerole_itemlist_follower "To follower"
+rls_string r_string_changerole_itemlist_publisher "To publisher"
+rls_string r_string_changerole_itemlist_moderator "To moderator"
+
+rls_string r_string_note_affiliationrequest_title "Publish request"
+rls_string r_string_note_affiliationrequest_text "$USER has requested permission to post in this channel. To approve this request press 'Accept', else press 'Decline'."
 
 rls_string r_string_note_affiliationoutcast "You have been banned from the channel. You now cannot read or post in this channel's content."
 rls_string r_string_note_affiliationmember "You have become a follower of this channel. You can now read, but not post in this channel's content."
 rls_string r_string_note_affiliationpublisher "You have become a publisher of this channel. You can now read and post in this channel's content."
 rls_string r_string_note_affiliationmoderator "You have become a moderator of this channel. You can now read, post, and manage this channel's content."
 
+rls_string r_string_note_subscriptionrequest_text "$USER has requested to follow this channel. To approve this request press 'Accept', else press 'Decline'."
 rls_string r_string_note_subscriptionpending "Your subscription request has been sent to the channel's producer."
 rls_string r_string_note_subscriptionaccepted "Your subscription to this channel has been accepted."
 rls_string r_string_note_subscriptionrejected "Your subscription to this channel has been rejected."
@@ -310,6 +315,7 @@ rls_string r_string_dialog_setcurrentlocation "Ορισμός θέσης μου:
 rls_string r_string_dialog_setnextlocation "Ορισμός επόμενης θέσης:"
 rls_string r_string_dialog_newmessage "Write post:"
 rls_string r_string_dialog_newcomment "Write comment:"
+rls_string r_string_dialog_requestcomment "Request comment:"
 rls_string r_string_dialog_addcontact "Enter contact's Id (eg. test@gtalk.com):"
 
 // Notes

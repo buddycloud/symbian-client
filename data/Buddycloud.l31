@@ -32,7 +32,7 @@ rls_string r_string_endcall_menu "End Call"
 rls_string r_string_hide_menu "隐藏"
 
 // Item
-rls_string r_string_item_newgroup "新的频道"
+rls_string r_string_item_newchannel "新的频道"
 rls_string r_string_item_newplace "新的地点"
 
 // Menu: Call
@@ -45,6 +45,7 @@ rls_string r_string_options_endcall "结束呼叫"
 // Menu: Settings & Edit place
 rls_string r_string_options_edititem "更改"
 rls_string r_string_options_searchplace "查找详情"
+rls_string r_string_options_remove "删除"
 
 rls_string r_string_note_noresultsfound "没有找到结果"
 rls_string r_string_note_requestsent "请求送出"
@@ -76,8 +77,6 @@ rls_string r_string_options_exit "退出"
 rls_string r_string_options_done "完成"
 rls_string r_string_options_connect "上线"
 rls_string r_string_options_disconnect "离线"
-rls_string r_string_options_itemcontact "联系人"
-rls_string r_string_options_itemgroup "频道"
 rls_string r_string_options_settings "设置"
 rls_string r_string_item_viewmessages "查看信息"
 rls_string r_string_item_viewchannelmessages "查看频道"
@@ -87,7 +86,6 @@ rls_string r_string_item_showchanneldetails "显示频道详情"
 rls_string r_string_item_call "呼叫联系人"
 rls_string r_string_item_sendplacebysms "通过短信发送所在位置"
 rls_string r_string_item_sendinvite "邀请加入buddycloud"
-rls_string r_string_item_delete "Remove"
 rls_string r_string_item_noticeaccept "接受"
 rls_string r_string_item_noticeacceptandfollow "同意并跟随"
 rls_string r_string_item_noticedecline "拒绝"
@@ -100,7 +98,7 @@ rls_string r_string_settings_clearconnection "更改连接"
 rls_string r_string_note_followinglistempty "您没有添加任何人。请使用频道和探索选项来搜索并添加追随者"
 
 // Menu: Messaging
-rls_string r_string_options_postrequest "Request to post"
+rls_string r_string_options_postrequest "Request post privilege"
 rls_string r_string_options_postmessage "Write new post"
 rls_string r_string_options_postmedia "发表多媒体"
 rls_string r_string_options_jumptounread "转到未读消息"
@@ -111,7 +109,10 @@ rls_string r_string_item_addcomment "Write comment"
 rls_string r_string_item_likepost "♥ post"
 rls_string r_string_item_copypost "Copy post"
 rls_string r_string_item_reportpost "Report post"
-rls_string r_string_item_deletepost "Delete post"
+rls_string r_string_item_removepost "Delete post"
+
+rls_string r_string_options_itemchannel "频道"
+rls_string r_string_channel_markread "Mark channel read"
 
 // Menu: Places
 rls_string r_string_options_setcurrent "标记新地点"
@@ -120,7 +121,7 @@ rls_string r_string_item_relearnplace "重新载入地点"
 rls_string r_string_dialog_relearnplace "您是否在这个地点并重新读取这个地点？"
 rls_string r_string_item_setnext "设置成为下一个地点"
 rls_string r_string_item_editplace "编辑详情"
-rls_string r_string_item_deleteplace "删除地点"
+rls_string r_string_options_removeplace "删除地点"
 
 rls_string r_string_note_placelastseen "登陆时间"
 rls_string r_string_note_placevisits "浏览"
@@ -172,16 +173,20 @@ rls_string r_string_note_personalchannelcreated "$USER，欢迎来到buddycloud�
 rls_string r_string_note_mediauploadready "你可以在此链接上传你的多媒体文件 $LINK"
 
 rls_string r_string_item_changerole "Change permission"
-rls_string r_string_changerole_itemlist_outcast "删除"
-rls_string r_string_changerole_itemlist_follower "追随者"
-rls_string r_string_changerole_itemlist_publisher "Publisher"
-rls_string r_string_changerole_itemlist_moderator "版主"
+rls_string r_string_changerole_itemlist_outcast "禁止这个频道"
+rls_string r_string_changerole_itemlist_follower "To follower"
+rls_string r_string_changerole_itemlist_publisher "To publisher"
+rls_string r_string_changerole_itemlist_moderator "To moderator"
+
+rls_string r_string_note_affiliationrequest_title "Publish request"
+rls_string r_string_note_affiliationrequest_text "$USER has requested permission to post in this channel. To approve this request press 'Accept', else press 'Decline'."
 
 rls_string r_string_note_affiliationoutcast "You have been banned from the channel. You now cannot read or post in this channel's content."
 rls_string r_string_note_affiliationmember "You have become a follower of this channel. You can now read, but not post in this channel's content."
 rls_string r_string_note_affiliationpublisher "You have become a publisher of this channel. You can now read and post in this channel's content."
 rls_string r_string_note_affiliationmoderator "You have become a moderator of this channel. You can now read, post, and manage this channel's content."
 
+rls_string r_string_note_subscriptionrequest_text "$USER has requested to follow this channel. To approve this request press 'Accept', else press 'Decline'."
 rls_string r_string_note_subscriptionpending "Your subscription request has been sent to the channel's producer."
 rls_string r_string_note_subscriptionaccepted "Your subscription to this channel has been accepted."
 rls_string r_string_note_subscriptionrejected "Your subscription to this channel has been rejected."
@@ -310,6 +315,7 @@ rls_string r_string_dialog_setcurrentlocation "设置我的地点："
 rls_string r_string_dialog_setnextlocation "设置下个地点："
 rls_string r_string_dialog_newmessage "Write post:"
 rls_string r_string_dialog_newcomment "Write comment:"
+rls_string r_string_dialog_requestcomment "Request comment:"
 rls_string r_string_dialog_addcontact "Enter contact's Id (eg. test@gtalk.com):"
 
 // Notes

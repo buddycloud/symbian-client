@@ -22,7 +22,7 @@ const TUid KCommunitiesViewId            = {13};
 _LIT(KBuddycloudRosterServer, "@buddycloud.com");
 _LIT(KBuddycloudChannelsServer, "@channels.buddycloud.com");
 
-_LIT8(KBuddycloudPubsubServer, "bbb@comptest.xmpp.lobstermonster.org");
+_LIT8(KBuddycloudPubsubServer, "broadcaster.buddycloud.com");
 
 _LIT8(KChatstateActive, "active");
 _LIT8(KChatstateComposing, "composing");
