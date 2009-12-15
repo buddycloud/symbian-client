@@ -50,7 +50,7 @@ CBuddycloudEditChannelList::~CBuddycloudEditChannelList() {
 	iXmppInterface->CancelXmppStanzaAcknowledge(this);
 	
 	if(iChannelItem && iChannelItem->GetItemId() <= 0) {
-		iBuddycloudLogic->GetFollowingStore()->DeleteItemById(iChannelItem->GetItemId());
+		delete iChannelItem;
 	}
 }
 
@@ -153,7 +153,7 @@ void CBuddycloudEditChannelList::EditItemL(TInt aIndex, TBool aCalledFromMenu) {
 	// Reset title
 	SetTitleL(iTitleResourceId);
 	
-	((*aItemArray)[aIndex])->StoreL();	
+	StoreSettingsL();
 	
 	if(iChannelItem->GetItemId() <= 0 && ((aIdentifier == EEditChannelItemTitle && iId.Length() == 0) || aIdentifier == EEditChannelItemId)) {
 		// Check for availablility
@@ -182,9 +182,7 @@ void CBuddycloudEditChannelList::EditItemL(TInt aIndex, TBool aCalledFromMenu) {
 			CleanupStack::PopAndDestroy(2); // aDiscoItemsStanza, aTextUtilities
 		}
 		
-		if(aIdentifier == EEditChannelItemTitle) {
-			((*aItemArray)[aIndex + 1])->UpdateListBoxTextL();	
-		}	
+		ListBox()->SetCurrentItemIndexAndDraw(EEditChannelItemId - 1);
 	}
 	
 	((*aItemArray)[aIndex])->UpdateListBoxTextL();	

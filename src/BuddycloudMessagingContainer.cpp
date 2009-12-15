@@ -1221,10 +1221,19 @@ void CBuddycloudMessagingContainer::DynInitMenuPaneL(TInt aResourceId, CEikMenuP
 	}
 	else if(aResourceId == R_MESSAGING_OPTIONS_CHANNEL_MENU) {
 		aMenuPane->SetItemDimmed(EMenuMarkReadCommand, true);
+		aMenuPane->SetItemDimmed(EMenuEditChannelCommand, true);
 		
 		if(iDiscussion->GetUnreadEntries() > 0) {
 			aMenuPane->SetItemDimmed(EMenuMarkReadCommand, false);
 		}
+		
+		// Channel metadata editing
+		CFollowingChannelItem* aChannelItem = static_cast <CFollowingChannelItem*> (iItem);	
+		
+		// TODO: Allow for user channel too
+		if(iIsChannel && iItem->GetItemType() == EItemChannel && aChannelItem->GetPubsubAffiliation() == EPubsubAffiliationOwner) {
+			aMenuPane->SetItemDimmed(EMenuEditChannelCommand, false);
+		}		
 	}
 	else if(aResourceId == R_MESSAGING_FOLLOW_MENU) {
 		aMenuPane->SetItemDimmed(EMenuFollowLinkCommand, true);
@@ -1354,6 +1363,11 @@ void CBuddycloudMessagingContainer::HandleCommandL(TInt aCommand) {
 		}
 	}
 	else if(aCommand == EMenuReportPostCommand) {
+		CAtomEntryData* aEntry = iEntries[iSelectedItem]->GetEntry();
+		
+		if(aEntry) {
+			iBuddycloudLogic->FlagPostAbusiveL(iItem->GetId(), aEntry->GetId());
+		}
 	}
 	else if(aCommand == EMenuMarkReadCommand) {
 		for(TInt i = 0; i < iEntries.Count(); i++) {
@@ -1378,6 +1392,10 @@ void CBuddycloudMessagingContainer::HandleCommandL(TInt aCommand) {
 		TExplorerQueryPckg aQueryPckg(aQuery);		
 		iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KExplorerViewId), TUid::Uid(iMessagingObject.iFollowerId), aQueryPckg);		
 	}	
+	else if(aCommand == EMenuEditChannelCommand) {
+		// Edit channel
+		iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KEditChannelViewId), TUid::Uid(iItem->GetItemId()), _L8(""));					
+	}
 	else if(aCommand == EMenuAcceptCommand || aCommand == EMenuDeclineCommand) {
 		// Accept & decline request
 		CAtomEntryData* aEntry = iEntries[iSelectedItem]->GetEntry();

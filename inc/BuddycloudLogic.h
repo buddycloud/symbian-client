@@ -236,6 +236,9 @@ class CBuddycloudLogic : public CBase, MContactDbObserver, MLocationEngineNotifi
     private: // Pubsub handling
 		void HandlePubsubEventL(const TDesC8& aStanza, TBool aNewEvent);
 		void HandlePubsubRequestL(const TDesC8& aStanza);
+		
+    public: // Flag/Tag
+    	void FlagPostAbusiveL(const TDesC& aNode, const TDesC8& aNodeItemId);
 	
 	public: // Channels
 		void FollowChannelL(const TDesC& aNode);

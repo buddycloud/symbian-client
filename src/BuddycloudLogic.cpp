@@ -1539,7 +1539,7 @@ void CBuddycloudLogic::ProcessChannelMetadataL(const TDesC8& aStanza) {
 	CTextUtilities* aTextUtilities = CTextUtilities::NewLC();
 	CXmlParser* aXmlParser = CXmlParser::NewLC(aStanza);
 
-	if(aXmlParser->MoveToElement(_L8("query"))) {
+	if(aXmlParser->MoveToElement(_L8("query")) || aXmlParser->MoveToElement(_L8("configuration"))) {
 		TPtrC aEncAttributeNode(aTextUtilities->Utf8ToUnicodeL(aXmlParser->GetStringAttribute(_L8("node"))));
 		
 		if(aEncAttributeNode.Length() > 0) {
@@ -1706,6 +1706,10 @@ void CBuddycloudLogic::HandlePubsubEventL(const TDesC8& aStanza, TBool aNewEvent
 		// Affiliations changed
 		aPubsubEventType = EPubsubEventAffiliation;
 	}
+	else if(aXmlParser->MoveToElement(_L8("configuration"))) {
+		// Metadata changed
+		ProcessChannelMetadataL(aStanza);
+	}
 	else if(aXmlParser->MoveToElement(_L8("purge"))) {
 		// Purge items
 		aPubsubEventType = EPubsubEventPurge;
@@ -1810,9 +1814,11 @@ void CBuddycloudLogic::HandlePubsubEventL(const TDesC8& aStanza, TBool aNewEvent
 														// Send presence
 														SendPresenceL();
 													}
-												}
-												else if(aGeolocItemType == EGeolocItemFuture) {
-													if(aRosterItem->GetGeolocItem(EGeolocItemFuture)->GetString(EGeolocText).FindF(aGeoloc->GetString(EGeolocText)) != KErrNotFound) {
+													
+													// Check future location
+													TPtrC aOwnFuturePlace(aRosterItem->GetGeolocItem(EGeolocItemFuture)->GetString(EGeolocText));
+													
+													if(aOwnFuturePlace.Length() > 0 && aOwnFuturePlace.FindF(aGeoloc->GetString(EGeolocText)) != KErrNotFound) {
 														iXmppEngine->SendAndForgetXmppStanza(_L8("<iq to='butler.buddycloud.com' type='set' id='next2'><query xmlns='http://buddycloud.com/protocol/place#next'><place><name/></place></query></iq>\r\n"), true);
 													}
 												}
@@ -2196,6 +2202,25 @@ void CBuddycloudLogic::HandlePubsubRequestL(const TDesC8& aStanza) {
 	CleanupStack::PopAndDestroy(2); // aXmlParser, aTextUtilities
 }
 
+void CBuddycloudLogic::FlagPostAbusiveL(const TDesC& aNode, const TDesC8& aNodeItemId) {
+#ifdef _DEBUG
+	WriteToLog(_L8("BL    CBuddycloudLogic::FlagPostAbusiveL"));
+#endif
+	
+	CTextUtilities* aTextUtilities = CTextUtilities::NewLC();	
+	TPtrC8 aEncNode(aTextUtilities->UnicodeToUtf8L(aNode));			
+	
+	_LIT8(KFlagPostStanza, "<iq to='tagger.buddycloud.com' type='set' id='flagpost:%02d'><flagtag xmlns='http://buddycloud.com/feedback'><x xmlns='jabber:x:data' type='submit'><field var='FORM_TYPE' type='hidden'><value>buddycloud:flag:post</value></field><field var='flag#channel'><value></value></field><field var='flag#itemid'><value></value></field></x></flagtag></iq>\r\n");	
+	HBufC8* aFlagPostStanza = HBufC8::NewLC(KFlagPostStanza().Length() + KBuddycloudPubsubServer().Length() + aEncNode.Length() + aNodeItemId.Length());
+	TPtr8 pFlagPostStanza(aFlagPostStanza->Des());
+	pFlagPostStanza.AppendFormat(KFlagPostStanza, GetNewIdStamp());
+	pFlagPostStanza.Insert(307, aNodeItemId);
+	pFlagPostStanza.Insert(259, aEncNode);
+
+	iXmppEngine->SendAndForgetXmppStanza(pFlagPostStanza, true);
+	CleanupStack::PopAndDestroy(2); // aFlagPostStanza, aTextUtilities
+}
+
 void CBuddycloudLogic::FollowChannelL(const TDesC& aNode) {
 #ifdef _DEBUG
 	WriteToLog(_L8("BL    CBuddycloudLogic::FollowChannelL"));
@@ -2322,10 +2347,10 @@ void CBuddycloudLogic::PublishChannelMetadataL(TInt aItemId) {
 			HBufC8* aEditStanza = HBufC8::NewLC(KEditStanza().Length() + KBuddycloudPubsubServer().Length() + aEncId.Length() + aAccess.Length() + aEncTitle->Des().Length() + aEncDescription->Des().Length());
 			TPtr8 pEditStanza(aEditStanza->Des());
 			pEditStanza.AppendFormat(KEditStanza, GetNewIdStamp());
-			pEditStanza.Insert(403, *aEncDescription);
+			pEditStanza.Insert(404, *aEncDescription);
 			pEditStanza.Insert(349, *aEncTitle);
 			pEditStanza.Insert(300, aAccess);
-			pEditStanza.Insert(116, aEncId);
+			pEditStanza.Insert(114, aEncId);
 			pEditStanza.Insert(8, KBuddycloudPubsubServer);
 		
 			iXmppEngine->SendAndForgetXmppStanza(pEditStanza, true);
@@ -3799,7 +3824,6 @@ void CBuddycloudLogic::LoadPlaceItemsL() {
 		WriteToLog(_L8("BL    Internalize Place Store"));
 
 		CXmlParser* aXmlParser = CXmlParser::NewLC(*aBuf);
-		CTextUtilities* aTextUtilities = CTextUtilities::NewLC();
 		CTimeUtilities* aTimeUtilities = CTimeUtilities::NewLC();
 
 		if(aXmlParser->MoveToElement(_L8("places"))) {
@@ -3833,7 +3857,7 @@ void CBuddycloudLogic::LoadPlaceItemsL() {
 			}
 		}
 
-		CleanupStack::PopAndDestroy(4); // aTimeUtilities, aTextUtilities, aXmlParser, aBuf
+		CleanupStack::PopAndDestroy(3); // aTimeUtilities, aXmlParser, aBuf
 		CleanupStack::PopAndDestroy(&aFile);
 	}
 }
@@ -6079,7 +6103,8 @@ void CBuddycloudLogic::HandleIncomingMessageL(TDesC& aFrom, const TDesC8& aData)
 	do {
 		TPtrC8 aElementName = aXmlParser->GetElementName();
 		
-		if(aElementName.Compare(_L8("body")) == 0) {
+		if(aElementName.Compare(_L8("body")) == 0 && aAtomEntry->GetContent().Length() == 0) {
+			// Get first body data only, avoid recollecting html data
 			aAtomEntry->SetContentL(aTextUtilities->Utf8ToUnicodeL(aXmlParser->GetStringData()));
 		}
 		else if(aElementName.Compare(_L8("thread")) == 0) {

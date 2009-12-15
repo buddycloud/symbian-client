@@ -189,14 +189,16 @@ void CBuddycloudListComponent::TimerExpired(TInt aExpiryId) {
 	}
 	else if(aExpiryId == KDragTimerId) {
 #ifdef __SERIES60_40__		
-		iDragVelocity = iDragVelocity * 0.95;		
-		iScrollbarHandlePosition += TInt(iDragVelocity);		
-		
-		CBuddycloudListComponent::RepositionItems(false);
-		RenderScreen();
-		
-		if(Abs(iDragVelocity) > 0.05) {
-			iDragTimer->After(50000);
+		if(iDraggingAllowed) {
+			iDragVelocity = iDragVelocity * 0.95;		
+			iScrollbarHandlePosition += TInt(iDragVelocity);		
+			
+			CBuddycloudListComponent::RepositionItems(false);
+			RenderScreen();
+			
+			if(Abs(iDragVelocity) > 0.05) {
+				iDragTimer->After(50000);
+			}
 		}
 #endif
 	}
@@ -461,9 +463,15 @@ void CBuddycloudListComponent::RepositionItems(TBool /*aSnapToItem*/) {
 	// If near to bottom, adjust handle positioning
 	if(iTotalListSize > iRect.Height() && iTotalListSize - iScrollbarHandlePosition < iRect.Height()) {
 		iScrollbarHandlePosition = iTotalListSize - iRect.Height();
+#ifdef __SERIES60_40__
+		iDraggingAllowed = false;
+#endif
 	}
 	else if(iScrollbarHandlePosition < 0 || iTotalListSize <= iRect.Height()) {
 		iScrollbarHandlePosition = 0;
+#ifdef __SERIES60_40__
+		iDraggingAllowed = false;
+#endif
 	}
 	
 	// Scrollbar
@@ -537,8 +545,9 @@ void CBuddycloudListComponent::HandlePointerEventL(const TPointerEvent &aPointer
 		iLastDragPosition = iStartDragPosition;
 	}
 	else if(aPointerEvent.iType == TPointerEvent::EDrag) {	
-		if(aPointerEvent.iPosition.iY + 32 < iStartDragPosition || aPointerEvent.iPosition.iY - 32 > iStartDragPosition) {
+		if(!iDraggingAllowed && (aPointerEvent.iPosition.iY + 32 < iStartDragPosition || aPointerEvent.iPosition.iY - 32 > iStartDragPosition)) {
 			iDraggingAllowed = true;			
+			iSnapToItem = false;
 		}
 		
 		if(iDraggingAllowed) {
