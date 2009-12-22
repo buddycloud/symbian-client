@@ -28,19 +28,11 @@ rls_string r_string_options_menu "خيارات"
 rls_string r_string_say_menu "يقول"
 rls_string r_string_cancel_menu "إلغاء"
 rls_string r_string_next_menu "التالي"
-rls_string r_string_endcall_menu "End Call"
 rls_string r_string_hide_menu "إخفاء"
 
 // Item
 rls_string r_string_item_newchannel "قناة جديدة"
 rls_string r_string_item_newplace "مكان جديد"
-
-// Menu: Call
-rls_string r_string_options_loudspeaker "التبديل إلى رئيس البرلمان"
-rls_string r_string_options_handset "التبديل إلى السماعة"
-rls_string r_string_options_hold "يمسك"
-rls_string r_string_options_resume "استئناف"
-rls_string r_string_options_endcall "إنهأ المكالمه"
 
 // Menu: Settings & Edit place
 rls_string r_string_options_edititem "تغيير"
@@ -83,7 +75,6 @@ rls_string r_string_item_viewchannelmessages "عرض القناة"
 rls_string r_string_item_viewprivatemessages "عرض الرسائل الخاصة"
 rls_string r_string_item_showplacedetails "وتظهر تفاصيل المكان"
 rls_string r_string_item_showchanneldetails "وتظهر تفاصيل القناة"
-rls_string r_string_item_call "مكالمة الاتصال"
 rls_string r_string_item_sendplacebysms "ارسال مكان عبر الرسائل القصيرة"
 rls_string r_string_item_sendinvite "buddycloud دعوة إلى"
 rls_string r_string_item_noticeaccept "قبول"
@@ -213,7 +204,6 @@ rls_string r_string_settings_itemlist_accesspoint "نقطة وصول لاستخ�
 rls_string r_string_settings_itemlist_accesspointuserdefined "الحساب المنشأ"
 rls_string r_string_settings_itemlist_accesspointalwaysask "داما اسئل"
 rls_string r_string_settings_itemlist_autostart "في بداية إطلاق الهاتف"
-rls_string r_string_settings_itemlist_showcontacts "وتظهر الأسماء الهاتف"
 
 // Notification settings
 rls_string r_string_settings_notifications_title "الإخطارات"

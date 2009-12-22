@@ -28,19 +28,11 @@ rls_string r_string_options_menu "Επιλογές"
 rls_string r_string_say_menu "Πες"
 rls_string r_string_cancel_menu "Ακυρο"
 rls_string r_string_next_menu "Επόμενο"
-rls_string r_string_endcall_menu "End Call"
 rls_string r_string_hide_menu "Hide"
 
 // Item
 rls_string r_string_item_newchannel "Νέο καναλι..."
 rls_string r_string_item_newplace "Νέα τοποθεσία..."
-
-// Menu: Call
-rls_string r_string_options_loudspeaker "Μετάβαση σε μεγάφωνο"
-rls_string r_string_options_handset "Μετάβαση σε ακουστικό"
-rls_string r_string_options_hold "Κράτηση"
-rls_string r_string_options_resume "Επανάληψη"
-rls_string r_string_options_endcall "Τερματισμός κλήσης"
 
 // Menu: Settings & Edit place
 rls_string r_string_options_edititem "Αλλαγή"
@@ -83,7 +75,6 @@ rls_string r_string_item_viewchannelmessages "Βλέπε κανάλι"
 rls_string r_string_item_viewprivatemessages "Βλέπε προσωπικά μηνυματα"
 rls_string r_string_item_showplacedetails "Δείξε λεπτομέρειες τοποθεσίας"
 rls_string r_string_item_showchanneldetails "Show channel details"
-rls_string r_string_item_call "Κάλεσε επαφή"
 rls_string r_string_item_sendplacebysms "Στείλε τοποθεσία μέσω SMS"
 rls_string r_string_item_sendinvite "Προσκάλεσε στο buddycloud"
 rls_string r_string_item_noticeaccept "Accept"
@@ -213,7 +204,6 @@ rls_string r_string_settings_itemlist_accesspoint "Σημείο πρόσβαση
 rls_string r_string_settings_itemlist_accesspointuserdefined "Χρήστης ορίζεται"
 rls_string r_string_settings_itemlist_accesspointalwaysask "Ερώτηση πάντα"
 rls_string r_string_settings_itemlist_autostart "Εκκίνηση με το άνοιγμα τηλεφώνου"
-rls_string r_string_settings_itemlist_showcontacts "Δες επαφές τηλεφώνου"
 
 // Notification settings
 rls_string r_string_settings_notifications_title "Notifications"

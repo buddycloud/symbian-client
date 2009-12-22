@@ -27,7 +27,6 @@
 #include "BuddycloudExplorer.h"
 #include "BuddycloudFollowingContainer.h"
 #include "BuddycloudMessagingContainer.h"
-#include "TelephonyEngine.h"
 
 // ================= MEMBER FUNCTIONS =======================
 
@@ -78,7 +77,6 @@ void CBuddycloudFollowingContainer::ConstructL(const TRect& aRect, TInt aItem) {
 	iSearchEdwin->SetAknEditorFlags(EAknEditorFlagNoT9 | EAknEditorFlagNoEditIndicators);
 	iSearchEdwin->SetAknEditorCase(EAknEditorLowerCase);
 	ConfigureEdwinL();
-	ConfigureCbaAndMenuL();
 
 	iBuddycloudLogic->AddStatusObserver(this);
 
@@ -204,25 +202,6 @@ void CBuddycloudFollowingContainer::DisplayEdwin(TBool aShowEdwin) {
 	}
 }
 
-void CBuddycloudFollowingContainer::ConfigureCbaAndMenuL() {
-	if(iBuddycloudLogic->GetCall()->GetTelephonyState() > ETelephonyIdle) {
-		CEikonEnv::Static()->RootWin().SetOrdinalPosition(0, ECoeWinPriorityAlwaysAtFront);
-		
-		iViewAccessor->ViewMenuBar()->StopDisplayingMenuBar();
-		iViewAccessor->ViewMenuBar()->SetMenuTitleResourceId(R_CALL_OPTIONS_MENUBAR);
-		iViewAccessor->ViewCba()->SetCommandSetL(R_SOFTKEYS_OPTIONS_ENDCALL);
-		iViewAccessor->ViewCba()->DrawDeferred();
-	}
-	else {
-		CEikonEnv::Static()->RootWin().SetOrdinalPosition(0, ECoeWinPriorityNormal);
-		
-		iViewAccessor->ViewMenuBar()->StopDisplayingMenuBar();
-		iViewAccessor->ViewMenuBar()->SetMenuTitleResourceId(R_STATUS_OPTIONS_MENUBAR);
-		iViewAccessor->ViewCba()->SetCommandSetL(R_SOFTKEYS_OPTIONS_HIDE);
-		iViewAccessor->ViewCba()->DrawDeferred();
-	}
-}
-
 void CBuddycloudFollowingContainer::NotificationEvent(TBuddycloudLogicNotificationType aEvent, TInt aId) {
 	if(aEvent == ENotificationFollowingItemsUpdated) {
 		if(aId == iSelectedItem) {
@@ -251,10 +230,6 @@ void CBuddycloudFollowingContainer::NotificationEvent(TBuddycloudLogicNotificati
 		
 		RenderScreen();
 	}
-	else if(aEvent == ENotificationTelephonyChanged) {
-		ConfigureCbaAndMenuL();		
-		RenderScreen();
-	}
 	else {
 		CBuddycloudListComponent::NotificationEvent(aEvent, aId);
 	}
@@ -279,10 +254,7 @@ void CBuddycloudFollowingContainer::GetHelpContext(TCoeHelpContext& aContext) co
 	if(iItemStore->Count() > 0) {
 		CFollowingItem* aItem = static_cast <CFollowingItem*> (iItemStore->GetItemById(iSelectedItem));
 
-		if(aItem->GetItemType() == EItemContact) {
-			aContext.iContext = KSendingInvites;			
-		}
-		else if(aItem->GetItemType() == EItemNotice) {
+		if(aItem->GetItemType() == EItemNotice) {
 			if(aItem->GetIdType() == EIdRoster) {
 				aContext.iContext = KFollowingRequests;	
 			}
@@ -346,7 +318,7 @@ void CBuddycloudFollowingContainer::SizeChanged() {
 	
 	// Search Field
 	if(iSearchEdwin) {
-		iSearchEdwin->SetTextL(&iBuddycloudLogic->GetContactFilter());
+		iSearchEdwin->SetTextL(&iBuddycloudLogic->GetFollowingFilterText());
 		iSearchEdwin->HandleTextChangedL();
 
 		if(iSearchEdwin->TextLength() > 0 || iSearchVisible) {
@@ -365,12 +337,11 @@ TInt CBuddycloudFollowingContainer::CountComponentControls() const {
 }
 
 CCoeControl* CBuddycloudFollowingContainer::ComponentControl(TInt aIndex) const {
-	switch (aIndex) {
-		case 0:
-			return iSearchEdwin;
-		default:
-			return NULL;
+	if(aIndex == 0) {
+		return iSearchEdwin;
 	}
+	
+	return NULL;
 }
 
 void CBuddycloudFollowingContainer::RenderWrappedText(TInt aIndex) {
@@ -384,7 +355,7 @@ void CBuddycloudFollowingContainer::RenderWrappedText(TInt aIndex) {
 		TInt aWidth = (iRect.Width() - iSelectedItemIconTextOffset - 2 - iLeftBarSpacer - iRightBarSpacer);
 		
 		if(aItem) {	
-			if(aItem->GetItemType() == EItemRoster || aItem->GetItemType() == EItemChannel) {
+			if(aItem->GetItemType() >= EItemRoster) {
 				CFollowingChannelItem* aChannelItem = static_cast <CFollowingChannelItem*> (aItem);
 				TBuf<32> aBuf;
 	
@@ -517,11 +488,6 @@ void CBuddycloudFollowingContainer::RenderListItems() {
 						iListItems.Append(TListItem(aItem->GetItemId(), TRect(0, aItemDrawPos, (Rect().Width() - iRightBarSpacer), (aItemDrawPos + aItemSize))));
 #endif
 
-						if(aItem->GetItemType() == EItemContact && aItem->GetTitle().Length() == 0) {
-							// Collect contact details if empty
-							iBuddycloudLogic->CollectContactDetailsL(aItem->GetItemId());
-						}
-						
 						TPtrC aDirectionalText(iTextUtilities->BidiLogicalToVisualL(aItem->GetTitle()));
 						
 						if(iSelectedItem == aItem->GetItemId()) {
@@ -742,7 +708,7 @@ void CBuddycloudFollowingContainer::RenderListItems() {
 								}
 								
 								// Request pubsub if not collected
-								if( !aDynamicContentRequested && !aRosterItem->PubsubCollected() ) {
+								if(!aDynamicContentRequested && !aRosterItem->PubsubCollected()) {
 									iBuddycloudLogic->RecollectFollowerDetailsL(aRosterItem->GetItemId());
 									aDynamicContentRequested = true;
 								}
@@ -879,13 +845,6 @@ void CBuddycloudFollowingContainer::HandleItemSelection(TInt aItemId) {
 				iViewAccessor->ViewMenuBar()->TryDisplayMenuBarL();
 				iViewAccessor->ViewMenuBar()->SetMenuTitleResourceId(R_STATUS_OPTIONS_MENUBAR);
 			}
-			else if(aItem->GetItemType() == EItemContact) {
-				if(iBuddycloudLogic->GetCall()->GetTelephonyState() == ETelephonyIdle) {
-					iViewAccessor->ViewMenuBar()->SetMenuTitleResourceId(R_STATUS_ITEM_MENUBAR);
-					iViewAccessor->ViewMenuBar()->TryDisplayMenuBarL();
-					iViewAccessor->ViewMenuBar()->SetMenuTitleResourceId(R_STATUS_OPTIONS_MENUBAR);
-				}
-			}
 			else if(aItem->GetItemType() != EItemNotice || iBuddycloudLogic->GetState() == ELogicOnline) {
 				iViewAccessor->ViewMenuBar()->SetMenuTitleResourceId(R_STATUS_ITEM_MENUBAR);
 				iViewAccessor->ViewMenuBar()->TryDisplayMenuBarL();
@@ -898,67 +857,26 @@ void CBuddycloudFollowingContainer::HandleItemSelection(TInt aItemId) {
 #ifdef __SERIES60_40__
 void CBuddycloudFollowingContainer::DynInitToolbarL(TInt aResourceId, CAknToolbar* aToolbar) {
 	if(aResourceId == R_STATUS_TOOLBAR) {
-		aToolbar->SetItemDimmed(EMenuCallCommand, true, true);
-		aToolbar->SetItemDimmed(EMenuMessagesCommand, true, true);
+		aToolbar->SetItemDimmed(EMenuChannelMessagesCommand, true, true);
+		aToolbar->SetItemDimmed(EMenuPrivateMessagesCommand, true, true);
 		
 		CFollowingItem* aItem = static_cast <CFollowingItem*> (iItemStore->GetItemById(iSelectedItem));
 
-		if(aItem && aItem->GetItemType() >= EItemContact) {
-			CFollowingContactItem* aContactItem = static_cast <CFollowingContactItem*> (aItem);
-			
-			// Call dimming
-			if(aContactItem->GetAddressbookId() >= 0) {
-				CContactItem* aContact = iBuddycloudLogic->GetContactDetailsLC(aContactItem->GetAddressbookId());
-				
-				if(aContact != NULL) {
-					if(aContact->CardFields().FindNext(KUidContactFieldPhoneNumber) != KErrNotFound) {
-						if( !iBuddycloudLogic->GetCall()->IsTelephonyBusy() ) {
-							aToolbar->SetItemDimmed(EMenuCallCommand, false, true);
-						}				
-					}
-					
-					CleanupStack::PopAndDestroy(); // aContact
-				}
+		if(aItem && aItem->GetItemType() >= EItemRoster) {
+			if(aItem->GetId().Length() > 0) {
+				aToolbar->SetItemDimmed(EMenuChannelMessagesCommand, false, true);
 			}
 			
-			// Message dimming
-			if(aItem->GetItemType() >= EItemRoster) {
-				aToolbar->SetItemDimmed(EMenuMessagesCommand, false, true);
+			if(aItem->GetItemType() == EItemRoster) {
+				aToolbar->SetItemDimmed(EMenuPrivateMessagesCommand, false, true);
 			}
-		}		
+		}
 	}
 }
 #endif
 
 void CBuddycloudFollowingContainer::DynInitMenuPaneL(TInt aResourceId, CEikMenuPane* aMenuPane) {
-	if(aResourceId == R_CALL_OPTIONS_MENU) {
-		aMenuPane->SetItemDimmed(EMenuLoudspeakerCommand, true);
-		aMenuPane->SetItemDimmed(EMenuHandsetCommand, true);
-		aMenuPane->SetItemDimmed(EMenuHoldCallCommand, true);
-		aMenuPane->SetItemDimmed(EMenuResumeCallCommand, true);
-		aMenuPane->SetItemDimmed(EMenuEndCallCommand, false);
-		
-		// Loudspeaker
-		if(iBuddycloudLogic->GetCall()->LoudspeakerAvailable()) {
-			if(iBuddycloudLogic->GetCall()->LoudspeakerActive()) {
-				aMenuPane->SetItemDimmed(EMenuHandsetCommand, false);
-			}
-			else {
-				aMenuPane->SetItemDimmed(EMenuLoudspeakerCommand, false);
-			}
-		}
-		
-		// Hold/Resume
-		if(iBuddycloudLogic->GetCall()->GetTelephonyState() == ETelephonyActive) {
-			if(iBuddycloudLogic->GetCall()->OnHold()) {
-				aMenuPane->SetItemDimmed(EMenuResumeCallCommand, false);
-			}
-			else {
-				aMenuPane->SetItemDimmed(EMenuHoldCallCommand, false);
-			}
-		}
-	}
-	else if(aResourceId == R_STATUS_OPTIONS_MENU) {
+	if(aResourceId == R_STATUS_OPTIONS_MENU) {
 		aMenuPane->SetItemDimmed(EMenuConnectCommand, true);
 		aMenuPane->SetItemDimmed(EMenuDisconnectCommand, true);
 		aMenuPane->SetItemDimmed(EMenuOptionsItemCommand, true);
@@ -986,7 +904,6 @@ void CBuddycloudFollowingContainer::DynInitMenuPaneL(TInt aResourceId, CEikMenuP
 		}
 	}
 	else if(aResourceId == R_STATUS_OPTIONS_ITEM_MENU) {
-		aMenuPane->SetItemDimmed(EMenuCallCommand, true);
 		aMenuPane->SetItemDimmed(EMenuPrivateMessagesCommand, true);
 		aMenuPane->SetItemDimmed(EMenuChannelMessagesCommand, true);
 		aMenuPane->SetItemDimmed(EMenuGetPlaceInfoCommand, true);
@@ -1015,29 +932,6 @@ void CBuddycloudFollowingContainer::DynInitMenuPaneL(TInt aResourceId, CEikMenuP
 					}
 				}
 			}
-			else if(aItem->GetItemType() == EItemContact) {
-				CFollowingContactItem* aContactItem = static_cast <CFollowingContactItem*> (aItem);
-				
-				if(aContactItem->GetAddressbookId() >= 0) {
-					CContactItem* aContact = iBuddycloudLogic->GetContactDetailsLC(aContactItem->GetAddressbookId());
-					
-					if(aContact) {
-						if(aContact->CardFields().FindNext(KUidContactFieldPhoneNumber) != KErrNotFound) {
-							if( !iBuddycloudLogic->GetCall()->IsTelephonyBusy() ) {
-								aMenuPane->SetItemDimmed(EMenuCallCommand, false);
-							}				
-						}
-						
-						if(iBuddycloudLogic->GetMyPlaceId() > 0) {
-							aMenuPane->SetItemDimmed(EMenuSendPlaceBySmsCommand, false);
-						}
-						
-						aMenuPane->SetItemDimmed(EMenuInviteToBuddycloudCommand, false);
-						
-						CleanupStack::PopAndDestroy(); // aContact
-					}
-				}
-			}
 			else if(aItem->GetItemType() == EItemRoster) {
 				CFollowingRosterItem* aRosterItem = static_cast <CFollowingRosterItem*> (aItem);				
 				
@@ -1050,24 +944,6 @@ void CBuddycloudFollowingContainer::DynInitMenuPaneL(TInt aResourceId, CEikMenuP
 					aMenuPane->SetItemDimmed(EMenuChannelInfoCommand, false);
 				}
 
-				if(aRosterItem->GetAddressbookId() >= 0) {
-					CContactItem* aContact = iBuddycloudLogic->GetContactDetailsLC(aRosterItem->GetAddressbookId());
-					
-					if(aContact) {
-						if(aContact->CardFields().FindNext(KUidContactFieldPhoneNumber) != KErrNotFound) {
-							if( !iBuddycloudLogic->GetCall()->IsTelephonyBusy() ) {
-								aMenuPane->SetItemDimmed(EMenuCallCommand, false);
-								
-								if(iBuddycloudLogic->GetMyPlaceId() > 0) {
-									aMenuPane->SetItemDimmed(EMenuSendPlaceBySmsCommand, false);
-								}
-							}
-						}
-						
-						CleanupStack::PopAndDestroy(); // aContact
-					}
-				}
-				
 				if(!aRosterItem->OwnItem()) {
 					if(aRosterItem->GetSubscription() <= EPresenceSubscriptionFrom) {
 						aMenuPane->SetItemDimmed(EMenuFollowCommand, false);
@@ -1139,22 +1015,7 @@ void CBuddycloudFollowingContainer::DynInitMenuPaneL(TInt aResourceId, CEikMenuP
 }
 
 void CBuddycloudFollowingContainer::HandleCommandL(TInt aCommand) {
-	if(aCommand == EMenuEndCallCommand) {
-		iBuddycloudLogic->GetCall()->Hangup();
-	}
-	else if(aCommand == EMenuHoldCallCommand) {
-		iBuddycloudLogic->GetCall()->Hold();
-	}
-	else if(aCommand == EMenuResumeCallCommand) {
-		iBuddycloudLogic->GetCall()->Resume();
-	}
-	else if(aCommand == EMenuLoudspeakerCommand) {
-		iBuddycloudLogic->GetCall()->SetLoudspeakerActive(true);
-	}
-	else if(aCommand == EMenuHandsetCommand) {
-		iBuddycloudLogic->GetCall()->SetLoudspeakerActive(false);
-	}
-	else if(aCommand == EMenuDisconnectCommand) {
+	if(aCommand == EMenuDisconnectCommand) {
 		iBuddycloudLogic->Disconnect();
 	}
 	else if(aCommand == EMenuConnectCommand) {
@@ -1211,39 +1072,20 @@ void CBuddycloudFollowingContainer::HandleCommandL(TInt aCommand) {
 			iBuddycloudLogic->UnfollowItemL(iSelectedItem);
 		}
 	}
-	else if(aCommand == EMenuMessagesCommand || aCommand == EMenuPrivateMessagesCommand || aCommand == EMenuChannelMessagesCommand) {
+	else if(aCommand == EMenuPrivateMessagesCommand || aCommand == EMenuChannelMessagesCommand) {
 		CFollowingItem* aItem = static_cast <CFollowingItem*> (iItemStore->GetItemById(iSelectedItem));
 
 		if(aItem) {
 			TMessagingViewObject aObject;			
 			aObject.iFollowerId = iSelectedItem;
 			aObject.iTitle.Append(aItem->GetTitle());
-			
-			if(aCommand == EMenuMessagesCommand) {
-				// Toolbar messages, get discussion with unread messages
-				aCommand = EMenuChannelMessagesCommand;
-				
-				if(aItem->GetItemType() == EItemRoster) {
-					CFollowingRosterItem* aRosterItem = static_cast <CFollowingRosterItem*> (aItem);
-					
-					if(aRosterItem->GetId(EIdChannel).Length() == 0 || 
-							(aRosterItem->GetUnread(EIdRoster) > 0 && aRosterItem->GetUnread(EIdChannel) == 0)) {
-						
-						// Open private messages if channel is read/not existing
-						aCommand = EMenuPrivateMessagesCommand;
-					}
-				}
-			}
+			aObject.iId.Append(aItem->GetId());
 			
 			if(aCommand == EMenuPrivateMessagesCommand) {
 				// Private messages
 				CFollowingRosterItem* aRosterItem = static_cast <CFollowingRosterItem*> (aItem);
 				
-				aObject.iId.Append(aRosterItem->GetId());
-			}
-			else {
-				// Topic or personal channel
-				aObject.iId.Append(aItem->GetId());
+				aObject.iId.Copy(aRosterItem->GetId());
 			}
 			
 			TMessagingViewObjectPckg aObjectPckg(aObject);		
@@ -1341,13 +1183,10 @@ void CBuddycloudFollowingContainer::HandleCommandL(TInt aCommand) {
 	else if(aCommand == EMenuDeclineCommand) {
 		iBuddycloudLogic->RespondToNoticeL(iSelectedItem, ENoticeDecline);
 	}
-	else if(aCommand == EMenuCallCommand) {
-		iBuddycloudLogic->CallL(iSelectedItem);
-	}
 	else if(aCommand == EMenuNewSearchCommand || aCommand == EAknSoftkeyBack) {
 		// Reset filter
-		iBuddycloudLogic->SetContactFilterL(_L(""));
-		iSearchEdwin->SetTextL(&iBuddycloudLogic->GetContactFilter());
+		iBuddycloudLogic->SetFollowingFilterTextL(_L(""));
+		iSearchEdwin->SetTextL(&iBuddycloudLogic->GetFollowingFilterText());
 		iSearchEdwin->HandleTextChangedL();
 		
 		if(aCommand == EMenuNewSearchCommand && !iSearchVisible) {
@@ -1471,15 +1310,6 @@ TKeyResponse CBuddycloudFollowingContainer::OfferKeyEventL(const TKeyEvent& aKey
 			aResult = EKeyWasConsumed;
 		}
 	}
-	else if(aType == EEventKeyUp) {
-		if(aKeyEvent.iScanCode == EStdKeyYes) {
-			if( !iBuddycloudLogic->GetCall()->IsTelephonyBusy() ) {
-				iBuddycloudLogic->CallL(iSelectedItem);
-				
-				aResult = EKeyWasConsumed;
-			}
-		}
-	}
 	else if(aType == EEventKeyDown) {
 		if(iSearchEdwin->TextLength() == 0 && aKeyEvent.iScanCode == EStdKeyRightArrow) {
 			iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KPlacesViewId), TUid::Uid(0), _L8(""));
@@ -1503,7 +1333,7 @@ TKeyResponse CBuddycloudFollowingContainer::OfferKeyEventL(const TKeyEvent& aKey
 		// Filter Contacts
 		TBuf<64> aFilterText;
 		iSearchEdwin->GetText(aFilterText);
-		iBuddycloudLogic->SetContactFilterL(aFilterText);
+		iBuddycloudLogic->SetFollowingFilterTextL(aFilterText);
 		
 		iSearchLength = iSearchEdwin->TextLength();
 		aResult = EKeyWasConsumed;

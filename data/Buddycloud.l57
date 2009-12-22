@@ -28,19 +28,11 @@ rls_string r_string_options_menu "הגדרות"
 rls_string r_string_say_menu "שלח"
 rls_string r_string_cancel_menu "לבטל"
 rls_string r_string_next_menu "הבא"
-rls_string r_string_endcall_menu "End Call"
 rls_string r_string_hide_menu "הסתר"
 
 // Item
 rls_string r_string_item_newchannel "ערוץ חדש"
 rls_string r_string_item_newplace "...מקום חדש"
-
-// Menu: Call
-rls_string r_string_options_loudspeaker "החלף לדיבורית"
-rls_string r_string_options_handset "החלף לשפופרת טלפון"
-rls_string r_string_options_hold "המתן"
-rls_string r_string_options_resume "המשך"
-rls_string r_string_options_endcall "לסיים שיחה"
 
 // Menu: Settings & Edit place
 rls_string r_string_options_edititem "להחליף"
@@ -83,7 +75,6 @@ rls_string r_string_item_viewchannelmessages "הצג ערוץ"
 rls_string r_string_item_viewprivatemessages "הצג הודעות פרטיות"
 rls_string r_string_item_showplacedetails "הצג פרטיי מקום"
 rls_string r_string_item_showchanneldetails "הצג את פרטי הערוץ"
-rls_string r_string_item_call "להתקשר לאיש קשר"
 rls_string r_string_item_sendplacebysms "שלח מיקום דרך הודעה קצרה"
 rls_string r_string_item_sendinvite "הזמן לבאדיקלאוד"
 rls_string r_string_item_noticeaccept "לקבל הזמנה"
@@ -213,7 +204,6 @@ rls_string r_string_settings_itemlist_accesspoint "נקודת גישה בשבי�
 rls_string r_string_settings_itemlist_accesspointuserdefined "מוגדר על ידי משתמש"
 rls_string r_string_settings_itemlist_accesspointalwaysask "תמיד לשאול"
 rls_string r_string_settings_itemlist_autostart "הפעל בעת הפעלת הפלאפון"
-rls_string r_string_settings_itemlist_showcontacts "הצג אנשי קשר מספר טלפונים"
 
 // Notification settings
 rls_string r_string_settings_notifications_title "הודעות"

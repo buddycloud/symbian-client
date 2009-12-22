@@ -473,6 +473,8 @@ void CDiscussion::ParseEntryForLinksL(CAtomEntryData* aEntry) {
 				pLink.Set(aContent.Left(aLinkSearch));			
 			}
 			
+			TInt aPreTrimLinkLength = pLink.Length();
+			
 			if(aLinkType != ELinkNone && (aLinkType == ELinkWebsite || (aLinkType == ELinkUsername && pLink.Locate('#') == KErrNotFound) ||
 					(aLinkType == ELinkChannel && pLink.Locate('@') == KErrNotFound) ||
 					(aGlobalPosition == 0 || aContent[aGlobalPosition - 1] == ' '))) {
@@ -499,8 +501,8 @@ void CDiscussion::ParseEntryForLinksL(CAtomEntryData* aEntry) {
 				}
 			}
 			
-			aGlobalPosition += pLink.Length();
-			aContent.Set(aContent.Mid(pLink.Length()));	
+			aGlobalPosition += aPreTrimLinkLength;
+			aContent.Set(aContent.Mid(aPreTrimLinkLength));	
 			
 			aLinkSearch = aContent.MatchF(_L("*http*://*"));
 			aWwwSearch = aContent.FindF(_L("www."));

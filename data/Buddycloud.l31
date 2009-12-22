@@ -28,19 +28,11 @@ rls_string r_string_options_menu "选项"
 rls_string r_string_say_menu "发送"
 rls_string r_string_cancel_menu "取消"
 rls_string r_string_next_menu "下一步"
-rls_string r_string_endcall_menu "End Call"
 rls_string r_string_hide_menu "隐藏"
 
 // Item
 rls_string r_string_item_newchannel "新的频道"
 rls_string r_string_item_newplace "新的地点"
-
-// Menu: Call
-rls_string r_string_options_loudspeaker "切换到"
-rls_string r_string_options_handset "打开话筒"
-rls_string r_string_options_hold "保持"
-rls_string r_string_options_resume "恢复"
-rls_string r_string_options_endcall "结束呼叫"
 
 // Menu: Settings & Edit place
 rls_string r_string_options_edititem "更改"
@@ -83,7 +75,6 @@ rls_string r_string_item_viewchannelmessages "查看频道"
 rls_string r_string_item_viewprivatemessages "查看私人信息"
 rls_string r_string_item_showplacedetails "查看地点详情"
 rls_string r_string_item_showchanneldetails "显示频道详情"
-rls_string r_string_item_call "呼叫联系人"
 rls_string r_string_item_sendplacebysms "通过短信发送所在位置"
 rls_string r_string_item_sendinvite "邀请加入buddycloud"
 rls_string r_string_item_noticeaccept "接受"
@@ -213,7 +204,6 @@ rls_string r_string_settings_itemlist_accesspoint "可用接入点"
 rls_string r_string_settings_itemlist_accesspointuserdefined "用户确定"
 rls_string r_string_settings_itemlist_accesspointalwaysask "经常询问"
 rls_string r_string_settings_itemlist_autostart "开机后自动启动"
-rls_string r_string_settings_itemlist_showcontacts "显示电话簿"
 
 // Notification settings
 rls_string r_string_settings_notifications_title "通知"

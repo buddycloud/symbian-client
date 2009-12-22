@@ -28,19 +28,11 @@ rls_string r_string_options_menu "Options"
 rls_string r_string_say_menu "Shout"
 rls_string r_string_cancel_menu "Belay"
 rls_string r_string_next_menu "Keep lookin'"
-rls_string r_string_endcall_menu "End Call"
 rls_string r_string_hide_menu "Hide"
 
 // Item
 rls_string r_string_item_newchannel "New chaannel..."
 rls_string r_string_item_newplace "New hang-out..."
-
-// Menu: Call
-rls_string r_string_options_loudspeaker "Switch t' speaker"
-rls_string r_string_options_handset "Switch t' handset"
-rls_string r_string_options_hold "Hold"
-rls_string r_string_options_resume "Resume"
-rls_string r_string_options_endcall "Talk no more"
 
 // Menu: Settings & Edit place
 rls_string r_string_options_edititem "Be changin'"
@@ -83,7 +75,6 @@ rls_string r_string_item_viewchannelmessages "See th' chaannel"
 rls_string r_string_item_viewprivatemessages "See th' pirate messages"
 rls_string r_string_item_showplacedetails "See th'r hang-out"
 rls_string r_string_item_showchanneldetails "Show channel details"
-rls_string r_string_item_call "Call scallywag"
 rls_string r_string_item_sendplacebysms "Send hang-out by bottle"
 rls_string r_string_item_sendinvite "Invit' t' Buddycloud"
 rls_string r_string_item_noticeaccept "Accept"
@@ -213,7 +204,6 @@ rls_string r_string_settings_itemlist_accesspoint "Access Point t' be usin'"
 rls_string r_string_settings_itemlist_accesspointuserdefined "Pirate selected"
 rls_string r_string_settings_itemlist_accesspointalwaysask "Always ask"
 rls_string r_string_settings_itemlist_autostart "Set sail when ye wake"
-rls_string r_string_settings_itemlist_showcontacts "See me phone Contacts"
 
 // Notification settings
 rls_string r_string_settings_notifications_title "Notifications"

@@ -28,19 +28,11 @@ rls_string r_string_options_menu "Optionen"
 rls_string r_string_say_menu "Sog"
 rls_string r_string_cancel_menu "Obbrecha"
 rls_string r_string_next_menu "Weita"
-rls_string r_string_endcall_menu "End Call"
 rls_string r_string_hide_menu "Vastecka"
 
 // Item
 rls_string r_string_item_newchannel "Neia Tschännl..."
 rls_string r_string_item_newplace "Neis Platzl..."
-
-// Menu: Call
-rls_string r_string_options_loudspeaker "Zum Lautsprecha wexln"
-rls_string r_string_options_handset "Zum Handset wexln"
-rls_string r_string_options_hold "Auf d'Schleif'n leg'n"
-rls_string r_string_options_resume "Fortfahr'n"
-rls_string r_string_options_endcall "Aufhänga"
 
 // Menu: Settings & Edit place
 rls_string r_string_options_edititem "Ummodl'n"
@@ -83,7 +75,6 @@ rls_string r_string_item_viewchannelmessages "In Tschännl neischaug'n"
 rls_string r_string_item_viewprivatemessages "PeäM oschaug'n"
 rls_string r_string_item_showplacedetails "Wo genau"
 rls_string r_string_item_showchanneldetails "Tschännl Info"
-rls_string r_string_item_call "Kontakt o'ruaffa"
 rls_string r_string_item_sendplacebysms "Schick mei Platzl ois SMS"
 rls_string r_string_item_sendinvite "Eilod'n fia buddycloud"
 rls_string r_string_item_noticeaccept "Freili"
@@ -213,7 +204,6 @@ rls_string r_string_settings_itemlist_accesspoint "Wia mogst na online geh'n?"
 rls_string r_string_settings_itemlist_accesspointuserdefined "So wia I sog"
 rls_string r_string_settings_itemlist_accesspointalwaysask "Frog mi oiwei"
 rls_string r_string_settings_itemlist_autostart "Mit'm Händy start'n"
-rls_string r_string_settings_itemlist_showcontacts "Telefonbuach o'zoag'n"
 
 // Notification settings
 rls_string r_string_settings_notifications_title "Do spuit d'Musi"

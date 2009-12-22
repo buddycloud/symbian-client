@@ -28,19 +28,11 @@ rls_string r_string_options_menu "Opţiuni"
 rls_string r_string_say_menu "Spune"
 rls_string r_string_cancel_menu "Anulare"
 rls_string r_string_next_menu "Următorul"
-rls_string r_string_endcall_menu "End Call"
 rls_string r_string_hide_menu "Ascunde"
 
 // Item
 rls_string r_string_item_newchannel "Noul canal..."
 rls_string r_string_item_newplace "Loc nou..."
-
-// Menu: Call
-rls_string r_string_options_loudspeaker "Comutare la Vorbitor"
-rls_string r_string_options_handset "Comutare la Handset"
-rls_string r_string_options_hold "Asteptare"
-rls_string r_string_options_resume "CV"
-rls_string r_string_options_endcall "Sfarsitul apelului"
 
 // Menu: Settings & Edit place
 rls_string r_string_options_edititem "Schimba"
@@ -83,7 +75,6 @@ rls_string r_string_item_viewchannelmessages "Vezi canal"
 rls_string r_string_item_viewprivatemessages "Vizualizati mesaje private"
 rls_string r_string_item_showplacedetails "Arata detaliile locatiei"
 rls_string r_string_item_showchanneldetails "Detaliile canalului"
-rls_string r_string_item_call "Apelare contact"
 rls_string r_string_item_sendplacebysms "Trimite loc prin SMS"
 rls_string r_string_item_sendinvite "Invita in buddycloud"
 rls_string r_string_item_noticeaccept "Accepta"
@@ -213,7 +204,6 @@ rls_string r_string_settings_itemlist_accesspoint "Puncte de access internet in 
 rls_string r_string_settings_itemlist_accesspointuserdefined "Definite de utilizator"
 rls_string r_string_settings_itemlist_accesspointalwaysask "Intodeauna intreaba"
 rls_string r_string_settings_itemlist_autostart "Porneste aplicatia la repornirea telefonului"
-rls_string r_string_settings_itemlist_showcontacts "Arata persoanele de contact"
 
 // Notification settings
 rls_string r_string_settings_notifications_title "Notificari"

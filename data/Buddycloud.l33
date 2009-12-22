@@ -28,19 +28,11 @@ rls_string r_string_options_menu "ตัวเลือก"
 rls_string r_string_say_menu "พิมพ์ข้อความ"
 rls_string r_string_cancel_menu "ยกเลิก"
 rls_string r_string_next_menu "ถัดไป"
-rls_string r_string_endcall_menu "End Call"
 rls_string r_string_hide_menu "ซ่อน"
 
 // Item
 rls_string r_string_item_newchannel "สถานีใหม่..."
 rls_string r_string_item_newplace "สถานที่ใหม่..."
-
-// Menu: Call
-rls_string r_string_options_loudspeaker "เปลี่ยนเป็นลำโพง"
-rls_string r_string_options_handset "เปลี่ยนเป็นหูฟัง"
-rls_string r_string_options_hold "รอสาย"
-rls_string r_string_options_resume "ทำต่อ"
-rls_string r_string_options_endcall "จบการสนทนา"
 
 // Menu: Settings & Edit place
 rls_string r_string_options_edititem "เปลี่ยน"
@@ -83,7 +75,6 @@ rls_string r_string_item_viewchannelmessages "ดูช่อง"
 rls_string r_string_item_viewprivatemessages "ดูข้อความส่วนตัว"
 rls_string r_string_item_showplacedetails "แสดงข้อมูลสถานที่"
 rls_string r_string_item_showchanneldetails "แสดงรายละเอียดของช่อง"
-rls_string r_string_item_call "โทรหาผู้ติดต่อ"
 rls_string r_string_item_sendplacebysms "ส่งสถานที่นี้ทาง sms"
 rls_string r_string_item_sendinvite "เชิญเข้าร่วม buddycloud"
 rls_string r_string_item_noticeaccept "ยอมรับ"
@@ -213,7 +204,6 @@ rls_string r_string_settings_itemlist_accesspoint "จุดเชื่อม�
 rls_string r_string_settings_itemlist_accesspointuserdefined "การกำหนดของผู้ใช้"
 rls_string r_string_settings_itemlist_accesspointalwaysask "ถามทุกครั้ง"
 rls_string r_string_settings_itemlist_autostart "เริ่มโปรแกรมอัตโนมัติเมื่อเปิดมือถือ"
-rls_string r_string_settings_itemlist_showcontacts "แสดงสมุดรายชื่อของโทรศัพท์"
 
 // Notification settings
 rls_string r_string_settings_notifications_title "การแจ้งเตือน"

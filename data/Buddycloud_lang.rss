@@ -138,23 +138,6 @@ RESOURCE CBA r_softkeys_options_next
     };
 }  
 
-RESOURCE CBA r_softkeys_options_endcall
-{
-	buttons =
-    {
-    CBA_BUTTON 
-        {
-        id = EAknSoftkeyOptions; 
-        txt = r_string_options_menu;
-        },
-    CBA_BUTTON 
-        {
-        id = EMenuEndCallCommand; 
-        txt = r_string_endcall_menu;
-        }
-    };
-}  
-
 // -----------------------------------------------------------------------------
 //
 // RESOURCE TOOL_BAR
@@ -170,17 +153,17 @@ RESOURCE AVKON_TOOLBAR r_status_toolbar
 		TBAR_CTRL
 		{
 			type = EAknCtButton;
-			id = EMenuCallCommand;
+			id = EMenuChannelMessagesCommand;
 			control = AVKON_BUTTON
 			{
 				states =
 				{
 					AVKON_BUTTON_STATE
 					{
-						helptxt = r_string_item_call;
+						helptxt = r_string_item_viewchannelmessages;
 					    bmpfile = "\\resource\\apps\\Buddycloud_Toolbar.mif";
-					    bmpid = EMbmToolbariconidsCall;
-					    bmpmask = EMbmToolbariconidsCall;
+					    bmpid = EMbmToolbariconidsToolbarchannelpost;
+					    bmpmask = EMbmToolbariconidsToolbarchannelpost;
 					}
 				};
 			};
@@ -197,8 +180,8 @@ RESOURCE AVKON_TOOLBAR r_status_toolbar
 					{
 						helptxt = r_string_options_newsearch;
 					    bmpfile = "\\resource\\apps\\Buddycloud_Toolbar.mif";
-					    bmpid = EMbmToolbariconidsSearch;
-					    bmpmask = EMbmToolbariconidsSearch;
+					    bmpid = EMbmToolbariconidsToolbarsearch;
+					    bmpmask = EMbmToolbariconidsToolbarsearch;
 					}
 				};
 			};
@@ -206,17 +189,17 @@ RESOURCE AVKON_TOOLBAR r_status_toolbar
 		TBAR_CTRL
 		{
 			type = EAknCtButton;
-			id = EMenuMessagesCommand;
+			id = EMenuPrivateMessagesCommand;
 			control = AVKON_BUTTON
 			{
 				states =
 				{
 					AVKON_BUTTON_STATE
 					{
-						helptxt = r_string_item_viewmessages;
+						helptxt = r_string_item_viewprivatemessages;
 					    bmpfile = "\\resource\\apps\\Buddycloud_Toolbar.mif";
-					    bmpid = EMbmToolbariconidsMessage;
-					    bmpmask = EMbmToolbariconidsMessage;
+					    bmpid = EMbmToolbariconidsToolbarmessage;
+					    bmpmask = EMbmToolbariconidsToolbarmessage;
 					}
 				};
 			};
@@ -241,8 +224,8 @@ RESOURCE AVKON_TOOLBAR r_messaging_toolbar
 					{
 						helptxt = r_string_item_addcomment;
 					    bmpfile = "\\resource\\apps\\Buddycloud_Toolbar.mif";
-					    bmpid = EMbmToolbariconidsMessagereply;
-					    bmpmask = EMbmToolbariconidsMessagereply;
+					    bmpid = EMbmToolbariconidsToolbarmessagereply;
+					    bmpmask = EMbmToolbariconidsToolbarmessagereply;
 					}
 				};
 			};
@@ -259,8 +242,26 @@ RESOURCE AVKON_TOOLBAR r_messaging_toolbar
 					{
 						helptxt = r_string_options_postmessage;
 					    bmpfile = "\\resource\\apps\\Buddycloud_Toolbar.mif";
-					    bmpid = EMbmToolbariconidsMessage;
-					    bmpmask = EMbmToolbariconidsMessage;
+					    bmpid = EMbmToolbariconidsToolbarmessage;
+					    bmpmask = EMbmToolbariconidsToolbarmessage;
+					}
+				};
+			};
+		},
+		TBAR_CTRL
+		{
+			type = EAknCtButton;
+			id = EMenuJumpToUnreadCommand;
+			control = AVKON_BUTTON
+			{
+				states =
+				{
+					AVKON_BUTTON_STATE
+					{
+						helptxt = r_string_options_jumptounread;
+					    bmpfile = "\\resource\\apps\\Buddycloud_Toolbar.mif";
+					    bmpid = EMbmToolbariconidsToolbarunreadjump;
+					    bmpmask = EMbmToolbariconidsToolbarunreadjump;
 					}
 				};
 			};
@@ -274,18 +275,6 @@ RESOURCE AVKON_TOOLBAR r_messaging_toolbar
 // RESOURCE MENU_BAR
 //
 // -----------------------------------------------------------------------------
-//
-RESOURCE MENU_BAR r_call_options_menubar
-{
-	titles =
-	{
-		MENU_TITLE 
-		{ 
-			menu_pane = r_call_options_menu;
-			txt = r_string_options_menu;
-		}
-	};
-}
 
 RESOURCE MENU_BAR r_settings_options_menubar
 {
@@ -427,44 +416,6 @@ RESOURCE MENU_BAR r_search_options_menubar
 		{ 
 			menu_pane = r_search_options_menu;
 			txt = r_string_options_menu;
-		}
-	};
-}
-
-// -----------------------------------------------------------------------------
-//
-//    Define call options menupane
-//
-// -----------------------------------------------------------------------------
-//
-RESOURCE MENU_PANE r_call_options_menu
-{
-	items =
-	{
-		MENU_ITEM
-		{ 
-			command = EMenuLoudspeakerCommand; 
-			txt = r_string_options_loudspeaker;
-		},
-		MENU_ITEM
-		{ 
-			command = EMenuHandsetCommand; 
-			txt = r_string_options_handset;
-		},
-		MENU_ITEM
-		{ 
-			command = EMenuHoldCallCommand; 
-			txt = r_string_options_hold;
-		},
-		MENU_ITEM
-		{ 
-			command = EMenuResumeCallCommand; 
-			txt = r_string_options_resume;
-		},
-		MENU_ITEM
-		{ 
-			command = EMenuEndCallCommand; 
-			txt = r_string_options_endcall;
 		}
 	};
 }
@@ -663,11 +614,6 @@ RESOURCE MENU_PANE r_status_options_item_menu
 		{ 
 			command = EMenuInviteToBuddycloudCommand; 
 			txt = r_string_item_sendinvite;
-		},
-		MENU_ITEM
-		{ 
-			command = EMenuCallCommand; 
-			txt = r_string_item_call;
 		},
 		MENU_ITEM
 		{ 
@@ -893,6 +839,11 @@ RESOURCE MENU_PANE r_messaging_options_channel_menu
 		{ 
 			command = EMenuSeeFollowersCommand; 
 			txt = r_string_item_seefollowers;
+		},
+		MENU_ITEM
+		{ 
+			command = EMenuEditChannelCommand; 
+			txt = r_string_item_editplace;
 		}
 	};
 }
@@ -1304,13 +1255,6 @@ RESOURCE AVKON_SETTING_ITEM_LIST r_preferences_settings_item_list
 		},
 		AVKON_SETTING_ITEM
 		{
-			identifier = ESettingPreferencesShowContacts;
-			setting_page_resource = r_settings_item_showcontacts_page;
-			associated_resource = r_settings_item_onoff_assoc;
-			name = r_string_settings_itemlist_showcontacts;
-		},
-		AVKON_SETTING_ITEM
-		{
 			identifier = ESettingPreferencesShowName;
 			setting_page_resource = r_settings_item_showname_page;
 			associated_resource = r_settings_item_onoff_assoc;
@@ -1419,13 +1363,6 @@ RESOURCE AVKON_SETTING_PAGE r_settings_item_accesspoint_page
 RESOURCE AVKON_SETTING_PAGE r_settings_item_autostart_page
 {
 	label = r_string_settings_itemlist_autostart;
-	type = EAknCtPopupSettingList;
-	editor_resource_id = r_binary_editor;
-}
-
-RESOURCE AVKON_SETTING_PAGE r_settings_item_showcontacts_page
-{
-	label = r_string_settings_itemlist_showcontacts;
 	type = EAknCtPopupSettingList;
 	editor_resource_id = r_binary_editor;
 }
@@ -2083,11 +2020,6 @@ RESOURCE TBUF r_localized_string_positioning_cell { buf = r_string_positioning_c
 RESOURCE TBUF r_localized_string_positioning_wifigps { buf = r_string_positioning_wifigps; }
 RESOURCE TBUF r_localized_string_positioning_bt { buf = r_string_positioning_bt; }
 RESOURCE TBUF r_localized_string_positioning_none { buf = r_string_positioning_none; }
-
-// Call
-RESOURCE TBUF r_localized_string_note_dialling { buf = r_string_note_dialling; }
-RESOURCE TBUF r_localized_string_note_talkingto { buf = r_string_note_talkingto; }
-RESOURCE TBUF r_localized_string_note_hangingup { buf = r_string_note_hangingup; }
 
 // Setup
 RESOURCE TBUF r_localized_string_next_menu { buf = r_string_next_menu; }

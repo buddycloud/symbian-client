@@ -40,9 +40,9 @@ enum TSettingsTabs {
 #define EMenuSetAsPlaceCommand 206
 #define EMenuSetNextPlaceCommand 207
 #define EMenuSetAsNextPlaceCommand 208
-#define EMenuCallCommand 209
+//#define EMenuCallCommand 209
 #define EMenuSendPlaceBySmsCommand 210
-#define EMenuMessagesCommand 211
+//#define EMenuMessagesCommand 211
 #define EMenuPrivateMessagesCommand 212
 #define EMenuChannelMessagesCommand 213
 #define EMenuAddContactCommand 214
@@ -84,11 +84,11 @@ enum TSettingsTabs {
 #define EMenuOptionsChannelCommand 249
 #define EMenuOptionsExploreCommand 250
 
-#define EMenuLoudspeakerCommand 251
-#define EMenuHandsetCommand 252
-#define EMenuHoldCallCommand 253
-#define EMenuResumeCallCommand 254
-#define EMenuEndCallCommand 255
+//#define EMenuLoudspeakerCommand 251
+//#define EMenuHandsetCommand 252
+//#define EMenuHoldCallCommand 253
+//#define EMenuResumeCallCommand 254
+//#define EMenuEndCallCommand 255
 
 #define EMenuCopyPostCommand 256
 #define EMenuLikePostCommand 257

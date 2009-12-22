@@ -28,19 +28,11 @@ rls_string r_string_options_menu "Seaded"
 rls_string r_string_say_menu "Vasta"
 rls_string r_string_cancel_menu "Tühista"
 rls_string r_string_next_menu "Edasi"
-rls_string r_string_endcall_menu "End Call"
 rls_string r_string_hide_menu "Peida"
 
 // Item
 rls_string r_string_item_newchannel "Uus kanal..."
 rls_string r_string_item_newplace "Uus asukoht..."
-
-// Menu: Call
-rls_string r_string_options_loudspeaker "Lülita kõlar sisse"
-rls_string r_string_options_handset "Lülita telefon sisse"
-rls_string r_string_options_hold "Ootel"
-rls_string r_string_options_resume "Jätka"
-rls_string r_string_options_endcall "Lõpeta kõne"
 
 // Menu: Settings & Edit place
 rls_string r_string_options_edititem "Muuda"
@@ -83,7 +75,6 @@ rls_string r_string_item_viewchannelmessages "Vaata kanalit"
 rls_string r_string_item_viewprivatemessages "Vaata privaatseid sõnumeid"
 rls_string r_string_item_showplacedetails "Näita asukohta detailsemalt"
 rls_string r_string_item_showchanneldetails "Näita kanali andmeid"
-rls_string r_string_item_call "Helista kontaktile"
 rls_string r_string_item_sendplacebysms "Saada asukoht sms-iga"
 rls_string r_string_item_sendinvite "Kutsu buddycloudi"
 rls_string r_string_item_noticeaccept "Nõustu"
@@ -213,7 +204,6 @@ rls_string r_string_settings_itemlist_accesspoint "Kasutatav ühendus"
 rls_string r_string_settings_itemlist_accesspointuserdefined "Kasutaja määratud"
 rls_string r_string_settings_itemlist_accesspointalwaysask "Küsi alati"
 rls_string r_string_settings_itemlist_autostart "Ava telefoni avamisel"
-rls_string r_string_settings_itemlist_showcontacts "Näita telefoni kontakte"
 
 // Notification settings
 rls_string r_string_settings_notifications_title "Teade"

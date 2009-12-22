@@ -28,19 +28,11 @@ rls_string r_string_options_menu "Seçenekler"
 rls_string r_string_say_menu "Söyle"
 rls_string r_string_cancel_menu "İptal"
 rls_string r_string_next_menu "Sonraki"
-rls_string r_string_endcall_menu "End Call"
 rls_string r_string_hide_menu "Hide"
 
 // Item
 rls_string r_string_item_newchannel "Yeni Kanal..."
 rls_string r_string_item_newplace "Yeni Mekan..."
-
-// Menu: Call
-rls_string r_string_options_loudspeaker "Hoparlörü Aç"
-rls_string r_string_options_handset "Kulaklığı Aç"
-rls_string r_string_options_hold "Beklet"
-rls_string r_string_options_resume "Devam"
-rls_string r_string_options_endcall "Aramayı Sonlandır"
 
 // Menu: Settings & Edit place
 rls_string r_string_options_edititem "Değiştir"
@@ -83,7 +75,6 @@ rls_string r_string_item_viewchannelmessages "Kanalı göster"
 rls_string r_string_item_viewprivatemessages "Özel mesajları göster"
 rls_string r_string_item_showplacedetails "Mekan detaylarını göster"
 rls_string r_string_item_showchanneldetails "Show channel details"
-rls_string r_string_item_call "Bağlantıyı ara"
 rls_string r_string_item_sendplacebysms "Mekanı SMS ile gönder"
 rls_string r_string_item_sendinvite "buddycloud'a davet et"
 rls_string r_string_item_noticeaccept "Accept"
@@ -213,7 +204,6 @@ rls_string r_string_settings_itemlist_accesspoint "Kullanılacak erişim noktas�
 rls_string r_string_settings_itemlist_accesspointuserdefined "Kullanıcı tanımlı"
 rls_string r_string_settings_itemlist_accesspointalwaysask "Daima sor"
 rls_string r_string_settings_itemlist_autostart "Telefon açıldığında başlat"
-rls_string r_string_settings_itemlist_showcontacts "Telefon kayıtlarını göster"
 
 // Notification settings
 rls_string r_string_settings_notifications_title "Notifications"

@@ -28,19 +28,11 @@ rls_string r_string_options_menu "Volby"
 rls_string r_string_say_menu "Říct"
 rls_string r_string_cancel_menu "Storno"
 rls_string r_string_next_menu "Další"
-rls_string r_string_endcall_menu "End Call"
 rls_string r_string_hide_menu "Hide"
 
 // Item
 rls_string r_string_item_newchannel "Nový kanál..."
 rls_string r_string_item_newplace "Nové místo..."
-
-// Menu: Call
-rls_string r_string_options_loudspeaker "Hlasitý odposlech"
-rls_string r_string_options_handset "Reproduktor telefonu"
-rls_string r_string_options_hold "Držet"
-rls_string r_string_options_resume "Pokračovat"
-rls_string r_string_options_endcall "Ukončit hovor"
 
 // Menu: Settings & Edit place
 rls_string r_string_options_edititem "Změnit"
@@ -83,7 +75,6 @@ rls_string r_string_item_viewchannelmessages "Zobrazit kanál"
 rls_string r_string_item_viewprivatemessages "Zobrazit zprávy"
 rls_string r_string_item_showplacedetails "Zobrazit detaily místa"
 rls_string r_string_item_showchanneldetails "Show channel details"
-rls_string r_string_item_call "Volat kontakt"
 rls_string r_string_item_sendplacebysms "Poslat info o poloze"
 rls_string r_string_item_sendinvite "Pozvat na buddycloud"
 rls_string r_string_item_noticeaccept "Accept"
@@ -213,7 +204,6 @@ rls_string r_string_settings_itemlist_accesspoint "Použít přístupový bod"
 rls_string r_string_settings_itemlist_accesspointuserdefined "Nastaveno uživatelem"
 rls_string r_string_settings_itemlist_accesspointalwaysask "Vždy se zeptat"
 rls_string r_string_settings_itemlist_autostart "Spustit po startu telefonu"
-rls_string r_string_settings_itemlist_showcontacts "Zobrazit Kontakty z telefonu"
 
 // Notification settings
 rls_string r_string_settings_notifications_title "Notifications"

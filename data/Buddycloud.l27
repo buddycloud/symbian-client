@@ -28,19 +28,11 @@ rls_string r_string_options_menu "Opcje"
 rls_string r_string_say_menu "Powiedz"
 rls_string r_string_cancel_menu "Anuluj"
 rls_string r_string_next_menu "Następny"
-rls_string r_string_endcall_menu "End Call"
 rls_string r_string_hide_menu "Ukryj"
 
 // Item
 rls_string r_string_item_newchannel "Nowy kanał..."
 rls_string r_string_item_newplace "Nowe miejsce..."
-
-// Menu: Call
-rls_string r_string_options_loudspeaker "Przełącz do głośników"
-rls_string r_string_options_handset "Przełącz na słuchawki"
-rls_string r_string_options_hold "Trzymaj"
-rls_string r_string_options_resume "Wznów"
-rls_string r_string_options_endcall "Zakończ"
 
 // Menu: Settings & Edit place
 rls_string r_string_options_edititem "Zmień"
@@ -83,7 +75,6 @@ rls_string r_string_item_viewchannelmessages "Wyświetl kanał"
 rls_string r_string_item_viewprivatemessages "Wyświetl prywatne wiadomości"
 rls_string r_string_item_showplacedetails "Pokaż szczegóły miejsca"
 rls_string r_string_item_showchanneldetails "Pokaż szczegóły kanału"
-rls_string r_string_item_call "Dzwoń do kontaktu"
 rls_string r_string_item_sendplacebysms "Wyślij miejsce przez SMS"
 rls_string r_string_item_sendinvite "Zaproś do buddycloud"
 rls_string r_string_item_noticeaccept "Akceptuj"
@@ -213,7 +204,6 @@ rls_string r_string_settings_itemlist_accesspoint "Punkt dostępu do użycia"
 rls_string r_string_settings_itemlist_accesspointuserdefined "Użytkownika"
 rls_string r_string_settings_itemlist_accesspointalwaysask "Zawsze pytaj"
 rls_string r_string_settings_itemlist_autostart "Uruchom przy starcie"
-rls_string r_string_settings_itemlist_showcontacts "Pokaż kontakty telefonu"
 
 // Notification settings
 rls_string r_string_settings_notifications_title "Powiadomienia"

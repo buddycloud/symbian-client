@@ -28,19 +28,11 @@ rls_string r_string_options_menu "Pilihan"
 rls_string r_string_say_menu "Katakan"
 rls_string r_string_cancel_menu "Membatalkan"
 rls_string r_string_next_menu "Selanjutnya"
-rls_string r_string_endcall_menu "End Call"
 rls_string r_string_hide_menu "Hide"
 
 // Item
 rls_string r_string_item_newchannel "Saluran baru..."
 rls_string r_string_item_newplace "Tempat baru..."
-
-// Menu: Call
-rls_string r_string_options_loudspeaker "Pindah ke speaker"
-rls_string r_string_options_handset "Pindah ke handset"
-rls_string r_string_options_hold "Menunggu"
-rls_string r_string_options_resume "Lanjutkan"
-rls_string r_string_options_endcall "Akhiri Panggilan"
 
 // Menu: Settings & Edit place
 rls_string r_string_options_edititem "Ubah"
@@ -83,7 +75,6 @@ rls_string r_string_item_viewchannelmessages "lihat saluran"
 rls_string r_string_item_viewprivatemessages "Lihat pesan pribadi"
 rls_string r_string_item_showplacedetails "Tunjukan perincian tempat"
 rls_string r_string_item_showchanneldetails "Tunjukan keterangan saluran"
-rls_string r_string_item_call "Memanggil kontak"
 rls_string r_string_item_sendplacebysms "Kirim tempat melalui sms"
 rls_string r_string_item_sendinvite "Undang ke buddycloud"
 rls_string r_string_item_noticeaccept "Terima"
@@ -213,7 +204,6 @@ rls_string r_string_settings_itemlist_accesspoint "Akses point yang akan digunak
 rls_string r_string_settings_itemlist_accesspointuserdefined "Tetapkan Pengguna"
 rls_string r_string_settings_itemlist_accesspointalwaysask "Selalu bertanya"
 rls_string r_string_settings_itemlist_autostart "Buka saat telepon dihidupkan"
-rls_string r_string_settings_itemlist_showcontacts "Tunjukkan kontak telepon"
 
 // Notification settings
 rls_string r_string_settings_notifications_title "Notifications"

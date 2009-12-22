@@ -28,19 +28,11 @@ rls_string r_string_options_menu "Opzioni"
 rls_string r_string_say_menu "Spedisci"
 rls_string r_string_cancel_menu "Annulla"
 rls_string r_string_next_menu "Successivo"
-rls_string r_string_endcall_menu "End Call"
 rls_string r_string_hide_menu "Nascondi"
 
 // Item
 rls_string r_string_item_newchannel "Nuovo canale..."
 rls_string r_string_item_newplace "Nuova locazione..."
-
-// Menu: Call
-rls_string r_string_options_loudspeaker "Passa al vivavoce"
-rls_string r_string_options_handset "Passa al cellulare"
-rls_string r_string_options_hold "Aspetta"
-rls_string r_string_options_resume "Riprendi"
-rls_string r_string_options_endcall "Termina la chiamata"
 
 // Menu: Settings & Edit place
 rls_string r_string_options_edititem "Cambia"
@@ -83,7 +75,6 @@ rls_string r_string_item_viewchannelmessages "Guarda il canale"
 rls_string r_string_item_viewprivatemessages "Guarda i messaggi privati"
 rls_string r_string_item_showplacedetails "Mostra i dettagli della locazione"
 rls_string r_string_item_showchanneldetails "Mostra i dettagli del canale"
-rls_string r_string_item_call "Chiama il contatto"
 rls_string r_string_item_sendplacebysms "Spedisci la locazione via SMS"
 rls_string r_string_item_sendinvite "Invita a buddycloud"
 rls_string r_string_item_noticeaccept "Accetta"
@@ -213,7 +204,6 @@ rls_string r_string_settings_itemlist_accesspoint "Punto d'accesso da usare"
 rls_string r_string_settings_itemlist_accesspointuserdefined "Definito dall'utente"
 rls_string r_string_settings_itemlist_accesspointalwaysask "Chiedi sempre"
 rls_string r_string_settings_itemlist_autostart "Fai partire all'accensione del telefono"
-rls_string r_string_settings_itemlist_showcontacts "Mostra i contatti del telefono"
 
 // Notification settings
 rls_string r_string_settings_notifications_title "Notifiche"

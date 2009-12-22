@@ -28,19 +28,11 @@ rls_string r_string_options_menu "Опции"
 rls_string r_string_say_menu "Сказать"
 rls_string r_string_cancel_menu "Отмена"
 rls_string r_string_next_menu "Дальше"
-rls_string r_string_endcall_menu "End Call"
 rls_string r_string_hide_menu "Скрыть"
 
 // Item
 rls_string r_string_item_newchannel "Новый канал..."
 rls_string r_string_item_newplace "Новое место..."
-
-// Menu: Call
-rls_string r_string_options_loudspeaker "Переключиться на громкую связь"
-rls_string r_string_options_handset "Переключиться на телефон"
-rls_string r_string_options_hold "Удержать"
-rls_string r_string_options_resume "Продолжить"
-rls_string r_string_options_endcall "Завершить звонок"
 
 // Menu: Settings & Edit place
 rls_string r_string_options_edititem "Изменить"
@@ -83,7 +75,6 @@ rls_string r_string_item_viewchannelmessages "Просмотр канала"
 rls_string r_string_item_viewprivatemessages "Просмотреть личные сообщения"
 rls_string r_string_item_showplacedetails "Подробности места"
 rls_string r_string_item_showchanneldetails "Информация о канале"
-rls_string r_string_item_call "Вызвать контакт"
 rls_string r_string_item_sendplacebysms "Отправить координаты по СМС"
 rls_string r_string_item_sendinvite "Пригласить в Buddycloud"
 rls_string r_string_item_noticeaccept "Принять"
@@ -213,7 +204,6 @@ rls_string r_string_settings_itemlist_accesspoint "Точка доступа"
 rls_string r_string_settings_itemlist_accesspointuserdefined "Определено пользователем"
 rls_string r_string_settings_itemlist_accesspointalwaysask "Всегда спрашивать"
 rls_string r_string_settings_itemlist_autostart "Запускать вместе с телефоном"
-rls_string r_string_settings_itemlist_showcontacts "Показывать контакты телефона"
 
 // Notification settings
 rls_string r_string_settings_notifications_title "Уведомления"

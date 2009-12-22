@@ -113,6 +113,10 @@ void CBuddycloudMessagingContainer::ConstructL(const TRect& aRect, TMessagingVie
 	
 	RenderScreen();
 	ActivateL();
+	
+#ifdef __SERIES60_40__
+		DynInitToolbarL(R_MESSAGING_TOOLBAR, iViewAccessor->ViewToolbar());
+#endif
 }
 
 CBuddycloudMessagingContainer::~CBuddycloudMessagingContainer() {
@@ -312,7 +316,7 @@ void CBuddycloudMessagingContainer::TimerExpired(TInt aExpiryId) {
 		TDateTime aDateTime = aTime.DateTime();
 		iTimer->After((60 - aDateTime.Second() + 1) * 1000);
 	
-	CleanupStack::PopAndDestroy(); // aTextTimeTopic
+		CleanupStack::PopAndDestroy(); // aTextTimeTopic
 #endif
 	}
 }
@@ -541,7 +545,7 @@ void CBuddycloudMessagingContainer::RenderSelectedText(TInt& aDrawPos) {
 				TInt aTypingPos = aTypingStartPos;
 				TPtrC pDirectionalText(iTextUtilities->BidiLogicalToVisualL(pTextLine));
 				
-				aDrawPos += aRenderingFont->HeightInPixels();
+				aDrawPos += i10ItalicFont->HeightInPixels();
 				aGlobalPosition += aDisplayableWidth;
 				
 				if(pCurrentLink.Length() > 0 && aGlobalPosition > aCurrentLink.iStart) {
@@ -684,12 +688,8 @@ TInt CBuddycloudMessagingContainer::CalculateMessageSize(TInt aIndex, TBool aSel
 		}
 	}
 	
-	if(aEntry->GetEntryType() < EEntryContentAction) {
-		// Textual message body
-		aItemSize += (i10NormalFont->HeightInPixels() * iEntries[aIndex]->iLines.Count());			
-	}
-	else if(!aSelected) {
-		// Unselected user action/event
+	if(aEntry->GetEntryType() < EEntryContentAction || !aSelected) {
+		// Textual message body or unselected user action/event
 		aItemSize += (i10ItalicFont->HeightInPixels() * iEntries[aIndex]->iLines.Count());			
 	}
 
@@ -925,7 +925,7 @@ void CBuddycloudMessagingContainer::RenderListItems() {
 					iBufferGc->UseFont(aRenderingFont);
 						
 					for(TInt x = 0; x < iEntries[i]->LineCount(); x++) {
-						aItemDrawPos += i10NormalFont->HeightInPixels();
+						aItemDrawPos += i10ItalicFont->HeightInPixels();
 						iBufferGc->DrawText(iEntries[i]->GetLine(x), TPoint(aRenderingPosition, aItemDrawPos));
 					}	
 						
@@ -1002,9 +1002,12 @@ void CBuddycloudMessagingContainer::RepositionItems(TBool aSnapToItem) {
 		
 #ifdef __SERIES60_40__
 			ResetItemLinks();
-			DynInitToolbarL(R_MESSAGING_TOOLBAR, iViewAccessor->ViewToolbar());
 #endif
 		}
+		
+#ifdef __SERIES60_40__
+		DynInitToolbarL(R_MESSAGING_TOOLBAR, iViewAccessor->ViewToolbar());
+#endif
 		
 		for(TInt i = 0; i < iEntries.Count(); i++) {
 			aItemSize = CalculateMessageSize(i, (i == iSelectedItem));
@@ -1044,9 +1047,11 @@ void CBuddycloudMessagingContainer::HandleItemSelection(TInt aItemId) {
 		
 #ifdef __SERIES60_40__
 		ResetItemLinks();
+#endif
+		RenderScreen();	
+#ifdef __SERIES60_40__
 		DynInitToolbarL(R_MESSAGING_TOOLBAR, iViewAccessor->ViewToolbar());
 #endif
-		RenderScreen();
 	}
 	else {
 		// Trigger item event
@@ -1079,6 +1084,7 @@ void CBuddycloudMessagingContainer::DynInitToolbarL(TInt aResourceId, CAknToolba
 	if(aResourceId == R_MESSAGING_TOOLBAR) {
 		aToolbar->SetItemDimmed(EMenuAddCommentCommand, true, true);
 		aToolbar->SetItemDimmed(EMenuWritePostCommand, true, true);
+		aToolbar->SetItemDimmed(EMenuJumpToUnreadCommand, true, true);
 		
 		CFollowingChannelItem* aChannelItem = static_cast <CFollowingChannelItem*> (iItem);	
 		
@@ -1090,10 +1096,14 @@ void CBuddycloudMessagingContainer::DynInitToolbarL(TInt aResourceId, CAknToolba
 			if(iEntries.Count() > 0 && iSelectedItem < iEntries.Count()) {
 				CAtomEntryData* aEntry = iEntries[iSelectedItem]->GetEntry();
 
-				if(aEntry && aEntry->GetId().Length() > 0) {
+				if(aEntry && aEntry->GetEntryType() != EEntryContentNotice && aEntry->GetId().Length() > 0) {
 					aToolbar->SetItemDimmed(EMenuAddCommentCommand, false, true);
 				}
 			}
+		}
+		
+		if(iDiscussion->GetUnreadEntries() > 0) {
+			aToolbar->SetItemDimmed(EMenuJumpToUnreadCommand, false, true);
 		}
 	}
 }
@@ -1378,6 +1388,8 @@ void CBuddycloudMessagingContainer::HandleCommandL(TInt aCommand) {
 				aEntry->SetRead(true);
 			}
 		}
+		
+		RenderScreen();
 	}
 	else if(aCommand == EMenuSeeFollowersCommand) {
 		TPtrC8 aSubjectJid = iTextUtilities->UnicodeToUtf8L(iMessagingObject.iId);

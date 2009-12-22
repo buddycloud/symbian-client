@@ -28,19 +28,11 @@ rls_string r_string_options_menu "Voorkeuren"
 rls_string r_string_say_menu "Zegt"
 rls_string r_string_cancel_menu "Annuleren "
 rls_string r_string_next_menu "Volgende"
-rls_string r_string_endcall_menu "End Call"
 rls_string r_string_hide_menu "Verbergen"
 
 // Item
 rls_string r_string_item_newchannel "Nieuw kanaal..."
 rls_string r_string_item_newplace "Nieuwe plaats..."
-
-// Menu: Call
-rls_string r_string_options_loudspeaker "Luidspreker gebruiken "
-rls_string r_string_options_handset "Overzetten naar handset"
-rls_string r_string_options_hold "Stop"
-rls_string r_string_options_resume "Doorgaan"
-rls_string r_string_options_endcall "Gesprek beëindigen"
 
 // Menu: Settings & Edit place
 rls_string r_string_options_edititem "Wijzigen"
@@ -83,7 +75,6 @@ rls_string r_string_item_viewchannelmessages "Channel kijken"
 rls_string r_string_item_viewprivatemessages "Private berichten lezen"
 rls_string r_string_item_showplacedetails "Show place details"
 rls_string r_string_item_showchanneldetails "Details weergeven"
-rls_string r_string_item_call "Contact bellen"
 rls_string r_string_item_sendplacebysms "Stuur plaats via SMS"
 rls_string r_string_item_sendinvite "Nodig uit voor buddycloud"
 rls_string r_string_item_noticeaccept "Aanvaard "
@@ -213,7 +204,6 @@ rls_string r_string_settings_itemlist_accesspoint "Te gebruiken access point"
 rls_string r_string_settings_itemlist_accesspointuserdefined "Gebruikergedefinieerd "
 rls_string r_string_settings_itemlist_accesspointalwaysask "Altijd vragen"
 rls_string r_string_settings_itemlist_autostart "Programma starten met de opstart van de toestel?"
-rls_string r_string_settings_itemlist_showcontacts "Show phone Contacts"
 
 // Notification settings
 rls_string r_string_settings_notifications_title "Aankondiging"

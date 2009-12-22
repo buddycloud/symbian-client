@@ -28,19 +28,11 @@ rls_string r_string_options_menu "Options"
 rls_string r_string_say_menu "Say"
 rls_string r_string_cancel_menu "Cancel"
 rls_string r_string_next_menu "Next"
-rls_string r_string_endcall_menu "End Call"
 rls_string r_string_hide_menu "Hide"
 
 // Item
 rls_string r_string_item_newchannel "New channel..."
 rls_string r_string_item_newplace "New place..."
-
-// Menu: Call
-rls_string r_string_options_loudspeaker "Switch to Speaker"
-rls_string r_string_options_handset "Switch to Handset"
-rls_string r_string_options_hold "Hold"
-rls_string r_string_options_resume "Resume"
-rls_string r_string_options_endcall "End Call"
 
 // Menu: Settings & Edit place
 rls_string r_string_options_edititem "Change"
@@ -83,7 +75,6 @@ rls_string r_string_item_viewchannelmessages "View channel"
 rls_string r_string_item_viewprivatemessages "View private messages"
 rls_string r_string_item_showplacedetails "Show place details"
 rls_string r_string_item_showchanneldetails "Show channel details"
-rls_string r_string_item_call "Call contact"
 rls_string r_string_item_sendplacebysms "Send place via SMS"
 rls_string r_string_item_sendinvite "Invite to buddycloud"
 rls_string r_string_item_noticeaccept "Accept"
@@ -181,10 +172,10 @@ rls_string r_string_changerole_itemlist_moderator "To moderator"
 rls_string r_string_note_affiliationrequest_title "Publish request"
 rls_string r_string_note_affiliationrequest_text "$USER has requested permission to post in this channel. To approve this request press 'Accept', else press 'Decline'."
 
-rls_string r_string_note_affiliationoutcast "You have been banned from the channel. You now cannot read or post in this channel's content."
-rls_string r_string_note_affiliationmember "You have become a follower of this channel. You can now read, but not post in this channel's content."
-rls_string r_string_note_affiliationpublisher "You have become a publisher of this channel. You can now read and post in this channel's content."
-rls_string r_string_note_affiliationmoderator "You have become a moderator of this channel. You can now read, post, and manage this channel's content."
+rls_string r_string_note_affiliationoutcast "You have been banned from the channel. You now cannot read or post content in this channel."
+rls_string r_string_note_affiliationmember "You have become a follower of the channel. You can now read, but not post content in this channel."
+rls_string r_string_note_affiliationpublisher "You have become a publisher of the channel. You can now read and post content in this channel."
+rls_string r_string_note_affiliationmoderator "You have become a moderator of the channel. You can now read, post, and manage content in this channel."
 
 rls_string r_string_note_subscriptionrequest_text "$USER has requested to follow this channel. To approve this request press 'Accept', else press 'Decline'."
 rls_string r_string_note_subscriptionpending "Your subscription request has been sent to the channel's producer."
@@ -213,7 +204,6 @@ rls_string r_string_settings_itemlist_accesspoint "Access Point to use"
 rls_string r_string_settings_itemlist_accesspointuserdefined "User defined"
 rls_string r_string_settings_itemlist_accesspointalwaysask "Always ask"
 rls_string r_string_settings_itemlist_autostart "Launch at phone start"
-rls_string r_string_settings_itemlist_showcontacts "Show phone Contacts"
 
 // Notification settings
 rls_string r_string_settings_notifications_title "Notifications"

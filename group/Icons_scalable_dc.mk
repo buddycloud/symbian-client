@@ -56,7 +56,7 @@ RESOURCE :
 	mifconv $(ARROWTARGETFILENAME) $(ARROWMBG) \
 		/c8 $(ICONDIR)\Arrow1.svg /c8 $(ICONDIR)\Arrow2.svg
 	mifconv $(TOOLBARTARGETFILENAME) $(TOOLBARMBG) \
-		/c8 $(ICONDIR)\Call.svg /c8 $(ICONDIR)\Message.svg /c8 $(ICONDIR)\MessageReply.svg /c8 $(ICONDIR)\Search.svg
+		/c8 $(ICONDIR)\ToolbarChannelPost.svg /c8 $(ICONDIR)\ToolbarMessage.svg /c8 $(ICONDIR)\ToolbarMessageReply.svg /c8 $(ICONDIR)\ToolbarSearch.svg /c8 $(ICONDIR)\ToolbarUnreadJump.svg
 		
 FREEZE : do_nothing
 

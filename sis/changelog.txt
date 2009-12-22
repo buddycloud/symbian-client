@@ -1,6 +1,41 @@
 Change Log
 ==========
 
+0.05.14
+
+- Update from 99translations
+- Add cleaning up of notice items on roster collection & roster push
+- Create 'Jump to unread' toolbar icon & add logic to CBuddycloudMessagingContainer
+
+0.05.13
+
+- [bug] Fix a rare case in link parsing that causes an infinite loop
+
+0.05.12
+
+- Add a timeout yield in CXmppEngine when reading to avoid UI blocking
+- Globalize CTextUtilities in CBuddycloudLogic
+- Remove TelephonyEngine and all references to it
+- Remove CFollowingContactItem class
+- Remove all calling functions and UI from views
+- Remove CBuddycloudContactSearcher & CBuddycloudContactStreamer
+- [bug] Fix client crash when cancelling on CBuddycloudEditChannelList
+- Re-render CBuddycloudMessagingContainer after 'Mark channel read'
+
+0.05.11
+
+- [bug] Correct message event handling for 'configuration' (not 'configure')
+
+0.05.10
+
+- [bug] CBuddycloudEditChannelList update item text fix (Channel Id not updating)
+- [bug] Fix a memory leak in CBuddycloudEditChannelList
+- Add logic for reporting abusive channel post items
+- [bug] Disable snapping to items on rotation & list events during a kinetic scroll
+- Add 'Edit details' menu item for owned channels in CBuddycloudMessagingContainer
+- Process message event for channel configuration change
+- [bug] Fix a geoloc future updating error
+
 0.05.09
 
 - [bug] Fix /me posts
