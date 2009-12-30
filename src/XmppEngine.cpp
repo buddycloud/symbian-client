@@ -87,8 +87,8 @@ CXmppEngine::~CXmppEngine() {
 	if(iStateTimer)
 		delete iStateTimer;
 
-	if(iQueueTimer)
-		delete iQueueTimer;
+	if(iReadTimer)
+		delete iReadTimer;
 
 	if(iTcpIpEngine)
 		delete iTcpIpEngine;
@@ -139,7 +139,7 @@ void CXmppEngine::ConstructL(MXmppEngineObserver* aEngineObserver) {
 	iConnectionId = 0;
 
 	iStateTimer = CCustomTimer::NewL(this, EXmppStateTimer);
-	iQueueTimer = CCustomTimer::NewL(this, EXmppQueueTimer);
+	iReadTimer = CCustomTimer::NewL(this, EXmppReadTimer);
 
 	iTcpIpEngine = CTcpIpEngine::NewL(this);
 
@@ -160,18 +160,9 @@ void CXmppEngine::SetObserver(MXmppEngineObserver* aEngineObserver) {
 }
 
 void CXmppEngine::TimerExpired(TInt aExpiryId) {
-	if(aExpiryId == EXmppQueueTimer) {
-		// Queue timer timeout
-		iXmppOutbox->SetMessageSent(true);
-		
-		if((iEngineState == EXmppOnline || iLastError != EXmppNone) && iSilenceState == EXmppSilenceTest) {
-			// Send next in outbox
-			if(iSendQueuedMessages || iXmppOutbox->ContainsPriorityMessages(EXmppPriorityHigh)) {
-				if(iXmppOutbox->Count() > 0) {
-					WriteToStreamL(iXmppOutbox->GetNextMessage()->GetStanza());
-				}			
-			}
-		}		
+	if(aExpiryId == EXmppReadTimer) {
+		// Read timer timeout
+		iTcpIpEngine->Read();
 	}
 	else if(aExpiryId == EXmppStateTimer) {
 		// State timer timeout
@@ -374,13 +365,24 @@ void CXmppEngine::PrepareShutdown() {
 void CXmppEngine::SendQueuedXmppStanzas() {
 	iSendQueuedMessages = true;
 	
-	if(!iXmppOutbox->SendInProgress()) {
-		iQueueTimer->After(QUEUE_INTERVAL);
-	}
+	SendNextQueuedStanzaL();
 }
 
 CXmppOutbox* CXmppEngine::GetMessageOutbox() {
 	return iXmppOutbox;
+}
+
+void CXmppEngine::SendNextQueuedStanzaL() {
+	iXmppOutbox->SetMessageSent(true);
+	
+	if((iEngineState == EXmppOnline || iLastError != EXmppNone) && iSilenceState == EXmppSilenceTest) {
+		// Send next in outbox
+		if(iSendQueuedMessages || iXmppOutbox->ContainsPriorityMessages(EXmppPriorityHigh)) {
+			if(iXmppOutbox->Count() > 0) {
+				WriteToStreamL(iXmppOutbox->GetNextMessage()->GetStanza());
+			}			
+		}
+	}		
 }
 
 void CXmppEngine::AddStanzaObserverL(const TDesC8& aStanzaId, MXmppStanzaObserver* aObserver) {
@@ -677,7 +679,7 @@ void CXmppEngine::HandleXmppStanzaL(const TDesC8& aStanza) {
 	}
 	
 	// Pass to observer if still unprocessed
-	if( !aStanzaIsProcessed ) {
+	if(!aStanzaIsProcessed) {
 		iEngineObserver->XmppUnhandledStanza(aStanza);
 	}
 
@@ -685,7 +687,7 @@ void CXmppEngine::HandleXmppStanzaL(const TDesC8& aStanza) {
 	
 	// Send next queued message
 	if(iSilenceState != EXmppSilenceTest && !iXmppOutbox->SendInProgress()) {
-		iQueueTimer->After(QUEUE_INTERVAL);
+		SendNextQueuedStanzaL();
 	}
 
 	// Reset Silence Test
@@ -797,12 +799,16 @@ void CXmppEngine::DataInflated(const TDesC8& aInflatedData) {
 void CXmppEngine::DataRead(const TDesC8& aMessage) {
 	iDataReceived += aMessage.Length();
 	
+	// Handle data received
 	if(iStreamCompressed) {
 		TRAPD(aErr, iCompressionEngine->InflateL(aMessage));
 	}
 	else {
 		TRAPD(aErr, ReadFromStreamL(aMessage));
 	}
+	
+	// Set timeout for next read
+	iReadTimer->After(READ_INTERVAL);
 }
 
 void CXmppEngine::ReadFromStreamL(const TDesC8& aData) {
@@ -828,63 +834,67 @@ void CXmppEngine::ReadFromStreamL(const TDesC8& aData) {
 		aProcessedStanza = false;
 
 		// Locate first close bracket
-		aFirstCloseMarker = pInputBuffer.Locate(TChar('>'));
+		aFirstCloseMarker = pInputBuffer.Locate('>');
 
-		// Test if new char is '>'
+		// See if buffer contains '>'
 		if(aFirstCloseMarker != KErrNotFound) {
-			// Test for '<?xml...' and '<stream:stream...'
-			aMarker = pInputBuffer.Find(_L8("<?xml"));
-
-			if(aMarker == KErrNotFound) {
-				aMarker = pInputBuffer.Find(_L8("<stream:stream"));
-			}
-
-			if(aMarker != KErrNotFound) {
-				// Return without processing
-				ProcessStanzaInBufferL(aFirstCloseMarker+1);
-
-				aProcessedStanza = true;
-				pInputBuffer.Set(iInputBuffer->Des());
-			}
-			else if(pInputBuffer[aFirstCloseMarker-1] == TUint('/')) {
-				// Test for <example/>
-				ProcessStanzaInBufferL(aFirstCloseMarker+1);
-
-				aProcessedStanza = true;
-				pInputBuffer.Set(iInputBuffer->Des());
-			}
-			else {
-				// Locate the end of the Element name
-				aMarker = pInputBuffer.Locate(TChar(' '));
-
-				if(aMarker != KErrNotFound && aFirstCloseMarker < aMarker) {
-					aMarker = aFirstCloseMarker;
+			if(iEngineState == EXmppLoggingIn) {
+				// Test for '<?xml...' and '<stream:stream...'
+				aMarker = pInputBuffer.Find(_L8("<?xml"));
+	
+				if(aMarker == KErrNotFound) {
+					aMarker = pInputBuffer.Find(_L8("<stream:stream"));
 				}
-
+	
 				if(aMarker != KErrNotFound) {
-					// Get and cleanup Element name
-					// '<example' to '</example>'
-					HBufC8* aElementName = HBufC8::NewLC(aMarker+2);
-					TPtr8 pElementName = aElementName->Des();
-					pElementName.Copy(pInputBuffer.Ptr(), aMarker);
-					pElementName.Append('>');
-					pElementName.Insert(1, _L8("/"));
-
-					// Find stanza close
-					aFirstCloseMarker = pInputBuffer.Find(pElementName);
-
-					if(aFirstCloseMarker != KErrNotFound) {
-						// We have a complete stanza
-						ProcessStanzaInBufferL(aFirstCloseMarker+pElementName.Length());
-
-						aProcessedStanza = true;
-						pInputBuffer.Set(iInputBuffer->Des());
+					// Return without processing
+					ProcessStanzaInBufferL(aFirstCloseMarker+1);
+	
+					aProcessedStanza = true;
+				}
+			}
+			
+			if(!aProcessedStanza) {
+				if(pInputBuffer[aFirstCloseMarker-1] == TUint('/')) {
+					// Test for <example/>
+					ProcessStanzaInBufferL(aFirstCloseMarker+1);
+	
+					aProcessedStanza = true;
+				}
+				else {
+					// Locate the end of the Element name
+					aMarker = pInputBuffer.Locate(' ');
+	
+					if(aMarker != KErrNotFound && aFirstCloseMarker < aMarker) {
+						aMarker = aFirstCloseMarker;
 					}
-
-					CleanupStack::PopAndDestroy(aElementName);
+	
+					if(aMarker != KErrNotFound) {
+						// Get and cleanup Element name
+						// '<example' to '</example>'
+						HBufC8* aElementName = HBufC8::NewLC(aMarker + 2);
+						TPtr8 pElementName(aElementName->Des());
+						pElementName.Append(pInputBuffer.Left(aMarker));
+						pElementName.Append('>');
+						pElementName.Insert(1, _L8("/"));
+	
+						// Find stanza close
+						aFirstCloseMarker = pInputBuffer.Find(pElementName);
+	
+						if(aFirstCloseMarker != KErrNotFound) {
+							// We have a complete stanza
+							ProcessStanzaInBufferL(aFirstCloseMarker + pElementName.Length());
+	
+							aProcessedStanza = true;
+						}
+	
+						CleanupStack::PopAndDestroy(aElementName);
+					}
 				}
 			}
 		}
+		
+		pInputBuffer.Set(iInputBuffer->Des());
 	} while( aProcessedStanza );
 }
 
@@ -993,10 +1003,8 @@ void CXmppEngine::NotifyEvent(TTcpIpEngineState aTcpEngineState) {
 			}
 			break;
 		case ETcpIpWriteComplete:
-			// Start timer to send next message
-			if(iXmppOutbox->SendInProgress()) {
-				iQueueTimer->After(QUEUE_INTERVAL);
-			}
+			// Send next stanza
+			SendNextQueuedStanzaL();
 			break;
 		default:;
 	}

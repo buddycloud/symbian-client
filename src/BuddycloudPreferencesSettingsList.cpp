@@ -93,18 +93,6 @@ void CBuddycloudPreferencesSettingsList::EditItemL(TInt aIndex, TBool aCalledFro
 	CAknSettingItemList::EditItemL(aIndex, aCalledFromMenu);
 	
 	((*aItemArray)[aIndex])->StoreL();
-	
-	if(aIdentifier == ESettingPreferencesShowContacts) {
-		if(iBuddycloudLogic->GetBoolSetting(ESettingItemShowContacts) && !iBuddycloudLogic->GetBoolSetting(ESettingItemContactsLoaded)) {
-			// Load contacts
-			iBuddycloudLogic->LoadAddressBookContacts();
-		}
-		else if(!iBuddycloudLogic->GetBoolSetting(ESettingItemShowContacts) && iBuddycloudLogic->GetBoolSetting(ESettingItemContactsLoaded)) {
-			// Remove contacts
-			iBuddycloudLogic->RemoveAddressBookContacts();
-		}
-	}
-	
 	((*aItemArray)[aIndex])->UpdateListBoxTextL();
 }
 
@@ -124,9 +112,6 @@ CAknSettingItem* CBuddycloudPreferencesSettingsList::CreateSettingItemL (TInt aI
 			break;
 		case ESettingPreferencesAccessPoint:
 			aSettingItem = new (ELeave) CAknBinaryPopupSettingItem(aIdentifier, iBuddycloudLogic->GetBoolSetting(ESettingItemAccessPoint));
-			break;
-		case ESettingPreferencesShowContacts:
-			aSettingItem = new (ELeave) CAknBinaryPopupSettingItem(aIdentifier, iBuddycloudLogic->GetBoolSetting(ESettingItemShowContacts));
 			break;
 		case ESettingPreferencesShowName:
 			aSettingItem = new (ELeave) CAknBinaryPopupSettingItem(aIdentifier, iBuddycloudLogic->GetBoolSetting(ESettingItemShowName));

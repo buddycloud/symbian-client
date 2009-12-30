@@ -782,42 +782,32 @@ void CBuddycloudExplorerContainer::HandleCommandL(TInt aCommand) {
 		CExplorerResultItem* aResultItem = iExplorerLevels[aLevel]->iResultItems[iSelectedItem];
 		
 		if(aResultItem->GetResultType() == EExplorerItemPerson || aResultItem->GetResultType() == EExplorerItemChannel) {			
-			TPtrC8 aSubjectJid = iTextUtilities->UnicodeToUtf8L(aResultItem->GetId());			
+			TPtrC8 aEncId = iTextUtilities->UnicodeToUtf8L(aResultItem->GetId());			
 			TExplorerQuery aQuery;
 		
 			if(aCommand == EMenuSeeFollowersCommand) {
-				TInt aLocateResult = aSubjectJid.Locate('@');
+				aQuery.iStanza.Append(_L8("<iq to='' type='get' id='exp_followers'><pubsub xmlns='http://jabber.org/protocol/pubsub#owner'><affiliations node=''/></pubsub></iq>"));
 				
-				if(aLocateResult != KErrNotFound) {
-					aQuery.iStanza.Append(_L8("<iq to='maitred.buddycloud.com' type='get' id='exp_users1'><query xmlns='http://buddycloud.com/protocol/channels#followers'><channel><jid></jid></channel></query></iq>"));
-					
-					if(aResultItem->GetResultType() == EExplorerItemChannel) {
-						aQuery.iStanza.Insert(138, aSubjectJid);
-					}
-					else {
-						_LIT8(KChannelsServer, "@channels.buddycloud.com");
-						HBufC8* aUserChannelJid = HBufC8::NewLC(aSubjectJid.Length() + KChannelsServer().Length());
-						TPtr8 pUserChannelJid(aUserChannelJid->Des());
-						pUserChannelJid.Append(aSubjectJid);
-						pUserChannelJid.Replace(aLocateResult, 1, _L8("%"));
-						pUserChannelJid.Append(KChannelsServer);
-						
-						aQuery.iStanza.Insert(138, pUserChannelJid);
-						
-						CleanupStack::PopAndDestroy(); // aUserChannelJid
-					}
-					
-					iEikonEnv->ReadResourceL(aQuery.iTitle, R_LOCALIZED_STRING_TITLE_FOLLOWEDBY);
-					aQuery.iTitle.Replace(aQuery.iTitle.Find(_L("$OBJECT")), 7, aResultItem->GetTitle().Left((aQuery.iTitle.MaxLength() - aQuery.iTitle.Length() + 7)));	
+				if(aResultItem->GetResultType() == EExplorerItemChannel) {
+					aQuery.iStanza.Insert(116, aEncId);
 				}
+				else if(aResultItem->GetResultType() == EExplorerItemPerson) {
+					aQuery.iStanza.Insert(116, _L8("/user//channel"));
+					aQuery.iStanza.Insert(122, aEncId);
+				}
+				
+				aQuery.iStanza.Insert(8, KBuddycloudPubsubServer);
+				
+				iEikonEnv->ReadResourceL(aQuery.iTitle, R_LOCALIZED_STRING_TITLE_FOLLOWEDBY);
+				aQuery.iTitle.Replace(aQuery.iTitle.Find(_L("$OBJECT")), 7, aResultItem->GetTitle().Left((aQuery.iTitle.MaxLength() - aQuery.iTitle.Length() + 7)));	
 			}
 			else {
 				if(aCommand == EMenuSeeProducingCommand) {
-					aQuery = CExplorerStanzaBuilder::BuildChannelsXmppStanza(aSubjectJid, EChannelProducer);
+					aQuery = CExplorerStanzaBuilder::BuildChannelsXmppStanza(aEncId, EChannelProducer);
 					iEikonEnv->ReadResourceL(aQuery.iTitle, R_LOCALIZED_STRING_TITLE_ISPRODUCING);
 				}
 				else {
-					aQuery = CExplorerStanzaBuilder::BuildChannelsXmppStanza(aSubjectJid, EChannelAll);
+					aQuery = CExplorerStanzaBuilder::BuildChannelsXmppStanza(aEncId, EChannelAll);
 					iEikonEnv->ReadResourceL(aQuery.iTitle, R_LOCALIZED_STRING_TITLE_ISFOLLOWING);
 				}
 				
@@ -940,8 +930,11 @@ void CBuddycloudExplorerContainer::XmppStanzaAcknowledgedL(const TDesC8& aStanza
 					HBufC* aJid = pAttributeId.AllocLC();
 					TPtr pJid(aJid->Des());
 					
-					for(TInt i = (pJid.Locate('@') - 1), x = (i - 2); i >= 0 && i > x; i--) {
-						pJid[i] = 46;
+					if(!iBuddycloudLogic->IsSubscribedTo(pJid, EItemRoster)) {
+						// Sensor jid
+						for(TInt i = (pJid.Locate('@') - 1), x = (i - 2); i >= 0 && i > x; i--) {
+							pJid[i] = 46;
+						}
 					}
 								
 					aResultItem->SetTitleL(pJid);
@@ -1006,42 +999,26 @@ void CBuddycloudExplorerContainer::XmppStanzaAcknowledgedL(const TDesC8& aStanza
 				CleanupStack::Pop(); // aResultItem
 			}
 		}
-		else if(aId.Compare(_L8("exp_users1")) == 0) {
+		else if(aId.Compare(_L8("exp_followers")) == 0) {
 			// Handle place/channel users result
-			while(aXmlParser->MoveToElement(_L8("user"))) {
+			while(aXmlParser->MoveToElement(_L8("affiliation"))) {
 				CExplorerResultItem* aResultItem = CExplorerResultItem::NewLC();
 				aResultItem->SetResultType(EExplorerItemPerson);
 				aResultItem->SetIconId(KIconPerson);
+				aResultItem->SetIdL(iTextUtilities->Utf8ToUnicodeL(aXmlParser->GetStringAttribute(_L8("jid"))));
 				
-				CXmlParser* aChannelXmlParser = CXmlParser::NewLC(aXmlParser->GetStringData());
+				HBufC* aTitle = aResultItem->GetId().AllocLC();
+				TPtr pTitle(aTitle->Des());
 				
-				do {
-					TPtrC8 aElementName = aChannelXmlParser->GetElementName();
-					TPtrC aElementData = iTextUtilities->Utf8ToUnicodeL(aChannelXmlParser->GetStringData());
-					
-					if(aElementName.Compare(_L8("jid")) == 0) {					
-						aResultItem->SetIdL(aElementData);
-						
-						// Sensor jid
-						HBufC* aJid = aElementData.AllocLC();
-						TPtr pJid(aJid->Des());
-						
-						for(TInt i = (pJid.Locate('@') - 1), x = (i - 2); i >= 0 && i > x; i--) {
-							pJid[i] = 46;
-						}
-									
-						aResultItem->SetTitleL(pJid);
-						CleanupStack::PopAndDestroy(); // aJid
+				if(!iBuddycloudLogic->IsSubscribedTo(pTitle, EItemRoster)) {
+					// Sensor jid						
+					for(TInt i = (pTitle.Locate('@') - 1), x = (i - 2); i >= 0 && i > x; i--) {
+						pTitle[i] = 46;
 					}
-					else if(aElementName.Compare(_L8("title")) == 0) {					
-						aResultItem->SetTitleL(aElementData);
-					}
-					else if(aElementName.Compare(_L8("description")) == 0) {					
-						aResultItem->SetDescriptionL(aElementData);
-					}
-				} while(aChannelXmlParser->MoveToNextElement());
-				
-				CleanupStack::PopAndDestroy(); // aChannelXmlParser
+				}
+							
+				aResultItem->SetTitleL(pTitle);
+				CleanupStack::PopAndDestroy(); // aTitle
 				
 				// Add item
 				iExplorerLevels[aLevel]->AppendSortedItem(aResultItem);

@@ -719,8 +719,6 @@ void CSocketReader::RunL() {
 			iEngineObserver->DataRead(iBuffer);
 			
 			iErrorCount = 0;
-			
-			Read();
 			break;
 		case KErrEof:
 			iErrorCount++;

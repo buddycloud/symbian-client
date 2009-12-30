@@ -317,11 +317,6 @@ rls_string r_string_note_updating "Updating..."
 rls_string r_string_note_online "Online"
 rls_string r_string_note_offline "Offline"
 
-// Call
-rls_string r_string_note_dialling "Calling $USER"
-rls_string r_string_note_talkingto "Talking to $USER"
-rls_string r_string_note_hangingup "Disconnected"
-
 // Setup 
 rls_string r_string_step2_title "Be famous!"
 rls_string r_string_step2_text "buddycloud channels gives you a new way to broadcast your awesomeness to your followers.\n\nbuddycloud channels enables you to become famous for your unique knowledge about a place or topic and to build up a community of followers."

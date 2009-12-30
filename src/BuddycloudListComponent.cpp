@@ -37,7 +37,6 @@ CBuddycloudListComponent::CBuddycloudListComponent(MViewAccessorObserver* aViewA
 void CBuddycloudListComponent::ConstructL() {
 	// Initialize timer & set title
 	iTimer = CCustomTimer::NewL(this, KTimeTimerId);
-	iCallTimer = CCustomTimer::NewL(this, KCallTimerId);
 	
 	// Scrollbar
 	iScrollBar = new (ELeave) CEikScrollBarFrame(this, this);
@@ -89,9 +88,6 @@ CBuddycloudListComponent::~CBuddycloudListComponent() {
 
 	if(iTimer)
 		delete iTimer;
-
-	if(iCallTimer)
-		delete iCallTimer;
 	
 #ifdef __SERIES60_40__
 	if(iDragTimer)
@@ -175,7 +171,7 @@ void CBuddycloudListComponent::ConfigureSkin() {
 }
 
 void CBuddycloudListComponent::NotificationEvent(TBuddycloudLogicNotificationType aEvent, TInt /*aId*/) {
-	if(aEvent == ENotificationActivityChanged || aEvent == ENotificationTelephonyChanged) {
+	if(aEvent == ENotificationActivityChanged) {
 		RenderScreen();
 	}
 	else if(aEvent == ENotificationLogicEngineDestroyed) {
@@ -184,10 +180,7 @@ void CBuddycloudListComponent::NotificationEvent(TBuddycloudLogicNotificationTyp
 }
 
 void CBuddycloudListComponent::TimerExpired(TInt aExpiryId) {
-	if(aExpiryId == KCallTimerId) {
-		RenderScreen();
-	}
-	else if(aExpiryId == KDragTimerId) {
+	if(aExpiryId == KDragTimerId) {
 #ifdef __SERIES60_40__		
 		if(iDraggingAllowed) {
 			iDragVelocity = iDragVelocity * 0.95;		
@@ -331,95 +324,12 @@ void CBuddycloudListComponent::RenderScreen() {
 	
 	// Activity dialog
 	if(iShowMialog) {
-		TBuf<256> aMialogLine1(iBuddycloudLogic->GetActivityStatus());
+		TBuf<256> aMialogLine1(iBuddycloudLogic->GetActivityStatus().Left(256));
 		TBuf<256> aMialogLine2;
 		
 		iBufferGc->SetClippingRect(iRect);
 		
-		if(iBuddycloudLogic->GetCall()->GetTelephonyState() > ETelephonyIdle) {
-			// Call Active		
-			TTelephonyEngineState aEngineState = iBuddycloudLogic->GetCall()->GetTelephonyState();
-			TInt aItemId = iBuddycloudLogic->GetCall()->GetCallerId();
-			TInt aAvatarId = KIconPerson;
-					
-			switch(aEngineState) {
-				case ETelephonyDialling:
-					CEikonEnv::Static()->ReadResource(aMialogLine1, R_LOCALIZED_STRING_NOTE_DIALLING);
-					aMialogLine1.Replace(aMialogLine1.Find(_L("$USER")), 5, iBuddycloudLogic->GetCall()->GetCallerName());
-					break;
-				case ETelephonyHangingUp:
-					CEikonEnv::Static()->ReadResource(aMialogLine1, R_LOCALIZED_STRING_NOTE_HANGINGUP);
-					break;
-				default:
-					User::ResetInactivityTime();
-					iCallTimer->After(1000000);
-	
-					CEikonEnv::Static()->ReadResource(aMialogLine1, R_LOCALIZED_STRING_NOTE_TALKINGTO);
-					aMialogLine1.Replace(aMialogLine1.Find(_L("$USER")), 5, iBuddycloudLogic->GetCall()->GetCallerName());
-							
-					TTime aNow, aStart = iBuddycloudLogic->GetCall()->GetCallStartTime();
-					TTimeIntervalHours aHours;
-					TTimeIntervalMinutes aMinutes;
-					TTimeIntervalSeconds aSeconds;
-					
-					aNow.HomeTime();
-					aNow.HoursFrom(aStart, aHours);
-					aNow.MinutesFrom(aStart, aMinutes);
-					aNow.SecondsFrom(aStart, aSeconds);
-					
-					aMialogLine2.Format(_L("for %02d:%02d:%02d"), aHours.Int(), aMinutes.Int(), aSeconds.Int());
-					break;
-			}
-			
-			CBuddycloudListStore* aItemStore = iBuddycloudLogic->GetFollowingStore();
-			CFollowingItem* aItem = static_cast <CFollowingItem*> (aItemStore->GetItemById(aItemId));
-			
-			if(aItem && aItem->GetItemType() == EItemRoster) {
-				CFollowingRosterItem* aRosterItem = static_cast <CFollowingRosterItem*> (aItem);
-				aAvatarId = aRosterItem->GetIconId();
-					
-				if(aEngineState == ETelephonyDialling) {
-					aMialogLine2.Copy(aRosterItem->GetGeolocItem(EGeolocItemCurrent)->GetString(EGeolocText));
-						
-#ifdef __SERIES60_3X__
-					if(aMialogLine2.Length() > 24) {
-						aMialogLine2.Delete(21, aMialogLine2.Length());
-						aMialogLine2.Append(_L("..."));
-					}
-#else
-					if(aMialogLine2.Length() > 18) {
-						aMialogLine2.Delete(15, aMialogLine2.Length());
-						aMialogLine2.Append(_L("..."));
-					}
-#endif
-				}
-			}
-			
-			// Redraw frame background & frame
-			TInt aMialogHeight = (i10NormalFont->FontMaxHeight() + i10BoldFont->FontMaxHeight()) + 4;
-			
-			if(aMialogHeight < 36) {
-				aMialogHeight = 36;
-			}
-			
-			TInt aLongestLine = (i10BoldFont->TextWidthInPixels(aMialogLine1) > i10NormalFont->TextWidthInPixels(aMialogLine2) ? i10BoldFont->TextWidthInPixels(aMialogLine1) : i10NormalFont->TextWidthInPixels(aMialogLine2));		
-			TRect aFrame = TRect((iRect.Width() - 32 - aLongestLine - 35), (iRect.Height() - aMialogHeight), (iRect.Width() - 25), (iRect.Height() + 5));
-			AknsDrawUtils::DrawBackground(AknsUtils::SkinInstance(), iBgContext, this, *iBufferGc, aFrame.iTl, aFrame, KAknsDrawParamDefault);
-			RenderItemFrame(aFrame);
-			
-			iBufferGc->SetBrushStyle(CGraphicsContext::ENullBrush);
-			iBufferGc->BitBltMasked(TPoint((iRect.Width() - 32 - aLongestLine - 32), (iRect.Height() - (aMialogHeight / 2) - 16)), iAvatarRepository->GetImage(aAvatarId, false, ELevelNormal), TRect(0, 0, 32, 32), iAvatarRepository->GetImage(aAvatarId, true, ELevelNormal), true);
-			iBufferGc->SetBrushStyle(CGraphicsContext::ESolidBrush);
-			
-			iBufferGc->SetPenColor(iColourTextSelected);	
-			iBufferGc->UseFont(i10BoldFont);
-			iBufferGc->DrawText(iTextUtilities->BidiLogicalToVisualL(aMialogLine1), TPoint((iRect.Width() - aLongestLine - 31), (iRect.Height() - i10NormalFont->FontMaxHeight() - i10BoldFont->FontMaxDescent() - 2)));
-			iBufferGc->DiscardFont();	
-			iBufferGc->UseFont(i10NormalFont);
-			iBufferGc->DrawText(iTextUtilities->BidiLogicalToVisualL(aMialogLine2), TPoint((iRect.Width() - aLongestLine - 31), (iRect.Height() - i10NormalFont->FontMaxDescent() - 2)));
-			iBufferGc->DiscardFont();
-		}
-		else if(aMialogLine1.Length() > 0) {
+		if(aMialogLine1.Length() > 0) {
 			// Draw Activity Status
 			TInt aSearch = aMialogLine1.Locate('\n');
 			

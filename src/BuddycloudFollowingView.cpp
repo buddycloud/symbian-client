@@ -54,7 +54,7 @@ void CBuddycloudFollowingView::HandleCommandL(TInt aCommand) {
 		
 		AppUi()->HandleCommandL(aCommand);
 	}
-	else if(aCommand == EAknSoftkeyBack && iBuddycloudLogic->GetContactFilter().Length() == 0) {
+	else if(aCommand == EAknSoftkeyBack && iBuddycloudLogic->GetFollowingFilterText().Length() == 0) {
 		TApaTask aTask(iEikonEnv->WsSession());
 		aTask.SetWgId(CEikonEnv::Static()->RootWin().Identifier());
 		aTask.SendToBackground();

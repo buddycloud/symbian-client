@@ -726,6 +726,11 @@ RESOURCE MENU_PANE r_messaging_options_menu
 	{
 		MENU_ITEM
 		{ 
+			command = EMenuJumpToUnreadCommand; 
+			txt = r_string_options_jumptounread;
+		},
+		MENU_ITEM
+		{ 
 			command = EMenuRequestToPostCommand; 
 			txt = r_string_options_postrequest;
 		},
@@ -750,11 +755,6 @@ RESOURCE MENU_PANE r_messaging_options_menu
 			command = EMenuOptionsChannelCommand; 
 			cascade = r_messaging_options_channel_menu; 
 			txt = r_string_options_itemchannel;
-		},
-		MENU_ITEM
-		{ 
-			command = EMenuJumpToUnreadCommand; 
-			txt = r_string_options_jumptounread;
 		},
 		MENU_ITEM
 		{ 

@@ -781,13 +781,6 @@ void CBuddycloudMessagingContainer::RenderListItems() {
 		for(TInt i = 0; i < iEntries.Count(); i++) {
 			CAtomEntryData* aEntry = iEntries[i]->GetEntry();
 			
-			if(i == iSelectedItem && !aEntry->Read()) {
-				iEntries[i]->SetRead(true);
-				aEntry->SetRead(true);
-					
-				TextWrapEntry(iSelectedItem);
-			}
-
 			// Calculate item size
 			aItemSize = CalculateMessageSize(i, (i == iSelectedItem));
 
@@ -1013,6 +1006,19 @@ void CBuddycloudMessagingContainer::RepositionItems(TBool aSnapToItem) {
 			aItemSize = CalculateMessageSize(i, (i == iSelectedItem));
 			
 			if(aSnapToItem && i == iSelectedItem) {
+				// Mark item read
+				CAtomEntryData* aEntry = iEntries[iSelectedItem]->GetEntry();
+				
+				if(!aEntry->Read()) {
+					iEntries[i]->SetRead(true);
+					aEntry->SetRead(true);
+						
+					TextWrapEntry(iSelectedItem);
+					
+					aItemSize = CalculateMessageSize(i, true);
+				}
+				
+				// Calculate select item position
 				if(aItemSize > iRect.Height()) {
 					iScrollbarHandlePosition = iTotalListSize;
 					iSelectedItemBox = TRect(0, 0, iRect.Width(), aItemSize);
@@ -1392,11 +1398,12 @@ void CBuddycloudMessagingContainer::HandleCommandL(TInt aCommand) {
 		RenderScreen();
 	}
 	else if(aCommand == EMenuSeeFollowersCommand) {
-		TPtrC8 aSubjectJid = iTextUtilities->UnicodeToUtf8L(iMessagingObject.iId);
+		TPtrC8 aEncId = iTextUtilities->UnicodeToUtf8L(iMessagingObject.iId);
 		
 		TExplorerQuery aQuery;
-		aQuery.iStanza.Append(_L8("<iq to='maitred.buddycloud.com' type='get' id='exp_users1'><query xmlns='http://buddycloud.com/protocol/channels#followers'><channel><jid></jid></channel></query></iq>"));
-		aQuery.iStanza.Insert(138, aSubjectJid);
+		aQuery.iStanza.Append(_L8("<iq to='' type='get' id='exp_followers'><pubsub xmlns='http://jabber.org/protocol/pubsub#owner'><affiliations node=''/></pubsub></iq>"));
+		aQuery.iStanza.Insert(116, aEncId);
+		aQuery.iStanza.Insert(8, KBuddycloudPubsubServer);
 		
 		iEikonEnv->ReadResourceL(aQuery.iTitle, R_LOCALIZED_STRING_TITLE_FOLLOWEDBY);
 		aQuery.iTitle.Replace(aQuery.iTitle.Find(_L("$OBJECT")), 7, iMessagingObject.iTitle.Left(aQuery.iTitle.MaxLength() - aQuery.iTitle.Length() + 7));

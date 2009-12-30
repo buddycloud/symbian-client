@@ -797,12 +797,12 @@ void CBuddycloudFollowingContainer::RepositionItems(TBool aSnapToItem) {
 			if(aItem && aItem->Filtered()) {
 				if(iSelectedItem == KErrNotFound) {
 					iSelectedItem = aItem->GetItemId();
-					
-#ifdef __SERIES60_40__
-					DynInitToolbarL(R_STATUS_TOOLBAR, iViewAccessor->ViewToolbar());
-#endif		
 					RenderWrappedText(iSelectedItem);		
 				}
+				
+#ifdef __SERIES60_40__
+				DynInitToolbarL(R_STATUS_TOOLBAR, iViewAccessor->ViewToolbar());
+#endif		
 				
 				aItemSize = CalculateItemSize(i);
 				
@@ -1208,10 +1208,11 @@ void CBuddycloudFollowingContainer::HandleCommandL(TInt aCommand) {
 			TExplorerQuery aQuery;
 			
 			if(aItem->GetItemType() == EItemChannel || (aItem->GetItemType() == EItemRoster && aCommand == EMenuSeeFollowersCommand)) {
-				TPtrC8 aSubjectId = iTextUtilities->UnicodeToUtf8L(aItem->GetId());
+				TPtrC8 aEncId = iTextUtilities->UnicodeToUtf8L(aItem->GetId());
 				
-				aQuery.iStanza.Append(_L8("<iq to='maitred.buddycloud.com' type='get' id='exp_users1'><query xmlns='http://buddycloud.com/protocol/channels#followers'><channel><jid></jid></channel></query></iq>"));
-				aQuery.iStanza.Insert(138, aSubjectId);
+				aQuery.iStanza.Append(_L8("<iq to='' type='get' id='exp_followers'><pubsub xmlns='http://jabber.org/protocol/pubsub#owner'><affiliations node=''/></pubsub></iq>"));
+				aQuery.iStanza.Insert(116, aEncId);
+				aQuery.iStanza.Insert(8, KBuddycloudPubsubServer);
 				
 				iEikonEnv->ReadResourceL(aQuery.iTitle, R_LOCALIZED_STRING_TITLE_FOLLOWEDBY);
 				aQuery.iTitle.Replace(aQuery.iTitle.Find(_L("$OBJECT")), 7, aItem->GetTitle());

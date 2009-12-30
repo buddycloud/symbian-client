@@ -84,9 +84,9 @@ TExplorerQuery CExplorerStanzaBuilder::BuildChannelsXmppStanza(const TDesC8& aSu
 TExplorerQuery CExplorerStanzaBuilder::BuildPlaceVisitorsXmppStanza(const TDesC8& aNode, TInt aPlaceId) {
 	TExplorerQuery aQuery;			
 	
-	_LIT8(KPlaceVisitorsStanza, "<iq to='butler.buddycloud.com' type='get' id='exp_users1'><query xmlns='http://buddycloud.com/protocol/place#visitors' node=''><place><id>http://buddycloud.com/places/%d</id></place></query></iq>");
+	_LIT8(KPlaceVisitorsStanza, "<iq to='butler.buddycloud.com' type='get' id='exp_visitors'><query xmlns='http://buddycloud.com/protocol/place#visitors' node=''><place><id>http://buddycloud.com/places/%d</id></place></query></iq>");
 	aQuery.iStanza.Format(KPlaceVisitorsStanza, aPlaceId);
-	aQuery.iStanza.Insert(125, aNode);
+	aQuery.iStanza.Insert(127, aNode);
 	
 	return aQuery;
 }

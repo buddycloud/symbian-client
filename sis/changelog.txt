@@ -1,6 +1,16 @@
 Change Log
 ==========
 
+0.05.15
+
+- Always validate CBuddycloudFollowingContainer toolbar on item reposition
+- Mark entry read & recalculate item size before instead of during screen rendering
+- [bug] Fix a type cast error in MediaPostRequestL
+- [trial] Move 'Jump to unread' menu item to top
+- Only sensor unknown jid's in Messaging & Explorer components
+- Do not process muc invite messages
+- Change to pubsub stanzas for 'See following' menu item
+
 0.05.14
 
 - Update from 99translations

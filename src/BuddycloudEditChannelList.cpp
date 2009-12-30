@@ -49,8 +49,13 @@ void CBuddycloudEditChannelList::ConstructL(const TRect& aRect, CBuddycloudLogic
 CBuddycloudEditChannelList::~CBuddycloudEditChannelList() {
 	iXmppInterface->CancelXmppStanzaAcknowledge(this);
 	
-	if(iChannelItem && iChannelItem->GetItemId() <= 0) {
-		delete iChannelItem;
+	if(iChannelItem) {
+		if(iChannelItem->GetItemId() == 0) {	
+			delete iChannelItem;
+		}
+		else if(iChannelItem->GetItemId() < 0) {
+			iBuddycloudLogic->GetFollowingStore()->DeleteItemById(iChannelItem->GetItemId());
+		}
 	}
 }
 

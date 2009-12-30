@@ -11,6 +11,7 @@
 */
 
 #include <s32file.h>
+#include <etel3rdparty.h>
 #include <f32file.h>
 #include "PhoneUtilities.h"
 
@@ -58,4 +59,23 @@ void CPhoneUtilities::GetFirmwareVersionL(TDes& aFirmwareVersion) {
 		
 		CleanupStack::PopAndDestroy(&aSession);	
 	}
+}
+
+TBool CPhoneUtilities::InCall() {
+	TBool aResult = false;
+	
+	CTelephony* aTelephony = CTelephony::NewLC();
+	
+	CTelephony::TCallStatusV1 aCallStatus;
+	CTelephony::TCallStatusV1Pckg aCallStatusV1Pckg(aCallStatus);
+	
+	if(aTelephony->GetLineStatus(CTelephony::EVoiceLine, aCallStatusV1Pckg) == KErrNone) {
+		if(aCallStatus.iStatus > CTelephony::EStatusIdle) {
+			aResult = true;
+		}
+	}
+	
+	CleanupStack::PopAndDestroy(); // aTelephony
+	
+	return aResult;
 }

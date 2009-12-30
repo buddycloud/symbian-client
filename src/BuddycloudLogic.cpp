@@ -1793,6 +1793,11 @@ void CBuddycloudLogic::HandlePubsubEventL(const TDesC8& aStanza, TBool aNewEvent
 										CAtomEntryData* aAtomEntry = aAtomEntryParser->XmlToAtomEntryLC(aXmlParser->GetStringData(), aReferenceId);									
 										aAtomEntry->SetIdL(aItemId);
 										
+										// Check jid sensor
+										if(IsSubscribedTo(aAtomEntry->GetAuthorJid(), EItemRoster)) {
+											aAtomEntry->SetAuthorNameL(aAtomEntry->GetAuthorJid());
+										}
+										
 										if(aAtomEntry->GetAuthorJid().Compare(iOwnItem->GetId()) == 0) {
 											// Own post
 											aAtomEntry->SetRead(true);
@@ -3627,7 +3632,7 @@ void CBuddycloudLogic::MediaPostRequestL(TInt aItemId) {
 
 	CFollowingItem* aItem = static_cast <CFollowingItem*> (iFollowingList->GetItemById(aItemId));
 	
-	if(iOwnItem && aItem && aItem->GetItemId() >= EItemRoster) {
+	if(iOwnItem && aItem && aItem->GetItemType() >= EItemRoster) {
 		CFollowingChannelItem* aChannelItem = static_cast <CFollowingChannelItem*> (aItem);
 		
 		if(aChannelItem->GetId().Length() > 0) {		
@@ -4748,7 +4753,7 @@ void CBuddycloudLogic::XmppUnhandledStanza(const TDesC8& aStanza) {
 					HandlePubsubRequestL(aStanza);
 				}				
 			}
-			else {
+			else if(!aXmlParser->MoveToElement(_L8("invite"))) {
 				HandleIncomingMessageL(aStanza);
 			}
 		}

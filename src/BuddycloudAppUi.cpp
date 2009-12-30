@@ -293,28 +293,23 @@ void CBuddycloudAppUi::HandleCommandL(TInt aCommand) {
 		iBuddycloudLogic->PrepareShutdown();
 	}
 	else if(aCommand == EApplicationExit || aCommand == EMenuExitCommand) {
-		if(iBuddycloudLogic->GetCall()->GetTelephonyState() > ETelephonyIdle) {
-			iBuddycloudLogic->GetCall()->Hangup();
-		}
-		else {
-			TApaTask aTask(iEikonEnv->WsSession());
-			aTask.SetWgId(iEikonEnv->RootWin().Identifier());
-			aTask.BringToForeground();
-	
-			if(!iExitDialogShowing) {
-				iExitDialogShowing = true;
-				
-				CAknMessageQueryDialog* dlg = new (ELeave) CAknMessageQueryDialog();
-		
-				if(dlg->ExecuteLD(R_EXIT_DIALOG) != 0) {
-					aTask.SendToBackground();
-		
-					iBuddycloudLogic->PrepareShutdown();
-				}
-			}
+		TApaTask aTask(iEikonEnv->WsSession());
+		aTask.SetWgId(iEikonEnv->RootWin().Identifier());
+		aTask.BringToForeground();
+
+		if(!iExitDialogShowing) {
+			iExitDialogShowing = true;
 			
-			iExitDialogShowing = false;
+			CAknMessageQueryDialog* dlg = new (ELeave) CAknMessageQueryDialog();
+	
+			if(dlg->ExecuteLD(R_EXIT_DIALOG) != 0) {
+				aTask.SendToBackground();
+	
+				iBuddycloudLogic->PrepareShutdown();
+			}
 		}
+		
+		iExitDialogShowing = false;
 	}
 	else if(aCommand == EMenuUserSettingsCommand) {
 		ActivateLocalViewL(KAccountSettingsViewId);
