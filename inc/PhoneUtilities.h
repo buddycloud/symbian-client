@@ -17,6 +17,9 @@ class CPhoneUtilities {
 	public:
 		static void GetPhoneModelL(TDes& aPhoneModel);
 		static void GetFirmwareVersionL(TDes& aFirmwareVersion);
+		
+	public:
+		static TBool InCall();
 };
 
 #endif /*PHONEUTILITIES_H_*/

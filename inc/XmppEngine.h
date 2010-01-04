@@ -47,7 +47,8 @@ enum TXmppEngineState {
 };
 
 enum TXmppEngineError {
-	EXmppNone, EXmppAuthorizationNotDefined, EXmppBadAuthorization, EXmppAlreadyConnected, EXmppTlsFailed
+	EXmppNone, EXmppAuthorizationNotDefined, EXmppBadAuthorization, EXmppAlreadyConnected, 
+	EXmppTlsFailed, EXmppServerUnresolved
 };
 
 enum TXmppSilenceState {
@@ -55,7 +56,7 @@ enum TXmppSilenceState {
 };
 
 enum TXmppTimers {
-	EXmppStateTimer, EXmppQueueTimer
+	EXmppStateTimer, EXmppReadTimer
 };
 
 /*
@@ -134,8 +135,11 @@ class CXmppEngine : public CBase, MTcpIpEngineNotification, MConnectionMonitorNo
 		void TimerExpired(TInt aExpiryId);
 
 	public: // Connection & Setup
-		void SetAuthorizationDetailsL(TDesC& aUsername, TDesC& aPassword);
-		void SetServerDetailsL(const TDesC& aHostName, TInt aPort);
+		void SetAccountDetailsL(TDesC& aUsername, TDesC& aPassword);
+		
+		void SetServerDetailsL(const TDesC& aHostName, TInt aPort = 5222);
+		void GetServerDetails(TDes& aHost);
+		
 		void SetResourceL(const TDesC8& aResource);
 
 		void ConnectL(TBool aConnectionCold);
@@ -150,11 +154,14 @@ class CXmppEngine : public CBase, MTcpIpEngineNotification, MConnectionMonitorNo
 		void PrepareShutdown();
 		
 	private:
-		void SetXmppServerL(const TDesC& aXmppServer);
+		void SetXmppServerL(const TDesC8& aXmppServer);
 		
 	public: // Stanza handling
 		void SendQueuedXmppStanzas();
 		CXmppOutbox* GetMessageOutbox();
+		
+	private:
+		void SendNextQueuedStanzaL();
 		
 	private:
 		void AddStanzaObserverL(const TDesC8& aStanzaId, MXmppStanzaObserver* aObserver);
@@ -181,11 +188,12 @@ class CXmppEngine : public CBase, MTcpIpEngineNotification, MConnectionMonitorNo
 		void CompressionDebug(const TDesC8& aDebug);
 
 	public: // From MTcpIpEngineNotification
-		void DataRead(const TDesC8& aMessage);
-		void DataWritten(const TDesC8& aMessage);
-
+		void HostResolved(const TDesC& aHostName, TInt aHostPort);
 		void NotifyEvent(TTcpIpEngineState aEngineState);
 		void Error(TTcpIpEngineError aError);
+
+		void DataRead(const TDesC8& aMessage);
+		void DataWritten(const TDesC8& aMessage);
 
 		void TcpIpDebug(const TDesC8& aMessage, TInt aCode);
 		void TcpIpDebug(const TDesC8& aMessage);
@@ -209,7 +217,7 @@ class CXmppEngine : public CBase, MTcpIpEngineNotification, MConnectionMonitorNo
 		TBool iConnectionCold;
 
 		CCustomTimer* iStateTimer;
-		CCustomTimer* iQueueTimer;
+		CCustomTimer* iReadTimer;
 
 		TInt iConnectionAttempts;
 		TXmppSilenceState iSilenceState;

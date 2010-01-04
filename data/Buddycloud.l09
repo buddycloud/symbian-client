@@ -282,8 +282,12 @@ rls_string r_string_exit_title "Poistumisen varmistus"
 rls_string r_string_exit_text "Poistuminen kirjaa sinut ulos buddycloudista.\n\nOletko varma?"
 
 // Authorization Error
-rls_string r_string_autherror_title "Rekisteröityminen epäonnistui"
-rls_string r_string_autherror_text "Käyttäjänimi on jo olemassa. Tarkista tiliasetukset ja yritä uudelleen."
+rls_string r_string_authorizationerror_title "Authorization failed"
+rls_string r_string_authorizationerror_text "Username already exists or password is incorrect. Please check your Account settings and try again."
+
+// Resolve Error
+rls_string r_string_serverresolveerror_title "Connection error"
+rls_string r_string_serverresolveerror_text "XMPP server could not be resolved. Please enter your XMPP server and try again."
 
 // Delete Item Message
 rls_string r_string_deleteitem_title "Vahvista poisto"
@@ -316,11 +320,6 @@ rls_string r_string_note_searching "Etsii..."
 rls_string r_string_note_updating "Päivitetään..."
 rls_string r_string_note_online "Online"
 rls_string r_string_note_offline "Offline"
-
-// Call
-rls_string r_string_note_dialling "Soitetaan $USER"
-rls_string r_string_note_talkingto "Keskustelussa $USER"
-rls_string r_string_note_hangingup "Yhteys katkennut"
 
 // Setup 
 rls_string r_string_step2_title "Ole kuuluisa!"

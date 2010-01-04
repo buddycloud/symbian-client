@@ -105,9 +105,7 @@ void CBuddycloudMessagingContainer::ConstructL(const TRect& aRect, TMessagingVie
 	CBuddycloudListComponent::ConstructL();
 	
 	InitializeMessageDataL();
-	
-	iFollowingItemIndex = iBuddycloudLogic->GetFollowingStore()->GetIndexById(iMessagingObject.iFollowerId);
-	
+		
 	iShowMialog = false;
 	iRendering = false;
 	
@@ -156,6 +154,7 @@ void CBuddycloudMessagingContainer::InitializeMessageDataL() {
 	
 	// Is a channel
 	CBuddycloudListStore* aItemStore = iBuddycloudLogic->GetFollowingStore();
+	iFollowingItemIndex = aItemStore->GetIndexById(iMessagingObject.iFollowerId);
 	iItem = static_cast <CFollowingItem*> (aItemStore->GetItemById(iMessagingObject.iFollowerId));
 	
 	if(iItem && iItem->GetItemType() >= EItemRoster) {
@@ -1637,7 +1636,7 @@ TKeyResponse CBuddycloudMessagingContainer::OfferKeyEventL(const TKeyEvent& aKey
 		if(aResult == EKeyWasNotConsumed && aKeyEvent.iCode >= 32 && aKeyEvent.iCode <= 255) {
 			aResult = EKeyWasConsumed;
 			
-			TBuf<1> aMessage;
+			TBuf<8> aMessage;
 	
 			if(aKeyEvent.iCode > 30) {
 				aMessage.Append(TChar(aKeyEvent.iCode));

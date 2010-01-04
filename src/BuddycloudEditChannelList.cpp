@@ -227,7 +227,7 @@ CAknSettingItem* CBuddycloudEditChannelList::CreateSettingItemL (TInt aIdentifie
     return aSettingItem;
 }
 
-void CBuddycloudEditChannelList::XmppStanzaAcknowledgedL(const TDesC8& aStanza, const TDesC8& aId) {
+void CBuddycloudEditChannelList::XmppStanzaAcknowledgedL(const TDesC8& aStanza, const TDesC8& /*aId*/) {
 	CXmlParser* aXmlParser = CXmlParser::NewLC(aStanza);
 	
 	if(aXmlParser->MoveToElement(_L8("item-not-found"))) {

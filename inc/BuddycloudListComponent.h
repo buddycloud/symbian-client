@@ -37,8 +37,7 @@
 ----------------------------------------------------------------------------
 */
 const TInt KTimeTimerId = 0;
-const TInt KCallTimerId = 1;
-const TInt KDragTimerId = 2;
+const TInt KDragTimerId = 1;
 
 class CBuddycloudListComponent : public CCoeControl, MBuddycloudLogicNotificationObserver, 
 		MTimeoutNotification, MEikScrollBarObserver {
@@ -146,9 +145,8 @@ class CBuddycloudListComponent : public CCoeControl, MBuddycloudLogicNotificatio
 		// Snap to same item on events
 		TBool iSnapToItem;
 
-		// Time timer
+		// Timer
 		CCustomTimer* iTimer;
-		CCustomTimer* iCallTimer;
 		
 		// Scrollbar data
 		CEikScrollBarFrame* iScrollBar;

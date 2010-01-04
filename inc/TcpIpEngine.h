@@ -15,6 +15,7 @@
 #define TCPIPENGINE_H_
 
 #include <blddef.h>
+#include <dns_qry.h>
 #include <e32cons.h>
 #include <in_sock.h>
 #include <nifman.h>
@@ -35,13 +36,14 @@
 */
 
 enum TTcpIpEngineState {
-	ETcpIpStart, ETcpIpLookingUp, ETcpIpConnecting, ETcpIpConnected, ETcpIpSecureConnection, 
-	ETcpIpCarrierChangeReq, ETcpIpCarrierChanging, ETcpIpWriteComplete, ETcpIpDisconnecting, ETcpIpDisconnected
+	ETcpIpStartResolve, ETcpIpStartConnection, ETcpIpLookUpHostName, ETcpIpLookUpAddress, ETcpIpConnecting, 
+	ETcpIpConnected, ETcpIpSecureConnection, ETcpIpCarrierChangeReq, ETcpIpCarrierChanging, ETcpIpWriteComplete, 
+	ETcpIpDisconnecting, ETcpIpDisconnected
 };
 
 enum TTcpIpEngineError {
-	ETcpIpAlreadyBusy, ETcpIpCancelled, ETcpIpLookUpFailed, ETcpIpAccessPointFailed, 
-	ETcpIpConnectFailed, ETcpIpSecureFailed, ETcpIpReadWriteError
+	ETcpIpAlreadyBusy, ETcpIpCancelled, ETcpIpHostNameLookUpFailed, ETcpIpAddressLookUpFailed, 
+	ETcpIpAccessPointFailed, ETcpIpConnectFailed, ETcpIpSecureFailed, ETcpIpReadWriteError
 };
 
 enum TTcpIpEngineConnectionMode {
@@ -58,11 +60,12 @@ enum TTcpIpEngineConnectionMode {
 
 class MTcpIpEngineNotification {
 	public:
-		virtual void DataRead(const TDesC8& aMessage) = 0;
-		virtual void DataWritten(const TDesC8& aMessage) = 0;
-
+		virtual void HostResolved(const TDesC& aHostName, TInt aHostPort) = 0;
 		virtual void NotifyEvent(TTcpIpEngineState aEngineState) = 0;
 		virtual void Error(TTcpIpEngineError aError) = 0;
+		
+		virtual void DataRead(const TDesC8& aMessage) = 0;
+		virtual void DataWritten(const TDesC8& aMessage) = 0;
 
 		virtual void TcpIpDebug(const TDesC8& aMessage, TInt aCode) = 0;
 		virtual void TcpIpDebug(const TDesC8& aMessage) = 0;
@@ -208,6 +211,8 @@ class CTcpIpEngine : public CActive {
 		void GetConnectionInformationL();
 
 	public:
+		void ResolveHostNameL(const TDesC8& aDataQuery);
+		
 		void ConnectL(const TDesC& aServerName, TInt aPort);
 		void SecureConnectionL(const TDesC& aProtocol);
 		
@@ -246,9 +251,11 @@ class CTcpIpEngine : public CActive {
 		RSocketServ iSocketServ;
 		RHostResolver iResolver;
 		TNameEntry iNameEntry;
+		TDnsQueryBuf iDnsQuery;
+		TDnsRespSRVBuf iDnsResponse;
 
-		HBufC* iSockHost;
-		TInt iSockPort;
+		HBufC* iSocketHost;
+		TInt iSocketPort;
 
 		TTcpIpEngineConnectionMode iConnectionMode;
 		TUint32 iConnectionModeId;		

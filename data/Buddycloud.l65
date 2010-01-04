@@ -172,10 +172,10 @@ rls_string r_string_changerole_itemlist_moderator "To moderator"
 rls_string r_string_note_affiliationrequest_title "Publish request"
 rls_string r_string_note_affiliationrequest_text "$USER has requested permission to post in this channel. To approve this request press 'Accept', else press 'Decline'."
 
-rls_string r_string_note_affiliationoutcast "You have been banned from the channel. You now cannot read or post in this channel's content."
-rls_string r_string_note_affiliationmember "You have become a follower of this channel. You can now read, but not post in this channel's content."
-rls_string r_string_note_affiliationpublisher "You have become a publisher of this channel. You can now read and post in this channel's content."
-rls_string r_string_note_affiliationmoderator "You have become a moderator of this channel. You can now read, post, and manage this channel's content."
+rls_string r_string_note_affiliationoutcast "You have been banned from the channel. You now cannot read or post content in this channel."
+rls_string r_string_note_affiliationmember "You have become a follower of the channel. You can now read, but not post content in this channel."
+rls_string r_string_note_affiliationpublisher "You have become a publisher of the channel. You can now read and post content in this channel."
+rls_string r_string_note_affiliationmoderator "You have become a moderator of the channel. You can now read, post, and manage content in this channel."
 
 rls_string r_string_note_subscriptionrequest_text "$USER has requested to follow this channel. To approve this request press 'Accept', else press 'Decline'."
 rls_string r_string_note_subscriptionpending "Your subscription request has been sent to the channel's producer."
@@ -282,8 +282,12 @@ rls_string r_string_exit_title "종료 확인 "
 rls_string r_string_exit_text "종료를 하실경우 버디클라우드에서 로그아웃하게됩니다.\n\n종료하시겠습니까?"
 
 // Authorization Error
-rls_string r_string_autherror_title "등록 실패"
-rls_string r_string_autherror_text "이 사용자명은 이미 존재합니다. 계정 설정을 체크하시고 다시 연결을 시도해 주십시오."
+rls_string r_string_authorizationerror_title "Authorization failed"
+rls_string r_string_authorizationerror_text "Username already exists or password is incorrect. Please check your Account settings and try again."
+
+// Resolve Error
+rls_string r_string_serverresolveerror_title "Connection error"
+rls_string r_string_serverresolveerror_text "XMPP server could not be resolved. Please enter your XMPP server and try again."
 
 // Delete Item Message
 rls_string r_string_deleteitem_title "삭제 확인"
@@ -316,11 +320,6 @@ rls_string r_string_note_searching "검색하는 중..."
 rls_string r_string_note_updating "업데이트 하는 중..."
 rls_string r_string_note_online "온라인"
 rls_string r_string_note_offline "오프라인"
-
-// Call
-rls_string r_string_note_dialling "$USER 에게 전화거는 중"
-rls_string r_string_note_talkingto "$USER 님과 대화하는 중"
-rls_string r_string_note_hangingup "연결해제됨"
 
 // Setup 
 rls_string r_string_step2_title "유명해지기!"

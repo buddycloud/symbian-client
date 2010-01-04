@@ -172,10 +172,10 @@ rls_string r_string_changerole_itemlist_moderator "To moderator"
 rls_string r_string_note_affiliationrequest_title "Publish request"
 rls_string r_string_note_affiliationrequest_text "$USER has requested permission to post in this channel. To approve this request press 'Accept', else press 'Decline'."
 
-rls_string r_string_note_affiliationoutcast "You have been banned from the channel. You now cannot read or post in this channel's content."
-rls_string r_string_note_affiliationmember "You have become a follower of this channel. You can now read, but not post in this channel's content."
-rls_string r_string_note_affiliationpublisher "You have become a publisher of this channel. You can now read and post in this channel's content."
-rls_string r_string_note_affiliationmoderator "You have become a moderator of this channel. You can now read, post, and manage this channel's content."
+rls_string r_string_note_affiliationoutcast "You have been banned from the channel. You now cannot read or post content in this channel."
+rls_string r_string_note_affiliationmember "You have become a follower of the channel. You can now read, but not post content in this channel."
+rls_string r_string_note_affiliationpublisher "You have become a publisher of the channel. You can now read and post content in this channel."
+rls_string r_string_note_affiliationmoderator "You have become a moderator of the channel. You can now read, post, and manage content in this channel."
 
 rls_string r_string_note_subscriptionrequest_text "$USER has requested to follow this channel. To approve this request press 'Accept', else press 'Decline'."
 rls_string r_string_note_subscriptionpending "Your subscription request has been sent to the channel's producer."
@@ -282,8 +282,12 @@ rls_string r_string_exit_title "退出确认"
 rls_string r_string_exit_text "退出将会登出你的buddycloud账号.\n\n你确定？"
 
 // Authorization Error
-rls_string r_string_autherror_title "注册失败"
-rls_string r_string_autherror_text "用户名已经存在，请检查你的账号设定，然后重新连接"
+rls_string r_string_authorizationerror_title "Authorization failed"
+rls_string r_string_authorizationerror_text "Username already exists or password is incorrect. Please check your Account settings and try again."
+
+// Resolve Error
+rls_string r_string_serverresolveerror_title "Connection error"
+rls_string r_string_serverresolveerror_text "XMPP server could not be resolved. Please enter your XMPP server and try again."
 
 // Delete Item Message
 rls_string r_string_deleteitem_title "确认删除"
@@ -316,11 +320,6 @@ rls_string r_string_note_searching "正在搜索"
 rls_string r_string_note_updating "正在更新"
 rls_string r_string_note_online "在线"
 rls_string r_string_note_offline "离线"
-
-// Call
-rls_string r_string_note_dialling "呼叫 $USER"
-rls_string r_string_note_talkingto "向 $USER发起会话"
-rls_string r_string_note_hangingup "断开连接"
 
 // Setup 
 rls_string r_string_step2_title "欢迎加入buddycloud!"

@@ -172,10 +172,10 @@ rls_string r_string_changerole_itemlist_moderator "To moderator"
 rls_string r_string_note_affiliationrequest_title "Publish request"
 rls_string r_string_note_affiliationrequest_text "$USER has requested permission to post in this channel. To approve this request press 'Accept', else press 'Decline'."
 
-rls_string r_string_note_affiliationoutcast "You have been banned from the channel. You now cannot read or post in this channel's content."
-rls_string r_string_note_affiliationmember "You have become a follower of this channel. You can now read, but not post in this channel's content."
-rls_string r_string_note_affiliationpublisher "You have become a publisher of this channel. You can now read and post in this channel's content."
-rls_string r_string_note_affiliationmoderator "You have become a moderator of this channel. You can now read, post, and manage this channel's content."
+rls_string r_string_note_affiliationoutcast "You have been banned from the channel. You now cannot read or post content in this channel."
+rls_string r_string_note_affiliationmember "You have become a follower of the channel. You can now read, but not post content in this channel."
+rls_string r_string_note_affiliationpublisher "You have become a publisher of the channel. You can now read and post content in this channel."
+rls_string r_string_note_affiliationmoderator "You have become a moderator of the channel. You can now read, post, and manage content in this channel."
 
 rls_string r_string_note_subscriptionrequest_text "$USER has requested to follow this channel. To approve this request press 'Accept', else press 'Decline'."
 rls_string r_string_note_subscriptionpending "Your subscription request has been sent to the channel's producer."
@@ -282,8 +282,12 @@ rls_string r_string_exit_title "التأكد من الخروج"
 rls_string r_string_exit_text "وسوف تغادر سجل خروجك. هل أنت متأكد؟"
 
 // Authorization Error
-rls_string r_string_autherror_title "فشل تسجيل"
-rls_string r_string_autherror_text ".اسم المستخدم هذا موجود بالفعل. الرجاء التحقق من إعدادات الحساب ومحاولة إعادة الاتصال"
+rls_string r_string_authorizationerror_title "Authorization failed"
+rls_string r_string_authorizationerror_text "Username already exists or password is incorrect. Please check your Account settings and try again."
+
+// Resolve Error
+rls_string r_string_serverresolveerror_title "Connection error"
+rls_string r_string_serverresolveerror_text "XMPP server could not be resolved. Please enter your XMPP server and try again."
 
 // Delete Item Message
 rls_string r_string_deleteitem_title "تاكد من الإزالة"
@@ -316,11 +320,6 @@ rls_string r_string_note_searching "تبحث"
 rls_string r_string_note_updating "تحديث"
 rls_string r_string_note_online "على الانترنت"
 rls_string r_string_note_offline "متواجد حاليا"
-
-// Call
-rls_string r_string_note_dialling "$USER استدعاء"
-rls_string r_string_note_talkingto "$USER الحديث مع"
-rls_string r_string_note_hangingup "انقطع التصال"
 
 // Setup 
 rls_string r_string_step2_title "كن مشهور!"

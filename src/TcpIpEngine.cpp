@@ -75,8 +75,8 @@ CTcpIpEngine::~CTcpIpEngine() {
 	}
 
 	// Free allocated memory
-	if(iSockHost)
-		delete iSockHost;
+	if(iSocketHost)
+		delete iSocketHost;
 	
 	if(iConnectionName)
 		delete iConnectionName;
@@ -140,9 +140,7 @@ void CTcpIpEngine::OpenConnectionL() {
 	
 	TInt aErrorCode;
 	
-	if((aErrorCode = iConnection.Open(iSocketServ)) == KErrNone) {
-		iEngineStatus = ETcpIpStart;
-		
+	if((aErrorCode = iConnection.Open(iSocketServ)) == KErrNone) {	
 #ifdef __3_2_ONWARDS__
 		TBool aSelectionSuccess = true;
 		
@@ -208,6 +206,8 @@ void CTcpIpEngine::OpenConnectionL() {
 #endif
 	}
 	else {
+		iEngineStatus = ETcpIpDisconnected;
+		
 		iEngineObserver->TcpIpDebug(_L8("TCP   RConnection::Open Error"), aErrorCode);
 	}
 }
@@ -318,18 +318,39 @@ void CTcpIpEngine::GetConnectionInformationL() {
 #endif
 }
 
+void CTcpIpEngine::ResolveHostNameL(const TDesC8& aDataQuery) {
+	iEngineObserver->TcpIpDebug(_L8("TCP   CTcpIpEngine::ResolveHostNameL"), iEngineStatus);
+	
+	if(!IsActive() && iEngineStatus == ETcpIpDisconnected) {
+		iDnsQuery().SetData(aDataQuery);
+		iDnsQuery().SetType(KDnsRRTypeSRV);
+		iDnsQuery().SetClass(KDnsRRClassIN);
+		
+		if(iSocketServ.Handle()) {
+			iEngineStatus = ETcpIpStartResolve;
+
+			OpenConnectionL();
+		}
+	}
+	else {
+		iEngineObserver->Error(ETcpIpAlreadyBusy);
+	}
+}
+
 void CTcpIpEngine::ConnectL(const TDesC& aServerName, TInt aPort) {
 	iEngineObserver->TcpIpDebug(_L8("TCP   CTcpIpEngine::ConnectL"), iEngineStatus);
 
 	if(!IsActive() && iEngineStatus == ETcpIpDisconnected) {
-		if(iSockHost)
-			delete iSockHost;
+		if(iSocketHost)
+			delete iSocketHost;
 
-		iSockHost = aServerName.Alloc();
-		iSockPort = aPort;
+		iSocketHost = aServerName.Alloc();
+		iSocketPort = aPort;
 
 		// Open channel to Socket Server
 		if(iSocketServ.Handle()) {
+			iEngineStatus = ETcpIpStartConnection;
+
 			OpenConnectionL();
 		}
 	}
@@ -342,7 +363,7 @@ void CTcpIpEngine::SecureConnectionL(const TDesC& aProtocol) {
 	iEngineObserver->TcpIpDebug(_L8("TCP   CTcpIpEngine::SecureConnectionL"), iEngineStatus);
 
 	if(!IsActive() && iEngineStatus == ETcpIpConnected) {
-		TPtrC aSockHost(iSockHost->Des());
+		TPtrC aSockHost(iSocketHost->Des());
 
 		// Cancel ongoing socket read
 		iSocketReader->CancelRead();
@@ -376,13 +397,15 @@ void CTcpIpEngine::Disconnect() {
 
 	// Disconnect
 	switch (iEngineStatus) {
-		case ETcpIpStart:
+		case ETcpIpStartResolve:
+		case ETcpIpStartConnection:
 			iConnection.Close();
 			
 			iEngineStatus = ETcpIpDisconnected;
 			iEngineObserver->NotifyEvent(iEngineStatus);
 			break;
-		case ETcpIpLookingUp:
+		case ETcpIpLookUpHostName:
+		case ETcpIpLookUpAddress:
 			iResolver.Close();
 			CloseConnection();
 			
@@ -452,6 +475,10 @@ void CTcpIpEngine::Read() {
 
 void CTcpIpEngine::DoCancel() {
 	switch (iEngineStatus) {
+		case ETcpIpLookUpHostName:
+		case ETcpIpLookUpAddress:
+			iResolver.Cancel();
+			break;
 		case ETcpIpConnecting:
 		case ETcpIpConnected:
 		case ETcpIpCarrierChangeReq:
@@ -459,9 +486,6 @@ void CTcpIpEngine::DoCancel() {
 			break;
 		case ETcpIpSecureConnection:
 			iSecureSocket->CancelAll();
-			break;
-		case ETcpIpLookingUp:
-			iResolver.Cancel();
 			break;
 		default:;
 	}
@@ -471,30 +495,41 @@ void CTcpIpEngine::RunL() {
 	iEngineObserver->TcpIpDebug(_L8("TCP   CTcpIpEngine::RunL"), iEngineStatus);
 
 	switch(iEngineStatus) {
-		case ETcpIpStart:
+		case ETcpIpStartResolve:
+		case ETcpIpStartConnection:
 			if(iStatus == KErrNone) {
 				if(iResolver.Open(iSocketServ, KAfInet, KProtocolInetTcp, iConnection) == KErrNone) {
-					// Resolving Host
-					// DNS request for name resolution
-					iEngineStatus = ETcpIpLookingUp;
-					iEngineObserver->NotifyEvent(iEngineStatus);					
 #ifdef __3_2_ONWARDS__
 					if(iMobility == NULL) {
 						iMobility = CActiveCommsMobilityApiExt::NewL(iConnection, *this);
 					}
-#endif
-					iResolver.GetByName(*iSockHost, iNameEntry, iStatus);
+#endif				
+					if(iEngineStatus == ETcpIpStartConnection) {
+						// Resolving address by host name
+						iEngineStatus = ETcpIpLookUpAddress;
+						iResolver.GetByName(*iSocketHost, iNameEntry, iStatus);
+					}
+					else {
+						// Resolving host name
+						iEngineStatus = ETcpIpLookUpHostName;
+						iResolver.Query(iDnsQuery, iDnsResponse, iStatus);
+					}
+					
+					iEngineObserver->NotifyEvent(iEngineStatus);					
 					SetActive();
 				}
 				else {
+					iEngineObserver->TcpIpDebug(_L8("TCP   RHostResolver::Open Error"), iStatus.Int());
+
 					iConnection.Close();
 
 					iEngineStatus = ETcpIpDisconnected;
 					iEngineObserver->Error(ETcpIpAccessPointFailed);
-					iEngineObserver->TcpIpDebug(_L8("TCP   RHostResolver::Open Error"), iStatus.Int());
 				}
 			}
 			else {
+				iEngineObserver->TcpIpDebug(_L8("TCP   RConnection::Start Error"), iStatus.Int());
+
 				iConnection.Close();
 				iEngineStatus = ETcpIpDisconnected;
 
@@ -504,30 +539,59 @@ void CTcpIpEngine::RunL() {
 				else {
 					iEngineObserver->Error(ETcpIpAccessPointFailed);
 				}
-
-				iEngineObserver->TcpIpDebug(_L8("TCP   RConnection::Start Error"), iStatus.Int());
 			}
 			break;
-		case ETcpIpLookingUp:
+		case ETcpIpLookUpHostName:
+			if(iStatus == KErrNone) {
+				// Host name resolved
+				if(iSocketHost) {
+					delete iSocketHost;
+				}
+				
+				iSocketHost = HBufC::NewL(iDnsResponse().Target().Length());
+				iSocketHost->Des().Copy(iDnsResponse().Target());
+				iSocketPort = iDnsResponse().Port();
+				
+				iEngineObserver->HostResolved(*iSocketHost, iSocketPort);
+				
+				// Resolving address by host name
+				iEngineStatus = ETcpIpLookUpAddress;
+				iEngineObserver->NotifyEvent(iEngineStatus);			
+				
+				iResolver.GetByName(*iSocketHost, iNameEntry, iStatus);		
+				SetActive();
+			}
+			else {
+				iEngineObserver->TcpIpDebug(_L8("TCP   RHostResolver::Query Error"), iStatus.Int());
+
+				iResolver.Close();
+				CloseConnection();
+
+				iEngineStatus = ETcpIpDisconnected;
+				iEngineObserver->Error(ETcpIpHostNameLookUpFailed);
+			}
+			break;
+		case ETcpIpLookUpAddress:
 			iResolver.Close();
 
 			if(iStatus == KErrNone) {
-				// Connecting...
+				// Address resolved from host name
 				iEngineStatus = ETcpIpDisconnected;
 				
 				GetConnectionInformationL();
 
 				// Open socket
 				TSockAddr aSockAddr = iNameEntry().iAddr;
-				aSockAddr.SetPort(iSockPort);
+				aSockAddr.SetPort(iSocketPort);
 				Connect(aSockAddr);
 			}
 			else {
+				iEngineObserver->TcpIpDebug(_L8("TCP   RHostResolver::GetByName Error"), iStatus.Int());
+				
 				CloseConnection();
 
 				iEngineStatus = ETcpIpDisconnected;
-				iEngineObserver->Error(ETcpIpLookUpFailed);
-				iEngineObserver->TcpIpDebug(_L8("TCP   RHostResolver::GetByName Error"), iStatus.Int());
+				iEngineObserver->Error(ETcpIpAddressLookUpFailed);
 			}
 			break;
 		case ETcpIpConnecting:
@@ -538,12 +602,13 @@ void CTcpIpEngine::RunL() {
 				GetConnectionInformationL();
 			}
 			else {
+				iEngineObserver->TcpIpDebug(_L8("TCP   RSocket::Connect Error"), iStatus.Int());
+				
 				CloseSocket();
 				CloseConnection();
 
 				iEngineStatus = ETcpIpDisconnected;
 				iEngineObserver->Error(ETcpIpConnectFailed);
-				iEngineObserver->TcpIpDebug(_L8("TCP   RSocket::Connect Error"), iStatus.Int());
 			}
 			break;
 		case ETcpIpSecureConnection:
@@ -555,12 +620,13 @@ void CTcpIpEngine::RunL() {
 				iEngineObserver->NotifyEvent(ETcpIpSecureConnection);
 			}
 			else {
+				iEngineObserver->TcpIpDebug(_L8("TCP   CSecureSocket::StartClientHandshake Error"), iStatus.Int());
+				
 				CloseSocket();
 				CloseConnection();
 
 				iEngineStatus = ETcpIpDisconnected;
 				iEngineObserver->Error(ETcpIpSecureFailed);
-				iEngineObserver->TcpIpDebug(_L8("TCP   CSecureSocket::StartClientHandshake Error"), iStatus.Int());
 			}			
 			break;
 		case ETcpIpCarrierChanging:
@@ -611,7 +677,7 @@ void CTcpIpEngine::NewCarrierActive(TAccessPointInfo /*aNewAp*/, TBool aIsSeamle
 	
 			// Open socket
 			TSockAddr aSockAddr = iNameEntry().iAddr;
-			aSockAddr.SetPort(iSockPort);
+			aSockAddr.SetPort(iSocketPort);
 			Connect(aSockAddr);
 			
 			// Accept new carrier

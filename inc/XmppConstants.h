@@ -21,6 +21,8 @@
 ----------------------------------------------------------------------------
 */
 
+static const TInt READ_INTERVAL = 50000;
+
 _LIT8(KPresenceSubscriptionBoth, "both");
 _LIT8(KPresenceSubscriptionFrom, "from");
 _LIT8(KPresenceSubscriptionTo, "to");

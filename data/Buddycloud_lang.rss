@@ -1174,7 +1174,6 @@ RESOURCE AVKON_SETTING_ITEM_LIST r_account_settings_item_list
 		{
 			identifier = ESettingAccountServer;
 			setting_page_resource = r_settings_item_server_page;
-			associated_resource = R_SETTINGS_ITEM_SERVER_ASSOC;
 			name = r_string_settings_itemlist_server;
 		}
 	};
@@ -1184,7 +1183,7 @@ RESOURCE AVKON_SETTING_PAGE r_settings_item_fullname_page
 {
 	label = r_string_settings_itemlist_fullname;
 	type = EEikCtEdwin;
-	editor_resource_id = r_text64_edwin;
+	editor_resource_id = r_allcase64_edwin;
 	hint_text = r_string_settings_itemlist_fullname_hint;
 }
 
@@ -1192,7 +1191,7 @@ RESOURCE AVKON_SETTING_PAGE r_settings_item_email_page
 {
 	label = r_string_settings_itemlist_email;
 	type = EEikCtEdwin;
-	editor_resource_id = r_text64_edwin;
+	editor_resource_id = r_allcase64_edwin;
 	hint_text = r_string_settings_itemlist_email_hint;
 }
 
@@ -1200,7 +1199,7 @@ RESOURCE AVKON_SETTING_PAGE r_settings_item_username_page
 {
 	label = r_string_settings_itemlist_username;
 	type = EEikCtEdwin;
-	editor_resource_id = r_username_edwin;
+	editor_resource_id = r_lowercase64_edwin;
 	hint_text = r_string_settings_itemlist_username_hint;
 }
 
@@ -1215,8 +1214,8 @@ RESOURCE AVKON_SETTING_PAGE r_settings_item_password_page
 RESOURCE AVKON_SETTING_PAGE r_settings_item_server_page
 {
 	label = r_string_settings_itemlist_server;
-	type = EAknCtPopupSettingList;
-	editor_resource_id = r_binary_editor;
+	type = EEikCtEdwin;
+	editor_resource_id = r_lowercase64_edwin;
 }
 
 RESOURCE AVKON_SETTING_ITEM_LIST r_preferences_settings_item_list
@@ -1647,49 +1646,49 @@ RESOURCE AVKON_SETTING_PAGE r_editplace_item_name_page
 {
 	label = r_string_editplace_itemlist_name_hint;
 	type = EEikCtEdwin;
-	editor_resource_id = r_text256_edwin;
+	editor_resource_id = r_allcase256_edwin;
 }
 
 RESOURCE AVKON_SETTING_PAGE r_editplace_item_street_page
 {
 	label = r_string_editplace_itemlist_street_hint;
 	type = EEikCtEdwin;
-	editor_resource_id = r_text256_edwin;
+	editor_resource_id = r_allcase256_edwin;
 }
 
 RESOURCE AVKON_SETTING_PAGE r_editplace_item_area_page
 {
 	label = r_string_editplace_itemlist_area_hint;
 	type = EEikCtEdwin;
-	editor_resource_id = r_text256_edwin;
+	editor_resource_id = r_allcase256_edwin;
 }
 
 RESOURCE AVKON_SETTING_PAGE r_editplace_item_city_page
 {
 	label = r_string_editplace_itemlist_city_hint;
 	type = EEikCtEdwin;
-	editor_resource_id = r_text256_edwin;
+	editor_resource_id = r_allcase256_edwin;
 }
 
 RESOURCE AVKON_SETTING_PAGE r_editplace_item_postcode_page
 {
 	label = r_string_editplace_itemlist_postcode_hint;
 	type = EEikCtEdwin;
-	editor_resource_id = r_text256_edwin;
+	editor_resource_id = r_allcase256_edwin;
 }
 
 RESOURCE AVKON_SETTING_PAGE r_editplace_item_region_page
 {
 	label = r_string_editplace_itemlist_region_hint;
 	type = EEikCtEdwin;
-	editor_resource_id = r_text256_edwin;
+	editor_resource_id = r_allcase256_edwin;
 }
 
 RESOURCE AVKON_SETTING_PAGE r_editplace_item_country_page
 {
 	label = r_string_editplace_itemlist_country_hint;
 	type = EEikCtEdwin;
-	editor_resource_id = r_text256_edwin;
+	editor_resource_id = r_allcase256_edwin;
 }
 
 RESOURCE AVKON_SETTING_PAGE r_editplace_item_visibility_page
@@ -1766,21 +1765,21 @@ RESOURCE AVKON_SETTING_PAGE r_editchannel_item_title_page
 {
 	label = r_string_editchannel_itemlist_title_hint;
 	type = EEikCtEdwin;
-	editor_resource_id = r_text64_edwin;
+	editor_resource_id = r_allcase64_edwin;
 }
 
 RESOURCE AVKON_SETTING_PAGE r_editchannel_item_id_page
 {
 	label = r_string_editchannel_itemlist_id_hint;
 	type = EEikCtEdwin;
-	editor_resource_id = r_text64_edwin;
+	editor_resource_id = r_allcase64_edwin;
 }
 
 RESOURCE AVKON_SETTING_PAGE r_editchannel_item_description_page
 {
 	label = r_string_editchannel_itemlist_description_hint;
 	type = EEikCtEdwin;
-	editor_resource_id = r_text256_edwin;
+	editor_resource_id = r_allcase256_edwin;
 }
 
 RESOURCE AVKON_SETTING_PAGE r_editchannel_item_access_page
@@ -1827,10 +1826,10 @@ RESOURCE EDWIN r_number_edwin
 	allowed_input_modes = EAknEditorNumericInputMode;
 }
 
-RESOURCE EDWIN r_username_edwin
+RESOURCE EDWIN r_lowercase64_edwin
 {
 	lines = 1;
-	maxlength = 32;
+	maxlength = 64;
 	default_case = EAknEditorLowerCase;
 	allowed_case_modes = EAknEditorLowerCase;
 	numeric_keymap = EAknEditorStandardNumberModeKeymap;
@@ -1843,7 +1842,7 @@ RESOURCE SECRETED r_password_edwin
 	num_letters = 32;
 }
 
-RESOURCE EDWIN r_text64_edwin
+RESOURCE EDWIN r_allcase64_edwin
 {
 	lines = 1;
 	maxlength = 64;
@@ -1854,7 +1853,7 @@ RESOURCE EDWIN r_text64_edwin
 	allowed_input_modes = EAknEditorAllInputModes;
 }
 
-RESOURCE EDWIN r_text256_edwin
+RESOURCE EDWIN r_allcase256_edwin
 {
 	lines = 5;
 	maxlength = 256;
@@ -1931,6 +1930,8 @@ RESOURCE TBUF r_localized_string_sendplacemessage_text { buf = r_string_sendplac
 RESOURCE TBUF r_localized_string_note_followinglistempty { buf = r_string_note_followinglistempty; }
 RESOURCE TBUF r_localized_string_followingrequest_title { buf = r_string_followingrequest_title; }
 RESOURCE TBUF r_localized_string_followingrequest_text { buf = r_string_followerrequest_text; }
+RESOURCE TBUF r_localized_string_serverresolveerror_title { buf = r_string_serverresolveerror_title; }
+RESOURCE TBUF r_localized_string_serverresolveerror_text { buf = r_string_serverresolveerror_text; }
 
 // Settings
 RESOURCE TBUF r_localized_string_newplace_title { buf = r_string_newplace_title; }
@@ -1994,7 +1995,6 @@ RESOURCE TBUF r_localized_string_note_subscriptionrequest_text { buf = r_string_
 RESOURCE TBUF r_localized_string_note_subscriptionpending { buf = r_string_note_subscriptionpending; }
 RESOURCE TBUF r_localized_string_note_subscriptionaccepted { buf = r_string_note_subscriptionaccepted; }
 RESOURCE TBUF r_localized_string_note_subscriptionrejected { buf = r_string_note_subscriptionrejected; }
-
 
 // Places
 RESOURCE TBUF r_localized_string_note_placelastseen { buf = r_string_note_placelastseen; }
@@ -2170,7 +2170,7 @@ RESOURCE DIALOG r_autherror_dialog
 			control = AVKON_HEADING
 			{
               			headinglayout = R_AVKON_LIST_HEADING_PANE_POPUPS;
-              			label = r_string_autherror_title;
+              			label = r_string_authorizationerror_title;
 			};
 		},
 		DLG_LINE
@@ -2179,7 +2179,7 @@ RESOURCE DIALOG r_autherror_dialog
 			id = EAknMessageQueryContentId;
 			control = AVKON_MESSAGE_QUERY
 			{
-				message = r_string_autherror_text;
+				message = r_string_authorizationerror_text;
 			};
 		}
 	};

@@ -227,9 +227,9 @@ void CXmppEngine::AddRosterObserver(MXmppRosterObserver* aRosterObserver) {
 	iRosterObserver = aRosterObserver;
 }
 
-void CXmppEngine::SetAuthorizationDetailsL(TDesC& aUsername, TDesC& aPassword) {
+void CXmppEngine::SetAccountDetailsL(TDesC& aUsername, TDesC& aPassword) {
 #ifdef _DEBUG
-	iEngineObserver->XmppDebug(_L8("XMPP  CXmppEngine::SetAuthorizationDetailsL"));
+	iEngineObserver->XmppDebug(_L8("XMPP  CXmppEngine::SetAccountDetailsL"));
 #endif
 
 	if(iUsername)
@@ -239,16 +239,19 @@ void CXmppEngine::SetAuthorizationDetailsL(TDesC& aUsername, TDesC& aPassword) {
 		delete iPassword;
 
 	iUsername = HBufC8::NewL(aUsername.Length());
-	iUsername->Des().Copy(aUsername);
+	TPtr8 pUsername(iUsername->Des());
+	pUsername.Copy(aUsername);
 
 	iPassword = HBufC8::NewL(aPassword.Length());
 	iPassword->Des().Copy(aPassword);
 
 	// Validate xmpp server domain
-	TInt aLocate = aUsername.Locate('@');
+	TInt aLocate = pUsername.Locate('@');
 	
 	if(aLocate != KErrNotFound) {
-		SetXmppServerL(aUsername.Mid(aLocate + 1));
+		SetXmppServerL(pUsername.Mid(aLocate + 1));
+		
+		pUsername.Delete(aLocate, pUsername.Length());
 	}	
 }
 
@@ -259,22 +262,23 @@ void CXmppEngine::SetServerDetailsL(const TDesC& aHostName, TInt aPort) {
 		delete iHostName;
 
 	iHostName = aHostName.AllocL();	
-	TInt aLocate = aHostName.Locate('.');
+	TPtr pHostName(iHostName->Des());
+	
+	// Set port
+	TInt aLocate = pHostName.Locate(':');
 	
 	if(aLocate != KErrNotFound) {
-		SetXmppServerL(aHostName.Mid(aLocate + 1));
-	}
-	else {
-		SetXmppServerL(aHostName);
+		TLex aPortLex(pHostName.Mid(aLocate + 1));		
+		aPortLex.Val(iHostPort);
+		
+		pHostName.Delete(aLocate, pHostName.Length());
 	}
 }
 
-void CXmppEngine::SetXmppServerL(const TDesC& aXmppServer) {
-	if(iXmppServer)
-		delete iXmppServer;
-	
-	iXmppServer = HBufC8::NewL(aXmppServer.Length());
-	iXmppServer->Des().Copy(aXmppServer);
+void CXmppEngine::GetServerDetails(TDes& aHost) {
+	aHost.Zero();
+	aHost.Append(*iHostName);
+	aHost.AppendFormat(_L(":%d"), iHostPort);
 }
 
 void CXmppEngine::SetResourceL(const TDesC8& aResource) {
@@ -289,26 +293,33 @@ void CXmppEngine::ConnectL(TBool aColdConnect) {
 	iEngineObserver->XmppDebug(_L8("XMPP  CXmppEngine::ConnectL"));
 #endif
 	
-	TPtr pHostName(iHostName->Des());
-	
-	if(pHostName.Length() > 0) {
-		TPtr8 pUsername(iUsername->Des());
-		TPtr8 pPassword(iPassword->Des());
-	
-		if(pUsername.Length() > 0 && pPassword.Length() > 0) {
-			iEngineState = EXmppInitialize;
-			iLastError = EXmppNone;
-			iConnectionAttempts = 0;
-			iConnectionCold = aColdConnect;
-	
-			// For Debugging
-			TcpIpDebug(_L8("XMPP  Connection Attempt"), (iConnectionAttempts + 1));
-	
-			iTcpIpEngine->ConnectL(pHostName, iHostPort);
+	TPtr aHostName(iHostName->Des());
+	TPtr8 aUsername(iUsername->Des());
+	TPtr8 aPassword(iPassword->Des());
+
+	if(aUsername.Length() > 0 && aPassword.Length() > 0) {
+		iEngineState = EXmppInitialize;
+		iLastError = EXmppNone;
+		iConnectionAttempts = 0;
+		iConnectionCold = aColdConnect;
+
+		// For Debugging
+		TcpIpDebug(_L8("XMPP  Connection Attempt"), (iConnectionAttempts + 1));
+
+		if(aHostName.Length() > 0) {
+			// Connect to server
+			iTcpIpEngine->ConnectL(aHostName, iHostPort);
 		}
 		else {
-			iEngineObserver->XmppError(EXmppAuthorizationNotDefined);
+			// Server resolve required
+			TBuf8<255> aQueryData(*iXmppServer);
+			aQueryData.Insert(0, _L8("_xmpp-client._tcp."));
+			
+			iTcpIpEngine->ResolveHostNameL(aQueryData);
 		}
+	}
+	else {
+		iEngineObserver->XmppError(EXmppAuthorizationNotDefined);
 	}
 }
 
@@ -360,6 +371,13 @@ void CXmppEngine::PrepareShutdown() {
 	iEngineState = EXmppShutdown;
 
 	iTcpIpEngine->Disconnect();
+}
+
+void CXmppEngine::SetXmppServerL(const TDesC8& aXmppServer) {
+	if(iXmppServer)
+		delete iXmppServer;
+	
+	iXmppServer = aXmppServer.AllocL();
 }
 
 void CXmppEngine::SendQueuedXmppStanzas() {
@@ -583,23 +601,37 @@ void CXmppEngine::HandleXmppStanzaL(const TDesC8& aStanza) {
 			aStanzaIsProcessed = true;
 		}
 		else if(aElement.Compare(_L8("success")) == 0) {
-			// Authorization Success
+			// Authorization success
 			iLastError = EXmppNone;
 			OpenStream();
 			
 			aStanzaIsProcessed = true;
 		}
 		else if(aElement.Compare(_L8("failure")) == 0) {
-			TPtrC8 aAttributeXmlns = aXmlParser->GetStringAttribute(_L8("xmlns"));
+			// Authorization failed
+			TPtr8 aUsername(iUsername->Des());
+			TInt aLocate = aUsername.Locate('@');
 			
-			if(aAttributeXmlns.Compare(_L8("urn:ietf:params:xml:ns:xmpp-tls")) == 0) {
-				// TLS negotiation failure
-				iLastError = EXmppTlsFailed;
+			if(aLocate == KErrNotFound) {
+				// Add xmpp server to username
+				aUsername.Append(_L8("@"));
+				aUsername.Append(*iXmppServer);
+				
+				// Re-authenticate
+				SendAuthorization();
 			}
-			else {
-				// Authorization Failure
-				iLastError = EXmppBadAuthorization;
-				iEngineObserver->XmppError(iLastError);
+			else {		
+				TPtrC8 aAttributeXmlns = aXmlParser->GetStringAttribute(_L8("xmlns"));
+				
+				if(aAttributeXmlns.Compare(_L8("urn:ietf:params:xml:ns:xmpp-tls")) == 0) {
+					// TLS negotiation failure
+					iLastError = EXmppTlsFailed;
+				}
+				else {
+					// Authorization failure
+					iLastError = EXmppBadAuthorization;
+					iEngineObserver->XmppError(iLastError);
+				}
 			}
 			
 			aStanzaIsProcessed = true;
@@ -917,12 +949,21 @@ void CXmppEngine::DataWritten(const TDesC8& aMessage) {
 	}
 }
 
+void CXmppEngine::HostResolved(const TDesC& aHostName, TInt aHostPort) {
+	if(iHostName) {
+		delete iHostName;
+	}
+	
+	iHostName = aHostName.AllocL();
+	iHostPort = aHostPort;
+}
+
 void CXmppEngine::NotifyEvent(TTcpIpEngineState aTcpEngineState) {
 	TPtr8 pXmppServer(iXmppServer->Des());
 	TPtr8 pInputBuffer(iInputBuffer->Des());
 
 	switch(aTcpEngineState) {
-		case ETcpIpLookingUp:
+		case ETcpIpLookUpAddress:
 			// Connection initialized
 			iEngineState = EXmppConnecting;
 			break;
@@ -1025,12 +1066,28 @@ void CXmppEngine::Error(TTcpIpEngineError aError) {
 				iTcpIpEngine->Disconnect();
 			}
 			break;
+		case ETcpIpHostNameLookUpFailed:
+			iEngineObserver->XmppError(EXmppServerUnresolved);
+			break;
 		case ETcpIpSecureFailed:
 			iLastError = EXmppTlsFailed;
 		default:
-			iEngineState = EXmppReconnect;
-			iEngineObserver->XmppStateChanged(EXmppReconnect);
-			iStateTimer->After(30000000);
+			if(iConnectionAttempts < 10) {
+				// Attempt reconnect
+				iEngineState = EXmppReconnect;
+				iEngineObserver->XmppStateChanged(EXmppReconnect);
+				iStateTimer->After(30000000);
+			}
+			else {
+				// Connection failed too many times
+				HostResolved(_L(""), 5222);
+				
+				// Re-resolve of server required
+				TBuf8<255> aQueryData(*iXmppServer);
+				aQueryData.Insert(0, _L8("_xmpp-client._tcp."));
+				
+				iTcpIpEngine->ResolveHostNameL(aQueryData);				
+			}			
 			break;
 	}
 }

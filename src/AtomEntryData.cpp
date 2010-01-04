@@ -190,6 +190,11 @@ void CAtomEntryData::SetContentL(const TDesC& aContent, TEntryContentType aEntry
 			iEntryType = EEntryContentAction;
 			
 			TPtrC aAuthorName(iAuthorName->Des());
+			TInt aLocate = aAuthorName.Locate('@');
+			
+			if(aLocate != KErrNotFound) {
+				aAuthorName.Set(aAuthorName.Left(aLocate));
+			}
 			
 			iContent = HBufC::NewL(aAuthorName.Length() + aContent.Length() - 3);
 			TPtr pContent(iContent->Des());

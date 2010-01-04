@@ -31,11 +31,10 @@ const TInt KEditingNewChannelId = -9999;
 
 enum TFollowingItemType {
 	EItemNotice = 2, 
-	EItemContact = 4, 
-	EItemRoster = 8, 
-	EItemChannel = 16,
+	EItemRoster = 4, 
+	EItemChannel = 8,
 	// Private: do not use
-	EItemAll = 30
+	EItemAll = 14
 };
 
 enum TIdType {
@@ -91,36 +90,12 @@ class CFollowingItem : public CBuddycloudListItem {
 /*
 ----------------------------------------------------------------------------
 --
--- CFollowingContactItem
---
-----------------------------------------------------------------------------
-*/
-
-class CFollowingContactItem : public CFollowingItem {
-	public:
-		static CFollowingContactItem* NewL();
-		static CFollowingContactItem* NewLC();
-		
-	protected:
-		CFollowingContactItem();
-
-	public:
-		TInt GetAddressbookId();
-		void SetAddressbookId(TInt aAddressbookId);
-
-	protected:
-		TInt iAddressbookId;
-};
-
-/*
-----------------------------------------------------------------------------
---
 -- CFollowingChannelItem
 --
 ----------------------------------------------------------------------------
 */
 
-class CFollowingChannelItem : public CFollowingContactItem {
+class CFollowingChannelItem : public CFollowingItem {
 	public:
 		static CFollowingChannelItem* NewL();
 		static CFollowingChannelItem* NewLC();

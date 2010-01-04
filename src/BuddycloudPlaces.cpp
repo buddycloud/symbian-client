@@ -73,11 +73,11 @@ CGeolocData* CBuddycloudPlace::GetGeoloc() {
 void CBuddycloudPlace::CopyGeolocL(CGeolocData* aGeoloc) {
 	// Copy geoloc
 	for(TInt i = 0; i < KMaxStringItems; i++) {
-		iGeoloc->SetStringL(TGeolocString(i), aGeoloc->GetString(TGeolocString(i)));
+		iGeoloc->SetStringL((TGeolocString)i, aGeoloc->GetString((TGeolocString)i));
 	}
 	
 	for(TInt i = 0; i < KMaxRealItems; i++) {
-		iGeoloc->SetRealL(TGeolocReal(i), aGeoloc->GetReal(TGeolocReal(i)));
+		iGeoloc->SetRealL((TGeolocReal)i, aGeoloc->GetReal((TGeolocReal)i));
 	}
 	
 	// Set id

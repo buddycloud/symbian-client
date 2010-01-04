@@ -1,7 +1,13 @@
 #ifndef BUDDYCLOUDCONSTANTS_H
 #define BUDDYCLOUDCONSTANTS_H
 
-// Constants
+/*
+----------------------------------------------------------------------------
+--
+-- Constants
+--
+----------------------------------------------------------------------------
+*/
 
 // View IDs
 const TUid KFollowingViewId              = {1};
@@ -40,5 +46,24 @@ _LIT8(KPlaceSearch, "search");
 _LIT8(KPlaceRemove, "remove");
 _LIT8(KPlaceDelete, "delete");
 _LIT8(KPlaceCurrent, "current");
+
+/*
+----------------------------------------------------------------------------
+--
+-- Enumerations
+--
+----------------------------------------------------------------------------
+*/
+
+enum TBuddycloudXmppIdEnumerations {
+	EXmppIdRegistration = 1, EXmppIdSetCredentials, EXmppIdGetNearbyPlaces, 
+	// Place id's
+	EXmppIdGetPlaceSubscriptions, EXmppIdAddPlaceSubscription, EXmppIdRemovePlaceSubscription, EXmppIdDeletePlace, 
+	EXmppIdSetCurrentPlace, EXmppIdCreatePlace, EXmppIdSearchForPlace, EXmppIdGetPlaceDetails, EXmppEditPlaceDetails, 
+	// Pubsub id's
+	EXmppIdGetPubsubSubscriptions, EXmppIdGetUsersPubsubNodeSubscribers, EXmppIdPublishMood, EXmppIdPublishFuturePlace, 
+	EXmppIdPublishChannelPost, EXmppIdValidateChannelExists, EXmppIdAddChannelSubscription, EXmppIdGetChannelMetadata,
+	EXmppIdRequestMediaPost
+};
 
 #endif

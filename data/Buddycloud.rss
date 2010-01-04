@@ -34,10 +34,10 @@ RESOURCE EIK_APP_INFO {}
 
 RESOURCE TBUF r_string_appversion 
 {
-	buf = "S60_9_0.05.15"; 
+	buf = "S60_9_0.05.16"; 
 }
 
-rls_string r_string_about_text "©2009 buddycloud\nVersion: 0.05.15\nhttp://buddycloud.com\n\nData Sent: %dKB\nData Received: %dKB" 
+rls_string r_string_about_text "©2009 buddycloud\nVersion: 0.05.16\nhttp://buddycloud.com\n\nData Sent: %dKB\nData Received: %dKB" 
 
 RESOURCE TBUF r_localized_string_about_text { buf = r_string_about_text; }
 
@@ -169,39 +169,6 @@ RESOURCE AKN_ICON_ARRAY r_icons_list
 		{
 			iconId = EMbmListiconidsTwitter;
 			maskId = EMbmListiconidsTwitter;
-		}
-    };
-}
-
-// -----------------------------------------------------------------------------
-//   
-// Define server association and texts
-//   
-// -----------------------------------------------------------------------------
-RESOURCE AVKON_POPUP_SETTING_TEXTS r_settings_item_server_assoc
-{
-	flags = 0;
-	setting_texts_resource = r_settings_item_server_texts;
-}
-
-RESOURCE ARRAY r_settings_item_server_texts
-{
-	items =
-    {
-		AVKON_ENUMERATED_TEXT
-		{
-			value = 0;
-			text = "buddycloud";
-		},
-		AVKON_ENUMERATED_TEXT
-		{
-			value = 1;
-			text = "buddycloud beta [bunker]";
-		},
-		AVKON_ENUMERATED_TEXT
-		{
-			value = 2;
-			text = "GTalk [full jid required]";
 		}
     };
 }

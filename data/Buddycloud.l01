@@ -282,8 +282,12 @@ rls_string r_string_exit_title "Exit confirmation"
 rls_string r_string_exit_text "Exiting will log you out of buddycloud.\n\nAre you sure?"
 
 // Authorization Error
-rls_string r_string_autherror_title "Registration failed"
-rls_string r_string_autherror_text "This username already exists. Please check your Account Settings and try to reconnect."
+rls_string r_string_authorizationerror_title "Authorization failed"
+rls_string r_string_authorizationerror_text "Username already exists or password is incorrect. Please check your Account settings and try again."
+
+// Resolve Error
+rls_string r_string_serverresolveerror_title "Connection error"
+rls_string r_string_serverresolveerror_text "XMPP server could not be resolved. Please enter your XMPP server and try again."
 
 // Delete Item Message
 rls_string r_string_deleteitem_title "Confirm removal"

@@ -15,13 +15,10 @@
 #define BUDDYCLOUDLOGIC_H_
 
 #include <e32base.h>
-#include <cntdb.h>
-#include <cntdbobs.h>
 #include <flogger.h>
 #include "Buddycloud.hrh"
 #include "AvatarRepository.h"
-#include "BuddycloudContactStreamer.h"
-#include "BuddycloudContactSearcher.h"
+#include "BuddycloudConstants.h"
 #include "BuddycloudFollowing.h"
 #include "BuddycloudList.h"
 #include "BuddycloudPlaces.h"
@@ -30,7 +27,7 @@
 #include "LocationEngine.h"
 #include "NotificationEngine.h"
 #include "Timer.h"
-#include "TelephonyEngine.h"
+#include "TextUtilities.h"
 #include "XmppEngine.h"
 #include "XmppInterfaces.h"
 
@@ -43,7 +40,7 @@
 */
 
 enum TDescSettingItems {
-	ESettingItemFullName, ESettingItemEmailAddress, ESettingItemUsername, ESettingItemPassword, 
+	ESettingItemFullName, ESettingItemEmailAddress, ESettingItemUsername, ESettingItemPassword, ESettingItemServer,
 	ESettingItemPrivateMessageToneFile, ESettingItemChannelPostToneFile, ESettingItemDirectReplyToneFile,
 	ESettingItemTwitterUsername, ESettingItemTwitterPassword
 };
@@ -51,14 +48,14 @@ enum TDescSettingItems {
 enum TIntSettingItems {
 	ESettingItemNotifyChannelsFollowing, ESettingItemNotifyChannelsModerating, 
 	ESettingItemPrivateMessageTone, ESettingItemChannelPostTone, ESettingItemDirectReplyTone,
-	ESettingItemServerId, ESettingItemLanguage
+	ESettingItemLanguage
 };
 
 enum TBoolSettingItems {
 	ESettingItemCellOn, ESettingItemWifiOn, ESettingItemBtOn, ESettingItemGpsOn, 
 	ESettingItemCellAvailable, ESettingItemWifiAvailable, ESettingItemBtAvailable, ESettingItemGpsAvailable, 
 	ESettingItemNewInstall, ESettingItemNotifyReplyTo, ESettingItemAutoStart, ESettingItemShowName, 
-	ESettingItemShowContacts, ESettingItemContactsLoaded, ESettingItemAccessPoint, ESettingItemMessageBlocking
+	ESettingItemAccessPoint, ESettingItemMessageBlocking
 };
 
 enum TBuddycloudLogicState {
@@ -76,8 +73,8 @@ enum TBuddycloudLogicNotificationType {
 	ENotificationMessageNotifiedEvent, ENotificationMessageSilentEvent, 
 	ENotificationEditPlaceRequested, ENotificationEditPlaceCompleted, 
 	ENotificationActivityChanged, ENotificationConnectivityChanged, 
-	ENotificationTelephonyChanged, ENotificationAuthenticationFailed,
-	ENotificationEditChannelRequested, ENotificationFollowingChannelEvent
+	ENotificationAuthenticationFailed, ENotificationServerResolveFailed,
+	ENotificationEditChannelRequested
 };
 
 enum TBuddycloudLogicTimeoutState {
@@ -135,11 +132,10 @@ class MBuddycloudLogicDebugObserver {
 ----------------------------------------------------------------------------
 */
 
-class CBuddycloudLogic : public CBase, MContactDbObserver, MLocationEngineNotification, MTimeInterface,
+class CBuddycloudLogic : public CBase, MLocationEngineNotification, MTimeInterface,
 									MXmppEngineObserver, MXmppRosterObserver, MXmppStanzaObserver,
 									MTimeoutNotification, MAvatarRepositoryObserver,
-									MDiscussionReadObserver, MTelephonyEngineNotification,
-									MBuddycloudContactStreamerObserver, MBuddycloudContactSearcherObserver {
+									MDiscussionReadObserver {
 
 	public:
 		CBuddycloudLogic(MBuddycloudLogicOwnerObserver* aObserver);
@@ -167,6 +163,7 @@ class CBuddycloudLogic : public CBase, MContactDbObserver, MLocationEngineNotifi
 		void ConnectToXmppServerL();
 		
 		void SendPresenceL();
+		void AddRosterManagementItemL(const TDesC8& aJid);
 		void SendPresenceSubscriptionL(const TDesC8& aTo, const TDesC8& aType, const TDesC8& aOptionalData = KNullDesC8);
 		
 		TInt GetNewIdStamp();
@@ -261,36 +258,12 @@ class CBuddycloudLogic : public CBase, MContactDbObserver, MLocationEngineNotifi
 	public: // From MDiscussionReadObserver
 		void DiscussionRead(TDesC& aDiscussionId, TInt aItemId);
 
-	public: // Contact Services
-		void PairItemIdsL(TInt aPairItemId1, TInt aPairItemId2);
-		void UnpairItemsL(TInt aItem);
-
-		void LoadAddressBookContacts();
-		void RemoveAddressBookContacts();
-		
-		CContactItem* GetContactDetailsLC(TInt aContactId);
-		void CollectContactDetailsL(TInt aFollowerId);
-		
-		void CallL(TInt aItemId);
-		CTelephonyEngine* GetCall();
-
-		TDesC& GetContactFilter();
-		void SetContactFilterL(const TDesC& aFilter);
+	public: // Filtering
+		TDesC& GetFollowingFilterText();
+		void SetFollowingFilterTextL(const TDesC& aFilter);
 
 	private:
-		void LoadAddressBookContactsL();
-
-		void FilterContactsL();
-		
-	private: // MBuddycloudContactStreamerObserver
-		void HandleStreamingContactL(TInt aContactId, CContactItem* aContact);
-		void FinishedStreamingCycle();
-		
-	private: // MBuddycloudContactSearcherObserver
-		void FinishedContactSearch();
-
-	private: // MContactDbObserver
-		void HandleDatabaseEventL(TContactDbObserverEvent aEvent);
+		void FilterFollowersL();
 
 	private: // Reading/Writing state to file
 		void LoadSettingsAndItems();
@@ -351,7 +324,7 @@ class CBuddycloudLogic : public CBase, MContactDbObserver, MLocationEngineNotifi
 		CBuddycloudPlaceStore* GetPlaceStore();
 
 	public:
-		void HandlePlaceQueryResultL(const TDesC8& aStanza, const TDesC8& aId);
+		void HandlePlaceQueryResultL(const TDesC8& aStanza, TBuddycloudXmppIdEnumerations aType);
 		
 	public: 
 		void SendEditedPlaceDetailsL(TBool aSearchOnly);
@@ -359,20 +332,16 @@ class CBuddycloudLogic : public CBase, MContactDbObserver, MLocationEngineNotifi
 		void EditMyPlacesL(TInt aPlaceId, TBool aAddPlace);
 	
 	private:	
-		void CollectMyPlacesL();
-		void ProcessMyPlacesL(CBuddycloudPlaceStore* aPlaceStore);
+		void CollectPlaceSubscriptionsL();
+		void ProcessPlaceSubscriptionsL(CBuddycloudPlaceStore* aPlaceStore);
 		void ProcessPlaceSearchL(CBuddycloudPlaceStore* aPlaceStore);
-		void SendPlaceQueryL(TInt aPlaceId, const TDesC8& aAction, TBool aAcknowledge = false);
+		void SendPlaceQueryL(TInt aPlaceId, TBuddycloudXmppIdEnumerations aType, TBool aAcknowledge = false);
 
 	public: // From MTimeoutNotification
 		void TimerExpired(TInt aExpiryId);
 
 	public: // From MAvatarRepositoryObserver
 		void AvatarLoaded();
-
-	public: // MTelephonyEngineNotification
-		void TelephonyStateChanged(TTelephonyEngineState aState);
-	   	void TelephonyDebug(const TDesC8& aMessage);
 
 	public: // From CLocationEngine
     	void HandleLocationServerResult(TLocationMotionState aMotionState, TInt aPatternQuality, TInt aPlaceId);
@@ -399,13 +368,14 @@ class CBuddycloudLogic : public CBase, MContactDbObserver, MLocationEngineNotifi
 		void XmppStanzaAcknowledgedL(const TDesC8& aStanza, const TDesC8& aId);
  
     private: // Presence handling
-    	void HandleIncomingPresenceL(TDesC& aFrom, const TDesC8& aStanza);
-       	void ProcessPresenceSubscriptionL(TDesC& aJid, const TDesC8& aData);
+    	void HandleIncomingPresenceL(const TDesC8& aStanza);
+       	void ProcessPresenceSubscriptionL(const TDesC8& aStanza);
    
     private: // Message handling
-		void HandleIncomingMessageL(TDesC& aFrom, const TDesC8& aData);
+		void HandleIncomingMessageL(const TDesC8& aStanza);
 
     protected:
+    	// Observers
     	MBuddycloudLogicOwnerObserver* iOwnerObserver;
 		MBuddycloudLogicStatusObserver* iStatusObserver;
 		RPointerArray<MBuddycloudLogicNotificationObserver> iNotificationObservers;
@@ -416,15 +386,8 @@ class CBuddycloudLogic : public CBase, MContactDbObserver, MLocationEngineNotifi
 		TBuddycloudLogicTimeoutState iTimerState;
 
 		CFollowingRosterItem* iOwnItem;
-
-		// Contact Database
-		CContactDatabase* iContactDatabase;
-		CContactChangeNotifier* iContactDbNotifier;
-		TBuddycloudContactNameOrder iContactNameOrder;
-
-		CBuddycloudContactStreamer* iContactStreamer;
-		CBuddycloudContactSearcher* iContactSearcher;
-		TBool iContactsLoaded;
+		
+		CTextUtilities* iTextUtilities;
 
 		// Connection State
 		TBuddycloudLogicState iState;
@@ -437,6 +400,7 @@ class CBuddycloudLogic : public CBase, MContactDbObserver, MLocationEngineNotifi
 		// Time Stamps
 		TTimeIntervalSeconds iServerOffset;
 		
+		// Internal flags
 		TInt iIdStamp;
 		
 		TBool iOffsetReceived;
@@ -444,6 +408,7 @@ class CBuddycloudLogic : public CBase, MContactDbObserver, MLocationEngineNotifi
 		TBool iPubsubSubscribedTo;
 		TBool iMyChannelMembersRequested;
 
+		// Xmpp engine
 		CXmppEngine* iXmppEngine;
         TBool iXmppEngineReady;
 
@@ -475,14 +440,13 @@ class CBuddycloudLogic : public CBase, MContactDbObserver, MLocationEngineNotifi
         TBool iSettingAccessPoint;
         TBool iSettingShowName;
         TBool iSettingAutoStart;
-        TBool iSettingShowContacts;
        
         // Account settings
         TBuf<32> iSettingFullName;
         TBuf<32> iSettingEmailAddress;
-        TBuf<32> iSettingUsername;
+        TBuf<64> iSettingUsername;
         TBuf<32> iSettingPassword;
-        TInt iSettingServerId;
+        TBuf<64> iSettingXmppServer;
         
         // Community settings
         TBuf<32> iSettingTwitterUsername;
@@ -504,17 +468,14 @@ class CBuddycloudLogic : public CBase, MContactDbObserver, MLocationEngineNotifi
        
         TInt iNextItemId;
 
-        HBufC* iContactFilter;
-        TBool iFilteringContacts;
+        HBufC* iFollowingFilterText;
+        TBool iFilteringFollowers;
 
         // Debug
         RFileLogger iLog;
 
         // Avatars
         CAvatarRepository* iAvatarRepository;
-        
-        // Telephony
-        CTelephonyEngine* iTelephonyEngine;
         
         // Save required
         TBool iSettingsSaveNeeded;

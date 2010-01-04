@@ -1,6 +1,19 @@
 Change Log
 ==========
 
+0.05.16
+
+- Remove domain name from /me posts
+- Observe publish result and display error if necessary
+- Optimization of CBuddycloudLogic::XmppStanzaAcknowledgedL
+- [bug] Update place title & description after editing
+- Implementation of automatic host name resolving from username domain
+- Re-resolving of host name after several failed connection attempts
+- Handle failure of host name resolve (error message & push to Account settings)
+- Change Account setting item 'XMPP server' from list to text entry
+- [bug] Fix of returning back to same following item position (on 1 unread post)
+- Update from 99translations
+
 0.05.15
 
 - Always validate CBuddycloudFollowingContainer toolbar on item reposition

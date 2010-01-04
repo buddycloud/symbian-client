@@ -423,6 +423,9 @@ void CBuddycloudAppUi::NotificationEvent(TBuddycloudLogicNotificationType aEvent
 		iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KEditChannelViewId), TUid::Uid(aId), _L8(""));
 	}
 	else if(aEvent == ENotificationAuthenticationFailed) {
-		iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KAccountSettingsViewId), TUid::Uid(3), _L8(""));
+		iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KAccountSettingsViewId), TUid::Uid(2), _L8(""));
+	}
+	else if(aEvent == ENotificationServerResolveFailed) {
+		iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KAccountSettingsViewId), TUid::Uid(4), _L8(""));
 	}
 }

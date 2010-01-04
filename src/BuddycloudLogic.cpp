@@ -326,19 +326,8 @@ void CBuddycloudLogic::ConnectToXmppServerL() {
 
 	SetActivityStatus(R_LOCALIZED_STRING_NOTE_CONNECTING);
 	
-	switch(iSettingServerId) {
-		case 1:
-			iXmppEngine->SetServerDetailsL(_L("beta.buddycloud.com"), 5222);
-			break;
-		case 2:
-			iXmppEngine->SetServerDetailsL(_L("talk.google.com"), 5222);
-			break;
-		default:
-			iXmppEngine->SetServerDetailsL(_L("cirrus.buddycloud.com"), 443);
-			break;
-	}
-	
-	iXmppEngine->SetAuthorizationDetailsL(iSettingUsername, iSettingPassword);
+	iXmppEngine->SetAccountDetailsL(iSettingUsername, iSettingPassword);
+	iXmppEngine->SetServerDetailsL(iSettingXmppServer);
 	iXmppEngine->ConnectL(iConnectionCold);
 }
 
@@ -524,6 +513,7 @@ TBool CBuddycloudLogic::GetLocationResourceDataAvailable(TBuddycloudLocationReso
 
 void CBuddycloudLogic::ValidateUsername() {
 	iSettingUsername.LowerCase();
+	iSettingXmppServer.Zero();
 	
 	for(TInt i = iSettingUsername.Length() - 1; i >= 0; i--) {
 		if(iSettingUsername[i] <= 45 || iSettingUsername[i] == 47 || (iSettingUsername[i] >= 58 && iSettingUsername[i] <= 63) ||
@@ -531,6 +521,11 @@ void CBuddycloudLogic::ValidateUsername() {
 			
 			iSettingUsername.Delete(i, 1);
 		}
+	}
+	
+	if(iSettingUsername.Locate('@') == KErrNotFound) {
+		iSettingUsername.Append(_L("@buddycloud.com"));
+		iSettingXmppServer.Append(_L("jabber.buddycloud.com"));
 	}
 }
 
@@ -587,6 +582,8 @@ TDes& CBuddycloudLogic::GetDescSetting(TDescSettingItems aItem) {
 			return iSettingUsername;
 		case ESettingItemPassword:
 			return iSettingPassword;			
+		case ESettingItemServer:
+			return iSettingXmppServer;			
 		case ESettingItemTwitterUsername:
 			return iSettingTwitterUsername;
 		case ESettingItemTwitterPassword:
@@ -616,8 +613,6 @@ TInt& CBuddycloudLogic::GetIntSetting(TIntSettingItems aItem) {
 			return iSettingNotifyChannelsModerating;
 		case ESettingItemLanguage:
 			return iSettingPreferredLanguage;
-		case ESettingItemServerId:
-			return iSettingServerId;
 		default:
 			return iSettingNotifyChannelsFollowing;
 	}
@@ -1124,10 +1119,10 @@ void CBuddycloudLogic::CollectPubsubSubscriptionsL() {
 #endif
 
 	// Collect users pubsub subscriptions
-	_LIT8(KPubsubSubscriptions, "<iq to='' type='get' id='pubsubsubscriptions'><pubsub xmlns='http://jabber.org/protocol/pubsub'><subscriptions/></pubsub></iq>\r\n");
+	_LIT8(KPubsubSubscriptions, "<iq to='' type='get' id='%02d:%02d'><pubsub xmlns='http://jabber.org/protocol/pubsub'><subscriptions/></pubsub></iq>\r\n");
 	HBufC8* aPubsubSubscriptions = HBufC8::NewLC(KPubsubSubscriptions().Length() + KBuddycloudPubsubServer().Length());
 	TPtr8 pPubsubSubscriptions(aPubsubSubscriptions->Des());
-	pPubsubSubscriptions.Append(KPubsubSubscriptions);
+	pPubsubSubscriptions.AppendFormat(KPubsubSubscriptions, EXmppIdGetPubsubSubscriptions, GetNewIdStamp());
 	pPubsubSubscriptions.Insert(8, KBuddycloudPubsubServer);
 
 	iXmppEngine->SendAndAcknowledgeXmppStanza(pPubsubSubscriptions, this, false, EXmppPriorityHigh);
@@ -1289,11 +1284,11 @@ void CBuddycloudLogic::CollectUsersPubsubNodeSubscribersL() {
 		TPtrC8 aEncId = iTextUtilities->UnicodeToUtf8L(iOwnItem->GetId(EIdChannel));
 		
 		// Collect users pubsub node subscribers
-		_LIT8(KNodeSubscribers, "<iq to='' type='get' id='pubsubnodesubscribers'><pubsub xmlns='http://jabber.org/protocol/pubsub#owner'><subscriptions node=''/></pubsub></iq>\r\n");
+		_LIT8(KNodeSubscribers, "<iq to='' type='get' id='%02d:%02d'><pubsub xmlns='http://jabber.org/protocol/pubsub#owner'><subscriptions node=''/></pubsub></iq>\r\n");
 		HBufC8* aNodeSubscribers = HBufC8::NewLC(KNodeSubscribers().Length() + KBuddycloudPubsubServer().Length() + aEncId.Length());
 		TPtr8 pNodeSubscribers(aNodeSubscribers->Des());
-		pNodeSubscribers.Append(KNodeSubscribers);
-		pNodeSubscribers.Insert(125, aEncId);
+		pNodeSubscribers.AppendFormat(KNodeSubscribers, EXmppIdGetUsersPubsubNodeSubscribers, GetNewIdStamp());
+		pNodeSubscribers.Insert(109, aEncId);
 		pNodeSubscribers.Insert(8, KBuddycloudPubsubServer);
 	
 		iXmppEngine->SendAndAcknowledgeXmppStanza(pNodeSubscribers, this, false, EXmppPriorityHigh);
@@ -1463,11 +1458,11 @@ void CBuddycloudLogic::CollectChannelMetadataL(const TDesC& aNode) {
 	
 	TPtrC8 aEncId = iTextUtilities->UnicodeToUtf8L(aNode);
 	
-	_LIT8(KDiscoItemsStanza, "<iq to='' type='get' id='metadata:%02d'><query xmlns='http://jabber.org/protocol/disco#info' node=''/></iq>\r\n");
+	_LIT8(KDiscoItemsStanza, "<iq to='' type='get' id='%02d:%02d'><query xmlns='http://jabber.org/protocol/disco#info' node=''/></iq>\r\n");
 	HBufC8* aDiscoItemsStanza = HBufC8::NewLC(KDiscoItemsStanza().Length() + KBuddycloudPubsubServer().Length() + aEncId.Length());
 	TPtr8 pDiscoItemsStanza(aDiscoItemsStanza->Des());
-	pDiscoItemsStanza.AppendFormat(KDiscoItemsStanza, GetNewIdStamp());
-	pDiscoItemsStanza.Insert(97, aEncId);
+	pDiscoItemsStanza.AppendFormat(KDiscoItemsStanza, EXmppIdGetChannelMetadata, GetNewIdStamp());
+	pDiscoItemsStanza.Insert(91, aEncId);
 	pDiscoItemsStanza.Insert(8, KBuddycloudPubsubServer);
 	
 	iXmppEngine->SendAndAcknowledgeXmppStanza(pDiscoItemsStanza, this, true);
@@ -2188,10 +2183,10 @@ void CBuddycloudLogic::FollowChannelL(const TDesC& aNode) {
 	
 	TPtrC8 aEncId = iTextUtilities->UnicodeToUtf8L(aChannelItem->GetId());
 	
-	_LIT8(KDiscoItemsStanza, "<iq to='' type='get' id='followchannel:%d'><query xmlns='http://jabber.org/protocol/disco#info' node=''/></iq>\r\n");
+	_LIT8(KDiscoItemsStanza, "<iq to='' type='get' id='%02d:%02d:%d'><query xmlns='http://jabber.org/protocol/disco#info' node=''/></iq>\r\n");
 	HBufC8* aDiscoItemsStanza = HBufC8::NewLC(KDiscoItemsStanza().Length() + KBuddycloudPubsubServer().Length() + aEncId.Length() + 32);
 	TPtr8 pDiscoItemsStanza(aDiscoItemsStanza->Des());
-	pDiscoItemsStanza.AppendFormat(KDiscoItemsStanza, aChannelItem->GetItemId());
+	pDiscoItemsStanza.AppendFormat(KDiscoItemsStanza, EXmppIdValidateChannelExists, GetNewIdStamp(), aChannelItem->GetItemId());
 	pDiscoItemsStanza.Insert(pDiscoItemsStanza.Length() - 10, aEncId);
 	pDiscoItemsStanza.Insert(8, KBuddycloudPubsubServer);
 	
@@ -2357,12 +2352,12 @@ void CBuddycloudLogic::SetMoodL(TDesC& aMood) {
 		
 		TPtrC8 aEncodedMood(iTextUtilities->UnicodeToUtf8L(aMood));
 	
-		_LIT8(KMoodStanza, "<iq to='' type='set' id='setmood:%02d'><pubsub xmlns='http://jabber.org/protocol/pubsub'><publish node='/user//mood'><item><mood xmlns='http://jabber.org/protocol/mood'><undefined/><text></text></mood></item></publish></pubsub></iq>\r\n");
+		_LIT8(KMoodStanza, "<iq to='' type='set' id='%02d:%02d'><pubsub xmlns='http://jabber.org/protocol/pubsub'><publish node='/user//mood'><item><mood xmlns='http://jabber.org/protocol/mood'><undefined/><text></text></mood></item></publish></pubsub></iq>\r\n");
 		HBufC8* aMoodStanza = HBufC8::NewLC(KMoodStanza().Length() + KBuddycloudPubsubServer().Length() + pEncJid.Length() + aEncodedMood.Length());
 		TPtr8 pMoodStanza(aMoodStanza->Des());
-		pMoodStanza.AppendFormat(KMoodStanza, GetNewIdStamp());
-		pMoodStanza.Insert(185, aEncodedMood);
-		pMoodStanza.Insert(108, pEncJid);
+		pMoodStanza.AppendFormat(KMoodStanza, EXmppIdPublishMood, GetNewIdStamp());
+		pMoodStanza.Insert(180, aEncodedMood);
+		pMoodStanza.Insert(103, pEncJid);
 		pMoodStanza.Insert(8, KBuddycloudPubsubServer);
 	
 		iXmppEngine->SendAndAcknowledgeXmppStanza(pMoodStanza, this, true);
@@ -2488,7 +2483,7 @@ void CBuddycloudLogic::SetCurrentPlaceL(TInt aPlaceId) {
 		EditMyPlacesL(aPlaceId, true);
 		
 		// Send query
-		SendPlaceQueryL(aPlaceId, KPlaceCurrent, true);
+		SendPlaceQueryL(aPlaceId, EXmppIdSetCurrentPlace, true);
 		
 		// Set Activity Status
 		if(iState == ELogicOnline) {
@@ -2517,12 +2512,12 @@ void CBuddycloudLogic::SetNextPlaceL(TDesC& aPlace, TInt aPlaceId) {
 	// Label
 	TPtrC8 aEncodedPlace(iTextUtilities->UnicodeToUtf8L(aPlace));
 	
-	_LIT8(KNextStanza, "<iq to='butler.buddycloud.com' type='set' id='setnext1'><query xmlns='http://buddycloud.com/protocol/place#next'><place><name></name></place></query></iq>\r\n");
+	_LIT8(KNextStanza, "<iq to='butler.buddycloud.com' type='set' id='%02d:%02d'><query xmlns='http://buddycloud.com/protocol/place#next'><place><name></name></place></query></iq>\r\n");
 	HBufC8* aNextStanza = HBufC8::NewLC(KNextStanza().Length() + aEncodedPlace.Length() + pPlaceIdElement.Length());
 	TPtr8 pNextStanza(aNextStanza->Des());
-	pNextStanza.Append(KNextStanza);
-	pNextStanza.Insert(133, pPlaceIdElement);
-	pNextStanza.Insert(126, aEncodedPlace);
+	pNextStanza.AppendFormat(KNextStanza, EXmppIdPublishFuturePlace, GetNewIdStamp());
+	pNextStanza.Insert(130, pPlaceIdElement);
+	pNextStanza.Insert(123, aEncodedPlace);
 	
 	iXmppEngine->SendAndAcknowledgeXmppStanza(pNextStanza, this, true);
 	CleanupStack::PopAndDestroy(2); // aNextStanza, aPlaceIdElement
@@ -2759,15 +2754,12 @@ void CBuddycloudLogic::LoadSettingsAndItemsL() {
 					iSettingEmailAddress.Copy(iTextUtilities->Utf8ToUnicodeL(aXmlParser->GetStringAttribute(_L8("email"))));
 					iSettingUsername.Copy(iTextUtilities->Utf8ToUnicodeL(aXmlParser->GetStringAttribute(_L8("username"))));
 					iSettingPassword.Copy(iTextUtilities->Utf8ToUnicodeL(aXmlParser->GetStringAttribute(_L8("password"))));										
+					iSettingXmppServer.Copy(iTextUtilities->Utf8ToUnicodeL(aXmlParser->GetStringAttribute(_L8("server"))));										
 					
-					iSettingServerId = aXmlParser->GetIntAttribute(_L8("serverid"));
-
-#ifndef _DEBUG
-					if(iSettingServerId == 1) {
-						// Reset beta.buddycloud.com to jabber.buddycloud.com
-						iSettingServerId = 0;
+					if(iSettingUsername.Locate('@') == KErrNotFound) {
+						iSettingUsername.Append(_L("@buddycloud.com"));
+						iSettingXmppServer.Copy(_L("jabber.buddycloud.com"));
 					}
-#endif
 				}
 				
 				if(aXmlParser->MoveToElement(_L8("preferences"))) {
@@ -3033,9 +3025,15 @@ void CBuddycloudLogic::SaveSettingsAndItemsL() {
 			aFile.WriteL(iTextUtilities->UnicodeToUtf8L(iSettingPassword));
 			aFile.WriteL(_L8("'"));
 		}
+
+		if(iSettingXmppServer.Length() > 0) {
+			aFile.WriteL(_L8(" server='"));
+			aFile.WriteL(iTextUtilities->UnicodeToUtf8L(iSettingXmppServer));
+			aFile.WriteL(_L8("'"));
+		}
 		
 		// Preferences
-		aBuf.Format(_L8(" serverid='%d'/>\r\n\t\t\t<preferences language='%d' autostart='%d' notifyfollowing='%d' notifymoderating='%d' accesspoint='%d' replyto='%d' showname='%d' messageblocking='%d'/>\r\n"), iSettingServerId, iSettingPreferredLanguage, iSettingAutoStart, iSettingNotifyChannelsFollowing, iSettingNotifyChannelsModerating, iSettingAccessPoint, iSettingNotifyReplyTo, iSettingShowName, iSettingMessageBlocking);
+		aBuf.Format(_L8("/>\r\n\t\t\t<preferences language='%d' autostart='%d' notifyfollowing='%d' notifymoderating='%d' accesspoint='%d' replyto='%d' showname='%d' messageblocking='%d'/>\r\n"), iSettingPreferredLanguage, iSettingAutoStart, iSettingNotifyChannelsFollowing, iSettingNotifyChannelsModerating, iSettingAccessPoint, iSettingNotifyReplyTo, iSettingShowName, iSettingMessageBlocking);
 		aFile.WriteL(aBuf);
 		
 		// Notifications
@@ -3641,10 +3639,10 @@ void CBuddycloudLogic::MediaPostRequestL(TInt aItemId) {
 			HBufC8* aEncId = iTextUtilities->UnicodeToUtf8L(aChannelItem->GetId()).AllocLC();
 			TPtr8 pEncId(aEncId->Des());
 			
-			_LIT8(KMediaStanza, "<iq to='media.buddycloud.com' type='set' id='mediareq:%d'><media xmlns='http://buddycloud.com/media#request'><placeid>%d</placeid><lat>%.6f</lat><lon>%.6f</lon><node></node></media></iq>\r\n");
+			_LIT8(KMediaStanza, "<iq to='media.buddycloud.com' type='set' id='%02d:%02d:%d'><media xmlns='http://buddycloud.com/media#request'><placeid>%d</placeid><lat>%.6f</lat><lon>%.6f</lon><node></node></media></iq>\r\n");
 			HBufC8* aMediaStanza = HBufC8::NewLC(KMediaStanza().Length() + pEncId.Length() + 32 + 22);
 			TPtr8 pMediaStanza(aMediaStanza->Des());
-			pMediaStanza.Format(KMediaStanza, aItem->GetItemId(), iStablePlaceId, aGeoloc->GetReal(EGeolocLatitude),  aGeoloc->GetReal(EGeolocLongitude));
+			pMediaStanza.AppendFormat(KMediaStanza, EXmppIdRequestMediaPost, GetNewIdStamp(), aItem->GetItemId(), iStablePlaceId, aGeoloc->GetReal(EGeolocLatitude),  aGeoloc->GetReal(EGeolocLongitude));
 			pMediaStanza.Insert(pMediaStanza.Length() - 22, pEncId);
 		
 			iXmppEngine->SendAndAcknowledgeXmppStanza(pMediaStanza, this, true);
@@ -3682,19 +3680,19 @@ void CBuddycloudLogic::PostMessageL(TInt aItemId, TDesC& aId, TDesC& aContent, c
 			TPtrC8 aGeolocXml(aGeolocParser->GeolocToXmlL(iOwnItem->GetGeolocItem(EGeolocItemCurrent)));
 			
 			_LIT8(KThreadParent, " parent=''");
-			_LIT8(KMessageStanza, "<message type='chat' to='' id='message'><body></body><thread></thread></message>\r\n");
+			_LIT8(KMessageStanza, "<message type='chat' to='' id='message:%02d'><body></body><thread></thread></message>\r\n");
 			HBufC8* aMessageStanza = HBufC8::NewLC(KMessageStanza().Length() + pEncId.Length() + pEncContent.Length() + KThreadParent().Length() + aReferenceId.Length() + aThreadData.Length() + aGeolocXml.Length());
 			TPtr8 pMessageStanza(aMessageStanza->Des());
-			pMessageStanza.Append(KMessageStanza);
-			pMessageStanza.Insert(70, aGeolocXml);
-			pMessageStanza.Insert(61, aThreadData);
+			pMessageStanza.AppendFormat(KMessageStanza, GetNewIdStamp());
+			pMessageStanza.Insert(73, aGeolocXml);
+			pMessageStanza.Insert(64, aThreadData);
 			
 			if(aReferenceId.Length() > 0) {
-				pMessageStanza.Insert(60, KThreadParent);
-				pMessageStanza.Insert(69, aReferenceId);				
+				pMessageStanza.Insert(63, KThreadParent);
+				pMessageStanza.Insert(72, aReferenceId);				
 			}
 			
-			pMessageStanza.Insert(46, pEncContent);
+			pMessageStanza.Insert(49, pEncContent);
 			pMessageStanza.Insert(25, pEncId);
 			
 			iXmppEngine->SendAndForgetXmppStanza(pMessageStanza, true, EXmppPriorityHigh);			
@@ -3705,7 +3703,7 @@ void CBuddycloudLogic::PostMessageL(TInt aItemId, TDesC& aId, TDesC& aContent, c
 			aAtomEntry->SetIdL(aThreadData);
 			aAtomEntry->SetPublishTime(aCurrentTime);
 			aAtomEntry->SetAuthorJidL(iOwnItem->GetId(), false);	
-			aAtomEntry->GetLocation()->SetStringL(EGeolocText, *iBroadLocationText);			
+			aAtomEntry->GetLocation()->SetStringL(EGeolocText, iOwnItem->GetGeolocItem(EGeolocItemCurrent)->GetString(EGeolocText));			
 			aAtomEntry->SetContentL(aContent);			
 			aAtomEntry->SetIconId(iOwnItem->GetIconId());	
 			aAtomEntry->SetPrivate(true);
@@ -3743,15 +3741,15 @@ void CBuddycloudLogic::PostMessageL(TInt aItemId, TDesC& aId, TDesC& aContent, c
 			CXmppAtomEntryParser* aAtomEntryParser = CXmppAtomEntryParser::NewLC();
 			TPtrC8 aAtomEntryXml(aAtomEntryParser->AtomEntryToXmlL(aAtomEntry, aReferenceId));
 			
-			_LIT8(KPublishStanza, "<iq to='' type='set' id='publish:%02d'><pubsub xmlns='http://jabber.org/protocol/pubsub'><publish node=''><item></item></publish></pubsub></iq>\r\n");
+			_LIT8(KPublishStanza, "<iq to='' type='set' id='%02d:%02d:%d'><pubsub xmlns='http://jabber.org/protocol/pubsub'><publish node=''><item></item></publish></pubsub></iq>\r\n");
 			HBufC8* aPublishStanza = HBufC8::NewLC(KPublishStanza().Length() + KBuddycloudPubsubServer().Length() + pEncId.Length() + aAtomEntryXml.Length());
 			TPtr8 pPublishStanza(aPublishStanza->Des());
-			pPublishStanza.AppendFormat(KPublishStanza, GetNewIdStamp());
-			pPublishStanza.Insert(110, aAtomEntryXml);
-			pPublishStanza.Insert(102, pEncId);
+			pPublishStanza.AppendFormat(KPublishStanza, EXmppIdPublishChannelPost, GetNewIdStamp(), aItemId);
+			pPublishStanza.Insert(pPublishStanza.Length() - 41, pEncId);
+			pPublishStanza.Insert(pPublishStanza.Length() - 33, aAtomEntryXml);
 			pPublishStanza.Insert(8, KBuddycloudPubsubServer);
 			
-			iXmppEngine->SendAndForgetXmppStanza(pPublishStanza, true, EXmppPriorityHigh);			
+			iXmppEngine->SendAndAcknowledgeXmppStanza(pPublishStanza, this, true, EXmppPriorityHigh);			
 			CleanupStack::PopAndDestroy(3); // aPublishStanza, aAtomEntryXml, aPublishStanza
 		}
 		
@@ -3785,13 +3783,13 @@ void CBuddycloudLogic::SendCommunityCredentials(TCommunityItems aCommunity) {
 		HBufC8* aEncPassword = iTextUtilities->UnicodeToUtf8L(pCommunityPassword).AllocLC();
 		TPtr8 pEncPassword(aEncPassword->Des());
 
-		_LIT8(KStanza, "<iq to='communities.buddycloud.com' type='set' id='credentials1'><credentials application='' username='' password=''/></iq>\r\n");
+		_LIT8(KStanza, "<iq to='communities.buddycloud.com' type='set' id='%02d:%02d'><credentials application='' username='' password=''/></iq>\r\n");
 		HBufC8* aStanza = HBufC8::NewLC(KStanza().Length() + aCommunityName.Length() + pEncUsername.Length() + pEncPassword.Length());
 		TPtr8 pStanza = aStanza->Des();
-		pStanza.Append(KStanza);
-		pStanza.Insert(115, pEncPassword);
-		pStanza.Insert(103, pEncUsername);
-		pStanza.Insert(91, aCommunityName);
+		pStanza.AppendFormat(KStanza, EXmppIdSetCredentials, GetNewIdStamp());
+		pStanza.Insert(108, pEncPassword);
+		pStanza.Insert(96, pEncUsername);
+		pStanza.Insert(84, aCommunityName);
 
 		iXmppEngine->SendAndAcknowledgeXmppStanza(pStanza, this, true);
 		CleanupStack::PopAndDestroy(2); // aEncPassword, aEncUsername
@@ -3899,20 +3897,20 @@ void CBuddycloudLogic::SendEditedPlaceDetailsL(TBool aSearchOnly) {
 		// Build core form stanza
 		_LIT8(KLatitudeElement, "<lat></lat>");
 		_LIT8(KLongitudeElement, "<lon></lon>");			
-		_LIT8(KCoreDetailsStanza, "<iq to='butler.buddycloud.com' type='' id='placequery1'><query xmlns='http://buddycloud.com/protocol/place#'><place><name></name><street></street><area></area><city></city><region></region><country></country><postalcode></postalcode></place></query></iq>\r\n");
+		_LIT8(KCoreDetailsStanza, "<iq to='butler.buddycloud.com' type='' id='%02d:%02d'><query xmlns='http://buddycloud.com/protocol/place#'><place><name></name><street></street><area></area><city></city><region></region><country></country><postalcode></postalcode></place></query></iq>\r\n");
 		
 		HBufC8* aCoreStanza = HBufC8::NewLC(KCoreDetailsStanza().Length() + pPlaceName.Length() + pPlaceStreet.Length() + 
 				pPlaceArea.Length() + pPlaceCity.Length() + pPlacePostcode.Length() + pPlaceRegion.Length() + 
 				pPlaceCountry.Length() + KLatitudeElement().Length() + aPlaceLatitude.Length() + KLongitudeElement().Length() + aPlaceLongitude.Length());		
 		TPtr8 pCoreStanza(aCoreStanza->Des());
 		pCoreStanza.Append(KCoreDetailsStanza);
-		pCoreStanza.Insert(220, pPlacePostcode);
-		pCoreStanza.Insert(198, pPlaceCountry);
-		pCoreStanza.Insert(180, pPlaceRegion);
-		pCoreStanza.Insert(165, pPlaceCity);
-		pCoreStanza.Insert(152, pPlaceArea);
-		pCoreStanza.Insert(137, pPlaceStreet);
-		pCoreStanza.Insert(122, pPlaceName);
+		pCoreStanza.Insert(218, pPlacePostcode);
+		pCoreStanza.Insert(196, pPlaceCountry);
+		pCoreStanza.Insert(178, pPlaceRegion);
+		pCoreStanza.Insert(163, pPlaceCity);
+		pCoreStanza.Insert(150, pPlaceArea);
+		pCoreStanza.Insert(135, pPlaceStreet);
+		pCoreStanza.Insert(120, pPlaceName);
 	
 		if(aGeoloc->GetReal(EGeolocLatitude) != 0.0 || aGeoloc->GetReal(EGeolocLongitude) != 0.0) {
 			pCoreStanza.Insert(pCoreStanza.Length() - 23, KLongitudeElement);
@@ -3922,11 +3920,10 @@ void CBuddycloudLogic::SendEditedPlaceDetailsL(TBool aSearchOnly) {
 		}
 
 		if(aSearchOnly) {
-			HBufC8* aSearchStanza = HBufC8::NewLC(pCoreStanza.Length() + (KPlaceSearch().Length() * 2) + KIqTypeGet().Length());
+			HBufC8* aSearchStanza = HBufC8::NewLC(pCoreStanza.Length() + KPlaceSearch().Length() + KIqTypeGet().Length());
 			TPtr8 pSearchStanza(aSearchStanza->Des());							
-			pSearchStanza.Append(pCoreStanza);
-			pSearchStanza.Insert(107, KPlaceSearch);
-			pSearchStanza.Insert(43, KPlaceSearch);
+			pSearchStanza.AppendFormat(pCoreStanza, EXmppIdSearchForPlace, GetNewIdStamp());
+			pSearchStanza.Insert(101, KPlaceSearch);
 			pSearchStanza.Insert(37, KIqTypeGet);
 			
 			iXmppEngine->SendAndAcknowledgeXmppStanza(pSearchStanza, this);
@@ -3937,12 +3934,11 @@ void CBuddycloudLogic::SendEditedPlaceDetailsL(TBool aSearchOnly) {
 			aSharedElement.Format(_L8("<shared>%d</shared>"), aEditingPlace->Shared());
 			
 			if(aEditingPlace->GetItemId() < 0) {
-				HBufC8* aCreateStanza = HBufC8::NewLC(pCoreStanza.Length() + (KPlaceCreate().Length() * 2) + aSharedElement.Length() + KIqTypeSet().Length());
+				HBufC8* aCreateStanza = HBufC8::NewLC(pCoreStanza.Length() + KPlaceCreate().Length() + aSharedElement.Length() + KIqTypeSet().Length());
 				TPtr8 pCreateStanza(aCreateStanza->Des());							
-				pCreateStanza.Append(pCoreStanza);
-				pCreateStanza.Insert(116, aSharedElement);
-				pCreateStanza.Insert(107, KPlaceCreate);
-				pCreateStanza.Insert(43, KPlaceCreate);
+				pCreateStanza.AppendFormat(pCoreStanza, EXmppIdCreatePlace, GetNewIdStamp());
+				pCreateStanza.Insert(110, aSharedElement);
+				pCreateStanza.Insert(101, KPlaceCreate);
 				pCreateStanza.Insert(37, KIqTypeSet);
 				
 				iXmppEngine->SendAndAcknowledgeXmppStanza(pCreateStanza, this, true);
@@ -3960,17 +3956,18 @@ void CBuddycloudLogic::SendEditedPlaceDetailsL(TBool aSearchOnly) {
 				TBuf8<64> aIdElement;
 				aIdElement.Format(_L8("<id>http://buddycloud.com/places/%d</id>"), aEditingPlace->GetItemId());
 				
-				HBufC8* aEditStanza = HBufC8::NewLC(pCoreStanza.Length() + (KPlaceEdit().Length() * 2) + aSharedElement.Length() + aIdElement.Length() + KIqTypeSet().Length());
+				HBufC8* aEditStanza = HBufC8::NewLC(pCoreStanza.Length() + KPlaceEdit().Length() + aSharedElement.Length() + aIdElement.Length() + KIqTypeSet().Length());
 				TPtr8 pEditStanza(aEditStanza->Des());							
-				pEditStanza.Append(pCoreStanza);
-				pEditStanza.Insert(116, aSharedElement);
-				pEditStanza.Insert(116, aIdElement);
-				pEditStanza.Insert(107, KPlaceEdit);
-				pEditStanza.Insert(43, KPlaceEdit);
+				pEditStanza.AppendFormat(pCoreStanza, EXmppEditPlaceDetails, GetNewIdStamp());
+				pEditStanza.Insert(110, aSharedElement);
+				pEditStanza.Insert(110, aIdElement);
+				pEditStanza.Insert(101, KPlaceEdit);
 				pEditStanza.Insert(37, KIqTypeSet);
 	
 				iXmppEngine->SendAndAcknowledgeXmppStanza(pEditStanza, this, true);
 				CleanupStack::PopAndDestroy(); // aEditStanza
+				
+				aEditingPlace->UpdateFromGeolocL();
 				
 				iPlaceList->SetEditedPlace(KErrNotFound);
 			}
@@ -3980,7 +3977,7 @@ void CBuddycloudLogic::SendEditedPlaceDetailsL(TBool aSearchOnly) {
 	}
 }
 
-void CBuddycloudLogic::HandlePlaceQueryResultL(const TDesC8& aStanza, const TDesC8& aId) {
+void CBuddycloudLogic::HandlePlaceQueryResultL(const TDesC8& aStanza, TBuddycloudXmppIdEnumerations aType) {
 #ifdef _DEBUG
 	WriteToLog(_L8("BL    CBuddycloudLogic::HandlePlaceQueryResultL"));
 #endif
@@ -4027,10 +4024,10 @@ void CBuddycloudLogic::HandlePlaceQueryResultL(const TDesC8& aStanza, const TDes
 			CleanupStack::Pop(); // aPlace			
 		}
 		
-		if(aId.Compare(_L8("myplaces1")) == 0) {
-			ProcessMyPlacesL(aPlaceStore);
+		if(aType == EXmppIdGetPlaceSubscriptions) {
+			ProcessPlaceSubscriptionsL(aPlaceStore);
 		}
-		else if(aId.Compare(_L8("searchplacequery1")) == 0) {
+		else if(aType == EXmppIdSearchForPlace) {
 			ProcessPlaceSearchL(aPlaceStore);
 		}
 		else if(aPlaceStore->Count() > 0) {
@@ -4046,7 +4043,7 @@ void CBuddycloudLogic::HandlePlaceQueryResultL(const TDesC8& aStanza, const TDes
 						iPlaceList->AddItem(aResultPlace);
 						aPlaceStore->RemoveItemByIndex(0);
 					}
-					else if(aId.Compare(_L8("placedetails1")) == 0) {
+					else if(aType == EXmppIdGetPlaceDetails) {
 						// New place details received, copy to existing place
 						aPlace->CopyGeolocL(aResultPlace->GetGeoloc());
 						aPlace->UpdateFromGeolocL();
@@ -4058,11 +4055,11 @@ void CBuddycloudLogic::HandlePlaceQueryResultL(const TDesC8& aStanza, const TDes
 					}
 					
 					// Current place set by placeid
-					if(aId.Compare(_L8("currentplacequery1")) == 0) {
+					if(aType == EXmppIdSetCurrentPlace) {
 						HandleLocationServerResult(EMotionStationary, 100, aResultPlace->GetItemId());
 						SetActivityStatus(_L(""));
 					}
-					else if(aId.Compare(_L8("createplacequery1")) == 0) {
+					else if(aType == EXmppIdCreatePlace) {
 						SetCurrentPlaceL(aResultPlace->GetItemId());
 					}
 				
@@ -4075,7 +4072,7 @@ void CBuddycloudLogic::HandlePlaceQueryResultL(const TDesC8& aStanza, const TDes
 				}
 				else {
 					// Result returned error condition
-					if(aId.Compare(_L8("placedetails1")) == 0 && aXmlParser->MoveToElement(_L8("not-authorized"))) {
+					if(aType == EXmppIdGetPlaceDetails && aXmlParser->MoveToElement(_L8("not-authorized"))) {
 						// User is no longer authorized to see this place, remove
 						if(aPlace) {
 							aPlace->SetShared(true);
@@ -4107,13 +4104,13 @@ void CBuddycloudLogic::GetPlaceDetailsL(TInt aPlaceId) {
 	}
 
 	// Send request
-	_LIT8(KPlaceDetailsStanza, "<iq to='butler.buddycloud.com' type='get' id='placedetails1'><query xmlns='http://buddycloud.com/protocol/place'><place><id>http://buddycloud.com/places/%d</id></place></query></iq>\r\n");
+	_LIT8(KPlaceDetailsStanza, "<iq to='butler.buddycloud.com' type='get' id='%02d:%02d'><query xmlns='http://buddycloud.com/protocol/place'><place><id>http://buddycloud.com/places/%d</id></place></query></iq>\r\n");
 	HBufC8* aPlaceDetailsStanza = HBufC8::NewLC(KPlaceDetailsStanza().Length() + 32);
 	TPtr8 pPlaceDetailsStanza(aPlaceDetailsStanza->Des());
-	pPlaceDetailsStanza.Format(KPlaceDetailsStanza, aPlaceId);
+	pPlaceDetailsStanza.AppendFormat(KPlaceDetailsStanza, EXmppIdGetPlaceDetails, GetNewIdStamp(), aPlaceId);
 
 	iXmppEngine->SendAndAcknowledgeXmppStanza(pPlaceDetailsStanza, this, true);
-	CleanupStack::PopAndDestroy();
+	CleanupStack::PopAndDestroy(); // aPlaceDetailsStanza
 }
 
 void CBuddycloudLogic::EditMyPlacesL(TInt aPlaceId, TBool aAddPlace) {
@@ -4125,16 +4122,16 @@ void CBuddycloudLogic::EditMyPlacesL(TInt aPlaceId, TBool aAddPlace) {
 
 	if(aAddPlace && aPlace == NULL) {
 		// Add place to 'my places'
-		SendPlaceQueryL(aPlaceId, KPlaceAdd, true);
+		SendPlaceQueryL(aPlaceId, EXmppIdAddPlaceSubscription, true);
 	}
 	else if(!aAddPlace && aPlace) {
 		if(aPlace->Shared()) {
 			// Remove place from 'my places'
-			SendPlaceQueryL(aPlaceId, KPlaceRemove);
+			SendPlaceQueryL(aPlaceId, EXmppIdRemovePlaceSubscription);
 		}
 		else {
 			// Delete private place
-			SendPlaceQueryL(aPlaceId, KPlaceDelete);
+			SendPlaceQueryL(aPlaceId, EXmppIdDeletePlace);
 		}
 		
 		// Remove place
@@ -4144,25 +4141,30 @@ void CBuddycloudLogic::EditMyPlacesL(TInt aPlaceId, TBool aAddPlace) {
 	NotifyNotificationObservers(ENotificationPlaceItemsUpdated, aPlaceId);
 }
 
-void CBuddycloudLogic::CollectMyPlacesL() {
+void CBuddycloudLogic::CollectPlaceSubscriptionsL() {
 #ifdef _DEBUG
-	WriteToLog(_L8("BL    CBuddycloudLogic::CollectMyPlacesL"));
+	WriteToLog(_L8("BL    CBuddycloudLogic::CollectPlaceSubscriptionsL"));
 #endif
 	
-	_LIT8(KMyPlacesStanza, "<iq to='butler.buddycloud.com' type='get' id='myplaces1'><query xmlns='http://buddycloud.com/protocol/place#myplaces'><options><feature var='id'/><feature var='revision'/><feature var='population'/></options></query></iq>\r\n");
-	iXmppEngine->SendAndAcknowledgeXmppStanza(KMyPlacesStanza, this, false, EXmppPriorityHigh);
+	_LIT8(KSubscribedPlacesStanza, "<iq to='butler.buddycloud.com' type='get' id='%02d:%02d'><query xmlns='http://buddycloud.com/protocol/place#myplaces'><options><feature var='id'/><feature var='revision'/><feature var='population'/></options></query></iq>\r\n");
+	HBufC8* aSubscribedPlacesStanza = HBufC8::NewLC(KSubscribedPlacesStanza().Length());
+	TPtr8 pSubscribedPlacesStanza(aSubscribedPlacesStanza->Des());
+	pSubscribedPlacesStanza.AppendFormat(KSubscribedPlacesStanza, EXmppIdGetPlaceSubscriptions, GetNewIdStamp());
+	
+	iXmppEngine->SendAndAcknowledgeXmppStanza(pSubscribedPlacesStanza, this, false, EXmppPriorityHigh);
+	CleanupStack::PopAndDestroy(); // aSubscribedPlacesStanza
 }
 
-void CBuddycloudLogic::ProcessMyPlacesL(CBuddycloudPlaceStore* aPlaceStore) {
+void CBuddycloudLogic::ProcessPlaceSubscriptionsL(CBuddycloudPlaceStore* aPlaceStore) {
 #ifdef _DEBUG
-	WriteToLog(_L8("BL    CBuddycloudLogic::ProcessMyPlacesL"));
+	WriteToLog(_L8("BL    CBuddycloudLogic::ProcessPlaceSubscriptionsL"));
 #endif
 	
 	for(TInt i = (iPlaceList->Count() - 1); i >= 0; i--) {
 		CBuddycloudExtendedPlace* aLocalPlace = static_cast <CBuddycloudExtendedPlace*> (iPlaceList->GetItemByIndex(i));
 		CBuddycloudExtendedPlace* aStorePlace = static_cast <CBuddycloudExtendedPlace*> (aPlaceStore->GetItemById(aLocalPlace->GetItemId()));
 		
-		if(aLocalPlace->GetItemId() != 0) {
+		if(aLocalPlace->GetItemId() > 0) {
 			if(aStorePlace) {
 				// Place in 'my places'
 				aLocalPlace->SetPopulation(aStorePlace->GetPopulation());
@@ -4284,26 +4286,39 @@ void CBuddycloudLogic::ProcessPlaceSearchL(CBuddycloudPlaceStore* aPlaceStore) {
 	}
 }
 
-void CBuddycloudLogic::SendPlaceQueryL(TInt aPlaceId, const TDesC8& aAction, TBool aAcknowledge) {
+void CBuddycloudLogic::SendPlaceQueryL(TInt aPlaceId, TBuddycloudXmppIdEnumerations aType, TBool aAcknowledge) {
 #ifdef _DEBUG
 	WriteToLog(_L8("BL    CBuddycloudLogic::SendPlaceQueryL"));
 #endif
 	
-	_LIT8(KEditMyPlacesStanza, "<iq to='butler.buddycloud.com' type='set' id='placequery1'><query xmlns='http://buddycloud.com/protocol/place#'><place><id>http://buddycloud.com/places/%d</id></place></query></iq>\r\n");
-	HBufC8* aEditMyPlacesStanza = HBufC8::NewLC(KEditMyPlacesStanza().Length() + (aAction.Length() * 2) + 32);
-	TPtr8 pEditMyPlacesStanza(aEditMyPlacesStanza->Des());
-	pEditMyPlacesStanza.Format(KEditMyPlacesStanza, aPlaceId);
-	pEditMyPlacesStanza.Insert(110, aAction);
-	pEditMyPlacesStanza.Insert(46, aAction);
-	
-	if(aAcknowledge) {
-		iXmppEngine->SendAndAcknowledgeXmppStanza(pEditMyPlacesStanza, this, true);
+	if(aType >= EXmppIdAddPlaceSubscription && aType <= EXmppIdSetCurrentPlace) {
+		_LIT8(KPlaceQueryStanza, "<iq to='butler.buddycloud.com' type='set' id='%02d:%02d'><query xmlns='http://buddycloud.com/protocol/place#'><place><id>http://buddycloud.com/places/%d</id></place></query></iq>\r\n");
+		HBufC8* aPlaceQueryStanza = HBufC8::NewLC(KPlaceQueryStanza().Length() + KPlaceCurrent().Length() + 32);
+		TPtr8 pPlaceQueryStanza(aPlaceQueryStanza->Des());
+		pPlaceQueryStanza.AppendFormat(KPlaceQueryStanza, aType, GetNewIdStamp(), aPlaceId);
+		
+		if(aType == EXmppIdAddPlaceSubscription) {
+			pPlaceQueryStanza.Insert(104, KPlaceAdd);
+		}
+		else if(aType == EXmppIdRemovePlaceSubscription) {
+			pPlaceQueryStanza.Insert(104, KPlaceRemove);
+		}
+		else if(aType == EXmppIdDeletePlace) {
+			pPlaceQueryStanza.Insert(104, KPlaceDelete);
+		}
+		else {
+			pPlaceQueryStanza.Insert(104, KPlaceCurrent);
+		}
+		
+		if(aAcknowledge) {
+			iXmppEngine->SendAndAcknowledgeXmppStanza(pPlaceQueryStanza, this, true);
+		}
+		else {
+			iXmppEngine->SendAndForgetXmppStanza(pPlaceQueryStanza, true);
+		}
+		
+		CleanupStack::PopAndDestroy(); // aPlaceQueryStanza	
 	}
-	else {
-		iXmppEngine->SendAndForgetXmppStanza(pEditMyPlacesStanza, true);
-	}
-	
-	CleanupStack::PopAndDestroy(); // aEditMyPlacesStanza			
 }
 
 /*
@@ -4471,11 +4486,11 @@ void CBuddycloudLogic::HandleLocationServerResult(TLocationMotionState aMotionSt
 	if(aNearbyRefreshNeeded) {
 		TPtrC8 aReferenceJid = iTextUtilities->UnicodeToUtf8L(iOwnItem->GetId());
 		
-		_LIT8(KNearbyStanza, "<iq to='butler.buddycloud.com' type='get' id='nearbyplaces1'><query xmlns='urn:oslo:nearbyobjects'><reference type='person' id=''/><options limit='10'/><request var='place'/></query></iq>\r\n");
+		_LIT8(KNearbyStanza, "<iq to='butler.buddycloud.com' type='get' id='%02d:%02d'><query xmlns='urn:oslo:nearbyobjects'><reference type='person' id=''/><options limit='10'/><request var='place'/></query></iq>\r\n");
 		HBufC8* aNearbyStanza = HBufC8::NewLC(KNearbyStanza().Length() + aReferenceJid.Length());
 		TPtr8 pNearbyStanza(aNearbyStanza->Des());
-		pNearbyStanza.Append(KNearbyStanza);
-		pNearbyStanza.Insert(128, aReferenceJid);
+		pNearbyStanza.AppendFormat(KNearbyStanza, EXmppIdGetNearbyPlaces, GetNewIdStamp());
+		pNearbyStanza.Insert(120, aReferenceJid);
 		
 		iXmppEngine->SendAndAcknowledgeXmppStanza(pNearbyStanza, this);	
 		CleanupStack::PopAndDestroy(); // aNearbyStanza
@@ -4532,9 +4547,11 @@ void CBuddycloudLogic::XmppStateChanged(TXmppEngineState aState) {
 	if(aState == EXmppOnline) {
 		// XMPP state changes to an Online state
 		iState = ELogicOnline;
-		iOwnerObserver->StateChanged(iState);
-		iXmppEngine->GetConnectionMode(iSettingConnectionMode, iSettingConnectionModeId);
 		iLastMotionState = EMotionUnknown;
+		iOwnerObserver->StateChanged(iState);
+		
+		iXmppEngine->GetServerDetails(iSettingXmppServer);
+		iXmppEngine->GetConnectionMode(iSettingConnectionMode, iSettingConnectionModeId);
 		
 		// Sent presence
 		SendPresenceL();
@@ -4553,7 +4570,7 @@ void CBuddycloudLogic::XmppStateChanged(TXmppEngineState aState) {
 			}
 			
 			// Collect my places
-			CollectMyPlacesL();
+			CollectPlaceSubscriptionsL();
 			
 			iConnectionCold = false;
 		}
@@ -4781,6 +4798,11 @@ void CBuddycloudLogic::XmppError(TXmppEngineError aError) {
 		// Send registration
 		HBufC8* aEncUsername = iTextUtilities->UnicodeToUtf8L(iSettingUsername).AllocLC();
 		TPtrC8 pEncUsername(aEncUsername->Des());
+		TInt aLocate = pEncUsername.Locate('@');
+		
+		if(aLocate != KErrNotFound) {
+			pEncUsername.Set(pEncUsername.Left(aLocate));
+		}
 		
 		HBufC8* aEncPassword = iTextUtilities->UnicodeToUtf8L(iSettingPassword).AllocLC();
 		TPtrC8 pEncPassword(aEncPassword->Des());
@@ -4791,21 +4813,20 @@ void CBuddycloudLogic::XmppError(TXmppEngineError aError) {
 		HBufC8* aEncFullName = iTextUtilities->UnicodeToUtf8L(iSettingFullName).AllocLC();
 		TPtrC8 pEncFirstName(aEncFullName->Des());
 		TPtrC8 pEncLastName;
-		TInt aLocateResult;
 		
-		if((aLocateResult = pEncFirstName.Locate(' ')) != KErrNotFound) {
-			pEncLastName.Set(pEncFirstName.Mid(aLocateResult + 1));
-			pEncFirstName.Set(pEncFirstName.Left(aLocateResult));
+		if((aLocate = pEncFirstName.Locate(' ')) != KErrNotFound) {
+			pEncLastName.Set(pEncFirstName.Mid(aLocate + 1));
+			pEncFirstName.Set(pEncFirstName.Left(aLocate));
 		}
 		
 		_LIT8(KFirstNameElement, "<firstname></firstname>");
 		_LIT8(KLastNameElement, "<lastname></lastname>");
 		_LIT8(KEmailElement, "<email></email>");
 		
-		_LIT8(KRegisterStanza, "<iq type='set' id='registration1'><query xmlns='jabber:iq:register'><username></username><password></password></query></iq>\r\n");
+		_LIT8(KRegisterStanza, "<iq type='set' id='%02d:%02d'><query xmlns='jabber:iq:register'><username></username><password></password></query></iq>\r\n");
 		HBufC8* aRegisterStanza = HBufC8::NewLC(KRegisterStanza().Length() + pEncUsername.Length() + pEncPassword.Length() + KFirstNameElement().Length() + pEncFirstName.Length() + KLastNameElement().Length() + pEncLastName.Length() + KEmailElement().Length() + pEncEmailAddress.Length());
 		TPtr8 pRegisterStanza(aRegisterStanza->Des());
-		pRegisterStanza.Copy(KRegisterStanza);
+		pRegisterStanza.AppendFormat(KRegisterStanza, EXmppIdRegistration, GetNewIdStamp());
 		
 		// First name
 		if(pEncFirstName.Length() > 0) {
@@ -4825,11 +4846,27 @@ void CBuddycloudLogic::XmppError(TXmppEngineError aError) {
 			pRegisterStanza.Insert(pRegisterStanza.Length() - 15 - 8, pEncEmailAddress);
 		}
 		
-		pRegisterStanza.Insert(99, pEncPassword);
-		pRegisterStanza.Insert(78, pEncUsername);
+		pRegisterStanza.Insert(91, pEncPassword);
+		pRegisterStanza.Insert(70, pEncUsername);
 
 		iXmppEngine->SendAndAcknowledgeXmppStanza(pRegisterStanza, this, false, EXmppPriorityHigh);
 		CleanupStack::PopAndDestroy(5); // aRegisterStanza, aEncFullName, aEncEmailAddress, aEncPassword, aEncUsername
+	}
+	else if(aError == EXmppServerUnresolved) {	
+		// Server could not be resolved
+		HBufC* aMessageTitle = CEikonEnv::Static()->AllocReadResourceLC(R_LOCALIZED_STRING_SERVERRESOLVEERROR_TITLE);
+		HBufC* aMessageText = CEikonEnv::Static()->AllocReadResourceLC(R_LOCALIZED_STRING_SERVERRESOLVEERROR_TEXT);		
+		
+		CAknMessageQueryDialog* aDialog = new (ELeave) CAknMessageQueryDialog();
+		aDialog->PrepareLC(R_AUTHERROR_DIALOG);
+		aDialog->SetHeaderTextL(*aMessageTitle);
+		aDialog->SetMessageTextL(*aMessageText);
+		aDialog->RunLD();
+		CleanupStack::PopAndDestroy(2); // aMessageText, aMessageTitle
+		
+		iXmppEngine->Disconnect();
+		
+		NotifyNotificationObservers(ENotificationServerResolveFailed);
 	}
 	else if(aError != EXmppAlreadyConnected) {	
 		SetActivityStatus(R_LOCALIZED_STRING_NOTE_OFFLINE);
@@ -5112,230 +5149,259 @@ void CBuddycloudLogic::XmppStanzaAcknowledgedL(const TDesC8& aStanza, const TDes
 #ifdef _DEBUG
 	WriteToLog(_L8("BL    CBuddycloudLogic::XmppStanzaAcknowledgedL"));
 #endif
-
-	CXmlParser* aXmlParser = CXmlParser::NewLC(aStanza);
-	TPtrC8 aAttributeType = aXmlParser->GetStringAttribute(_L8("type"));
 	
-	if(aAttributeType.Compare(_L8("result")) == 0) {
-		if(aId.Compare(_L8("nearbyplaces1")) == 0) {
-			// Delete old nearby places
-			for(TInt i = 0; i < iNearbyPlaces.Count(); i++) {
-				delete iNearbyPlaces[i];
-			}
+	if(aId.Locate(':') != KErrNotFound) {
+		TLex8 aIdLex(aId.Left(aId.Locate(':')));
+		TInt aIdEnum = KErrNotFound;
+		
+		if(aIdLex.Val(aIdEnum) != KErrNotFound) {
+			CXmlParser* aXmlParser = CXmlParser::NewLC(aStanza);
+			TPtrC8 aAttributeType = aXmlParser->GetStringAttribute(_L8("type"));
 			
-			iNearbyPlaces.Reset();
-
-			// Get new nearby places
-			while(aXmlParser->MoveToElement(_L8("item"))) {
-				TPtrC8 pAttributeId = aXmlParser->GetStringAttribute(_L8("id"));
-				TPtrC8 pAttributeVar = aXmlParser->GetStringAttribute(_L8("var"));
-				TInt aIntValue = pAttributeId.LocateReverse('/');
-				
-				if(aIntValue != KErrNotFound && pAttributeVar.Compare(_L8("place")) == 0) {
-					CXmlParser* aItemXmlParser = CXmlParser::NewLC(aXmlParser->GetStringData());
+			if(aAttributeType.Compare(_L8("result")) == 0) {
+				if(aIdEnum == EXmppIdRegistration) {
+					// Registration success
+					iXmppEngine->SendAuthorization();
 					
-					// Convert place id
-					TLex8 aLexValue(pAttributeId.Mid(aIntValue + 1));
-					if(aLexValue.Val(aIntValue) != KErrNone) {
-						aIntValue = 0;
-					}
-					
-					if(aIntValue > 0 && aItemXmlParser->MoveToElement(_L8("name"))) {
-						// Add Place to Nearby List
-						CBuddycloudNearbyPlace* aNewPlace = new (ELeave) CBuddycloudNearbyPlace();
-						CleanupStack::PushL(aNewPlace);
-
-						aNewPlace->SetPlaceId(aIntValue);
-						aNewPlace->SetPlaceNameL(iTextUtilities->Utf8ToUnicodeL(aItemXmlParser->GetStringData()));
-						
-						iNearbyPlaces.Append(aNewPlace);
-						CleanupStack::Pop();
-					}
-					
-					CleanupStack::PopAndDestroy(); // aItemXmlParser
+					// Save settings
+					SaveSettingsAndItemsL();
 				}
-			}
-		}
-		else if(aId.Compare(_L8("pubsubsubscriptions")) == 0) {
-			// Handle pubsub subscriptions
-			ProcessPubsubSubscriptionsL(aStanza);
-		}
-		else if(aId.Compare(_L8("pubsubnodesubscribers")) == 0) {
-			// Handle users pubsub node subscribers
-			ProcessUsersPubsubNodeSubscribersL(aStanza);
-		}
-		else if(aId.Compare(_L8("myplaces1")) == 0 || aId.Compare(_L8("addplacequery1")) == 0 || 
-				aId.Compare(_L8("createplacequery1")) == 0 || aId.Compare(_L8("currentplacequery1")) == 0 || 
-				aId.Compare(_L8("searchplacequery1")) == 0 || aId.Compare(_L8("placedetails1")) == 0) {
-			
-			// Handle places query result
-			HandlePlaceQueryResultL(aStanza, aId);
-		}
-		else if(aId.Find(_L8("setmood:")) != KErrNotFound || aId.Compare(_L8("setnext1")) == 0) {
-			// Set mood/next place result
-			SetActivityStatus(_L(""));
-		}
-		else if(aId.Find(_L8("followchannel:")) != KErrNotFound) {
-			// Follow node result
-			if(aXmlParser->MoveToElement(_L8("query"))) {
-				TPtrC8 aAttributeNode(aXmlParser->GetStringAttribute(_L8("node")));
-				TPtrC8 aEncId(iTextUtilities->UnicodeToUtf8L(iOwnItem->GetId()));
-				
-				// Send subscribe stanza
-				_LIT8(KSubscribeStanza, "<iq to='' type='set' id='subscribe:%02d'><pubsub xmlns='http://jabber.org/protocol/pubsub'><subscribe node='' jid=''/></pubsub></iq>\r\n");
-				HBufC8* aSubscribeStanza = HBufC8::NewLC(KSubscribeStanza().Length() + KBuddycloudPubsubServer().Length() + aAttributeNode.Length() + aEncId.Length());
-				TPtr8 pSubscribeStanza(aSubscribeStanza->Des());
-				pSubscribeStanza.AppendFormat(KSubscribeStanza, GetNewIdStamp());
-				pSubscribeStanza.Insert(113, aEncId);
-				pSubscribeStanza.Insert(106, aAttributeNode);
-				pSubscribeStanza.Insert(8, KBuddycloudPubsubServer);
-				
-				iXmppEngine->SendAndForgetXmppStanza(pSubscribeStanza, true);
-				CleanupStack::PopAndDestroy(); // aSubscribeStanza
-				
-				// Process disco items
-				ProcessChannelMetadataL(aStanza);					
-			}
-		}
-		else if(aId.Find(_L8("metadata:")) != KErrNotFound) {
-			// Handle (disco#info) metadata result
-			ProcessChannelMetadataL(aStanza);
-		}
-		else if(aId.Compare(_L8("credentials1")) == 0) {
-			// Communities update success
-			HBufC* aMessage = CEikonEnv::Static()->AllocReadResourceLC(R_LOCALIZED_STRING_NOTE_CREDENTIALS_SUCCESS);
-			CAknConfirmationNote* aDialog = new (ELeave) CAknConfirmationNote();		
-			aDialog->ExecuteLD(*aMessage);
-			CleanupStack::PopAndDestroy(); // aMessage				
-		}
-		else if(aId.Compare(_L8("registration1")) == 0) {
-			// Registration success
-			iXmppEngine->SendAuthorization();
-			
-			// Save settings
-			SaveSettingsAndItemsL();
-		}
-		else if(aId.Find(_L8("mediareq:")) != KErrNotFound) {
-			// Media post request
-			if(aXmlParser->MoveToElement(_L8("uploaduri"))) {
-				TInt aItemId = KErrNotFound;
-				TLex8 aLex(aId.Mid(aId.Locate(':') + 1));
-				
-				if(aLex.Val(aItemId) == KErrNone) {
-					CFollowingItem* aItem = static_cast <CFollowingItem*> (iFollowingList->GetItemById(aItemId));
+				else if(aIdEnum == EXmppIdSetCredentials) {
+					// Communities update success
+					HBufC* aMessage = CEikonEnv::Static()->AllocReadResourceLC(R_LOCALIZED_STRING_NOTE_CREDENTIALS_SUCCESS);
+					CAknConfirmationNote* aDialog = new (ELeave) CAknConfirmationNote();		
+					aDialog->ExecuteLD(*aMessage);
+					CleanupStack::PopAndDestroy(); // aMessage				
+				}
+				else if(aIdEnum == EXmppIdGetNearbyPlaces) {
+					// Delete old nearby places
+					for(TInt i = 0; i < iNearbyPlaces.Count(); i++) {
+						delete iNearbyPlaces[i];
+					}
 					
-					if(aItem && aItem->GetItemType() >= EItemRoster) {						
-						// Create discussion entry
-						CAtomEntryData* aAtomEntry = CAtomEntryData::NewLC();
-						aAtomEntry->SetPrivate(true);
-						aAtomEntry->SetDirectReply(true);
-						aAtomEntry->SetIconId(KIconChannel);							
-						aAtomEntry->SetPublishTime(TimeStamp());	
-						aAtomEntry->SetAuthorNameL(_L("Media Uploader"));
+					iNearbyPlaces.Reset();
+
+					// Get new nearby places
+					while(aXmlParser->MoveToElement(_L8("item"))) {
+						TPtrC8 pAttributeId = aXmlParser->GetStringAttribute(_L8("id"));
+						TPtrC8 pAttributeVar = aXmlParser->GetStringAttribute(_L8("var"));
+						TInt aIntValue = pAttributeId.LocateReverse('/');
+						
+						if(aIntValue != KErrNotFound && pAttributeVar.Compare(_L8("place")) == 0) {
+							CXmlParser* aItemXmlParser = CXmlParser::NewLC(aXmlParser->GetStringData());
 							
-						HBufC* aResourceText = CEikonEnv::Static()->AllocReadResourceLC(R_LOCALIZED_STRING_NOTE_MEDIAUPLOADREADY);					
-						TPtrC aDataUploaduri = iTextUtilities->Utf8ToUnicodeL(aXmlParser->GetStringData());
+							// Convert place id
+							TLex8 aLexValue(pAttributeId.Mid(aIntValue + 1));
+							if(aLexValue.Val(aIntValue) != KErrNone) {
+								aIntValue = 0;
+							}
+							
+							if(aIntValue > 0 && aItemXmlParser->MoveToElement(_L8("name"))) {
+								// Add Place to Nearby List
+								CBuddycloudNearbyPlace* aNewPlace = new (ELeave) CBuddycloudNearbyPlace();
+								CleanupStack::PushL(aNewPlace);
+
+								aNewPlace->SetPlaceId(aIntValue);
+								aNewPlace->SetPlaceNameL(iTextUtilities->Utf8ToUnicodeL(aItemXmlParser->GetStringData()));
+								
+								iNearbyPlaces.Append(aNewPlace);
+								CleanupStack::Pop();
+							}
+							
+							CleanupStack::PopAndDestroy(); // aItemXmlParser
+						}
+					}
+				}
+				else if(aIdEnum >= EXmppIdGetPlaceSubscriptions && aIdEnum <= EXmppIdGetPlaceDetails) {
+					// Handle places query result
+					HandlePlaceQueryResultL(aStanza, (TBuddycloudXmppIdEnumerations)aIdEnum);
+				}
+				else if(aIdEnum == EXmppIdGetPubsubSubscriptions) {
+					// Handle pubsub subscriptions
+					ProcessPubsubSubscriptionsL(aStanza);
+				}
+				else if(aIdEnum == EXmppIdGetUsersPubsubNodeSubscribers) {
+					// Handle users pubsub node subscribers
+					ProcessUsersPubsubNodeSubscribersL(aStanza);
+				}
+				else if(aIdEnum == EXmppIdPublishMood || aIdEnum == EXmppIdPublishFuturePlace) {
+					// Publish mood or future place result
+					SetActivityStatus(_L(""));
+				}
+				else if(aIdEnum == EXmppIdValidateChannelExists) {
+					// Validate channel exists
+					if(aXmlParser->MoveToElement(_L8("query"))) {
+						TPtrC8 aAttributeNode(aXmlParser->GetStringAttribute(_L8("node")));
+						TPtrC8 aEncId(iTextUtilities->UnicodeToUtf8L(iOwnItem->GetId()));
 						
-						HBufC* aMessageText = HBufC::NewLC(aResourceText->Des().Length() + aDataUploaduri.Length());
-						TPtr pMessageText(aMessageText->Des());
-						pMessageText.Append(*aResourceText);
-						pMessageText.Replace(pMessageText.Find(_L("$LINK")), 5, aDataUploaduri);							
+						// Send subscribe stanza
+						_LIT8(KSubscribeStanza, "<iq to='' type='set' id='%02d:%02d'><pubsub xmlns='http://jabber.org/protocol/pubsub'><subscribe node='' jid=''/></pubsub></iq>\r\n");
+						HBufC8* aSubscribeStanza = HBufC8::NewLC(KSubscribeStanza().Length() + KBuddycloudPubsubServer().Length() + aAttributeNode.Length() + aEncId.Length());
+						TPtr8 pSubscribeStanza(aSubscribeStanza->Des());
+						pSubscribeStanza.AppendFormat(KSubscribeStanza, EXmppIdAddChannelSubscription, GetNewIdStamp());
+						pSubscribeStanza.Insert(106, aEncId);
+						pSubscribeStanza.Insert(99, aAttributeNode);
+						pSubscribeStanza.Insert(8, KBuddycloudPubsubServer);
 						
-						aAtomEntry->SetContentL(pMessageText);
-						CleanupStack::PopAndDestroy(2); // aMessageText, aResourceText
-	
-						// Add to discussion
-						CDiscussion* aDiscussion = iDiscussionManager->GetDiscussionL(aItem->GetId());
+						iXmppEngine->SendAndForgetXmppStanza(pSubscribeStanza, true);
+						CleanupStack::PopAndDestroy(); // aSubscribeStanza
 						
-						if(aDiscussion->AddEntryOrCommentLD(aAtomEntry)) {									
-							NotifyNotificationObservers(ENotificationMessageNotifiedEvent, aItem->GetItemId());
+						// Process disco items
+						ProcessChannelMetadataL(aStanza);					
+					}
+				}
+				else if(aIdEnum == EXmppIdGetChannelMetadata) {
+					// Handle channel metadata result
+					ProcessChannelMetadataL(aStanza);
+				}
+				else if(aIdEnum == EXmppIdRequestMediaPost) {
+					// Media post request
+					if(aXmlParser->MoveToElement(_L8("uploaduri"))) {
+						TLex8 aItemLex(aId.Mid(aId.LocateReverse(':') + 1));
+						TInt aItemId = KErrNotFound;
+						
+						if(aItemLex.Val(aItemId) == KErrNone) {
+							CFollowingItem* aItem = static_cast <CFollowingItem*> (iFollowingList->GetItemById(aItemId));
+							
+							if(aItem && aItem->GetItemType() >= EItemRoster) {						
+								// Create discussion entry
+								CAtomEntryData* aAtomEntry = CAtomEntryData::NewLC();
+								aAtomEntry->SetPrivate(true);
+								aAtomEntry->SetDirectReply(true);
+								aAtomEntry->SetIconId(KIconChannel);							
+								aAtomEntry->SetPublishTime(TimeStamp());	
+								aAtomEntry->SetAuthorNameL(_L("Media Uploader"));
+									
+								HBufC* aResourceText = CEikonEnv::Static()->AllocReadResourceLC(R_LOCALIZED_STRING_NOTE_MEDIAUPLOADREADY);					
+								TPtrC aDataUploaduri = iTextUtilities->Utf8ToUnicodeL(aXmlParser->GetStringData());
+								
+								HBufC* aMessageText = HBufC::NewLC(aResourceText->Des().Length() + aDataUploaduri.Length());
+								TPtr pMessageText(aMessageText->Des());
+								pMessageText.Append(*aResourceText);
+								pMessageText.Replace(pMessageText.Find(_L("$LINK")), 5, aDataUploaduri);							
+								
+								aAtomEntry->SetContentL(pMessageText);
+								CleanupStack::PopAndDestroy(2); // aMessageText, aResourceText
+			
+								// Add to discussion
+								CDiscussion* aDiscussion = iDiscussionManager->GetDiscussionL(aItem->GetId());
+								
+								if(aDiscussion->AddEntryOrCommentLD(aAtomEntry)) {									
+									NotifyNotificationObservers(ENotificationMessageNotifiedEvent, aItem->GetItemId());
+								}
+							}
 						}
 					}
 				}
 			}
-		}
-	}
-	else if(aAttributeType.Compare(_L8("error")) == 0) {
-		if(aId.Compare(_L8("createplacequery1")) == 0 || aId.Compare(_L8("currentplacequery1")) == 0 || 
-				aId.Compare(_L8("editplacequery1")) == 0) {
-			// Handle place query error
-			SetActivityStatus(_L(""));
-			
-			if(aXmlParser->MoveToElement(_L8("text"))) {
-				HBufC* aMessageTitle = CEikonEnv::Static()->AllocReadResourceLC(R_LOCALIZED_STRING_UPDATEFAILED_TITLE);
-				
-				CAknMessageQueryDialog* aDialog = new (ELeave) CAknMessageQueryDialog();
-				aDialog->PrepareLC(R_AUTHERROR_DIALOG);
-				aDialog->SetHeaderTextL(*aMessageTitle);
-				aDialog->SetMessageTextL(iTextUtilities->Utf8ToUnicodeL(aXmlParser->GetStringData()));
-				aDialog->RunLD();
-				
-				CleanupStack::PopAndDestroy(); // aMessageTitle
-			}
-		}
-		else if(aId.Find(_L8("setmood:")) != KErrNotFound || aId.Compare(_L8("setnext1")) == 0) {
-			// Set mood/next place error
-			SetActivityStatus(_L(""));
-		}
-		else if(aId.Compare(_L8("searchplacequery1")) == 0) {
-			// No place search error
-			SetActivityStatus(_L(""));
-
-			HBufC* aMessage = CEikonEnv::Static()->AllocReadResourceLC(R_LOCALIZED_STRING_NOTE_NORESULTSFOUND);
-			CAknInformationNote* aDialog = new (ELeave) CAknInformationNote();		
-			aDialog->ExecuteLD(*aMessage);
-			CleanupStack::PopAndDestroy(); // aMessage
-		}
-		else if(aId.Compare(_L8("placedetails1")) == 0) {
-			// Handle places query error
-			HandlePlaceQueryResultL(aStanza, aId);
-		}
-		else if(aId.Find(_L8("followchannel:")) != KErrNotFound) {
-			// Follow node error
-			TInt aItemId = KErrNotFound;
-			TLex8 aLex(aId.Mid(aId.Locate(':') + 1));
-			
-			if(aLex.Val(aItemId) == KErrNone) {
-				CFollowingItem* aItem = static_cast <CFollowingItem*> (iFollowingList->GetItemById(aItemId));
-				
-				if(aItem && aItem->GetItemType() == EItemChannel) {	
-					CFollowingChannelItem* aChannelItem = static_cast <CFollowingChannelItem*> (aItem);
+			else if(aAttributeType.Compare(_L8("error")) == 0) {
+				if(aIdEnum == EXmppIdRegistration) {
+					// Registration failed			
+					CAknMessageQueryDialog* dlg = new (ELeave) CAknMessageQueryDialog();
+					dlg->ExecuteLD(R_AUTHERROR_DIALOG);
 					
-					if(aXmlParser->MoveToElement(_L8("item-not-found"))) {
-						// Channel doesn't exist
-						aChannelItem->SetIdL(aChannelItem->GetTitle());
-						aChannelItem->SetItemId(KEditingNewChannelId);
+					iXmppEngine->Disconnect();
+					
+					NotifyNotificationObservers(ENotificationAuthenticationFailed);
+				}
+				else if(aIdEnum == EXmppIdSetCredentials) {
+					// Communities update failed
+					HBufC* aMessage = CEikonEnv::Static()->AllocReadResourceLC(R_LOCALIZED_STRING_NOTE_CREDENTIALS_FAIL);
+					CAknErrorNote* aDialog = new (ELeave) CAknErrorNote();	
+					aDialog->SetTimeout(CAknNoteDialog::ENoTimeout);
+					aDialog->ExecuteLD(*aMessage);
+					CleanupStack::PopAndDestroy(); // aMessage	
+				}
+				else if(aIdEnum == EXmppIdCreatePlace || aIdEnum == EXmppIdSetCurrentPlace || aIdEnum == EXmppEditPlaceDetails) {
+					// Handle place query error
+					SetActivityStatus(_L(""));
+					
+					if(aXmlParser->MoveToElement(_L8("text"))) {
+						HBufC* aMessageTitle = CEikonEnv::Static()->AllocReadResourceLC(R_LOCALIZED_STRING_UPDATEFAILED_TITLE);
 						
-						NotifyNotificationObservers(ENotificationEditChannelRequested, KEditingNewChannelId);
+						CAknMessageQueryDialog* aDialog = new (ELeave) CAknMessageQueryDialog();
+						aDialog->PrepareLC(R_AUTHERROR_DIALOG);
+						aDialog->SetHeaderTextL(*aMessageTitle);
+						aDialog->SetMessageTextL(iTextUtilities->Utf8ToUnicodeL(aXmlParser->GetStringData()));
+						aDialog->RunLD();
+						
+						CleanupStack::PopAndDestroy(); // aMessageTitle
 					}
-					else {
-						// Delete discussion & channel
-						iDiscussionManager->DeleteDiscussionL(aChannelItem->GetId());
-						iFollowingList->DeleteItemById(aItemId);
+				}
+				else if(aIdEnum == EXmppIdSearchForPlace) {
+					// Handle place search error
+					HBufC* aMessage = CEikonEnv::Static()->AllocReadResourceLC(R_LOCALIZED_STRING_NOTE_NORESULTSFOUND);
+					CAknInformationNote* aDialog = new (ELeave) CAknInformationNote();		
+					aDialog->ExecuteLD(*aMessage);
+					CleanupStack::PopAndDestroy(); // aMessage
+				}
+				else if(aIdEnum == EXmppIdGetPlaceDetails) {
+					// Handle place details error
+					HandlePlaceQueryResultL(aStanza, (TBuddycloudXmppIdEnumerations)aIdEnum);
+				}
+				else if(aIdEnum == EXmppIdPublishMood || aIdEnum == EXmppIdPublishFuturePlace) {
+					// Set mood or future place error
+					SetActivityStatus(_L(""));
+				}
+				else if(aIdEnum == EXmppIdPublishChannelPost) {
+					// Publishing error
+					if(aXmlParser->MoveToElement(_L8("text"))) {
+						TLex8 aItemLex(aId.Mid(aId.LocateReverse(':') + 1));
+						TInt aItemId = KErrNotFound;
+						
+						if(aItemLex.Val(aItemId) == KErrNone) {
+							CFollowingItem* aItem = static_cast <CFollowingItem*> (iFollowingList->GetItemById(aItemId));
+							
+							if(aItem && aItem->GetItemType() >= EItemRoster) {	
+								CAtomEntryData* aAtomEntry = CAtomEntryData::NewLC();
+								aAtomEntry->SetPrivate(true);
+								aAtomEntry->SetDirectReply(true);
+								aAtomEntry->SetIconId(KIconChannel);							
+								aAtomEntry->SetPublishTime(TimeStamp());	
+								aAtomEntry->SetAuthorNameL(_L("Broadcaster"));							
+								aAtomEntry->SetContentL(iTextUtilities->Utf8ToUnicodeL(aXmlParser->GetStringData()));
+
+								// Add to discussion
+								CDiscussion* aDiscussion = iDiscussionManager->GetDiscussionL(aItem->GetId());
+								
+								if(aDiscussion->AddEntryOrCommentLD(aAtomEntry)) {									
+									NotifyNotificationObservers(ENotificationMessageNotifiedEvent, aItem->GetItemId());
+								}
+							}
+						}
+					}
+				}
+				else if(aIdEnum == EXmppIdValidateChannelExists) {
+					// Follow node error
+					TLex8 aItemLex(aId.Mid(aId.LocateReverse(':') + 1));
+					TInt aItemId = KErrNotFound;
+					
+					if(aItemLex.Val(aItemId) == KErrNone) {
+						CFollowingItem* aItem = static_cast <CFollowingItem*> (iFollowingList->GetItemById(aItemId));
+						
+						if(aItem && aItem->GetItemType() == EItemChannel) {	
+							CFollowingChannelItem* aChannelItem = static_cast <CFollowingChannelItem*> (aItem);
+							
+							if(aXmlParser->MoveToElement(_L8("item-not-found"))) {
+								// Channel doesn't exist
+								aChannelItem->SetIdL(aChannelItem->GetTitle());
+								aChannelItem->SetItemId(KEditingNewChannelId);
+								
+								NotifyNotificationObservers(ENotificationEditChannelRequested, KEditingNewChannelId);
+							}
+							else {
+								// Delete discussion & channel
+								iDiscussionManager->DeleteDiscussionL(aChannelItem->GetId());
+								iFollowingList->DeleteItemById(aItemId);
+							}
+						}
 					}
 				}
 			}
-		}
-		else if(aId.Compare(_L8("credentials1")) == 0) {
-			// Communities update failed
-			HBufC* aMessage = CEikonEnv::Static()->AllocReadResourceLC(R_LOCALIZED_STRING_NOTE_CREDENTIALS_FAIL);
-			CAknErrorNote* aDialog = new (ELeave) CAknErrorNote();	
-			aDialog->SetTimeout(CAknNoteDialog::ENoTimeout);
-			aDialog->ExecuteLD(*aMessage);
-			CleanupStack::PopAndDestroy(); // aMessage	
-		}
-		else if(aId.Compare(_L8("registration1")) == 0) {
-			// Registration failed			
-			CAknMessageQueryDialog* dlg = new (ELeave) CAknMessageQueryDialog();
-			dlg->ExecuteLD(R_AUTHERROR_DIALOG);
 			
-			iXmppEngine->Disconnect();
-			
-			NotifyNotificationObservers(ENotificationAuthenticationFailed);
+			CleanupStack::PopAndDestroy(); // aXmlParser
 		}
 	}
-	
-	CleanupStack::PopAndDestroy(); // aXmlParser
 }
 
 void CBuddycloudLogic::HandleIncomingPresenceL(const TDesC8& aStanza) {

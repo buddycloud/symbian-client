@@ -118,20 +118,25 @@ void CBuddycloudAccountSettingsList::EditItemL(TInt aIndex, TBool aCalledFromMen
 		
 		CAknSettingItemList::EditItemL(aIndex, aCalledFromMenu);
 		
-		((*aItemArray)[aIndex])->StoreL();
-		((*aItemArray)[aIndex])->UpdateListBoxTextL();
+		StoreSettingsL();
 		
 		if(iCurrentItemData.Compare(aItemArray->MdcaPoint(aIndex).Left(64)) != 0) {
 			// Data changed
 			if(aIdentifier == ESettingAccountUsername) {
 				iBuddycloudLogic->ValidateUsername();
 				
+				LoadSettingsL();
+				
 				if(iCurrentItemData.Compare(iBuddycloudLogic->GetDescSetting(ESettingItemUsername)) != 0) {
 					// Username is changed
 					iBuddycloudLogic->ResetStoredDataL();
+					
+					ListBox()->SetCurrentItemIndexAndDraw(ESettingItemServer - 1);
 				}
 			}
 		}
+		
+		((*aItemArray)[aIndex])->UpdateListBoxTextL();
 	}
 }
 
@@ -154,7 +159,8 @@ CAknSettingItem* CBuddycloudAccountSettingsList::CreateSettingItemL (TInt aIdent
 			aSettingItem = new (ELeave) CAknPasswordSettingItem(aIdentifier, CAknPasswordSettingItem::EAlpha, iBuddycloudLogic->GetDescSetting(ESettingItemPassword));
 			break;
 		case ESettingAccountServer:
-			aSettingItem = new (ELeave) CAknEnumeratedTextPopupSettingItem(aIdentifier, iBuddycloudLogic->GetIntSetting(ESettingItemServerId));
+			aSettingItem = new (ELeave) CAknTextSettingItem(aIdentifier, iBuddycloudLogic->GetDescSetting(ESettingItemServer));
+			aSettingItem->SetSettingPageFlags(CAknTextSettingPage::EZeroLengthAllowed | CAknTextSettingPage::EPredictiveTextEntryPermitted);
 			break;
 		default:
 			break;

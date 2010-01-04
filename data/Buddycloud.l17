@@ -282,8 +282,12 @@ rls_string r_string_exit_title "Kilépés megerősítése"
 rls_string r_string_exit_text "Kilépéssel a buddycloud csatlakozásod is megszűnok. Biztosan ezt szeretnéd?"
 
 // Authorization Error
-rls_string r_string_autherror_title "Regisztráció nem sikerült"
-rls_string r_string_autherror_text "Ez a felhasználónév már létezik. Kérlek nézd át a Fiókbeállításaidat és próbáld újra."
+rls_string r_string_authorizationerror_title "Authorization failed"
+rls_string r_string_authorizationerror_text "Username already exists or password is incorrect. Please check your Account settings and try again."
+
+// Resolve Error
+rls_string r_string_serverresolveerror_title "Connection error"
+rls_string r_string_serverresolveerror_text "XMPP server could not be resolved. Please enter your XMPP server and try again."
 
 // Delete Item Message
 rls_string r_string_deleteitem_title "Eltávolítás megerősítése"
@@ -316,11 +320,6 @@ rls_string r_string_note_searching "Keresés..."
 rls_string r_string_note_updating "Frissítés..."
 rls_string r_string_note_online "Online"
 rls_string r_string_note_offline "Offline"
-
-// Call
-rls_string r_string_note_dialling "$USER hívása"
-rls_string r_string_note_talkingto "Beszéd folyamatban $USER felhasználóval"
-rls_string r_string_note_hangingup "Kapcsolat bontva"
 
 // Setup 
 rls_string r_string_step2_title "Legyél híres!"

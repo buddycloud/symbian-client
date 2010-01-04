@@ -44,7 +44,6 @@ class CBuddycloudFollowingContainer : public CBuddycloudListComponent, MBuddyclo
 	private:
 		void ConfigureEdwinL();
 		void DisplayEdwin(TBool aShowEdwin);
-		void ConfigureCbaAndMenuL();
 
 	public: // From MBuddycloudLogicNotificationObserver
 		void NotificationEvent(TBuddycloudLogicNotificationType aEvent, TInt aId = KErrNotFound);
