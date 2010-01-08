@@ -15,18 +15,22 @@
 #include <aknsettingitemlist.h>
 #include "BuddycloudEditChannelList.h"
 #include "BuddycloudLogic.h"
+#include "TextUtilities.h"
+#include "ViewReference.h"
 #include "XmppInterfaces.h"
 
 // CLASS DECLARATION
 class CBuddycloudEditChannelList : public CAknSettingItemList, MXmppStanzaObserver {
 	public: // Constructors and destructor
-		CBuddycloudEditChannelList();
-		void ConstructL(const TRect& aRect, CBuddycloudLogic* aBuddycloudLogic, TInt aItemId);
+		CBuddycloudEditChannelList(CBuddycloudLogic* aBuddycloudLogic);
+		void ConstructL(const TRect& aRect, TViewData aQueryData);
 		~CBuddycloudEditChannelList();
 		
 	private:
 		void SetTitleL(TInt aResourceId);
 		void ValidateChannelId();
+		
+		void CollectChannelMetadataL(const TDesC& aNodeId);
 
 	public:
 		void EditCurrentItemL();
@@ -51,6 +55,10 @@ class CBuddycloudEditChannelList : public CAknSettingItemList, MXmppStanzaObserv
 	private: // Data
 		CBuddycloudLogic* iBuddycloudLogic;	
 		MXmppWriteInterface* iXmppInterface;
+		
+		TViewData iQueryData;
+		
+		CTextUtilities* iTextUtilities;
 
 		CFollowingChannelItem* iChannelItem;
 		TBool iChannelSaveAllowed;

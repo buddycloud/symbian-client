@@ -17,7 +17,6 @@
 #include "BrowserLauncher.h"
 #include "Buddycloud.hlp.hrh"
 #include "BuddycloudExplorerContainer.h"
-#include "BuddycloudMessagingContainer.h"
 #include "XmlParser.h"
 #include "XmppUtilities.h"
 
@@ -35,11 +34,11 @@ CBuddycloudExplorerContainer::CBuddycloudExplorerContainer(MViewAccessorObserver
 	iXmppInterface = aBuddycloudLogic->GetXmppInterface();
 }
 
-void CBuddycloudExplorerContainer::ConstructL(const TRect& aRect, TExplorerQuery aQuery) {
+void CBuddycloudExplorerContainer::ConstructL(const TRect& aRect, TViewReference aQueryReference) {
 	iRect = aRect;
-	CreateWindowL();
+	iQueryReference = aQueryReference;
 	
-	SetPrevView(TVwsViewId(TUid::Uid(APPUID), KChannelsViewId), TUid::Uid(0));
+	CreateWindowL();
 
 	// Tabs
 	iNaviPane = (CAknNavigationControlContainer*) iEikonEnv->AppUiFactory()->StatusPane()->ControlL(TUid::Uid(EEikStatusPaneUidNavi));
@@ -61,10 +60,17 @@ void CBuddycloudExplorerContainer::ConstructL(const TRect& aRect, TExplorerQuery
 	iLocalizedRank = iEikonEnv->AllocReadResourceL(R_LOCALIZED_STRING_NOTE_CHANNELRANK);
 	
 	SetRect(iRect);
-	ActivateL();
+	ActivateL();	
 	
 	// Initialize explorer
-	if(aQuery.iStanza.Length() == 0) {
+	TViewData aQuery = iQueryReference.iNewViewData;
+	
+	if(!iQueryReference.iCallbackRequested) {
+		iQueryReference.iCallbackViewId = KChannelsViewId;
+		iQueryReference.iOldViewData.iId = 0;
+	}
+		
+	if(aQuery.iData.Length() == 0) {
 		// Add default query (nearby objects)
 		CFollowingRosterItem* aOwnItem = iBuddycloudLogic->GetOwnItem();
 		
@@ -76,12 +82,7 @@ void CBuddycloudExplorerContainer::ConstructL(const TRect& aRect, TExplorerQuery
 		}
 	}
 	
-	PushLevelL(aQuery.iTitle, aQuery.iStanza);
-}
-
-void CBuddycloudExplorerContainer::SetPrevView(const TVwsViewId& aViewId, TUid aViewMsgId) {
-	iPrevViewId = aViewId;
-	iPrevViewMsgId = aViewMsgId;
+	PushLevelL(aQuery.iTitle, aQuery.iData);
 }
 
 CBuddycloudExplorerContainer::~CBuddycloudExplorerContainer() {
@@ -115,10 +116,10 @@ void CBuddycloudExplorerContainer::NotificationEvent(TBuddycloudLogicNotificatio
 			
 			if(aOwnItem) {			
 				// Build stanza
-				TExplorerQuery aQuery = CExplorerStanzaBuilder::BuildNearbyXmppStanza(EExplorerItemPerson, iTextUtilities->UnicodeToUtf8L(aOwnItem->GetId()));
+				TViewData aQuery = CExplorerStanzaBuilder::BuildNearbyXmppStanza(EExplorerItemPerson, iTextUtilities->UnicodeToUtf8L(aOwnItem->GetId()));
 				iEikonEnv->ReadResourceL(aQuery.iTitle, R_LOCALIZED_STRING_EXPLORERTAB_HINT);
 				
-				PushLevelL(aQuery.iTitle, aQuery.iStanza);
+				PushLevelL(aQuery.iTitle, aQuery.iData);
 			}
 		}
 	}
@@ -665,28 +666,28 @@ void CBuddycloudExplorerContainer::HandleCommandL(TInt aCommand) {
 			CExplorerResultItem* aResultItem = iExplorerLevels[aLevel]->iResultItems[iSelectedItem];
 			
 			if(aResultItem->GetResultType() == EExplorerItemDirectory) {
-				TExplorerQuery aQuery;		
+				TViewData aQuery;		
 
 				if(aResultItem->GetId().Compare(_L("local")) == 0) {
 					CFollowingRosterItem* aOwnItem = iBuddycloudLogic->GetOwnItem();
 					
 					if(aOwnItem) {
 						aQuery = CExplorerStanzaBuilder::BuildNearbyXmppStanza(EExplorerItemPerson, iTextUtilities->UnicodeToUtf8L(aOwnItem->GetId()), 20);
-						aQuery.iStanza.Insert((aQuery.iStanza.Length() - 15), _L8("<request var='channel'/>"));
+						aQuery.iData.Insert((aQuery.iData.Length() - 15), _L8("<request var='channel'/>"));
 					}
 				}
 				else {
 					aQuery = CExplorerStanzaBuilder::BuildChannelsXmppStanza(iTextUtilities->UnicodeToUtf8L(aResultItem->GetId()), EChannelAll, 20);
 				}
 				
-				if(aQuery.iStanza.Length() > 0) {
+				if(aQuery.iData.Length() > 0) {
 					// Add language code
 					TPtrC8 aLangCode = iTextUtilities->UnicodeToUtf8L(*iEikonEnv->AllocReadResourceLC(R_LOCALIZED_STRING_LANGCODE));
-					aQuery.iStanza.Insert(3, _L8(" xml:lang=''"));
-					aQuery.iStanza.Insert(14, aLangCode);
+					aQuery.iData.Insert(3, _L8(" xml:lang=''"));
+					aQuery.iData.Insert(14, aLangCode);
 					CleanupStack::PopAndDestroy(); // aLangCode
 					
-					PushLevelL(aResultItem->GetTitle(), aQuery.iStanza);
+					PushLevelL(aResultItem->GetTitle(), aQuery.iData);
 				}
 			}
 			else if(aResultItem->GetResultType() == EExplorerItemLink) {
@@ -698,7 +699,11 @@ void CBuddycloudExplorerContainer::HandleCommandL(TInt aCommand) {
 	}
 	else if(aCommand == EMenuEditChannelCommand) {
 		// Create new channel
-		iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KEditChannelViewId));			
+		TViewReferenceBuf aViewReference;	
+		aViewReference().iCallbackViewId = KChannelsViewId;
+		aViewReference().iOldViewData = iQueryReference.iNewViewData;
+
+		iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KEditChannelViewId), TUid::Uid(0), aViewReference);					
 	}
 	else if(aCommand == EMenuSetAsPlaceCommand || aCommand == EMenuSetAsNextPlaceCommand || aCommand == EMenuBookmarkPlaceCommand) {
 		if(iExplorerLevels[aLevel]->iResultItems.Count() > 0) {
@@ -730,15 +735,14 @@ void CBuddycloudExplorerContainer::HandleCommandL(TInt aCommand) {
 					}
 					else if(aResultItem->GetResultType() == EExplorerItemChannel) {
 						// TODO: Follow explorer channel						
-//						TInt aFollowingId = iBuddycloudLogic->FollowTopicChannelL(aResultItem->GetId(), aResultItem->GetTitle(), aResultItem->GetDescription());
+//						TInt aFollowingId = iBuddycloudLogic->FollowChannelL(aResultItem->GetId());
 //								
-//						TMessagingViewObject aObject;			
-//						aObject.iFollowerId = aFollowingId;
-//						aObject.iTitle.Append(aResultItem->GetTitle());
-//						aObject.iId.Append(aResultItem->GetId());
-//						
-//						TMessagingViewObjectPckg aObjectPckg(aObject);		
-//						iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KMessagingViewId), TUid::Uid(aFollowingId), aObjectPckg);			
+//						TViewReferenceBuf aViewReference;	
+//						aViewReference().iNewViewData.iId = aFollowingId;
+//						aViewReference().iNewViewData.iTitle.Copy(aResultItem->GetTitle());
+//						aViewReference().iNewViewData.iData.Copy(aResultItem->GetId());
+//
+//						iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KMessagingViewId), TUid::Uid(aFollowingId), aViewReference);					
 					}
 				}
 				else {
@@ -759,18 +763,17 @@ void CBuddycloudExplorerContainer::HandleCommandL(TInt aCommand) {
 							if(aItem && aItem->GetItemType() >= EItemRoster) {														
 								iXmppInterface->CancelXmppStanzaAcknowledge(this);
 								
-								TMessagingViewObject aObject;			
-								aObject.iFollowerId = aFollowingId;
-								aObject.iTitle.Append(aItem->GetTitle());
-								aObject.iId.Append(aItem->GetId());
+								TViewReferenceBuf aViewReference;	
+								aViewReference().iNewViewData.iId = aFollowingId;
+								aViewReference().iNewViewData.iTitle.Copy(aItem->GetTitle());
+								aViewReference().iNewViewData.iData.Copy(aItem->GetId());
 								
 								if(aCommand == EMenuPrivateMessagesCommand) {
 									CFollowingRosterItem* aRosterItem = static_cast <CFollowingRosterItem*> (aItem);
-									aObject.iId.Append(aRosterItem->GetId());
+									aViewReference().iNewViewData.iData.Copy(aRosterItem->GetId());
 								}
-								
-								TMessagingViewObjectPckg aObjectPckg(aObject);		
-								iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KMessagingViewId), TUid::Uid(aFollowingId), aObjectPckg);			
+
+								iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KMessagingViewId), TUid::Uid(aFollowingId), aViewReference);					
 							}
 						}
 					}
@@ -783,20 +786,20 @@ void CBuddycloudExplorerContainer::HandleCommandL(TInt aCommand) {
 		
 		if(aResultItem->GetResultType() == EExplorerItemPerson || aResultItem->GetResultType() == EExplorerItemChannel) {			
 			TPtrC8 aEncId = iTextUtilities->UnicodeToUtf8L(aResultItem->GetId());			
-			TExplorerQuery aQuery;
+			TViewData aQuery;
 		
 			if(aCommand == EMenuSeeFollowersCommand) {
-				aQuery.iStanza.Append(_L8("<iq to='' type='get' id='exp_followers'><pubsub xmlns='http://jabber.org/protocol/pubsub#owner'><affiliations node=''/></pubsub></iq>"));
+				aQuery.iData.Append(_L8("<iq to='' type='get' id='exp_followers'><pubsub xmlns='http://jabber.org/protocol/pubsub#owner'><affiliations node=''/></pubsub></iq>"));
 				
 				if(aResultItem->GetResultType() == EExplorerItemChannel) {
-					aQuery.iStanza.Insert(116, aEncId);
+					aQuery.iData.Insert(116, aEncId);
 				}
 				else if(aResultItem->GetResultType() == EExplorerItemPerson) {
-					aQuery.iStanza.Insert(116, _L8("/user//channel"));
-					aQuery.iStanza.Insert(122, aEncId);
+					aQuery.iData.Insert(116, _L8("/user//channel"));
+					aQuery.iData.Insert(122, aEncId);
 				}
 				
-				aQuery.iStanza.Insert(8, KBuddycloudPubsubServer);
+				aQuery.iData.Insert(8, KBuddycloudPubsubServer);
 				
 				iEikonEnv->ReadResourceL(aQuery.iTitle, R_LOCALIZED_STRING_TITLE_FOLLOWEDBY);
 				aQuery.iTitle.Replace(aQuery.iTitle.Find(_L("$OBJECT")), 7, aResultItem->GetTitle().Left((aQuery.iTitle.MaxLength() - aQuery.iTitle.Length() + 7)));	
@@ -814,8 +817,8 @@ void CBuddycloudExplorerContainer::HandleCommandL(TInt aCommand) {
 				aQuery.iTitle.Replace(aQuery.iTitle.Find(_L("$USER")), 5, aResultItem->GetTitle().Left((aQuery.iTitle.MaxLength() - aQuery.iTitle.Length() + 5)));	
 			}
 			
-			if(aQuery.iStanza.Length() > 0) {
-				PushLevelL(aQuery.iTitle, aQuery.iStanza);
+			if(aQuery.iData.Length() > 0) {
+				PushLevelL(aQuery.iTitle, aQuery.iData);
 			}
 		}
 	}
@@ -823,16 +826,16 @@ void CBuddycloudExplorerContainer::HandleCommandL(TInt aCommand) {
 		CExplorerResultItem* aResultItem = iExplorerLevels[aLevel]->iResultItems[iSelectedItem];
 		
 		// Build stanza
-		TExplorerQuery aQuery = CExplorerStanzaBuilder::BuildNearbyXmppStanza(aResultItem->GetResultType(), iTextUtilities->UnicodeToUtf8L(aResultItem->GetId()));
+		TViewData aQuery = CExplorerStanzaBuilder::BuildNearbyXmppStanza(aResultItem->GetResultType(), iTextUtilities->UnicodeToUtf8L(aResultItem->GetId()));
 
 		iEikonEnv->ReadResourceL(aQuery.iTitle, R_LOCALIZED_STRING_TITLE_NEARBYTO);
 		aQuery.iTitle.Replace(aQuery.iTitle.Find(_L("$OBJECT")), 7, aResultItem->GetTitle().Left((aQuery.iTitle.MaxLength() - aQuery.iTitle.Length() + 7)));	
 		
-		PushLevelL(aQuery.iTitle, aQuery.iStanza);			
+		PushLevelL(aQuery.iTitle, aQuery.iData);			
 	}
 	else if(aCommand == EMenuSeeBeenHereCommand || aCommand == EMenuSeeGoingHereCommand) {
 		CExplorerResultItem* aResultItem = iExplorerLevels[aLevel]->iResultItems[iSelectedItem];
-		TExplorerQuery aQuery;
+		TViewData aQuery;
 		
 		if(aCommand == EMenuSeeBeenHereCommand) {
 			aQuery = CExplorerStanzaBuilder::BuildPlaceVisitorsXmppStanza(_L8("past"), aResultItem->GetItemId());
@@ -845,7 +848,7 @@ void CBuddycloudExplorerContainer::HandleCommandL(TInt aCommand) {
 		
 		aQuery.iTitle.Replace(aQuery.iTitle.Find(_L("$PLACE")), 6, aResultItem->GetTitle().Left((aQuery.iTitle.MaxLength() - aQuery.iTitle.Length() + 6)));	
 		
-		PushLevelL(aQuery.iTitle, aQuery.iStanza);			
+		PushLevelL(aQuery.iTitle, aQuery.iData);			
 	}
 	else if(aCommand == EAknSoftkeyBack) {
 		if(aLevel > 0) {
@@ -853,7 +856,16 @@ void CBuddycloudExplorerContainer::HandleCommandL(TInt aCommand) {
 		}
 		else {
 			iXmppInterface->CancelXmppStanzaAcknowledge(this);
-			iCoeEnv->AppUi()->ActivateViewL(iPrevViewId, iPrevViewMsgId, _L8(""));
+			
+			TViewReferenceBuf aViewReference;
+			aViewReference().iCallbackViewId = KExplorerViewId;
+			aViewReference().iOldViewData = iQueryReference.iNewViewData;
+			
+			if(iQueryReference.iCallbackRequested) {
+				aViewReference().iNewViewData = iQueryReference.iOldViewData;
+			}
+			
+			iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), iQueryReference.iCallbackViewId), TUid::Uid(iQueryReference.iOldViewData.iId), aViewReference);
 		}
 	}
 }
@@ -932,7 +944,7 @@ void CBuddycloudExplorerContainer::XmppStanzaAcknowledgedL(const TDesC8& aStanza
 					
 					if(!iBuddycloudLogic->IsSubscribedTo(pJid, EItemRoster)) {
 						// Sensor jid
-						for(TInt i = (pJid.Locate('@') - 1), x = (i - 2); i >= 0 && i > x; i--) {
+						for(TInt i = (pJid.Locate('@') - 1), x = (i - 2); i > 1 && i > x; i--) {
 							pJid[i] = 46;
 						}
 					}
@@ -1012,7 +1024,7 @@ void CBuddycloudExplorerContainer::XmppStanzaAcknowledgedL(const TDesC8& aStanza
 				
 				if(!iBuddycloudLogic->IsSubscribedTo(pTitle, EItemRoster)) {
 					// Sensor jid						
-					for(TInt i = (pTitle.Locate('@') - 1), x = (i - 2); i >= 0 && i > x; i--) {
+					for(TInt i = (pTitle.Locate('@') - 1), x = (i - 2); i > 1 && i > x; i--) {
 						pTitle[i] = 46;
 					}
 				}

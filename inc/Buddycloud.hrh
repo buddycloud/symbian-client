@@ -121,10 +121,8 @@ enum TSettingsAccountItems {
 enum TSettingsPreferencesItems {
 	ESettingPreferencesLanguage = 1,
 	ESettingPreferencesBlocking,
-	ESettingPreferencesAutoStart,
 	ESettingPreferencesAccessPoint,
-	ESettingPreferencesShowContacts,
-	ESettingPreferencesShowName
+	ESettingPreferencesAutoStart
 };
 
 enum TSettingsNotificationsItems {

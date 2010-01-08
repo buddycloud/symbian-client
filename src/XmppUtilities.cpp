@@ -344,7 +344,11 @@ CAtomEntryData* CXmppAtomEntryParser::XmlToAtomEntryLC(const TDesC8& aStanza, TD
 		if(aElementName.Compare(_L8("published")) == 0) {
 			aAtomEntry->SetPublishTime(CTimeUtilities::DecodeL(aXmlParser->GetStringData()));
 		}
+		else if(aElementName.Compare(_L8("in-reply-to")) == 0) {
+			aReferenceId.Copy(aXmlParser->GetStringData().Left(aReferenceId.MaxLength()));
+		}
 		else if(aElementName.Compare(_L8("headers")) == 0) {
+			// TODO: remove old format
 			while(aXmlParser->MoveToElement(_L8("header"))) {
 				TPtrC8 aAttributeName = aXmlParser->GetStringAttribute(_L8("name"));
 				
@@ -426,10 +430,10 @@ TDesC8& CXmppAtomEntryParser::AtomEntryToXmlL(CAtomEntryData* aAtomEntry, const 
 	}
 	
 	_LIT8(KAtomEntryContainer, "<entry xmlns='http://www.w3.org/2005/Atom'><published></published><author></author><content type='text'></content></entry>");
-	_LIT8(KHeaderContainer, "<headers xmlns='http://jabber.org/protocol/shim'><header name='In-Reply-To'></header></headers>");
+	_LIT8(KHeaderContainer, "<in-reply-to xmlns='http://buddycloud.com/atom-elements-0'></in-reply-to>");
 	_LIT8(KExtendedContainer, "<x id='' read='%d' star='%d' private='%d' reply='%d' icon='%d' affiliation='%d' type='%d'/>");
 	_LIT8(KAuthorNameContainer, "<name></name>");
-	_LIT8(KAuthorJidContainer, "<jid></jid>");
+	_LIT8(KAuthorJidContainer, "<jid xmlns='http://buddycloud.com/atom-elements-0'></jid>");
 	
 	TFormattedTimeDesc aFormatedTime;
 	CTimeUtilities::EncodeL(aAtomEntry->GetPublishTime(), aFormatedTime);
@@ -464,7 +468,7 @@ TDesC8& CXmppAtomEntryParser::AtomEntryToXmlL(CAtomEntryData* aAtomEntry, const 
 	
 	if(aAtomAuthorJid->Des().Length() > 0) {
 		aXml.Insert(74, KAuthorJidContainer);
-		aXml.Insert(74 + 5, *aAtomAuthorJid);
+		aXml.Insert(74 + 51, *aAtomAuthorJid);
 	}
 	
 	if(aAtomAuthorName->Des().Length() > 0) {
@@ -474,7 +478,7 @@ TDesC8& CXmppAtomEntryParser::AtomEntryToXmlL(CAtomEntryData* aAtomEntry, const 
 	
 	if(aReferenceId.Length() > 0) {
 		aXml.Insert(66, KHeaderContainer);
-		aXml.Insert(66 + 76, aReferenceId);	
+		aXml.Insert(66 + 59, aReferenceId);	
 	}
 	
 	aXml.Insert(54, aFormatedTime);

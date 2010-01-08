@@ -513,6 +513,8 @@ void CDiscussion::ParseEntryForLinksL(CAtomEntryData* aEntry) {
 }
 
 void CDiscussion::EntryRead(CAtomEntryData* aEntry) {
+	TInt aLastUnread = iUnreadEntries;
+	
 	iLastUpdate.UniversalTime();
 
 	if(!aEntry->Read()) {
@@ -527,7 +529,7 @@ void CDiscussion::EntryRead(CAtomEntryData* aEntry) {
 		iUnreadEntries = 0;
 		iUnreadReplies = 0;
 		
-		if(iDiscussionReadObserver) {
+		if(iDiscussionReadObserver && aLastUnread != iUnreadEntries) {
 			iDiscussionReadObserver->DiscussionRead(*iDiscussionId, iItemId);
 		}
 	}

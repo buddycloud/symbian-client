@@ -1,37 +1,28 @@
 /*
 ============================================================================
- Name        : BuddycloudEditChannelView.h
+ Name        : BuddycloudChannelInfoView.h
  Author      : Ross Savage
- Copyright   : Buddycloud 2009
- Description : Declares Edit Channel View
+ Copyright   : Buddycloud 2010
+ Description : Declares Channel Info View
 ============================================================================
 */
 
-#ifndef BUDDYCLOUDEDITCHANNELVIEW_H_
-#define BUDDYCLOUDEDITCHANNELVIEW_H_
+#ifndef BUDDYCLOUDCHANNELINFOVIEW_H_
+#define BUDDYCLOUDCHANNELINFOVIEW_H_
 
 // INCLUDES
 #include <aknview.h>
 #include <coecobs.h>
 #include "BuddycloudConstants.h"
+#include "BuddycloudChannelInfoContainer.h"
 #include "BuddycloudLogic.h"
 #include "ViewReference.h"
 
-// FORWARD DECLARATIONS
-class CBuddycloudEditChannelList;
-
-/*
-----------------------------------------------------------------------------
---
--- CBuddycloudEditChannelView
---
-----------------------------------------------------------------------------
-*/
-
-class CBuddycloudEditChannelView : public CAknView {
+// CLASS DECLARATION
+class CBuddycloudChannelInfoView : public CAknView {
 	public: // Constructors and destructor
 		void ConstructL(CBuddycloudLogic* aBuddycloudLogic);
-		~CBuddycloudEditChannelView();
+		~CBuddycloudChannelInfoView();
 
 	public: // Functions from base classes
 		TUid Id() const;
@@ -43,14 +34,11 @@ class CBuddycloudEditChannelView : public CAknView {
 		void DoDeactivate();
 
 	private: // Data
-		CBuddycloudEditChannelList* iList;
-
+		CBuddycloudChannelInfoContainer* iContainer;		
 		CBuddycloudLogic* iBuddycloudLogic;
 		
 		TUid iPrevViewId;
 		TViewData iPrevViewData;
 };
 
-#endif
-
-// End of File
+#endif /* BUDDYCLOUDCHANNELINFOVIEW_H_ */

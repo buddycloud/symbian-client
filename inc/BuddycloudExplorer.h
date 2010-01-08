@@ -16,6 +16,7 @@
 #include <e32base.h>
 #include "BuddycloudList.h"
 #include "GeolocData.h"
+#include "ViewReference.h"
 
 /*
 ----------------------------------------------------------------------------
@@ -41,25 +42,6 @@ enum TExplorerState {
 /*
 ----------------------------------------------------------------------------
 --
--- TExplorerQuery
---
-----------------------------------------------------------------------------
-*/
-
-const TInt KExplorerMaxTitleSize  = 128;
-const TInt KExplorerMaxStanzaSize = 512;
-	
-class TExplorerQuery {
-	public:
-		TBuf<KExplorerMaxTitleSize> iTitle;
-		TBuf8<KExplorerMaxStanzaSize> iStanza;
-};
-
-typedef TPckg<TExplorerQuery> TExplorerQueryPckg;
-
-/*
-----------------------------------------------------------------------------
---
 -- CExplorerStanzaBuilder
 --
 ----------------------------------------------------------------------------
@@ -68,14 +50,14 @@ typedef TPckg<TExplorerQuery> TExplorerQueryPckg;
 class CExplorerStanzaBuilder {
 	public:
 		// Nearby stanzas
-		static TExplorerQuery BuildNearbyXmppStanza(TExplorerItemType aType, const TDesC8& aReferenceId, TInt aOptionsLimit = 10);
-		static TExplorerQuery BuildNearbyXmppStanza(TReal aPointLatitude, TReal aPointLongitude, TInt aOptionsLimit = 10);
+		static TViewData BuildNearbyXmppStanza(TExplorerItemType aType, const TDesC8& aReferenceId, TInt aOptionsLimit = 10);
+		static TViewData BuildNearbyXmppStanza(TReal aPointLatitude, TReal aPointLongitude, TInt aOptionsLimit = 10);
 
 		// Channels stanzas
-		static TExplorerQuery BuildChannelsXmppStanza(const TDesC8& aSubject, TExplorerChannelRole aRole, TInt aOptionsLimit = 0);
+		static TViewData BuildChannelsXmppStanza(const TDesC8& aSubject, TExplorerChannelRole aRole, TInt aOptionsLimit = 0);
 
 		// Place stanzas
-		static TExplorerQuery BuildPlaceVisitorsXmppStanza(const TDesC8& aNode, TInt aPlaceId);
+		static TViewData BuildPlaceVisitorsXmppStanza(const TDesC8& aNode, TInt aPlaceId);
 };
 
 /*

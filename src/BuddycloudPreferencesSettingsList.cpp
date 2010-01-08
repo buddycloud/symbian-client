@@ -107,14 +107,11 @@ CAknSettingItem* CBuddycloudPreferencesSettingsList::CreateSettingItemL (TInt aI
 		case ESettingPreferencesBlocking:
 			aSettingItem = new (ELeave) CAknBinaryPopupSettingItem(aIdentifier, iBuddycloudLogic->GetBoolSetting(ESettingItemMessageBlocking));
 			break;
-		case ESettingPreferencesAutoStart:
-			aSettingItem = new (ELeave) CAknBinaryPopupSettingItem(aIdentifier, iBuddycloudLogic->GetBoolSetting(ESettingItemAutoStart));
-			break;
 		case ESettingPreferencesAccessPoint:
 			aSettingItem = new (ELeave) CAknBinaryPopupSettingItem(aIdentifier, iBuddycloudLogic->GetBoolSetting(ESettingItemAccessPoint));
 			break;
-		case ESettingPreferencesShowName:
-			aSettingItem = new (ELeave) CAknBinaryPopupSettingItem(aIdentifier, iBuddycloudLogic->GetBoolSetting(ESettingItemShowName));
+		case ESettingPreferencesAutoStart:
+			aSettingItem = new (ELeave) CAknBinaryPopupSettingItem(aIdentifier, iBuddycloudLogic->GetBoolSetting(ESettingItemAutoStart));
 			break;
 		default:
 			break;

@@ -1,6 +1,22 @@
 Change Log
 ==========
 
+0.05.18
+
+- Publish users full name into atom entries
+- Fix jid sensoring to always show the first two characters of a jid (eg. ab@domain is not sensored)
+- [bug] In discussion manager don't notify an already read entry deletion
+- Collect mood & geo nodes when following a new contact
+- Implementation of basic CBuddycloudChannelInfoView & CBuddycloudChannelInfoContainer
+- Implementation of a new View Referencing system to be able to traverse forward & back views
+- Remove manual collection of pubsub data (should be always pushed)
+- Change the atom entry in-reply-to format & update corrected namespaces
+
+0.05.17
+
+- [bug] Avoid a double collection of node data after a reset or new/clean install
+- [bug] Clear stored broad location & last node id received on reset
+
 0.05.16
 
 - Remove domain name from /me posts

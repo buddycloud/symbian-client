@@ -49,23 +49,38 @@ void CBuddycloudEditChannelView::HandleCommandL(TInt aCommand) {
 	else if(aCommand == EMenuHelpCommand) {
 		AppUi()->HandleCommandL(aCommand);
 	}
-	else if(aCommand == EAknSoftkeyDone) {
-		TInt aItemId = iList->SaveChannelDataL();
-		
-		AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KFollowingViewId), TUid::Uid(aItemId), _L8(""));
-	}
-	else if(aCommand == EAknSoftkeyCancel) {				
-		AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KChannelsViewId));
+	else if(aCommand == EAknSoftkeyDone || aCommand == EAknSoftkeyCancel) {
+		TViewReferenceBuf aViewReference;
+		TInt aItemId = 0;
+	
+		if(aCommand == EAknSoftkeyDone && (aItemId = iList->SaveChannelDataL()) > 0) {
+			// Channel created
+			aViewReference().iCallbackViewId = iPrevViewId;
+			aViewReference().iOldViewData = iPrevViewData;
+			aViewReference().iNewViewData.iId = aItemId;
+				
+			iPrevViewId = KMessagingViewId;
+			iPrevViewData.iId = aItemId;
+		}
+		else {
+			aViewReference().iCallbackViewId = KEditChannelViewId;
+			aViewReference().iNewViewData = iPrevViewData;
+		}
+			
+		AppUi()->ActivateLocalViewL(iPrevViewId, TUid::Uid(iPrevViewData.iId), aViewReference);
 	}
 }
 
-void CBuddycloudEditChannelView::DoActivateL(const TVwsViewId& aPrevViewId, TUid aCustomMessageId, const TDesC8& /*aCustomMessage*/) {
-	if (!iList) {
-		iPrevViewId = aPrevViewId;
-		iPrevViewMessageId = aCustomMessageId;
+void CBuddycloudEditChannelView::DoActivateL(const TVwsViewId& /*aPrevViewId*/, TUid /*aCustomMessageId*/, const TDesC8& aCustomMessage) {
+	if(!iList) {
+		TViewReferenceBuf aViewReference;
+		aViewReference.Copy(aCustomMessage);
 		
-		iList = new (ELeave) CBuddycloudEditChannelList;
-		iList->ConstructL(ClientRect(), iBuddycloudLogic, aCustomMessageId.iUid);
+		iPrevViewId = aViewReference().iCallbackViewId;
+		iPrevViewData = aViewReference().iOldViewData;
+		
+		iList = new (ELeave) CBuddycloudEditChannelList(iBuddycloudLogic);
+		iList->ConstructL(ClientRect(), aViewReference().iNewViewData);
 		iList->SetMopParent(this);
 
 		TResourceReader aReader;
@@ -79,7 +94,7 @@ void CBuddycloudEditChannelView::DoActivateL(const TVwsViewId& aPrevViewId, TUid
 }
 
 void CBuddycloudEditChannelView::DoDeactivate() {
-	if (iList) {
+	if(iList) {
 		AppUi()->RemoveFromViewStack(*this, iList);
 		delete iList;
 		iList = NULL;

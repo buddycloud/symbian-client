@@ -124,25 +124,6 @@ void CFollowingChannelItem::SetPubsubAffiliation(TXmppPubsubAffiliation aPubsubA
 	iPubsubAffiliation = aPubsubAffiliation;
 }
 
-TInt CFollowingChannelItem::GetRank() {
-	return iRank;
-}
-
-TInt CFollowingChannelItem::GetRankShift() {
-	return iRankShift;
-}
-
-void CFollowingChannelItem::SetRank(TInt aRank, TInt aShift) {
-	if(aShift != 0) {
-		iRankShift = aShift;
-	}
-	else if(iRank != 0 && iRank != aRank) {
-		iRankShift = iRank - aRank;
-	}
-	
-	iRank = aRank;
-}
-
 void CFollowingChannelItem::SetUnreadData(MDiscussionUnreadData* aUnreadData, TIdType /*aType*/) {
 	iChannelUnreadData = aUnreadData;
 }
@@ -200,7 +181,6 @@ CFollowingRosterItem::CFollowingRosterItem() {
 	iIconId = KIconPerson;
 
 	iSubscription = EPresenceSubscriptionUnknown;
-	iPubsubCollected = false;
 }
 
 void CFollowingRosterItem::ConstructL() {
@@ -259,14 +239,6 @@ TPresenceSubscription CFollowingRosterItem::GetSubscription() {
 
 void CFollowingRosterItem::SetSubscription(TPresenceSubscription aSubscription) {
 	iSubscription = aSubscription;
-}
-
-TBool CFollowingRosterItem::PubsubCollected() {
-	return iPubsubCollected;
-}
-
-void CFollowingRosterItem::SetPubsubCollected(TBool aCollected) {
-	iPubsubCollected = aCollected;
 }
 
 CGeolocData* CFollowingRosterItem::GetGeolocItem(TGeolocItemType aGeolocItem) {

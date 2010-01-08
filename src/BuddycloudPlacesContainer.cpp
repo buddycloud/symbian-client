@@ -19,6 +19,7 @@
 #include "Buddycloud.hlp.hrh"
 #include "BuddycloudPlacesContainer.h"
 #include "BuddycloudExplorer.h"
+#include "ViewReference.h"
 
 /*
 ----------------------------------------------------------------------------
@@ -818,20 +819,33 @@ void CBuddycloudPlacesContainer::HandleCommandL(TInt aCommand) {
 
 		if(aPlace) {
 			CGeolocData* aGeoloc = aPlace->GetGeoloc();
-			TExplorerQuery aQuery = CExplorerStanzaBuilder::BuildNearbyXmppStanza(aGeoloc->GetReal(EGeolocLatitude), aGeoloc->GetReal(EGeolocLongitude));
+			
+			TViewReferenceBuf aViewReference;
+			aViewReference().iCallbackViewId = KPlacesViewId;
+			aViewReference().iOldViewData.iId = iSelectedItem;
+			
+			// Query		
+			TViewData aQuery = CExplorerStanzaBuilder::BuildNearbyXmppStanza(aGeoloc->GetReal(EGeolocLatitude), aGeoloc->GetReal(EGeolocLongitude));
 
 			iEikonEnv->ReadResourceL(aQuery.iTitle, R_LOCALIZED_STRING_TITLE_NEARBYTO);
 			aQuery.iTitle.Replace(aQuery.iTitle.Find(_L("$OBJECT")), 7, aGeoloc->GetString(EGeolocText).Left((aQuery.iTitle.MaxLength() - aQuery.iTitle.Length() + 7)));		
-			TExplorerQueryPckg aQueryPckg(aQuery);		
-			iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KExplorerViewId), TUid::Uid(iSelectedItem), aQueryPckg);		
+			
+			aViewReference().iNewViewData = aQuery;
+
+			iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KExplorerViewId), TUid::Uid(iSelectedItem), aViewReference);		
 		}
 	}
 	else if(aCommand == EMenuSeeBeenHereCommand || aCommand == EMenuSeeGoingHereCommand) {
 		CBuddycloudExtendedPlace* aPlace = static_cast <CBuddycloudExtendedPlace*> (iPlaceStore->GetItemById(iSelectedItem));
 
 		if(aPlace) {
-			TExplorerQuery aQuery;
+			TViewReferenceBuf aViewReference;
+			aViewReference().iCallbackViewId = KPlacesViewId;
+			aViewReference().iOldViewData.iId = iSelectedItem;
 			
+			// Query
+			TViewData aQuery;
+
 			if(aCommand == EMenuSeeBeenHereCommand) {
 				aQuery = CExplorerStanzaBuilder::BuildPlaceVisitorsXmppStanza(_L8("past"), aPlace->GetItemId());
 				iEikonEnv->ReadResourceL(aQuery.iTitle, R_LOCALIZED_STRING_TITLE_WHOSBEENTO);
@@ -843,8 +857,9 @@ void CBuddycloudPlacesContainer::HandleCommandL(TInt aCommand) {
 			
 			aQuery.iTitle.Replace(aQuery.iTitle.Find(_L("$PLACE")), 6, aPlace->GetGeoloc()->GetString(EGeolocText).Left((aQuery.iTitle.MaxLength() - aQuery.iTitle.Length() + 6)));		
 			
-			TExplorerQueryPckg aQueryPckg(aQuery);		
-			iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KExplorerViewId), TUid::Uid(iSelectedItem), aQueryPckg);	
+			aViewReference().iNewViewData = aQuery;
+			
+			iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KExplorerViewId), TUid::Uid(iSelectedItem), aViewReference);	
 		}
 	}
 }

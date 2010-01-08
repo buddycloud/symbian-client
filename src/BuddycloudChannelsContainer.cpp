@@ -33,7 +33,10 @@ void CBuddycloudChannelsContainer::ConstructL(const TRect& aRect) {
 	iRect = aRect;
 	CreateWindowL();
 	
-	SetPrevView(TVwsViewId(TUid::Uid(APPUID), KPlacesViewId), TUid::Uid(0));
+	if(!iQueryReference.iCallbackRequested) {
+		iQueryReference.iCallbackViewId = KPlacesViewId;
+		iQueryReference.iOldViewData.iId = 0;
+	}
 
 	// Tabs
 	iNaviPane = (CAknNavigationControlContainer*) iEikonEnv->AppUiFactory()->StatusPane()->ControlL(TUid::Uid(EEikStatusPaneUidNavi));

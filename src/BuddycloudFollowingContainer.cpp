@@ -26,7 +26,7 @@
 #include "Buddycloud.hlp.hrh"
 #include "BuddycloudExplorer.h"
 #include "BuddycloudFollowingContainer.h"
-#include "BuddycloudMessagingContainer.h"
+#include "ViewReference.h"
 
 // ================= MEMBER FUNCTIONS =======================
 
@@ -465,7 +465,6 @@ void CBuddycloudFollowingContainer::RenderListItems() {
 	iBufferGc->SetBrushStyle(CGraphicsContext::ESolidBrush);
 
 	if(iItemStore->Count() > 0 && iTotalListSize > 0) {
-		TBool aDynamicContentRequested = false;
 		TInt aItemSize = 0;
 		
 #ifdef __SERIES60_40__
@@ -625,12 +624,6 @@ void CBuddycloudFollowingContainer::RenderListItems() {
 										iBufferGc->DiscardFont();
 									}
 								}
-								
-								// Request pubsub if not collected
-								if( !aDynamicContentRequested && !aRosterItem->PubsubCollected() ) {
-									iBuddycloudLogic->RecollectFollowerDetailsL(aRosterItem->GetItemId());
-									aDynamicContentRequested = true;
-								}
 							}							
 						}
 						else {
@@ -689,28 +682,14 @@ void CBuddycloudFollowingContainer::RenderListItems() {
 							if(aItem->GetItemType() == EItemRoster) {
 								CFollowingRosterItem* aRosterItem = static_cast <CFollowingRosterItem*> (aItem);
 								
-								if(!aRosterItem->PubsubCollected()) {
-									iBufferGc->SetPenColor(iColourTextSelectedTrans);
-								}
-								
 								// Current place
 								if(aRosterItem->GetGeolocItem(EGeolocItemCurrent)->GetString(EGeolocText).Length() > 0) {
-									if( !aRosterItem->PubsubCollected() ) {
-										iBufferGc->SetPenColor(iColourTextTrans);
-									}
-	
 									iBufferGc->UseFont(i10NormalFont);
 									aItemDrawPos += i10BoldFont->FontMaxDescent();
 									aItemDrawPos += i10NormalFont->HeightInPixels();
 									aDirectionalText.Set(iTextUtilities->BidiLogicalToVisualL(aRosterItem->GetGeolocItem(EGeolocItemCurrent)->GetString(EGeolocText)));
 									iBufferGc->DrawText(aDirectionalText, TPoint(iLeftBarSpacer + iUnselectedItemIconTextOffset, aItemDrawPos));
 									iBufferGc->DiscardFont();
-								}
-								
-								// Request pubsub if not collected
-								if(!aDynamicContentRequested && !aRosterItem->PubsubCollected()) {
-									iBuddycloudLogic->RecollectFollowerDetailsL(aRosterItem->GetItemId());
-									aDynamicContentRequested = true;
 								}
 							}
 						}
@@ -1076,20 +1055,18 @@ void CBuddycloudFollowingContainer::HandleCommandL(TInt aCommand) {
 		CFollowingItem* aItem = static_cast <CFollowingItem*> (iItemStore->GetItemById(iSelectedItem));
 
 		if(aItem) {
-			TMessagingViewObject aObject;			
-			aObject.iFollowerId = iSelectedItem;
-			aObject.iTitle.Append(aItem->GetTitle());
-			aObject.iId.Append(aItem->GetId());
+			TViewReferenceBuf aViewReference;	
+			aViewReference().iNewViewData.iId = iSelectedItem;
+			aViewReference().iNewViewData.iTitle.Copy(aItem->GetTitle());
+			aViewReference().iNewViewData.iData.Copy(aItem->GetId());
 			
 			if(aCommand == EMenuPrivateMessagesCommand) {
 				// Private messages
-				CFollowingRosterItem* aRosterItem = static_cast <CFollowingRosterItem*> (aItem);
-				
-				aObject.iId.Copy(aRosterItem->GetId());
+				CFollowingRosterItem* aRosterItem = static_cast <CFollowingRosterItem*> (aItem);			
+				aViewReference().iNewViewData.iData.Copy(aRosterItem->GetId());
 			}
-			
-			TMessagingViewObjectPckg aObjectPckg(aObject);		
-			iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KMessagingViewId), TUid::Uid(iSelectedItem), aObjectPckg);			
+
+			iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KMessagingViewId), TUid::Uid(iSelectedItem), aViewReference);					
 		}
 	}
 	else if(aCommand == EMenuGetPlaceInfoCommand) {
@@ -1135,43 +1112,14 @@ void CBuddycloudFollowingContainer::HandleCommandL(TInt aCommand) {
 		CFollowingItem* aItem = static_cast <CFollowingItem*> (iItemStore->GetItemById(iSelectedItem));
 
 		if(aItem && aItem->GetItemType() >= EItemRoster) {
-			_LIT(KChannelName, "#\n");
-			_LIT(KChannelRank, ": %d (%d)");
-			HBufC* aRankResource = iEikonEnv->AllocReadResourceLC(R_LOCALIZED_STRING_NOTE_CHANNELRANK);
-			TPtrC pRankResource(aRankResource->Des());
-			
-			CFollowingChannelItem* aChannelItem = static_cast <CFollowingChannelItem*> (aItem);
-			TPtrC pChannelName(aChannelItem->GetId());
-			TInt aLocate = pChannelName.Locate('@');
-			
-			if(aLocate != KErrNotFound) {
-				pChannelName.Set(pChannelName.Left(aLocate));
-			}
-			
-			HBufC* aMessage = HBufC::NewLC(KChannelName().Length() + pChannelName.Length() + pRankResource.Length() + KChannelRank().Length() + 32);
-			TPtr pMessage(aMessage->Des());
-			pMessage.Append(pRankResource);
-			pMessage.AppendFormat(KChannelRank(), aChannelItem->GetRank(), aChannelItem->GetRankShift());
-			
-			if(aItem->GetItemType() == EItemChannel) {
-				pMessage.Insert(0, KChannelName);
-				pMessage.Insert(1, pChannelName);
-			}
-			
-			if(aChannelItem->GetRankShift() > 0 && (aLocate = pMessage.Locate('(')) != KErrNotFound) {
-				pMessage.Insert(aLocate + 1, _L("+"));
-			}
-			
-			// Prepare dialog
-			CAknMessageQueryDialog* aDialog = new (ELeave) CAknMessageQueryDialog();
-			aDialog->PrepareLC(R_ABOUT_DIALOG);				
-			aDialog->SetHeaderText(aChannelItem->GetTitle());
-			aDialog->SetMessageText(pMessage);
-			
-			// Show dialog
-			aDialog->RunLD();			
-			
-			CleanupStack::PopAndDestroy(2); // aMessage, aRankResource
+			TViewReferenceBuf aViewReference;	
+			aViewReference().iCallbackRequested = true;
+			aViewReference().iCallbackViewId = KFollowingViewId;
+			aViewReference().iOldViewData.iId = iSelectedItem;
+			aViewReference().iNewViewData.iTitle.Copy(aItem->GetTitle());
+			aViewReference().iNewViewData.iData.Copy(aItem->GetId());
+
+			iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KChannelInfoViewId), TUid::Uid(0), aViewReference);			
 		}
 	}
 	else if(aCommand == EMenuAcceptCommand) {
@@ -1205,14 +1153,19 @@ void CBuddycloudFollowingContainer::HandleCommandL(TInt aCommand) {
 		CFollowingItem* aItem = static_cast <CFollowingItem*> (iItemStore->GetItemById(iSelectedItem));
 
 		if(aItem && aItem->GetItemType() >= EItemRoster) {
-			TExplorerQuery aQuery;
+			TViewReferenceBuf aViewReference;
+			aViewReference().iCallbackViewId = KFollowingViewId;
+			aViewReference().iOldViewData.iId = iSelectedItem;
+			
+			// Query
+			TViewData aQuery;
 			
 			if(aItem->GetItemType() == EItemChannel || (aItem->GetItemType() == EItemRoster && aCommand == EMenuSeeFollowersCommand)) {
 				TPtrC8 aEncId = iTextUtilities->UnicodeToUtf8L(aItem->GetId());
 				
-				aQuery.iStanza.Append(_L8("<iq to='' type='get' id='exp_followers'><pubsub xmlns='http://jabber.org/protocol/pubsub#owner'><affiliations node=''/></pubsub></iq>"));
-				aQuery.iStanza.Insert(116, aEncId);
-				aQuery.iStanza.Insert(8, KBuddycloudPubsubServer);
+				aQuery.iData.Append(_L8("<iq to='' type='get' id='exp_followers'><pubsub xmlns='http://jabber.org/protocol/pubsub#owner'><affiliations node=''/></pubsub></iq>"));
+				aQuery.iData.Insert(116, aEncId);
+				aQuery.iData.Insert(8, KBuddycloudPubsubServer);
 				
 				iEikonEnv->ReadResourceL(aQuery.iTitle, R_LOCALIZED_STRING_TITLE_FOLLOWEDBY);
 				aQuery.iTitle.Replace(aQuery.iTitle.Find(_L("$OBJECT")), 7, aItem->GetTitle());
@@ -1233,17 +1186,22 @@ void CBuddycloudFollowingContainer::HandleCommandL(TInt aCommand) {
 				aQuery.iTitle.Replace(aQuery.iTitle.Find(_L("$USER")), 5, aItem->GetTitle());
 			}
 						
-			TExplorerQueryPckg aQueryPckg(aQuery);		
-			iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KExplorerViewId), TUid::Uid(iSelectedItem), aQueryPckg);		
+			aViewReference().iNewViewData = aQuery;
+			
+			iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KExplorerViewId), TUid::Uid(0), aViewReference);		
 		}
 	}
 	else if(aCommand == EMenuSeeNearbyCommand) {
 		CFollowingItem* aItem = static_cast <CFollowingItem*> (iItemStore->GetItemById(iSelectedItem));
 
 		if(aItem) {
-			TExplorerQuery aQuery;
+			TViewReferenceBuf aViewReference;
+			aViewReference().iCallbackViewId = KFollowingViewId;
+			aViewReference().iOldViewData.iId = iSelectedItem;
 			
-			// Build stanza
+			// Query
+			TViewData aQuery;
+
 			if(aItem->GetItemType() == EItemRoster) {
 				CFollowingRosterItem* aRosterItem = static_cast <CFollowingRosterItem*> (aItem);
 				
@@ -1253,12 +1211,12 @@ void CBuddycloudFollowingContainer::HandleCommandL(TInt aCommand) {
 				aQuery = CExplorerStanzaBuilder::BuildNearbyXmppStanza(EExplorerItemChannel, iTextUtilities->UnicodeToUtf8L(aItem->GetId()));
 			}
 			
-			// Add title
 			iEikonEnv->ReadResourceL(aQuery.iTitle, R_LOCALIZED_STRING_TITLE_NEARBYTO);
 			aQuery.iTitle.Replace(aQuery.iTitle.Find(_L("$OBJECT")), 7, aItem->GetTitle());
 			
-			TExplorerQueryPckg aQueryPckg(aQuery);		
-			iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KExplorerViewId), TUid::Uid(iSelectedItem), aQueryPckg);		
+			aViewReference().iNewViewData = aQuery;
+			
+			iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KExplorerViewId), TUid::Uid(0), aViewReference);		
 		}
 	}
 }

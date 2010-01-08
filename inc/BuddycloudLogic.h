@@ -73,8 +73,7 @@ enum TBuddycloudLogicNotificationType {
 	ENotificationMessageNotifiedEvent, ENotificationMessageSilentEvent, 
 	ENotificationEditPlaceRequested, ENotificationEditPlaceCompleted, 
 	ENotificationActivityChanged, ENotificationConnectivityChanged, 
-	ENotificationAuthenticationFailed, ENotificationServerResolveFailed,
-	ENotificationEditChannelRequested
+	ENotificationAuthenticationFailed, ENotificationServerResolveFailed
 };
 
 enum TBuddycloudLogicTimeoutState {
@@ -197,14 +196,12 @@ class CBuddycloudLogic : public CBase, MLocationEngineNotification, MTimeInterfa
 		
 		void SendSmsOrEmailL(TDesC& aAddress, TDesC& aSubject, TDesC& aBody);
 		
-	public: // Friends
+	public: // Sending to external
 		void SendInviteL(TInt aFollowerId);
 		void SendPlaceL(TInt aFollowerId);
 		
-	public: // Follow & pubsub collect
+	public: // Follow contact
 		void FollowContactL(const TDesC& aContact);
-		
-		void RecollectFollowerDetailsL(TInt aFollowerId);
 
 	private: // Pubsub
 		void SendPresenceToPubsubL();
@@ -216,8 +213,8 @@ class CBuddycloudLogic : public CBase, MLocationEngineNotification, MTimeInterfa
 		void CollectUsersPubsubNodeSubscribersL();
 		void ProcessUsersPubsubNodeSubscribersL(const TDesC8& aStanza);
 		
-		void CollectLastPubsubNodeItemsL(const TDesC& aNode, const TDesC8& aLastIdReceived);		
-		void CollectUserPubsubNodeL(const TDesC& aJid, const TDesC& aNodeLeaf);
+		void CollectLastPubsubNodeItemsL(const TDesC& aNode, const TDesC8& aHistoryAfterItem);		
+		void CollectUserPubsubNodeL(const TDesC& aJid, const TDesC& aNodeLeaf, const TDesC8& aHistoryAfterItem = KNullDesC8);
 		
 		void CollectChannelMetadataL(const TDesC& aNode);
 		void ProcessChannelMetadataL(const TDesC8& aStanza);
@@ -238,10 +235,8 @@ class CBuddycloudLogic : public CBase, MLocationEngineNotification, MTimeInterfa
     	void FlagPostAbusiveL(const TDesC& aNode, const TDesC8& aNodeItemId);
 	
 	public: // Channels
-		void FollowChannelL(const TDesC& aNode);
+		TInt FollowChannelL(const TDesC& aNode);
 		void UnfollowChannelL(TInt aItemId);
-		
-		void PublishChannelMetadataL(TInt aItemId);
 		
 		TInt CreateChannelL(CFollowingChannelItem* aChannelItem);
 
@@ -269,8 +264,6 @@ class CBuddycloudLogic : public CBase, MLocationEngineNotification, MTimeInterfa
 		void LoadSettingsAndItems();
 		void LoadSettingsAndItemsL();
 		void SaveSettingsAndItemsL();
-
-		void AddChannelItemL(TPtrC aId, TPtrC aName, TPtrC aTopic, TInt aRank = 0);
 
 		void LoadPlaceItems();
 		void LoadPlaceItemsL();

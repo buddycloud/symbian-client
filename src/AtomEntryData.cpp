@@ -134,24 +134,12 @@ TDesC& CAtomEntryData::GetAuthorJid() {
 	return iNullString;	
 }
 
-void CAtomEntryData::SetAuthorJidL(const TDesC& aAuthorJid, TBool aSensor) {
+void CAtomEntryData::SetAuthorJidL(const TDesC& aAuthorJid) {
 	if(iAuthorJid) {
 		delete iAuthorJid;
 	}
 	
 	iAuthorJid = aAuthorJid.AllocL();
-	
-	if(GetAuthorName().Length() == 0) {
-		SetAuthorNameL(aAuthorJid);
-		
-		if(aSensor) {
-			TPtr aAuthorName(iAuthorName->Des());
-			
-			for(TInt i = (aAuthorName.Locate('@') - 1), x = (i - 2); i >= 0 && i > x; i--) {
-				aAuthorName[i] = 46;
-			}
-		}
-	}
 }
 
 TXmppPubsubAffiliation CAtomEntryData::GetAuthorAffiliation() {
@@ -189,7 +177,7 @@ void CAtomEntryData::SetContentL(const TDesC& aContent, TEntryContentType aEntry
 			// Is a /me post
 			iEntryType = EEntryContentAction;
 			
-			TPtrC aAuthorName(iAuthorName->Des());
+			TPtrC aAuthorName(iAuthorJid->Des());
 			TInt aLocate = aAuthorName.Locate('@');
 			
 			if(aLocate != KErrNotFound) {

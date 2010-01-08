@@ -16,6 +16,7 @@
 #include <akntabobserver.h>
 #include "BuddycloudListComponent.h"
 #include "BuddycloudExplorer.h"
+#include "ViewReference.h"
 #include "XmppInterfaces.h"
 
 /*
@@ -30,11 +31,8 @@ class CBuddycloudExplorerContainer : public CBuddycloudListComponent, public MAk
 	
 	public: // Constructors and destructor
 		CBuddycloudExplorerContainer(MViewAccessorObserver* aViewAccessor, CBuddycloudLogic* aBuddycloudLogic);
-		void ConstructL(const TRect& aRect, TExplorerQuery aQuery);
+		void ConstructL(const TRect& aRect, TViewReference aQueryReference);
         ~CBuddycloudExplorerContainer();
-        
-	public:
-		void SetPrevView(const TVwsViewId& aViewId, TUid aViewMsgId);
 
 	public: // From MBuddycloudLogicNotificationObserver
 		void NotificationEvent(TBuddycloudLogicNotificationType aEvent, TInt aId = KErrNotFound);
@@ -74,6 +72,8 @@ class CBuddycloudExplorerContainer : public CBuddycloudListComponent, public MAk
 	protected: // Variables
 		MXmppWriteInterface* iXmppInterface;
 		
+		TViewReference iQueryReference;
+		
 		// Tabs
 		CAknNavigationControlContainer* iNaviPane;
 		CAknNavigationDecorator* iNaviDecorator;
@@ -81,10 +81,6 @@ class CBuddycloudExplorerContainer : public CBuddycloudListComponent, public MAk
 		
 		// Strings
 		HBufC* iLocalizedRank;
-		
-		// Previous view
-		TVwsViewId iPrevViewId;
-		TUid iPrevViewMsgId;
 		
 		// Query/result management
 		TExplorerState iExplorerState;

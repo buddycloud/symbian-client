@@ -19,8 +19,6 @@
 #include "GeolocData.h"
 #include "XmppConstants.h"
 
-const TInt KEditingNewChannelId = -9999;
-
 /*
 ----------------------------------------------------------------------------
 --
@@ -115,11 +113,6 @@ class CFollowingChannelItem : public CFollowingItem {
 		void SetPubsubAffiliation(TXmppPubsubAffiliation aPubsubAffiliation);
 		
 	public:
-		TInt GetRank();
-		TInt GetRankShift();
-		void SetRank(TInt aRank, TInt aShift = 0);
-		
-	public:
 		void SetUnreadData(MDiscussionUnreadData* aUnreadData, TIdType aType = EIdChannel);
 		
 	public:
@@ -132,9 +125,6 @@ class CFollowingChannelItem : public CFollowingItem {
 		TXmppPubsubAccessModel iAccessModel;
 		TXmppPubsubSubscription iPubsubSubscription;
 		TXmppPubsubAffiliation iPubsubAffiliation;
-		
-		TInt iRank;
-		TInt iRankShift;
 };
 
 /*
@@ -171,9 +161,6 @@ class CFollowingRosterItem : public CFollowingChannelItem {
 		void SetSubscription(TPresenceSubscription aSubscription);
 
 	public:
-		TBool PubsubCollected();
-		void SetPubsubCollected(TBool aCollected);
-
 		CGeolocData* GetGeolocItem(TGeolocItemType aGeolocItem);
 		void SetGeolocItemL(TGeolocItemType aGeolocItem, CGeolocData* aGeoloc);
 		
@@ -189,7 +176,6 @@ class CFollowingRosterItem : public CFollowingChannelItem {
 		HBufC* iJid;
 
 		TBool iOwnItem;
-		TBool iPubsubCollected;		
 		
 		TPresenceSubscription iSubscription;
 		TPresenceState iPresence;

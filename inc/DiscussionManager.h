@@ -90,6 +90,12 @@ class MDiscussionUpdateObserver {
 
 class MDiscussionUnreadData {
 	public:
+		MDiscussionUnreadData() {
+			iUnreadEntries = 0;
+			iUnreadReplies = 0;
+		}
+	
+	public:
 		TInt iUnreadEntries;
 		TInt iUnreadReplies;
 };

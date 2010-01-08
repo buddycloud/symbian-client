@@ -15,7 +15,7 @@
 #include <Buddycloud_lang.rsg>
 #include "BuddycloudMessagingView.h"
 #include "BuddycloudMessagingContainer.h"
-
+#include "ViewReference.h"
 
 // ================= MEMBER FUNCTIONS =======================
 
@@ -67,24 +67,25 @@ void CBuddycloudMessagingView::OfferToolbarEventL(TInt aCommandId) {
 
 void CBuddycloudMessagingView::DoActivateL(const TVwsViewId& /*aPrevViewId*/, TUid aCustomMessageId, const TDesC8& aCustomMessage) {
 	if (!iContainer) {
-		TMessagingViewObject aObject;
-		TMessagingViewObjectPckg aObjectPckg(aObject);
-		aObjectPckg.Copy(aCustomMessage);
+		TViewReferenceBuf aViewReference;
+		aViewReference.Copy(aCustomMessage);
 		
-		if(aObject.iId.Length() == 0) {
-			// No jid referenced, get channel jid as default
+		TViewData aQuery = aViewReference().iNewViewData;
+		
+		if(aQuery.iData.Length() == 0) {
+			// Nothing referenced, get channel node as default
 			CBuddycloudListStore* aItemStore = iBuddycloudLogic->GetFollowingStore();
 			CFollowingItem* aItem = static_cast <CFollowingItem*> (aItemStore->GetItemById(aCustomMessageId.iUid));
 					
 			if(aItem && aItem->GetItemType() >= EItemRoster) {
-				aObject.iFollowerId = aItem->GetItemId();
-				aObject.iId = aItem->GetId();
-				aObject.iTitle = aItem->GetTitle();
+				aQuery.iId = aItem->GetItemId();
+				aQuery.iData.Copy(aItem->GetId());
+				aQuery.iTitle.Copy(aItem->GetTitle());
 			}
 		}
 	
 		iContainer = new (ELeave) CBuddycloudMessagingContainer(this, iBuddycloudLogic);
-		iContainer->ConstructL(ClientRect(), aObject);
+		iContainer->ConstructL(ClientRect(), aQuery);
 		iContainer->SetMopParent(this);
 		AppUi()->AddToViewStackL(*this, iContainer);
 	}

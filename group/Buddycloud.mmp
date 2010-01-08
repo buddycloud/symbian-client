@@ -80,18 +80,19 @@ SOURCEPATH ..\src
 SOURCE            BuddycloudLogic.cpp WlanDataHandler.cpp CellTowerDataHandler.cpp BtDataHandler.cpp 
 SOURCE            DataHander.cpp GpsDataHandler.cpp LocationEngine.cpp SignalStrengthDataHandler.cpp 
 SOURCE            TcpIpEngine.cpp Timer.cpp XmlParser.cpp XmppEngine.cpp ConnectionMonitor.cpp BuddycloudMessagingView.cpp 
-SOURCE            BuddycloudMessagingContainer.cpp NotificationEngine.cpp AvatarRepository.cpp 
+SOURCE            BuddycloudMessagingContainer.cpp NotificationEngine.cpp AvatarRepository.cpp AudioPlayer.cpp 
 SOURCE            BuddycloudAccountSettingsView.cpp BuddycloudAccountSettingsList.cpp AutoSelectTextQueryDialog.cpp BuddycloudPlaces.cpp 
 SOURCE            BuddycloudPlacesView.cpp BuddycloudPlacesContainer.cpp BuddycloudEditPlaceView.cpp BuddycloudEditPlaceList.cpp
 SOURCE            BrowserLauncher.cpp BuddycloudNearby.cpp BuddycloudExplorerContainer.cpp BuddycloudExplorerView.cpp
-SOURCE            BuddycloudContactStreamer.cpp CellTowerDataSimulation.cpp BuddycloudListComponent.cpp
-SOURCE            CompressionEngine.cpp EZStreamCompressor.cpp EZStreamDecompressor.cpp TelephonyEngine.cpp 
+SOURCE            CellTowerDataSimulation.cpp BuddycloudListComponent.cpp BuddycloudEditChannelView.cpp BuddycloudEditChannelList.cpp 
+SOURCE            CompressionEngine.cpp EZStreamCompressor.cpp EZStreamDecompressor.cpp TimeUtilities.cpp
 SOURCE            BuddycloudSetupView.cpp BuddycloudSetupContainer.cpp BuddycloudBeaconSettingsView.cpp BuddycloudBeaconSettingsList.cpp 
 SOURCE            SearchResultMessageQueryDialog.cpp TextUtilities.cpp PhoneUtilities.cpp FontUtilities.cpp FileUtilities.cpp 
 SOURCE            BuddycloudChannelsContainer.cpp BuddycloudChannelsView.cpp BuddycloudExplorer.cpp 
-SOURCE            BuddycloudPreferencesSettingsView.cpp BuddycloudPreferencesSettingsList.cpp BuddycloudContactSearcher.cpp 
+SOURCE            BuddycloudPreferencesSettingsView.cpp BuddycloudPreferencesSettingsList.cpp 
 SOURCE            BuddycloudCommunitiesView.cpp BuddycloudCommunitiesContainer.cpp BuddycloudFollowing.cpp 
 SOURCE            BuddycloudFollowingContainer.cpp BuddycloudFollowingView.cpp
-SOURCE            XmppOutbox.cpp BuddycloudNotificationsSettingsView.cpp BuddycloudNotificationsSettingsList.cpp AudioPlayer.cpp TimeUtilities.cpp XmppUtilities.cpp GeolocData.cpp BuddycloudList.cpp DiscussionManager.cpp AtomEntryData.cpp BuddycloudEditChannelView.cpp BuddycloudEditChannelList.cpp 
+SOURCE            XmppOutbox.cpp BuddycloudNotificationsSettingsView.cpp BuddycloudNotificationsSettingsList.cpp 
+SOURCE            XmppUtilities.cpp GeolocData.cpp BuddycloudList.cpp DiscussionManager.cpp AtomEntryData.cpp BuddycloudChannelInfoView.cpp BuddycloudChannelInfoContainer.cpp
 
 // End of File

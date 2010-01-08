@@ -80,6 +80,12 @@ RESOURCE AVKON_VIEW r_editchannel_view
 	cba = R_AVKON_SOFTKEYS_OPTIONS_CANCEL;
 }
 
+RESOURCE AVKON_VIEW r_channelinfo_view
+{
+	menubar = r_channelinfo_options_menubar;
+	cba = R_AVKON_SOFTKEYS_OPTIONS_BACK;
+}
+
 // ---------------------------------------------------------------------------- 
 //
 // RESOURCE CBA
@@ -276,30 +282,6 @@ RESOURCE AVKON_TOOLBAR r_messaging_toolbar
 //
 // -----------------------------------------------------------------------------
 
-RESOURCE MENU_BAR r_settings_options_menubar
-{
-	titles =
-	{
-		MENU_TITLE 
-		{ 
-			menu_pane = r_settings_options_menu;
-			txt = r_string_options_menu;
-		}
-	};
-}
-
-RESOURCE MENU_BAR r_editplace_options_menubar
-{
-	titles =
-	{
-		MENU_TITLE 
-		{ 
-			menu_pane = r_editplace_options_menu;
-			txt = r_string_options_menu;
-		}
-	};
-}
-
 RESOURCE MENU_BAR r_status_options_menubar
 {
 	titles =
@@ -408,6 +390,30 @@ RESOURCE MENU_BAR r_explorer_item_menubar
 	};
 }
 
+RESOURCE MENU_BAR r_settings_options_menubar
+{
+	titles =
+	{
+		MENU_TITLE 
+		{ 
+			menu_pane = r_settings_options_menu;
+			txt = r_string_options_menu;
+		}
+	};
+}
+
+RESOURCE MENU_BAR r_editplace_options_menubar
+{
+	titles =
+	{
+		MENU_TITLE 
+		{ 
+			menu_pane = r_editplace_options_menu;
+			txt = r_string_options_menu;
+		}
+	};
+}
+
 RESOURCE MENU_BAR r_search_options_menubar
 {
 	titles =
@@ -420,101 +426,14 @@ RESOURCE MENU_BAR r_search_options_menubar
 	};
 }
 
-// -----------------------------------------------------------------------------
-//
-//    Define settings options menupane
-//
-// -----------------------------------------------------------------------------
-//
-RESOURCE MENU_PANE r_settings_options_menu
+RESOURCE MENU_BAR r_channelinfo_options_menubar
 {
-	items =
+	titles =
 	{
-		MENU_ITEM
+		MENU_TITLE 
 		{ 
-			command = EMenuEditItemCommand; 
-			txt = r_string_options_edititem;
-		},
-		MENU_ITEM
-		{ 
-			command = EMenuDeleteCommand; 
-			txt = r_string_options_remove;
-		},
-		MENU_ITEM
-		{ 
-			command = EMenuHelpCommand; 
-			txt = r_string_options_help;
-		},
-		MENU_ITEM
-		{ 
-			command = EAknSoftkeyDone; 
-			txt = r_string_options_done;
-		}
-	};
-}
-
-// -----------------------------------------------------------------------------
-//
-//    Define edit place options menupane
-//
-// -----------------------------------------------------------------------------
-//
-RESOURCE MENU_PANE r_editplace_options_menu
-{
-	items =
-	{
-		MENU_ITEM
-		{ 
-			command = EMenuEditItemCommand; 
-			txt = r_string_options_edititem;
-		},
-		MENU_ITEM
-		{ 
-			command = EMenuHelpCommand; 
-			txt = r_string_options_help;
-		},
-		MENU_ITEM
-		{ 
-			command = EMenuNewSearchCommand; 
-			txt = r_string_options_searchplace;
-		},
-		MENU_ITEM
-		{ 
-			command = EAknSoftkeyDone; 
-			txt = r_string_options_done;
-		}
-	};
-}
-
-// -----------------------------------------------------------------------------
-//
-//    Define search options menupane
-//
-// -----------------------------------------------------------------------------
-//
-RESOURCE MENU_PANE r_search_options_menu
-{
-	items =
-	{
-		MENU_ITEM
-		{ 
-			command = EMenuSelectCommand; 
-			txt = r_string_options_select;
-		},
-		MENU_ITEM
-		{ 
-			command = EMenuNewSearchCommand; 
-			txt = r_string_options_newsearch;
-		},
-		MENU_ITEM
-		{ 
-			command = EMenuPreviousCommand; 
-			txt = r_string_options_previousresult;
-		},
-		MENU_ITEM
-		{ 
-			command = EAknSoftkeyBack; 
-			txt = r_string_options_cancelsearch;
+			menu_pane = r_channelinfo_options_menu;
+			txt = r_string_options_menu;
 		}
 	};
 }
@@ -843,7 +762,7 @@ RESOURCE MENU_PANE r_messaging_options_channel_menu
 		MENU_ITEM
 		{ 
 			command = EMenuEditChannelCommand; 
-			txt = r_string_item_editplace;
+			txt = r_string_item_showchanneldetails;
 		}
 	};
 }
@@ -866,6 +785,11 @@ RESOURCE MENU_PANE r_messaging_follow_menu
 		{ 
 			command = EMenuFollowLinkCommand; 
 			txt = r_string_item_follow;
+		},
+		MENU_ITEM
+		{ 
+			command = EMenuChannelInfoCommand; 
+			txt = r_string_item_showchanneldetails;
 		},
 		MENU_ITEM
 		{ 
@@ -959,7 +883,7 @@ RESOURCE MENU_PANE r_places_options_item_menu
 		MENU_ITEM
 		{ 
 			command = EMenuEditPlaceCommand; 
-			txt = r_string_item_editplace;
+			txt = r_string_item_editdetails;
 		},
 		MENU_ITEM
 		{ 
@@ -1136,6 +1060,144 @@ RESOURCE MENU_PANE r_explorer_options_explore_menu
 }
 
 // -----------------------------------------------------------------------------
+//
+//    Define settings options menupane
+//
+// -----------------------------------------------------------------------------
+//
+RESOURCE MENU_PANE r_settings_options_menu
+{
+	items =
+	{
+		MENU_ITEM
+		{ 
+			command = EMenuEditItemCommand; 
+			txt = r_string_options_edititem;
+		},
+		MENU_ITEM
+		{ 
+			command = EMenuDeleteCommand; 
+			txt = r_string_options_remove;
+		},
+		MENU_ITEM
+		{ 
+			command = EMenuHelpCommand; 
+			txt = r_string_options_help;
+		},
+		MENU_ITEM
+		{ 
+			command = EAknSoftkeyDone; 
+			txt = r_string_options_done;
+		}
+	};
+}
+
+// -----------------------------------------------------------------------------
+//
+//    Define edit place options menupane
+//
+// -----------------------------------------------------------------------------
+//
+RESOURCE MENU_PANE r_editplace_options_menu
+{
+	items =
+	{
+		MENU_ITEM
+		{ 
+			command = EMenuEditItemCommand; 
+			txt = r_string_options_edititem;
+		},
+		MENU_ITEM
+		{ 
+			command = EMenuHelpCommand; 
+			txt = r_string_options_help;
+		},
+		MENU_ITEM
+		{ 
+			command = EMenuNewSearchCommand; 
+			txt = r_string_options_searchplace;
+		},
+		MENU_ITEM
+		{ 
+			command = EAknSoftkeyDone; 
+			txt = r_string_options_done;
+		}
+	};
+}
+
+// -----------------------------------------------------------------------------
+//
+//    Define search options menupane
+//
+// -----------------------------------------------------------------------------
+//
+RESOURCE MENU_PANE r_search_options_menu
+{
+	items =
+	{
+		MENU_ITEM
+		{ 
+			command = EMenuSelectCommand; 
+			txt = r_string_options_select;
+		},
+		MENU_ITEM
+		{ 
+			command = EMenuNewSearchCommand; 
+			txt = r_string_options_newsearch;
+		},
+		MENU_ITEM
+		{ 
+			command = EMenuPreviousCommand; 
+			txt = r_string_options_previousresult;
+		},
+		MENU_ITEM
+		{ 
+			command = EAknSoftkeyBack; 
+			txt = r_string_options_cancelsearch;
+		}
+	};
+}
+
+// -----------------------------------------------------------------------------
+//
+//    Define channelinfo options menupane
+//
+// -----------------------------------------------------------------------------
+//
+RESOURCE MENU_PANE r_channelinfo_options_menu
+{
+	items =
+	{
+		MENU_ITEM
+		{ 
+			command = EMenuFollowCommand; 
+			txt = r_string_item_follow;
+		},
+		MENU_ITEM
+		{ 
+			command = EMenuEditChannelCommand; 
+			txt = r_string_item_editdetails;
+		},
+		MENU_ITEM
+		{ 
+			command = EMenuOptionsExploreCommand; 
+			cascade = r_explorer_options_explore_menu; 
+			txt = r_string_options_explore;
+		},
+		MENU_ITEM
+		{ 
+			command = EMenuDeleteCommand; 
+			txt = r_string_options_delete;
+		},
+		MENU_ITEM
+		{ 
+			command = EMenuHelpCommand; 
+			txt = r_string_options_help;
+		}
+	};
+}
+
+// -----------------------------------------------------------------------------
 //   
 // Define Setting Items and Pages
 //   
@@ -1240,13 +1302,6 @@ RESOURCE AVKON_SETTING_ITEM_LIST r_preferences_settings_item_list
 		},
 		AVKON_SETTING_ITEM
 		{
-			identifier = ESettingPreferencesAutoStart;
-			setting_page_resource = r_settings_item_autostart_page;
-			associated_resource = r_settings_item_onoff_assoc;
-			name = r_string_settings_itemlist_autostart;
-		},
-		AVKON_SETTING_ITEM
-		{
 			identifier = ESettingPreferencesAccessPoint;
 			setting_page_resource = r_settings_item_accesspoint_page;
 			associated_resource = r_settings_item_accesspoint_assoc;
@@ -1254,10 +1309,10 @@ RESOURCE AVKON_SETTING_ITEM_LIST r_preferences_settings_item_list
 		},
 		AVKON_SETTING_ITEM
 		{
-			identifier = ESettingPreferencesShowName;
-			setting_page_resource = r_settings_item_showname_page;
+			identifier = ESettingPreferencesAutoStart;
+			setting_page_resource = r_settings_item_autostart_page;
 			associated_resource = r_settings_item_onoff_assoc;
-			name = r_string_settings_itemlist_showname;
+			name = r_string_settings_itemlist_autostart;
 		}
 	};
 }
@@ -1343,13 +1398,6 @@ RESOURCE ARRAY r_settings_item_accesspoint_texts
 			text = r_string_settings_itemlist_accesspointalwaysask;
 		}
 	};
-}
-
-RESOURCE AVKON_SETTING_PAGE r_settings_item_showname_page
-{
-	label = r_string_settings_itemlist_showname;
-	type = EAknCtPopupSettingList;
-	editor_resource_id = r_binary_editor;
 }
 
 RESOURCE AVKON_SETTING_PAGE r_settings_item_accesspoint_page

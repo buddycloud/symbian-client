@@ -13,27 +13,11 @@
 // INCLUDES
 #include "BuddycloudListComponent.h"
 #include "DiscussionManager.h"
+#include "ViewReference.h"
 
 enum TMoveDirection {
 	EMoveNone, EMoveUp, EMoveDown
 };
-
-/*
-----------------------------------------------------------------------------
---
--- TMessagingViewObject
---
-----------------------------------------------------------------------------
-*/
-	
-class TMessagingViewObject {
-	public:
-		TInt iFollowerId;
-		TBuf<128> iTitle;
-		TBuf<256> iId;
-};
-
-typedef TPckg<TMessagingViewObject> TMessagingViewObjectPckg;
 
 /*
 ----------------------------------------------------------------------------
@@ -83,7 +67,7 @@ class CTextWrappedEntry : public CBase {
 class CBuddycloudMessagingContainer : public CBuddycloudListComponent, MDiscussionUpdateObserver {
 	public: // Constructors and destructor
 		CBuddycloudMessagingContainer(MViewAccessorObserver* aViewAccessor, CBuddycloudLogic* aBuddycloudLogic);
-		void ConstructL(const TRect& aRect, TMessagingViewObject aObject);
+		void ConstructL(const TRect& aRect, TViewData aQueryData);
         ~CBuddycloudMessagingContainer();
         
 	private:
@@ -145,8 +129,10 @@ class CBuddycloudMessagingContainer : public CBuddycloudListComponent, MDiscussi
 #endif
 
 	protected: // Variables
-		TMessagingViewObject iMessagingObject;
+		TViewData iMessagingObject;
 		TInt iFollowingItemIndex;
+		
+		HBufC* iMessagingId;
 		
 		// Flags
 		TBool iRendering;

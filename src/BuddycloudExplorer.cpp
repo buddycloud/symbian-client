@@ -21,72 +21,72 @@
 ----------------------------------------------------------------------------
 */
 		
-TExplorerQuery CExplorerStanzaBuilder::BuildNearbyXmppStanza(TExplorerItemType aType, const TDesC8& aReferenceId, TInt aOptionsLimit) {
-	TExplorerQuery aQuery;			
+TViewData CExplorerStanzaBuilder::BuildNearbyXmppStanza(TExplorerItemType aType, const TDesC8& aReferenceId, TInt aOptionsLimit) {
+	TViewData aQuery;			
 	
 	_LIT8(KNearbyStanza, "<iq to='butler.buddycloud.com' type='get' id='exp_nearby1'><query xmlns='urn:oslo:nearbyobjects'><reference type='' id=''/><options limit='%d'/></query></iq>\r\n");
-	aQuery.iStanza.Format(KNearbyStanza, aOptionsLimit);	
-	aQuery.iStanza.Insert(120, aReferenceId);
+	aQuery.iData.Format(KNearbyStanza, aOptionsLimit);	
+	aQuery.iData.Insert(120, aReferenceId);
 	
 	switch(aType) {
 		case EExplorerItemPerson:
-			aQuery.iStanza.Insert(114, _L8("person"));
+			aQuery.iData.Insert(114, _L8("person"));
 			break;
 		case EExplorerItemChannel:
-			aQuery.iStanza.Insert(114, _L8("channel"));
+			aQuery.iData.Insert(114, _L8("channel"));
 			break;
 		default:
-			aQuery.iStanza.Insert(114, _L8("place"));
+			aQuery.iData.Insert(114, _L8("place"));
 			break;
 	}
 	
 	return aQuery;
 }
 		
-TExplorerQuery CExplorerStanzaBuilder::BuildNearbyXmppStanza(TReal aPointLatitude, TReal aPointLongitude, TInt aOptionsLimit) {
-	TExplorerQuery aQuery;			
+TViewData CExplorerStanzaBuilder::BuildNearbyXmppStanza(TReal aPointLatitude, TReal aPointLongitude, TInt aOptionsLimit) {
+	TViewData aQuery;			
 
 	_LIT8(KNearbyStanza, "<iq to='butler.buddycloud.com' type='get' id='exp_nearby1'><query xmlns='urn:oslo:nearbyobjects'><point lat='%.6f' lon='%.6f'/><options limit='%d'/></query></iq>\r\n");
-	aQuery.iStanza.Format(KNearbyStanza, aPointLatitude, aPointLongitude, aOptionsLimit);
+	aQuery.iData.Format(KNearbyStanza, aPointLatitude, aPointLongitude, aOptionsLimit);
 	
 	return aQuery;
 }
 
-TExplorerQuery CExplorerStanzaBuilder::BuildChannelsXmppStanza(const TDesC8& aSubject, TExplorerChannelRole aRole, TInt aOptionsLimit) {
-	TExplorerQuery aQuery;			
+TViewData CExplorerStanzaBuilder::BuildChannelsXmppStanza(const TDesC8& aSubject, TExplorerChannelRole aRole, TInt aOptionsLimit) {
+	TViewData aQuery;			
 	
-	aQuery.iStanza.Append(_L8("<iq to='maitred.buddycloud.com' type='get' id='exp_channels1'><query xmlns='http://buddycloud.com/protocol/channels'><subject></subject></query></iq>\r\n"));
+	aQuery.iData.Append(_L8("<iq to='maitred.buddycloud.com' type='get' id='exp_channels1'><query xmlns='http://buddycloud.com/protocol/channels'><subject></subject></query></iq>\r\n"));
 	
 	if(aOptionsLimit > 0) {
 		TBuf8<32> aMaxElement;
 		aMaxElement.Format(_L8("<max>%d</max>"), aOptionsLimit);
-		aQuery.iStanza.Insert(136, aMaxElement);
+		aQuery.iData.Insert(136, aMaxElement);
 	}
 	
 	switch(aRole) {
 		case EChannelProducer:
-			aQuery.iStanza.Insert(136, _L8("<role>producer</role>"));
+			aQuery.iData.Insert(136, _L8("<role>producer</role>"));
 			break;
 		case EChannelModerator:
-			aQuery.iStanza.Insert(136, _L8("<role>moderator</role>"));
+			aQuery.iData.Insert(136, _L8("<role>moderator</role>"));
 			break;
 		case EChannelFollower:
-			aQuery.iStanza.Insert(136, _L8("<role>follower</role>"));
+			aQuery.iData.Insert(136, _L8("<role>follower</role>"));
 			break;
 		default:;
 	}
 	
-	aQuery.iStanza.Insert(126, aSubject);
+	aQuery.iData.Insert(126, aSubject);
 	
 	return aQuery;
 }	
 
-TExplorerQuery CExplorerStanzaBuilder::BuildPlaceVisitorsXmppStanza(const TDesC8& aNode, TInt aPlaceId) {
-	TExplorerQuery aQuery;			
+TViewData CExplorerStanzaBuilder::BuildPlaceVisitorsXmppStanza(const TDesC8& aNode, TInt aPlaceId) {
+	TViewData aQuery;			
 	
 	_LIT8(KPlaceVisitorsStanza, "<iq to='butler.buddycloud.com' type='get' id='exp_visitors'><query xmlns='http://buddycloud.com/protocol/place#visitors' node=''><place><id>http://buddycloud.com/places/%d</id></place></query></iq>");
-	aQuery.iStanza.Format(KPlaceVisitorsStanza, aPlaceId);
-	aQuery.iStanza.Insert(127, aNode);
+	aQuery.iData.Format(KPlaceVisitorsStanza, aPlaceId);
+	aQuery.iData.Insert(127, aNode);
 	
 	return aQuery;
 }

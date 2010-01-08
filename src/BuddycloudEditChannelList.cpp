@@ -16,26 +16,34 @@
 #include "Buddycloud.hlp.hrh"
 #include "BuddycloudConstants.h"
 #include "BuddycloudEditChannelList.h"
-#include "TextUtilities.h"
 #include "XmlParser.h"
+#include "XmppUtilities.h"
 
-CBuddycloudEditChannelList::CBuddycloudEditChannelList() : CAknSettingItemList() {
-	iChannelItem = NULL;
-	iTitleResourceId = R_LOCALIZED_STRING_NEWCHANNEL_TITLE;
-}
-
-void CBuddycloudEditChannelList::ConstructL(const TRect& aRect, CBuddycloudLogic* aBuddycloudLogic, TInt aItemId) {
+CBuddycloudEditChannelList::CBuddycloudEditChannelList(CBuddycloudLogic* aBuddycloudLogic) : CAknSettingItemList() {
 	iBuddycloudLogic = aBuddycloudLogic;
 	iXmppInterface = iBuddycloudLogic->GetXmppInterface();
 	
-	iChannelItem = static_cast <CFollowingChannelItem*> (iBuddycloudLogic->GetFollowingStore()->GetItemById(aItemId));
+	iTitleResourceId = R_LOCALIZED_STRING_NEWCHANNEL_TITLE;
+}
 
-	if(iChannelItem && iChannelItem->GetId().Length() > 0) {
+void CBuddycloudEditChannelList::ConstructL(const TRect& aRect, TViewData aQueryData) {
+	iQueryData = aQueryData;
+	
+	iTextUtilities = CTextUtilities::NewL();
+	
+	iChannelItem = static_cast <CFollowingChannelItem*> (iBuddycloudLogic->GetFollowingStore()->GetItemById(iQueryData.iId));
+
+	if(iChannelItem == NULL) {		
+		TPtrC aEncData(iTextUtilities->Utf8ToUnicodeL(iQueryData.iData));
+		
+		iChannelItem = CFollowingChannelItem::NewL();
+		iChannelItem->SetTitleL(aEncData);
+		iChannelItem->SetIdL(aEncData);
+	}	
+	
+	if(iChannelItem->GetId().Length() > 0) {
 		iChannelSaveAllowed = true;
 	}
-	else if(iChannelItem == NULL) {
-		iChannelItem = CFollowingChannelItem::NewL();
-	}	
 
 	if(iChannelItem->GetItemId() > 0) {		
 		iTitleResourceId = R_LOCALIZED_STRING_EDITCHANNEL_TITLE;
@@ -49,13 +57,12 @@ void CBuddycloudEditChannelList::ConstructL(const TRect& aRect, CBuddycloudLogic
 CBuddycloudEditChannelList::~CBuddycloudEditChannelList() {
 	iXmppInterface->CancelXmppStanzaAcknowledge(this);
 	
-	if(iChannelItem) {
-		if(iChannelItem->GetItemId() == 0) {	
-			delete iChannelItem;
-		}
-		else if(iChannelItem->GetItemId() < 0) {
-			iBuddycloudLogic->GetFollowingStore()->DeleteItemById(iChannelItem->GetItemId());
-		}
+	if(iTextUtilities) {
+		delete iTextUtilities;
+	}
+	
+	if(iChannelItem && iChannelItem->GetItemId() <= 0) {	
+		delete iChannelItem;
 	}
 }
 
@@ -74,11 +81,25 @@ void CBuddycloudEditChannelList::ValidateChannelId() {
 			iId[i] = 95;
 		}
 		else if(iId[i] <= 47 || (iId[i] >= 57 && iId[i] <= 64) ||
-				(iId[i] >= 91 && iId[i] <= 96) || iId[i] >= 123) {
+				(iId[i] >= 91 && iId[i] <= 94) || iId[i] == 96 || iId[i] >= 123) {
 			
 			iId.Delete(i, 1);
 		}
 	}
+}
+
+void CBuddycloudEditChannelList::CollectChannelMetadataL(const TDesC& aNodeId) {
+	TPtrC8 aEncNodeId(iTextUtilities->UnicodeToUtf8L(aNodeId));
+	
+	_LIT8(KDiscoItemsStanza, "<iq to='' type='get' id='metadata'><query xmlns='http://jabber.org/protocol/disco#info' node=''/></iq>\r\n");
+	HBufC8* aDiscoItemsStanza = HBufC8::NewLC(KDiscoItemsStanza().Length() + KBuddycloudPubsubServer().Length() + aEncNodeId.Length());
+	TPtr8 pDiscoItemsStanza(aDiscoItemsStanza->Des());
+	pDiscoItemsStanza.Append(KDiscoItemsStanza);
+	pDiscoItemsStanza.Insert(94, aEncNodeId);
+	pDiscoItemsStanza.Insert(8, KBuddycloudPubsubServer);
+	
+	iXmppInterface->SendAndAcknowledgeXmppStanza(pDiscoItemsStanza, this, true);
+	CleanupStack::PopAndDestroy(); // aDiscoItemsStanza
 }
 
 void CBuddycloudEditChannelList::EditCurrentItemL() {
@@ -86,30 +107,57 @@ void CBuddycloudEditChannelList::EditCurrentItemL() {
 }
 
 void CBuddycloudEditChannelList::LoadChannelDataL() {
-	iTitle.Copy(iChannelItem->GetTitle().Left(iTitle.MaxLength()));
-	iId.Copy(iChannelItem->GetId().Left(iId.MaxLength()));
-	iDescription.Copy(iChannelItem->GetDescription().Left(iDescription.MaxLength()));
 	iAccess = iChannelItem->GetAccessModel();
+	iId.Copy(iChannelItem->GetId().Left(iId.MaxLength()));
+	
+	if(iChannelItem->GetItemType() == EItemChannel) {
+		// Copy channel data
+		iTitle.Copy(iChannelItem->GetTitle().Left(iTitle.MaxLength()));
+		iDescription.Copy(iChannelItem->GetDescription().Left(iDescription.MaxLength()));
+	}
+	else {
+		// Collect roster data
+		CollectChannelMetadataL(iChannelItem->GetId());
+	}
 }
 
 TInt CBuddycloudEditChannelList::SaveChannelDataL() {
 	StoreSettingsL();
 	
 	if(iChannelSaveAllowed) {
-		iChannelItem->SetTitleL(iTitle);
 		iChannelItem->SetIdL(iId);
-		iChannelItem->SetDescriptionL(iDescription);
 		iChannelItem->SetAccessModel((TXmppPubsubAccessModel)iAccess);
+		
+		if(iChannelItem->GetItemType() == EItemChannel) {
+			iChannelItem->SetTitleL(iTitle);
+			iChannelItem->SetDescriptionL(iDescription);
+		}
 		
 		if(iChannelItem->GetItemId() <= 0) {
 			// Create new channel			
 			return iBuddycloudLogic->CreateChannelL(iChannelItem);
 		}
 		else {
-			iBuddycloudLogic->PublishChannelMetadataL(iChannelItem->GetItemId());
-		}
+			// Publish channel metadata
+			HBufC8* aEncTitle = iTextUtilities->UnicodeToUtf8L(iTitle).AllocLC();
+			HBufC8* aEncDescription = iTextUtilities->UnicodeToUtf8L(iDescription).AllocLC();
+			TPtrC8 aAccess = CXmppEnumerationConverter::PubsubAccessModel(iChannelItem->GetAccessModel());
+			TPtrC8 aEncId(iTextUtilities->UnicodeToUtf8L(iChannelItem->GetId()));
 		
-		return iChannelItem->GetItemId();
+			// Send stanza
+			_LIT8(KEditStanza, "<iq to='' type='set' id='editchannel'><pubsub xmlns='http://jabber.org/protocol/pubsub#owner'><configure node=''><x xmlns='jabber:x:data' type='submit'><field var='FORM_TYPE' type='hidden'><value>http://jabber.org/protocol/pubsub#node_config</value></field><field var='pubsub#access_model'><value></value></field><field var='pubsub#title'><value></value></field><field var='pubsub#description'><value></value></field></x></configure></pubsub></iq>\r\n");
+			HBufC8* aEditStanza = HBufC8::NewLC(KEditStanza().Length() + KBuddycloudPubsubServer().Length() + aEncId.Length() + aAccess.Length() + aEncTitle->Des().Length() + aEncDescription->Des().Length());
+			TPtr8 pEditStanza(aEditStanza->Des());
+			pEditStanza.Append(KEditStanza);
+			pEditStanza.Insert(401, *aEncDescription);
+			pEditStanza.Insert(346, *aEncTitle);
+			pEditStanza.Insert(297, aAccess);
+			pEditStanza.Insert(111, aEncId);
+			pEditStanza.Insert(8, KBuddycloudPubsubServer);
+		
+			iXmppInterface->SendAndForgetXmppStanza(pEditStanza, true);
+			CleanupStack::PopAndDestroy(3); // aEditStanza, aEncDescription, aEncTitle
+		}
 	}
 	
 	return 0;
@@ -173,18 +221,14 @@ void CBuddycloudEditChannelList::EditItemL(TInt aIndex, TBool aCalledFromMenu) {
 		LoadSettingsL();
 		
 		if(iId.Length() > 0) {
-			CTextUtilities* aTextUtilities = CTextUtilities::NewLC();
-			TPtrC8 aEncId = aTextUtilities->UnicodeToUtf8L(iId);
+			_LIT(KRootNode, "/channel/");
+			HBufC* aNodeId = HBufC::NewLC(KRootNode().Length() + iId.Length());
+			TPtr pNodeId(aNodeId->Des());
+			pNodeId.Append(KRootNode);
+			pNodeId.Append(iId);
 			
-			_LIT8(KDiscoItemsStanza, "<iq to='' type='get' id='discoinfo'><query xmlns='http://jabber.org/protocol/disco#info' node='/channel/'/></iq>\r\n");
-			HBufC8* aDiscoItemsStanza = HBufC8::NewLC(KDiscoItemsStanza().Length() + KBuddycloudPubsubServer().Length() + aEncId.Length());
-			TPtr8 pDiscoItemsStanza(aDiscoItemsStanza->Des());
-			pDiscoItemsStanza.Append(KDiscoItemsStanza);
-			pDiscoItemsStanza.Insert(104, aEncId);
-			pDiscoItemsStanza.Insert(8, KBuddycloudPubsubServer);
-			
-			iXmppInterface->SendAndAcknowledgeXmppStanza(pDiscoItemsStanza, this, true);
-			CleanupStack::PopAndDestroy(2); // aDiscoItemsStanza, aTextUtilities
+			CollectChannelMetadataL(pNodeId);
+			CleanupStack::PopAndDestroy(); // aNodeId
 		}
 		
 		ListBox()->SetCurrentItemIndexAndDraw(EEditChannelItemId - 1);
@@ -234,10 +278,32 @@ void CBuddycloudEditChannelList::XmppStanzaAcknowledgedL(const TDesC8& aStanza, 
 		iChannelSaveAllowed = true;		
 	}
 	else {
-		HBufC* aMessage = CEikonEnv::Static()->AllocReadResourceLC(R_LOCALIZED_STRING_NOTE_CHANNELEXISTS);
-		CAknErrorNote* aDialog = new (ELeave) CAknErrorNote(true);		
-		aDialog->ExecuteLD(*aMessage);
-		CleanupStack::PopAndDestroy(); // aMessage
+		if(iChannelSaveAllowed) {
+			while(aXmlParser->MoveToElement(_L8("field"))) {
+				TPtrC8 aAttributeVar(aXmlParser->GetStringAttribute(_L8("var")));
+				
+				if(aXmlParser->MoveToElement(_L8("value"))) {
+					TPtrC aEncDataValue(iTextUtilities->Utf8ToUnicodeL(aXmlParser->GetStringData()));							
+					
+					if(aAttributeVar.Compare(_L8("pubsub#title")) == 0) {
+						iTitle.Copy(iTextUtilities->Utf8ToUnicodeL(aXmlParser->GetStringData()).Left(iTitle.MaxLength()));
+					}
+					else if(aAttributeVar.Compare(_L8("pubsub#description")) == 0) {
+						iDescription.Copy(iTextUtilities->Utf8ToUnicodeL(aXmlParser->GetStringData()).Left(iDescription.MaxLength()));
+					}
+				}
+			}
+			
+			LoadSettingsL();
+			
+			DrawDeferred();
+		}
+		else {
+			HBufC* aMessage = CEikonEnv::Static()->AllocReadResourceLC(R_LOCALIZED_STRING_NOTE_CHANNELEXISTS);
+			CAknErrorNote* aDialog = new (ELeave) CAknErrorNote(true);		
+			aDialog->ExecuteLD(*aMessage);
+			CleanupStack::PopAndDestroy(); // aMessage
+		}
 	}
 	
 	CleanupStack::PopAndDestroy(); // aXmlParser

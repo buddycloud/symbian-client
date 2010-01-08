@@ -17,7 +17,7 @@
 #include "BuddycloudExplorer.h"
 #include "BuddycloudExplorerView.h"
 #include "BuddycloudExplorerContainer.h"
-
+#include "ViewReference.h"
 
 // ================= MEMBER FUNCTIONS =======================
 
@@ -56,15 +56,13 @@ void CBuddycloudExplorerView::HandleCommandL(TInt aCommand) {
 	}
 }
 
-void CBuddycloudExplorerView::DoActivateL(const TVwsViewId& aPrevViewId, TUid aCustomMessageId, const TDesC8& aCustomMessage) {		
+void CBuddycloudExplorerView::DoActivateL(const TVwsViewId& /*aPrevViewId*/, TUid /*aCustomMessageId*/, const TDesC8& aCustomMessage) {		
 	if (!iContainer) {
-		TExplorerQuery aQuery;
-		TExplorerQueryPckg aQueryPckg(aQuery);
-		aQueryPckg.Copy(aCustomMessage);
+		TViewReferenceBuf aViewReference;
+		aViewReference.Copy(aCustomMessage);
 		
 		iContainer = new (ELeave) CBuddycloudExplorerContainer(this, iBuddycloudLogic);
-		iContainer->ConstructL(ClientRect(), aQuery);
-		iContainer->SetPrevView(aPrevViewId, aCustomMessageId);
+		iContainer->ConstructL(ClientRect(), aViewReference());
 		iContainer->SetMopParent(this);
  		AppUi()->AddToViewStackL(*this, iContainer);
 	}

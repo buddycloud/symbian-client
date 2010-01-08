@@ -20,6 +20,7 @@
 #include "BrowserLauncher.h"
 #include "BuddycloudExplorer.h"
 #include "BuddycloudMessagingContainer.h"
+#include "ViewReference.h"
 
 /*
 ----------------------------------------------------------------------------
@@ -96,9 +97,9 @@ CBuddycloudMessagingContainer::CBuddycloudMessagingContainer(MViewAccessorObserv
 		CBuddycloudListComponent(aViewAccessor, aBuddycloudLogic) {
 }
 
-void CBuddycloudMessagingContainer::ConstructL(const TRect& aRect, TMessagingViewObject aObject) {
+void CBuddycloudMessagingContainer::ConstructL(const TRect& aRect, TViewData aQueryData) {
 	iRect = aRect;
-	iMessagingObject = aObject;
+	iMessagingObject = aQueryData;
 	CreateWindowL();
 	
 	// Construct super
@@ -119,7 +120,12 @@ void CBuddycloudMessagingContainer::ConstructL(const TRect& aRect, TMessagingVie
 
 CBuddycloudMessagingContainer::~CBuddycloudMessagingContainer() {
 	iDiscussion->SetDiscussionUpdateObserver(NULL);
+	
+	if(iMessagingId) {
+		delete iMessagingId;
+	}
 
+	// Delete entries
 	for(TInt i = 0; i < iEntries.Count(); i++) {
 		if(iEntries[i]) {
 			delete iEntries[i];
@@ -148,18 +154,25 @@ void CBuddycloudMessagingContainer::InitializeMessageDataL() {
 	iJumpToUnreadPost = true;
 	iSelectedItem = KErrNotFound;
 	
+	// Set messaging id
+	if(iMessagingId) {
+		delete iMessagingId;
+	}
+	
+	iMessagingId = iTextUtilities->Utf8ToUnicodeL(iMessagingObject.iData).AllocL();
+	
 	// Initialize message discussion
-	iDiscussion = iBuddycloudLogic->GetDiscussion(iMessagingObject.iId);
+	iDiscussion = iBuddycloudLogic->GetDiscussion(*iMessagingId);
 	iDiscussion->SetDiscussionUpdateObserver(this);
 	
 	// Is a channel
 	CBuddycloudListStore* aItemStore = iBuddycloudLogic->GetFollowingStore();
-	iFollowingItemIndex = aItemStore->GetIndexById(iMessagingObject.iFollowerId);
-	iItem = static_cast <CFollowingItem*> (aItemStore->GetItemById(iMessagingObject.iFollowerId));
+	iFollowingItemIndex = aItemStore->GetIndexById(iMessagingObject.iId);
+	iItem = static_cast <CFollowingItem*> (aItemStore->GetItemById(iMessagingObject.iId));
 	
 	if(iItem && iItem->GetItemType() >= EItemRoster) {
 		if(iItem->GetItemType() == EItemChannel || 
-				(iItem->GetItemType() == EItemRoster && iItem->GetId().Compare(iMessagingObject.iId) == 0)) {
+				(iItem->GetItemType() == EItemRoster && iItem->GetId().Compare(*iMessagingId) == 0)) {
 			
 			// Is a channel discussion
 			iIsChannel = true;
@@ -199,13 +212,13 @@ void CBuddycloudMessagingContainer::InitializeMessageDataL() {
 
 void CBuddycloudMessagingContainer::NotificationEvent(TBuddycloudLogicNotificationType aEvent, TInt aId) {
 	if(aEvent == ENotificationFollowingItemDeleted) {
-		if(aId == iMessagingObject.iFollowerId) {
+		if(aId == iMessagingObject.iId) {
 			iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KFollowingViewId), TUid::Uid(0), _L8(""));
 		}
 	}
 	else {
 		if(aEvent == ENotificationMessageNotifiedEvent || aEvent == ENotificationMessageSilentEvent) {
-			if(aId == iMessagingObject.iFollowerId) {
+			if(aId == iMessagingObject.iId) {
 				RepositionItems(iSnapToItem);
 				RenderScreen();
 			}
@@ -377,7 +390,7 @@ void CBuddycloudMessagingContainer::ComposeNewPostL(const TDesC& aContent, const
 		if(aDialog->RunLD() != 0) {
 			iJumpToUnreadPost = true;
 			
-			iBuddycloudLogic->PostMessageL(iMessagingObject.iFollowerId, iMessagingObject.iId, pMessage, aReferenceId);	
+			iBuddycloudLogic->PostMessageL(iMessagingObject.iId, *iMessagingId, pMessage, aReferenceId);	
 			
 			if(!iIsChannel) {
 				RepositionItems(iSnapToItem);
@@ -1242,16 +1255,13 @@ void CBuddycloudMessagingContainer::DynInitMenuPaneL(TInt aResourceId, CEikMenuP
 			aMenuPane->SetItemDimmed(EMenuMarkReadCommand, false);
 		}
 		
-		// Channel metadata editing
-		CFollowingChannelItem* aChannelItem = static_cast <CFollowingChannelItem*> (iItem);	
-		
-		// TODO: Allow for user channel too
-		if(iIsChannel && iItem->GetItemType() == EItemChannel && aChannelItem->GetPubsubAffiliation() == EPubsubAffiliationOwner) {
+		if(iIsChannel) {
 			aMenuPane->SetItemDimmed(EMenuEditChannelCommand, false);
 		}		
 	}
 	else if(aResourceId == R_MESSAGING_FOLLOW_MENU) {
 		aMenuPane->SetItemDimmed(EMenuFollowLinkCommand, true);
+		aMenuPane->SetItemDimmed(EMenuChannelInfoCommand, true);
 		aMenuPane->SetItemDimmed(EMenuChannelMessagesCommand, true);
 		aMenuPane->SetItemDimmed(EMenuPrivateMessagesCommand, true);
 		aMenuPane->SetItemDimmed(EMenuAcceptCommand, true);
@@ -1261,14 +1271,13 @@ void CBuddycloudMessagingContainer::DynInitMenuPaneL(TInt aResourceId, CEikMenuP
 			CAtomEntryData* aEntry = iEntries[iSelectedItem]->GetEntry();
 
 			if(aEntry) {
-				// Content notice
 				if(aEntry->GetEntryType() == EEntryContentNotice) {
+					// Content notice
 					aMenuPane->SetItemDimmed(EMenuAcceptCommand, false);
 					aMenuPane->SetItemDimmed(EMenuDeclineCommand, false);		
 				}
-				
-				// Content contains links
-				if(aEntry->GetLinkCount() > 0) {
+				else if(aEntry->GetLinkCount() > 0) {
+					// Content contains links
 					CEntryLinkPosition aLinkPosition = aEntry->GetLink(iSelectedLink);
 					
 					if(aLinkPosition.iType != ELinkWebsite) {
@@ -1289,7 +1298,12 @@ void CBuddycloudMessagingContainer::DynInitMenuPaneL(TInt aResourceId, CEikMenuP
 						
 						if(aItemId == 0) {
 							// Not yet following
-							aMenuPane->SetItemDimmed(EMenuFollowLinkCommand, false);
+							if(aLinkPosition.iType == ELinkUsername) {
+								aMenuPane->SetItemDimmed(EMenuFollowLinkCommand, false);
+							}
+							else {
+								aMenuPane->SetItemDimmed(EMenuChannelInfoCommand, false);
+							}
 						}
 						else {
 							CBuddycloudListStore* aItemStore = iBuddycloudLogic->GetFollowingStore();
@@ -1326,7 +1340,7 @@ void CBuddycloudMessagingContainer::HandleCommandL(TInt aCommand) {
 		CleanupStack::PopAndDestroy(); // R_LOCALIZED_STRING_DIALOG_REQUESTCOMMENT
 	
 		if(aDialog->RunLD() != 0) {
-			iBuddycloudLogic->RequestPubsubNodeAffiliationL(iMessagingObject.iId, EPubsubAffiliationPublisher, pMessageText);
+			iBuddycloudLogic->RequestPubsubNodeAffiliationL(*iMessagingId, EPubsubAffiliationPublisher, pMessageText);
 		}
 		
 		CleanupStack::PopAndDestroy(); // aMessageText
@@ -1335,7 +1349,7 @@ void CBuddycloudMessagingContainer::HandleCommandL(TInt aCommand) {
 		ComposeNewPostL(_L(""));
 	}
 	else if(aCommand == EMenuPostMediaCommand) {
-		iBuddycloudLogic->MediaPostRequestL(iMessagingObject.iFollowerId);
+		iBuddycloudLogic->MediaPostRequestL(iMessagingObject.iId);
 		
 		iJumpToUnreadPost = true;
 	}
@@ -1397,22 +1411,33 @@ void CBuddycloudMessagingContainer::HandleCommandL(TInt aCommand) {
 		RenderScreen();
 	}
 	else if(aCommand == EMenuSeeFollowersCommand) {
-		TPtrC8 aEncId = iTextUtilities->UnicodeToUtf8L(iMessagingObject.iId);
+		TViewReferenceBuf aViewReference;
+		aViewReference().iCallbackRequested = true;
+		aViewReference().iCallbackViewId = KMessagingViewId;
+		aViewReference().iOldViewData.iId = iItem->GetItemId();
+
+		// Query
+		TViewData aQuery;
 		
-		TExplorerQuery aQuery;
-		aQuery.iStanza.Append(_L8("<iq to='' type='get' id='exp_followers'><pubsub xmlns='http://jabber.org/protocol/pubsub#owner'><affiliations node=''/></pubsub></iq>"));
-		aQuery.iStanza.Insert(116, aEncId);
-		aQuery.iStanza.Insert(8, KBuddycloudPubsubServer);
+		aQuery.iData.Append(_L8("<iq to='' type='get' id='exp_followers'><pubsub xmlns='http://jabber.org/protocol/pubsub#owner'><affiliations node=''/></pubsub></iq>"));
+		aQuery.iData.Insert(116, iTextUtilities->UnicodeToUtf8L(*iMessagingId));
+		aQuery.iData.Insert(8, KBuddycloudPubsubServer);
 		
 		iEikonEnv->ReadResourceL(aQuery.iTitle, R_LOCALIZED_STRING_TITLE_FOLLOWEDBY);
 		aQuery.iTitle.Replace(aQuery.iTitle.Find(_L("$OBJECT")), 7, iMessagingObject.iTitle.Left(aQuery.iTitle.MaxLength() - aQuery.iTitle.Length() + 7));
 	
-		TExplorerQueryPckg aQueryPckg(aQuery);		
-		iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KExplorerViewId), TUid::Uid(iMessagingObject.iFollowerId), aQueryPckg);		
+		aViewReference().iNewViewData = aQuery;
+		
+		iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KExplorerViewId), TUid::Uid(0), aViewReference);		
 	}	
 	else if(aCommand == EMenuEditChannelCommand) {
-		// Edit channel
-		iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KEditChannelViewId), TUid::Uid(iItem->GetItemId()), _L8(""));					
+		TViewReferenceBuf aViewReference;	
+		aViewReference().iCallbackRequested = true;
+		aViewReference().iCallbackViewId = KMessagingViewId;
+		aViewReference().iOldViewData = iMessagingObject;
+		aViewReference().iNewViewData = iMessagingObject;
+
+		iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KChannelInfoViewId), TUid::Uid(0), aViewReference);					
 	}
 	else if(aCommand == EMenuAcceptCommand || aCommand == EMenuDeclineCommand) {
 		// Accept & decline request
@@ -1424,25 +1449,21 @@ void CBuddycloudMessagingContainer::HandleCommandL(TInt aCommand) {
 			if(aEntry->GetAuthorJid().Compare(_L("http://jabber.org/protocol/pubsub#subscribe_authorization")) == 0) {
 				if(aCommand == EMenuAcceptCommand) {
 					// Accept channel subscription
-					iBuddycloudLogic->SetPubsubNodeSubscriptionL(aJid, iMessagingObject.iId, EPubsubSubscriptionSubscribed);	
+					iBuddycloudLogic->SetPubsubNodeSubscriptionL(aJid, *iMessagingId, EPubsubSubscriptionSubscribed);	
 				}
 				else {
 					// Decline channel subscription
-					iBuddycloudLogic->SetPubsubNodeSubscriptionL(aJid, iMessagingObject.iId, EPubsubSubscriptionNone);		
+					iBuddycloudLogic->SetPubsubNodeSubscriptionL(aJid, *iMessagingId, EPubsubSubscriptionNone);		
 				}
 			}
 			else if(aCommand == EMenuAcceptCommand) {
 				// Accept publisher privilage
-				iBuddycloudLogic->SetPubsubNodeAffiliationL(aJid, iMessagingObject.iId, EPubsubAffiliationPublisher);		
+				iBuddycloudLogic->SetPubsubNodeAffiliationL(aJid, *iMessagingId, EPubsubAffiliationPublisher);		
 			}
 			
 			// Delete item from discussion
 			iDiscussion->DeleteEntryById(aEntry->GetId());
 		}		
-	}
-	else if(aCommand == EMenuDeclineCommand) {
-		// Decline request
-	
 	}
 	else if(aCommand == EMenuFollowCommand) {
 		CAtomEntryData* aEntry = iEntries[iSelectedItem]->GetEntry();
@@ -1451,17 +1472,22 @@ void CBuddycloudMessagingContainer::HandleCommandL(TInt aCommand) {
 			iBuddycloudLogic->FollowContactL(aEntry->GetAuthorJid());
 		}
 	}
-	else if(aCommand == EMenuFollowLinkCommand || aCommand == EMenuChannelMessagesCommand || aCommand == EMenuPrivateMessagesCommand) {
+	else if(aCommand == EMenuFollowLinkCommand || aCommand == EMenuChannelInfoCommand || 
+			aCommand == EMenuChannelMessagesCommand || aCommand == EMenuPrivateMessagesCommand) {
+		
+		// Handle action on a highlighted link
 		CAtomEntryData* aEntry = iEntries[iSelectedItem]->GetEntry();
 		
 		if(aEntry && aEntry->GetLinkCount() > 0) {
 			CEntryLinkPosition aLinkPosition = aEntry->GetLink(iSelectedLink);
 			
 			if(aLinkPosition.iType != ELinkWebsite) {
+				TPtrC aLinkText(aEntry->GetContent().Mid(aLinkPosition.iStart, aLinkPosition.iLength));
 				_LIT(KRootNode, "/channel/");
-				HBufC* aLinkId = HBufC::NewLC(aLinkPosition.iLength + KRootNode().Length());
+				
+				HBufC* aLinkId = HBufC::NewLC(aLinkText.Length() + KRootNode().Length());
 				TPtr pLinkId(aLinkId->Des());
-				pLinkId.Append(aEntry->GetContent().Mid(aLinkPosition.iStart, aLinkPosition.iLength));
+				pLinkId.Append(aLinkText);
 					
 				if(aLinkPosition.iType == ELinkChannel) {
 					pLinkId = pLinkId.Mid(1);
@@ -1472,25 +1498,33 @@ void CBuddycloudMessagingContainer::HandleCommandL(TInt aCommand) {
 				}
 				
 				if(aCommand == EMenuFollowLinkCommand) {
-					if(aLinkPosition.iType == ELinkUsername) {
-						iBuddycloudLogic->FollowContactL(pLinkId);
-					}
-					else {
-						iBuddycloudLogic->FollowChannelL(pLinkId);
-					}
+					// Follow contact
+					iBuddycloudLogic->FollowContactL(pLinkId);
+				}
+				else if(aCommand == EMenuChannelInfoCommand) {
+					// View channel info
+					TViewReferenceBuf aViewReference;	
+					aViewReference().iCallbackRequested = true;
+					aViewReference().iCallbackViewId = KMessagingViewId;
+					aViewReference().iOldViewData.iId = iItem->GetItemId();
+					aViewReference().iNewViewData.iTitle.Copy(aLinkText);
+					aViewReference().iNewViewData.iData.Copy(pLinkId);
+
+					iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KChannelInfoViewId), TUid::Uid(0), aViewReference);			
 				}
 				else {
+					// View channel/private messages
 					CBuddycloudListStore* aItemStore = iBuddycloudLogic->GetFollowingStore();
 					CFollowingItem* aItem = static_cast <CFollowingItem*> (aItemStore->GetItemById(iBuddycloudLogic->IsSubscribedTo(pLinkId, EItemRoster|EItemChannel)));
 					
 					if(aItem && aItem->GetItemType() >= EItemRoster) {
-						iMessagingObject.iFollowerId = aItem->GetItemId();
-						iMessagingObject.iTitle = aItem->GetTitle();
-						iMessagingObject.iId = aItem->GetId();
+						iMessagingObject.iId = aItem->GetItemId();
+						iMessagingObject.iTitle.Copy(aItem->GetTitle());
+						iMessagingObject.iData.Copy(aItem->GetId());
 						
 						if(aItem->GetItemType() == EItemRoster && aCommand == EMenuPrivateMessagesCommand) {
 							CFollowingRosterItem* aRosterItem = static_cast <CFollowingRosterItem*> (aItem);							
-							iMessagingObject.iId = aRosterItem->GetId();
+							iMessagingObject.iData.Copy(aRosterItem->GetId());
 						}
 						
 						InitializeMessageDataL();
@@ -1534,7 +1568,7 @@ void CBuddycloudMessagingContainer::HandleCommandL(TInt aCommand) {
 						break;					
 				}
 				
-				iBuddycloudLogic->SetPubsubNodeAffiliationL(aEntry->GetAuthorJid(), iMessagingObject.iId, aAffiliation);		
+				iBuddycloudLogic->SetPubsubNodeAffiliationL(aEntry->GetAuthorJid(), *iMessagingId, aAffiliation);		
 			}
 		}
 	}
@@ -1549,8 +1583,8 @@ void CBuddycloudMessagingContainer::HandleCommandL(TInt aCommand) {
 		iEntries.Reset();
 		
 		// Get item's index
-		TInt aFollowingIdsIndex = iBuddycloudLogic->GetFollowingStore()->GetIndexById(iMessagingObject.iFollowerId);
-		TInt aReturnItemId = iMessagingObject.iFollowerId;
+		TInt aFollowingIdsIndex = iBuddycloudLogic->GetFollowingStore()->GetIndexById(iMessagingObject.iId);
+		TInt aReturnItemId = iMessagingObject.iId;
 
 		// Switch index if all entries read
 		if(iDiscussion->GetUnreadEntries() == 0 && iFollowingItemIndex < aFollowingIdsIndex) {

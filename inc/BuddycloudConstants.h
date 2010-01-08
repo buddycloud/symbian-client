@@ -22,7 +22,8 @@ const TUid KBeaconSettingsViewId         = {9};
 const TUid KMessagingViewId              = {10};
 const TUid KEditPlaceViewId              = {11};
 const TUid KEditChannelViewId            = {12};
-const TUid KCommunitiesViewId            = {13};
+const TUid KChannelInfoViewId            = {13};
+const TUid KCommunitiesViewId            = {14};
 
 // String constants
 _LIT(KBuddycloudRosterServer, "@buddycloud.com");
@@ -62,7 +63,7 @@ enum TBuddycloudXmppIdEnumerations {
 	EXmppIdSetCurrentPlace, EXmppIdCreatePlace, EXmppIdSearchForPlace, EXmppIdGetPlaceDetails, EXmppEditPlaceDetails, 
 	// Pubsub id's
 	EXmppIdGetPubsubSubscriptions, EXmppIdGetUsersPubsubNodeSubscribers, EXmppIdPublishMood, EXmppIdPublishFuturePlace, 
-	EXmppIdPublishChannelPost, EXmppIdValidateChannelExists, EXmppIdAddChannelSubscription, EXmppIdGetChannelMetadata,
+	EXmppIdCreateChannel, EXmppIdPublishChannelPost, EXmppIdAddChannelSubscription, EXmppIdGetChannelMetadata, 
 	EXmppIdRequestMediaPost
 };
 

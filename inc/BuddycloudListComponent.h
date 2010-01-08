@@ -12,9 +12,10 @@
 
 // INCLUDES
 #include <AknsBasicBackgroundControlContext.h>
-#include <coecntrl.h>
-#include <fbs.h>
 #include <bitdev.h>
+#include <coecntrl.h>
+#include <eikscrlb.h>
+#include <fbs.h>
 #include <Buddycloud.rsg>
 #include "Buddycloud.hrh"
 #include "Buddycloud.pan"

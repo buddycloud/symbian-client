@@ -29,6 +29,7 @@
 #include "BuddycloudPreferencesSettingsView.h"
 #include "BuddycloudNotificationsSettingsView.h"
 #include "BuddycloudBeaconSettingsView.h"
+#include "BuddycloudChannelInfoView.h"
 #include "BuddycloudCommunitiesView.h"
 #include "BuddycloudFollowingView.h"
 #include "BuddycloudMessagingView.h"
@@ -156,6 +157,12 @@ void CBuddycloudAppUi::CreateViewsL() {
 	CleanupStack::PushL(aViewEditChannel);
 	aViewEditChannel->ConstructL(iBuddycloudLogic);
 	AddViewL(aViewEditChannel);
+	CleanupStack::Pop();
+
+	CBuddycloudChannelInfoView* aViewChannelInfo = new (ELeave) CBuddycloudChannelInfoView;
+	CleanupStack::PushL(aViewChannelInfo);
+	aViewChannelInfo->ConstructL(iBuddycloudLogic);
+	AddViewL(aViewChannelInfo);
 	CleanupStack::Pop();
 
 	if(iBuddycloudLogic->GetDescSetting(ESettingItemUsername).Length() > 0) {
@@ -417,15 +424,12 @@ void CBuddycloudAppUi::NotificationEvent(TBuddycloudLogicNotificationType aEvent
 		User::ResetInactivityTime();
 	}
 	else if(aEvent == ENotificationEditPlaceRequested) {
-		iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KEditPlaceViewId), TUid::Uid(aId), _L8(""));
-	}
-	else if(aEvent == ENotificationEditChannelRequested) {
-		iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KEditChannelViewId), TUid::Uid(aId), _L8(""));
+		ActivateLocalViewL(KEditPlaceViewId, TUid::Uid(aId), _L8(""));
 	}
 	else if(aEvent == ENotificationAuthenticationFailed) {
-		iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KAccountSettingsViewId), TUid::Uid(2), _L8(""));
+		ActivateLocalViewL(KAccountSettingsViewId, TUid::Uid(2), _L8(""));
 	}
 	else if(aEvent == ENotificationServerResolveFailed) {
-		iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KAccountSettingsViewId), TUid::Uid(4), _L8(""));
+		ActivateLocalViewL(KAccountSettingsViewId, TUid::Uid(4), _L8(""));
 	}
 }

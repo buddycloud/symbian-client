@@ -102,7 +102,7 @@ class CAtomEntryData : CBase {
 		void SetAuthorNameL(const TDesC& aAuthorName);
 		
 		TDesC& GetAuthorJid();
-		void SetAuthorJidL(const TDesC& aAuthorJid, TBool aSensor = true);
+		void SetAuthorJidL(const TDesC& aAuthorJid);
 		
 		TXmppPubsubAffiliation GetAuthorAffiliation();
 		void SetAuthorAffiliation(TXmppPubsubAffiliation aAffiliation);		
