@@ -128,15 +128,25 @@ CBuddycloudListStore* CBuddycloudListStore::NewL() {
 CBuddycloudListStore* CBuddycloudListStore::NewLC() {
 	CBuddycloudListStore* self = new (ELeave) CBuddycloudListStore();
 	CleanupStack::PushL(self);
+	self->ConstructL();
 	return self;
 }
 
 CBuddycloudListStore::~CBuddycloudListStore() {
+	if(iFilterText) {
+		delete iFilterText;
+	}
+	
+	// List
 	for(TInt i = 0; i < iItemStore.Count();i++) {
 		delete iItemStore[i];
 	}
 
 	iItemStore.Close();
+}
+
+void CBuddycloudListStore::ConstructL() {
+	iFilterText = HBufC::NewL(0);
 }
 
 TInt CBuddycloudListStore::Count() {
@@ -250,6 +260,63 @@ void CBuddycloudListStore::DeleteItemById(TInt aItemId) {
 			iItemStore.Remove(i);
 			
 			break;
+		}
+	}
+}
+
+TDesC& CBuddycloudListStore::GetFilterText() {
+	return *iFilterText;
+}
+
+TBool CBuddycloudListStore::SetFilterTextL(const TDesC& aFilterText) {
+	TPtrC aOldFilterText(iFilterText->Des());
+
+	if(aOldFilterText.Compare(aFilterText) != 0) {
+		// Set filter text
+		if(iFilterText) {
+			delete iFilterText;
+		}
+		
+		iFilterText = aFilterText.AllocL();
+		
+		// Filter
+		FilterL();
+		
+		return true;
+	}
+	
+	return false;
+}
+
+void CBuddycloudListStore::FilterItemL(TInt aIndex) {	
+	CBuddycloudListItem* aItem = iItemStore[aIndex];
+	TPtrC aFilterText(iFilterText->Des());
+	
+	if(aItem && ((aFilterText.Length() <= aItem->GetTitle().Length() && 
+				aItem->GetTitle().FindF(aFilterText) != KErrNotFound) || 
+			(aFilterText.Length() <= aItem->GetDescription().Length() && 
+				aItem->GetDescription().FindF(aFilterText) != KErrNotFound))) {
+			
+		// Title or description match
+		aItem->SetFiltered(true);
+	}
+}
+
+void CBuddycloudListStore::FilterL() {
+	TPtrC aFilterText(iFilterText->Des());
+	
+	if(aFilterText.Length() == 0) {
+		// Reset filter
+		for(TInt i = 0; i < iItemStore.Count(); i++) {
+			iItemStore[i]->SetFiltered(true);
+		}
+	}
+	else {
+		// Filter items
+		for(TInt i = 0; i < iItemStore.Count(); i++) {
+			iItemStore[i]->SetFiltered(false);
+
+			FilterItemL(i);
 		}
 	}
 }

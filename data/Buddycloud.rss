@@ -34,10 +34,10 @@ RESOURCE EIK_APP_INFO {}
 
 RESOURCE TBUF r_string_appversion 
 {
-	buf = "S60_9_0.05.18"; 
+	buf = "S60_9_0.05.21"; 
 }
 
-rls_string r_string_about_text "©2009 buddycloud\nVersion: 0.05.18\nhttp://buddycloud.com\n\nData Sent: %dKB\nData Received: %dKB" 
+rls_string r_string_about_text "©2009 buddycloud\nVersion: 0.05.21\nhttp://buddycloud.com\n\nData Sent: %dKB\nData Received: %dKB" 
 
 RESOURCE TBUF r_localized_string_about_text { buf = r_string_about_text; }
 
@@ -52,7 +52,7 @@ RESOURCE NAVI_DECORATOR r_default_navi_decorator
 	type = ENaviDecoratorControlTabGroup;
 	control = TAB_GROUP
 	{
-		tab_width = EAknTabWidthWithFourTabs;
+		tab_width = EAknTabWidthWithThreeTabs;
 		active = ETabFollowing;
 		tabs =
 		{
@@ -69,13 +69,6 @@ RESOURCE NAVI_DECORATOR r_default_navi_decorator
 			    bmpfile = "\\resource\\apps\\Buddycloud_Tab.mif";
 			    bmpid = EMbmTabiconidsTabplace;
 			    bmpmask = EMbmTabiconidsTabplace;
-			},
-			TAB
-			{
-				id = ETabChannels;
-			    bmpfile = "\\resource\\apps\\Buddycloud_Tab.mif";
-			    bmpid = EMbmTabiconidsTabchannel;
-			    bmpmask = EMbmTabiconidsTabchannel;
 			},
 			TAB
 			{

@@ -20,8 +20,7 @@ rls_string r_string_translatedby "Fordítás: bkos"
 
 rls_string r_string_followingtab_hint "Ismerősök/Csatornák"
 rls_string r_string_placestab_hint "Helyek"
-rls_string r_string_explorertab_hint "Közelben"
-rls_string r_string_channelstab_hint "Csatornák"
+rls_string r_string_explorertab_hint "Explorer"
 
 // CBA
 rls_string r_string_options_menu "Opciók"
@@ -150,11 +149,12 @@ rls_string r_string_note_requesting "Kérés..."
 rls_string r_string_note_channelrank "Helyezés"
 
 // Menu: Channels
+rls_string r_string_list_nearbytoyou "What's Nearby To Me"
 rls_string r_string_list_featuredchannels "Kiemelt csatornák"
 rls_string r_string_list_channelsyoumightlike "Számodra érdekes csatornák"
 rls_string r_string_list_followersfavourites "Követők kedvencei"
 rls_string r_string_list_mostpopularchannels "Legnépszerűbb csatornák"
-rls_string r_string_list_channelsneartoyou "Közeli csatornák"
+rls_string r_string_list_channelsneartoyou "Channels Near To Me"
 
 rls_string r_string_item_open "Megnyit"
 rls_string r_string_item_follow "Kövesd..."
@@ -187,8 +187,6 @@ rls_string r_string_note_subscriptionrejected "Követési felkérésed vissza le
 rls_string r_string_settings_account_title "Fiók"
 rls_string r_string_settings_itemlist_fullname "Teljes név"
 rls_string r_string_settings_itemlist_fullname_hint "Teljes neved"
-rls_string r_string_settings_itemlist_email "E-mail cím"
-rls_string r_string_settings_itemlist_email_hint "Az e-mail címed"
 rls_string r_string_settings_itemlist_username "Felhasználónév"
 rls_string r_string_settings_itemlist_username_hint "XMPP szerver felhasználó"
 rls_string r_string_settings_itemlist_password "Jelszó"
@@ -292,6 +290,7 @@ rls_string r_string_serverresolveerror_text "XMPP server could not be resolved. 
 // Delete Item Message
 rls_string r_string_deleteitem_title "Eltávolítás megerősítése"
 rls_string r_string_deleteitem_text "Biztos, hogy el szeretnéd távolítani?"
+rls_string r_string_deletechannel_text "Deleting this channel will also delete all content.\n\nAre you sure?"
 
 // Sms/Email Messages
 rls_string r_string_invitemessage_title "Csatlakozz a buddycloudhoz!"
@@ -325,17 +324,17 @@ rls_string r_string_note_offline "Offline"
 rls_string r_string_step2_title "Legyél híres!"
 rls_string r_string_step2_text "A buddycloud csatornák új lehetőséget nyújtanak saját tartalmad közlésére követőiddel. A buddycloud csatornák segítségével híres lehetsz ismereteiddel egyedi helyszínekről és témákról és egy saját társaságot alakíthastz ki a követőiddel."
 
-rls_string r_string_step3_title "Mit tehetsz?"
-rls_string r_string_step3_text "A buddyclouddal létre hozhatsz különleges témájú csatornákat vagy egy személyes csatornát, amely rólad szól. A buddycloud automatikusan megosztja a jelenlegi pozíciódat, egy értelmezett helyként, a követőiddel illetve városi szinten mindenki mással is.\n\nKérlek add meg a buddycloud felhasználónevedet vagy ha nem rendelkezel ilyennel, válassz egy új felhasználónevet: "
+rls_string r_string_step3_title "How do you want to log in?"
+rls_string r_string_step3_text "Recommended: Instantly sign-in using your Google account (or any Jabber account).\n\nAlternatively: Register for a buddycloud account."
+rls_string r_string_step3_label1 "Use existing account"
+rls_string r_string_step3_label2 "Register new account"
 
-rls_string r_string_step4_title "Az előnyeid"
-rls_string r_string_step4_text "A buddycloud új lehetőségeket nyújt a követőiddel való kapcsolattartásban és jelzi a csatornád növekvő népszerűségét. A kevés adatforgalomnak köszönhetően egész nap használhatod kis költség és hosszú akkumulátor élettartam mellett. Folyamatosan megoszthatód helyszínedet ellenőrzött és biztonságos módon.\n\nKérlek adj meg egy biztonságos jelszót:"
+rls_string r_string_step4_title "Who are you?"
+rls_string r_string_step4_text1 "Enter your existing account details.\n\nThis looks like 'name@gmail.com' or 'name@googlemail.com'."
+rls_string r_string_step4_text2 "Choose a new username and password to start using buddycloud.  If you have already registered for buddycloud on another phone, enter those details here."
 
-rls_string r_string_step5_title "Maradj kapcsolatban"
-rls_string r_string_step5_text "Ha szeretnéd, hogy figyelmeztessünk új buddycloud szolgáltatások és új verziók esetén, akkor add meg az e-mail címedet(nem kötelező), bizalmasan kezeljük."
-
-rls_string r_string_step6_title "Gratulálunk!"
-rls_string r_string_step6_text "A beállítás befejeződött. Most csatlakozol és bejelentkezel a buddycloud csatornákba."
-rls_string r_string_step6_question "Szeretnéd, hogy mostantól a buddycloud automatikusan induljon a telefon bekapcsolásakor?"
+rls_string r_string_step5_title "Gratulálunk!"
+rls_string r_string_step5_text "You are setup and ready to use buddycloud channels."
+rls_string r_string_step5_question "Szeretnéd, hogy mostantól a buddycloud automatikusan induljon a telefon bekapcsolásakor?"
 
 // End of File

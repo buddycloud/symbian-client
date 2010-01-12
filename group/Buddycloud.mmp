@@ -88,7 +88,7 @@ SOURCE            CellTowerDataSimulation.cpp BuddycloudListComponent.cpp Buddyc
 SOURCE            CompressionEngine.cpp EZStreamCompressor.cpp EZStreamDecompressor.cpp TimeUtilities.cpp
 SOURCE            BuddycloudSetupView.cpp BuddycloudSetupContainer.cpp BuddycloudBeaconSettingsView.cpp BuddycloudBeaconSettingsList.cpp 
 SOURCE            SearchResultMessageQueryDialog.cpp TextUtilities.cpp PhoneUtilities.cpp FontUtilities.cpp FileUtilities.cpp 
-SOURCE            BuddycloudChannelsContainer.cpp BuddycloudChannelsView.cpp BuddycloudExplorer.cpp 
+SOURCE            BuddycloudExplorer.cpp 
 SOURCE            BuddycloudPreferencesSettingsView.cpp BuddycloudPreferencesSettingsList.cpp 
 SOURCE            BuddycloudCommunitiesView.cpp BuddycloudCommunitiesContainer.cpp BuddycloudFollowing.cpp 
 SOURCE            BuddycloudFollowingContainer.cpp BuddycloudFollowingView.cpp

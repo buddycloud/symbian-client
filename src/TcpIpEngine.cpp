@@ -552,6 +552,7 @@ void CTcpIpEngine::RunL() {
 				iSocketHost->Des().Copy(iDnsResponse().Target());
 				iSocketPort = iDnsResponse().Port();
 				
+				iEngineObserver->TcpIpDebug(iDnsResponse().Target(), iDnsResponse().Port());
 				iEngineObserver->HostResolved(*iSocketHost, iSocketPort);
 				
 				// Resolving address by host name
@@ -579,7 +580,14 @@ void CTcpIpEngine::RunL() {
 				iEngineStatus = ETcpIpDisconnected;
 				
 				GetConnectionInformationL();
-
+				
+#ifdef _DEBUG
+				// Debug
+				TBuf8<15> aIp;
+				aIp.Format(_L8("%d.%d.%d.%d"), iNameEntry().iAddr[11], iNameEntry().iAddr[10], iNameEntry().iAddr[9], iNameEntry().iAddr[8]);
+				iEngineObserver->TcpIpDebug(aIp, iSocketPort);
+#endif
+				
 				// Open socket
 				TSockAddr aSockAddr = iNameEntry().iAddr;
 				aSockAddr.SetPort(iSocketPort);

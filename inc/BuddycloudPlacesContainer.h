@@ -30,7 +30,11 @@ class CBuddycloudPlacesContainer : public CBuddycloudListComponent, MAknTabObser
 		CBuddycloudPlacesContainer(MViewAccessorObserver* aViewAccessor, CBuddycloudLogic* aBuddycloudLogic);
 		void ConstructL(const TRect& aRect, TInt aPlaceId);
         ~CBuddycloudPlacesContainer();
- 
+		
+	private:
+		void ConfigureEdwinL();
+		void DisplayEdwin(TBool aShowEdwin);
+
 	public: // From MBuddycloudLogicNotificationObserver
 		void NotificationEvent(TBuddycloudLogicNotificationType aEvent, TInt aId = KErrNotFound);
 
@@ -49,7 +53,10 @@ class CBuddycloudPlacesContainer : public CBuddycloudListComponent, MAknTabObser
 		void GetHelpContext(TCoeHelpContext& aContext) const;
 		
 	private: // From CCoeControl
+		void HandleResourceChange(TInt aType);
 		void SizeChanged();
+        TInt CountComponentControls() const;
+        CCoeControl* ComponentControl(TInt aIndex) const;
  		TKeyResponse OfferKeyEventL(const TKeyEvent& aKeyEvent, TEventCode aType);
   		
 	public: // From MAknTabObserver
@@ -67,6 +74,11 @@ class CBuddycloudPlacesContainer : public CBuddycloudListComponent, MAknTabObser
 		HBufC* iLocalizedPlacePopulation;
 		HBufC* iLocalizedLearningPlace;
 		HBufC* iLocalizedUpdatingPlace;
+		
+		// Edwin
+		CEikEdwin* iEdwin;
+		TBool iEdwinVisible;
+		TInt iEdwinLength;
 
 		CBuddycloudPlaceStore* iPlaceStore;
 };

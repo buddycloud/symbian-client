@@ -20,8 +20,7 @@ rls_string r_string_translatedby "Translated by: venduza"
 
 rls_string r_string_followingtab_hint "Επόμενο"
 rls_string r_string_placestab_hint "Τοποθεσίες"
-rls_string r_string_explorertab_hint "Κοντά"
-rls_string r_string_channelstab_hint "Κανάλια"
+rls_string r_string_explorertab_hint "Explorer"
 
 // CBA
 rls_string r_string_options_menu "Επιλογές"
@@ -150,11 +149,12 @@ rls_string r_string_note_requesting "Αίτηση..."
 rls_string r_string_note_channelrank "Βαθμός"
 
 // Menu: Channels
+rls_string r_string_list_nearbytoyou "What's Nearby To Me"
 rls_string r_string_list_featuredchannels "Προτεινόμενα κανάλια"
 rls_string r_string_list_channelsyoumightlike "Κανάλια που μπορεί να σου αρέσουν"
 rls_string r_string_list_followersfavourites "Οπαδοί' Αγαπημένα"
 rls_string r_string_list_mostpopularchannels "Πιο δημοφιλή κανάλια"
-rls_string r_string_list_channelsneartoyou "Κανάλια κοντά σου"
+rls_string r_string_list_channelsneartoyou "Channels Near To Me"
 
 rls_string r_string_item_open "Ανοιξε"
 rls_string r_string_item_follow "Ακολούθα"
@@ -187,8 +187,6 @@ rls_string r_string_note_subscriptionrejected "Your subscription to this channel
 rls_string r_string_settings_account_title "Λογαριασμός"
 rls_string r_string_settings_itemlist_fullname "Πλήρες όνομα"
 rls_string r_string_settings_itemlist_fullname_hint "Το πλήρες όνομα σας"
-rls_string r_string_settings_itemlist_email "Διεύθυνση e-mail"
-rls_string r_string_settings_itemlist_email_hint "Η διεύθυνση e-mail σας"
 rls_string r_string_settings_itemlist_username "Ονομα χρήστη"
 rls_string r_string_settings_itemlist_username_hint "XMPP server username"
 rls_string r_string_settings_itemlist_password "Κωδικός"
@@ -292,6 +290,7 @@ rls_string r_string_serverresolveerror_text "XMPP server could not be resolved. 
 // Delete Item Message
 rls_string r_string_deleteitem_title "Επιβεβαίωση αφαίρεσης"
 rls_string r_string_deleteitem_text "Είστε σίγουρος ότι θέλετε να το καταργήσετε?"
+rls_string r_string_deletechannel_text "Deleting this channel will also delete all content.\n\nAre you sure?"
 
 // Sms/Email Messages
 rls_string r_string_invitemessage_title "Βρείτε μας στο buddycloud!"
@@ -325,17 +324,17 @@ rls_string r_string_note_offline "Αποσυνδεδεμένος"
 rls_string r_string_step2_title "Γίνε διάσημος!"
 rls_string r_string_step2_text "Τα καναλια του buddycloud σας δίνουν ένα νέο τρόπο μεταδόσης της επιβλητικότητά σας στους οπαδούς σας.\n\nΤα καναλια του buddycloud σας επιτρέπει να γίνετε γνωστός για τη μοναδική σας γνώση πάνω σε μία τοποθεσία ή ένα θέμα και να δημιουργήσετε μια κοινότητα των οπαδών."
 
-rls_string r_string_step3_title "Τι μπορείς να κάνεις?"
-rls_string r_string_step3_text "Με το buddycloud μπορείτε να δημιουργήσετε ένα κανάλι πάνω σε αυτό που είστε καλοί, ή ένα προσωπικό κανάλι σχετικά με εσάς. Το buddycloud θα μοιράζεται αυτόματα την τρέχουσα θέση σας ως σημαντική τοποθεσία μαρκαρισμένη με τους οπαδούς σας, ή σε επίπεδο πόλεως με όλους τους άλλους.\n\nΠαρακαλώ επιλέξτε ένα μοναδικό όνομα χρήστη για να ξεκινήσετε:"
+rls_string r_string_step3_title "How do you want to log in?"
+rls_string r_string_step3_text "Recommended: Instantly sign-in using your Google account (or any Jabber account).\n\nAlternatively: Register for a buddycloud account."
+rls_string r_string_step3_label1 "Use existing account"
+rls_string r_string_step3_label2 "Register new account"
 
-rls_string r_string_step4_title "Τα οφέλη σου"
-rls_string r_string_step4_text "Το buddycloud σας παρέχει ένα νέο επίπεδο αλληλεπίδρασης με τους οπαδούς σας και δείχνει την αυξανόμενη δημοτικότητα του καναλιού σας. Συνεχίστε όλη την ημέρα με χαμηλό κόστος και με χαμηλή εξάντληση της μπαταρίας του τηλεφώνου σας, λόγω του χαμηλού buddycloud δεδομένων χρήσης. Μοιραστείτε συνεχώς τη θέση σας, αλλά με ελεγχόμενο, ασφαλή τρόπο.\n\nΠαρακαλώ εισάγετε έναν ασφαλή κωδικό πρόσβασης:"
+rls_string r_string_step4_title "Who are you?"
+rls_string r_string_step4_text1 "Enter your existing account details.\n\nThis looks like 'name@gmail.com' or 'name@googlemail.com'."
+rls_string r_string_step4_text2 "Choose a new username and password to start using buddycloud.  If you have already registered for buddycloud on another phone, enter those details here."
 
-rls_string r_string_step5_title "Μείνε σε επαφή"
-rls_string r_string_step5_text "Λάβετε ειδοποιήσεις για νέες υπηρεσίες buddycloud και νέες εκδόσεις της εφαρμογής.\n\nΑφήστε μας την ηλεκτρονική σας διεύθυνση (προαιρετικό), θα τη κρατήσουμε ασφαλή:"
-
-rls_string r_string_step6_title "Συγχαρητήρια!"
-rls_string r_string_step6_text "Η εγκατάσταση ολοκληρώθηκε. Τώρα θα συνδεθείτε και θα εγγραφτείτε στα κανάλια buddycloud."
-rls_string r_string_step6_question "Θέλετε να ξεκινάει το buddycloud όταν ενεργοποιείτε το τηλέφωνό σας από τώρα και στο εξής?"
+rls_string r_string_step5_title "Συγχαρητήρια!"
+rls_string r_string_step5_text "You are setup and ready to use buddycloud channels."
+rls_string r_string_step5_question "Θέλετε να ξεκινάει το buddycloud όταν ενεργοποιείτε το τηλέφωνό σας από τώρα και στο εξής?"
 
 // End of File

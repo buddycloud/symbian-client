@@ -276,3 +276,53 @@ TInt CFollowingRosterItem::GetUnread(TIdType aType) {
 	
 	return 0;
 }
+
+/*
+----------------------------------------------------------------------------
+--
+-- CBuddycloudFollowingStore
+--
+----------------------------------------------------------------------------
+*/
+
+CBuddycloudFollowingStore* CBuddycloudFollowingStore::NewL() {
+	CBuddycloudFollowingStore* self = NewLC();
+	CleanupStack::Pop(self);
+	return self;
+}
+
+CBuddycloudFollowingStore* CBuddycloudFollowingStore::NewLC() {
+	CBuddycloudFollowingStore* self = new (ELeave) CBuddycloudFollowingStore();
+	CleanupStack::PushL(self);
+	self->ConstructL();
+	return self;
+}
+
+void CBuddycloudFollowingStore::FilterItemL(TInt aIndex) {
+	CBuddycloudListStore::FilterItemL(aIndex);
+	
+	CFollowingItem* aFollowingItem = static_cast <CFollowingItem*> (iItemStore[aIndex]);
+	TPtrC aFilterText(iFilterText->Des());
+		
+	if(aFollowingItem && !aFollowingItem->Filtered()) {
+		if(aFilterText.Length() <= aFollowingItem->GetId().Length() && 
+				aFollowingItem->GetId().FindF(aFilterText) != KErrNotFound) {
+			
+			// Id match
+			aFollowingItem->SetFiltered(true);
+		}
+		
+		if(!aFollowingItem->Filtered() && aFollowingItem->GetItemType() == EItemRoster) {
+			CFollowingRosterItem* aRosterItem = static_cast <CFollowingRosterItem*> (aFollowingItem);
+			TPtrC aCurrentPlace(aRosterItem->GetGeolocItem(EGeolocItemCurrent)->GetString(EGeolocText));
+			TPtrC aFuturePlace(aRosterItem->GetGeolocItem(EGeolocItemFuture)->GetString(EGeolocText));
+			
+			if((aFilterText.Length() <= aCurrentPlace.Length() && aCurrentPlace.FindF(aFilterText) != KErrNotFound) || 
+					(aFilterText.Length() <= aFuturePlace.Length() && aFuturePlace.FindF(aFilterText) != KErrNotFound)) {
+				
+				// Current or future place match
+				aFollowingItem->SetFiltered(true);
+			}
+		}
+	}	
+}

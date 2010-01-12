@@ -43,8 +43,10 @@ TUid CBuddycloudFollowingView::Id() const {
 	return KFollowingViewId;
 }
 
-void CBuddycloudFollowingView::ProcessCommandL(TInt aCommand) {
-	CAknView::ProcessCommandL(aCommand);
+void CBuddycloudFollowingView::DynInitMenuPaneL(TInt aResourceId, CEikMenuPane* aMenuPane) {
+	if(iContainer) {
+		iContainer->DynInitMenuPaneL(aResourceId, aMenuPane);		
+	}
 }
 
 void CBuddycloudFollowingView::HandleCommandL(TInt aCommand) {
@@ -54,19 +56,8 @@ void CBuddycloudFollowingView::HandleCommandL(TInt aCommand) {
 		
 		AppUi()->HandleCommandL(aCommand);
 	}
-	else if(aCommand == EAknSoftkeyBack && iBuddycloudLogic->GetFollowingFilterText().Length() == 0) {
-		TApaTask aTask(iEikonEnv->WsSession());
-		aTask.SetWgId(CEikonEnv::Static()->RootWin().Identifier());
-		aTask.SendToBackground();
-	}
 	else if(iContainer) {
 		iContainer->HandleCommandL(aCommand);
-	}
-}
-
-void CBuddycloudFollowingView::DynInitMenuPaneL(TInt aResourceId, CEikMenuPane* aMenuPane) {
-	if(iContainer) {
-		iContainer->DynInitMenuPaneL(aResourceId, aMenuPane);		
 	}
 }
 		

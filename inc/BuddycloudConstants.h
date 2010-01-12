@@ -12,30 +12,20 @@
 // View IDs
 const TUid KFollowingViewId              = {1};
 const TUid KPlacesViewId                 = {2};
-const TUid KChannelsViewId               = {3};
-const TUid KExplorerViewId               = {4};
-const TUid KSetupViewId                  = {5};
-const TUid KAccountSettingsViewId        = {6};
-const TUid KPreferencesSettingsViewId    = {7};
-const TUid KNotificationsSettingsViewId  = {8};
-const TUid KBeaconSettingsViewId         = {9};
-const TUid KMessagingViewId              = {10};
-const TUid KEditPlaceViewId              = {11};
-const TUid KEditChannelViewId            = {12};
-const TUid KChannelInfoViewId            = {13};
-const TUid KCommunitiesViewId            = {14};
+const TUid KExplorerViewId               = {3};
+const TUid KSetupViewId                  = {4};
+const TUid KAccountSettingsViewId        = {5};
+const TUid KPreferencesSettingsViewId    = {6};
+const TUid KNotificationsSettingsViewId  = {7};
+const TUid KBeaconSettingsViewId         = {8};
+const TUid KMessagingViewId              = {9};
+const TUid KEditPlaceViewId              = {10};
+const TUid KEditChannelViewId            = {11};
+const TUid KChannelInfoViewId            = {12};
+const TUid KCommunitiesViewId            = {13};
 
 // String constants
-_LIT(KBuddycloudRosterServer, "@buddycloud.com");
-_LIT(KBuddycloudChannelsServer, "@channels.buddycloud.com");
-
 _LIT8(KBuddycloudPubsubServer, "broadcaster.buddycloud.com");
-
-_LIT8(KChatstateActive, "active");
-_LIT8(KChatstateComposing, "composing");
-_LIT8(KChatstatePaused, "paused");
-_LIT8(KChatstateInactive, "inactive");
-_LIT8(KChatstateGone, "gone");
 
 _LIT8(KIqTypeSet, "set");
 _LIT8(KIqTypeGet, "get");
@@ -47,6 +37,9 @@ _LIT8(KPlaceSearch, "search");
 _LIT8(KPlaceRemove, "remove");
 _LIT8(KPlaceDelete, "delete");
 _LIT8(KPlaceCurrent, "current");
+
+_LIT8(KTaggerFlag, "flag");
+_LIT8(KTaggerTag, "tag");
 
 /*
 ----------------------------------------------------------------------------

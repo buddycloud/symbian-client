@@ -166,7 +166,7 @@ void CBuddycloudMessagingContainer::InitializeMessageDataL() {
 	iDiscussion->SetDiscussionUpdateObserver(this);
 	
 	// Is a channel
-	CBuddycloudListStore* aItemStore = iBuddycloudLogic->GetFollowingStore();
+	CBuddycloudFollowingStore* aItemStore = iBuddycloudLogic->GetFollowingStore();
 	iFollowingItemIndex = aItemStore->GetIndexById(iMessagingObject.iId);
 	iItem = static_cast <CFollowingItem*> (aItemStore->GetItemById(iMessagingObject.iId));
 	
@@ -942,7 +942,7 @@ void CBuddycloudMessagingContainer::RenderListItems() {
 
 				// Separator line
 				if((i != iSelectedItem) && ((i + 1) != iSelectedItem) && (i < (iEntries.Count() - 1))) {
-					iBufferGc->SetPenColor(iColourHighlightBorder);
+					iBufferGc->SetPenColor(iColourTextTrans);
 					iBufferGc->SetPenStyle(CGraphicsContext::EDashedPen);
 					iBufferGc->DrawLine(TPoint(iLeftBarSpacer + aItemLeftOffset + 4, aItemDrawPos), TPoint((iRect.Width() - iRightBarSpacer - 5), aItemDrawPos));
 					iBufferGc->SetPenStyle(CGraphicsContext::ESolidPen);
@@ -1306,7 +1306,7 @@ void CBuddycloudMessagingContainer::DynInitMenuPaneL(TInt aResourceId, CEikMenuP
 							}
 						}
 						else {
-							CBuddycloudListStore* aItemStore = iBuddycloudLogic->GetFollowingStore();
+							CBuddycloudFollowingStore* aItemStore = iBuddycloudLogic->GetFollowingStore();
 							CFollowingItem* aItem = static_cast <CFollowingItem*> (aItemStore->GetItemById(aItemId));
 							
 							if(aItem && aItem->GetItemType() >= EItemRoster) {
@@ -1384,18 +1384,19 @@ void CBuddycloudMessagingContainer::HandleCommandL(TInt aCommand) {
 			CleanupStack::PopAndDestroy(2); // aPlainText, aClipbroad
 		}
 	}
-	else if(aCommand == EMenuDeletePostCommand) {
+	else if(aCommand == EMenuDeletePostCommand || aCommand == EMenuLikePostCommand || aCommand == EMenuReportPostCommand) {
 		CAtomEntryData* aEntry = iEntries[iSelectedItem]->GetEntry();
 		
 		if(aEntry) {
-			iBuddycloudLogic->RetractPubsubNodeItemL(iItem->GetId(), aEntry->GetId());
-		}
-	}
-	else if(aCommand == EMenuReportPostCommand) {
-		CAtomEntryData* aEntry = iEntries[iSelectedItem]->GetEntry();
-		
-		if(aEntry) {
-			iBuddycloudLogic->FlagPostAbusiveL(iItem->GetId(), aEntry->GetId());
+			if(aCommand == EMenuDeletePostCommand) {
+				iBuddycloudLogic->RetractPubsubNodeItemL(iItem->GetId(), aEntry->GetId());
+			}
+			else if(aCommand == EMenuLikePostCommand) {
+				iBuddycloudLogic->FlagTagNodeItemL(KTaggerTag, iItem->GetId(), aEntry->GetId());
+			}
+			else if(aCommand == EMenuReportPostCommand) {
+				iBuddycloudLogic->FlagTagNodeItemL(KTaggerFlag, iItem->GetId(), aEntry->GetId());
+			}
 		}
 	}
 	else if(aCommand == EMenuMarkReadCommand) {
@@ -1514,7 +1515,7 @@ void CBuddycloudMessagingContainer::HandleCommandL(TInt aCommand) {
 				}
 				else {
 					// View channel/private messages
-					CBuddycloudListStore* aItemStore = iBuddycloudLogic->GetFollowingStore();
+					CBuddycloudFollowingStore* aItemStore = iBuddycloudLogic->GetFollowingStore();
 					CFollowingItem* aItem = static_cast <CFollowingItem*> (aItemStore->GetItemById(iBuddycloudLogic->IsSubscribedTo(pLinkId, EItemRoster|EItemChannel)));
 					
 					if(aItem && aItem->GetItemType() >= EItemRoster) {
@@ -1667,12 +1668,12 @@ TKeyResponse CBuddycloudMessagingContainer::OfferKeyEventL(const TKeyEvent& aKey
 			aResult = EKeyWasConsumed;
 		}
 
-		if(aResult == EKeyWasNotConsumed && aKeyEvent.iCode >= 32 && aKeyEvent.iCode <= 255) {
+		if(aResult == EKeyWasNotConsumed && aKeyEvent.iCode >= 33 && aKeyEvent.iCode <= 255) {
 			aResult = EKeyWasConsumed;
 			
 			TBuf<8> aMessage;
 	
-			if(aKeyEvent.iCode > 30) {
+			if(aKeyEvent.iCode <= 47 || aKeyEvent.iCode >= 58) {
 				aMessage.Append(TChar(aKeyEvent.iCode));
 				aMessage.Capitalize();
 			}

@@ -20,8 +20,7 @@ rls_string r_string_translatedby "แปลโดย : buddycloud สาวไ�
 
 rls_string r_string_followingtab_hint "ติดตาม"
 rls_string r_string_placestab_hint "สถานที่"
-rls_string r_string_explorertab_hint "เพื่อนๆใกล้เคียง"
-rls_string r_string_channelstab_hint "สถานี"
+rls_string r_string_explorertab_hint "Explorer"
 
 // CBA
 rls_string r_string_options_menu "ตัวเลือก"
@@ -150,11 +149,12 @@ rls_string r_string_note_requesting "กำลังส่งคำร้อง�
 rls_string r_string_note_channelrank "ลำดับ"
 
 // Menu: Channels
+rls_string r_string_list_nearbytoyou "What's Nearby To Me"
 rls_string r_string_list_featuredchannels "สถานีที่โดดเด่น"
 rls_string r_string_list_channelsyoumightlike "สถานีที่คุณอาจจะชอบ"
 rls_string r_string_list_followersfavourites "ผู้ติดตามที่ฮอตที่สุด"
 rls_string r_string_list_mostpopularchannels "สถานีที่ฮอตที่สุด"
-rls_string r_string_list_channelsneartoyou "สถานีที่อยู่ใกล้ๆคุณ"
+rls_string r_string_list_channelsneartoyou "Channels Near To Me"
 
 rls_string r_string_item_open "เปิด"
 rls_string r_string_item_follow "ติดตาม"
@@ -187,8 +187,6 @@ rls_string r_string_note_subscriptionrejected "Your subscription to this channel
 rls_string r_string_settings_account_title "นามแฝง"
 rls_string r_string_settings_itemlist_fullname "ชื่อจริง"
 rls_string r_string_settings_itemlist_fullname_hint "ชื่อจริงของคุณ"
-rls_string r_string_settings_itemlist_email "E-mail"
-rls_string r_string_settings_itemlist_email_hint "E-mail ของคุณ"
 rls_string r_string_settings_itemlist_username "ชื่อผู้ใช้"
 rls_string r_string_settings_itemlist_username_hint "XMPP server username"
 rls_string r_string_settings_itemlist_password "รหัสผ่าน"
@@ -292,6 +290,7 @@ rls_string r_string_serverresolveerror_text "XMPP server could not be resolved. 
 // Delete Item Message
 rls_string r_string_deleteitem_title "ยืนยันการลบออก"
 rls_string r_string_deleteitem_text "แน่ใจหรือว่าต้องการลบออก?"
+rls_string r_string_deletechannel_text "Deleting this channel will also delete all content.\n\nAre you sure?"
 
 // Sms/Email Messages
 rls_string r_string_invitemessage_title "สนุกกับเราที่ buddycloud!"
@@ -325,17 +324,17 @@ rls_string r_string_note_offline "ออฟไลน์"
 rls_string r_string_step2_title "ขอให้เป็นคนดังนะ!"
 rls_string r_string_step2_text "ช่องต่างๆของ buddycloud ทำให้คุณสามารถเผยแพร่สิ่งต่างๆให้กับผู้ติดตามของคุณได้ สุดยอด ทำให้คุณกลายเป็นคนดังด้วยสิ่งที่คุณมี สถานที่ต่างๆ หรือสร้างชุมชนการพูดคุยกันขึ้นมาเอง"
 
-rls_string r_string_step3_title "คุณจะทำอะไรได้บ้าง?"
-rls_string r_string_step3_text "ด้วย buddycloud คุณสามารถสร้างหัวข้อใหม่ๆในช่องที่คุณชอบ หรือช่องส่วนตัวของคุณก็ได้\n\nbuddycloud  จะแชร์ข้อมูลสถานที่ๆคุณอยู่ ณ ปัจจุบัน ในฐานะของสถานที่ๆมีความหมาย ที่ถูกบุ๊คมาร์คไว้ ให้ผู้ติดตามของคุณได้ดู หรือผู้คนทั้งหลายในเมือง\n\nกรุณาใส่ชื่อผู้ใช้ของคุณแล้วเริ่มได้เลย"
+rls_string r_string_step3_title "How do you want to log in?"
+rls_string r_string_step3_text "Recommended: Instantly sign-in using your Google account (or any Jabber account).\n\nAlternatively: Register for a buddycloud account."
+rls_string r_string_step3_label1 "Use existing account"
+rls_string r_string_step3_label2 "Register new account"
 
-rls_string r_string_step4_title "ผลประโยชน์ที่คุณจะได้รับ"
-rls_string r_string_step4_text "buddycloud เป็นมิติใหม่ที่ทำให้คุณติดต่อสื่อสารกับเพื่อนๆ ผู้ติดตาม และโชว์ว่าช่องของคุณจะโด่งดังมีชื่อเสียงแค่ไหน โดยที่ไม่เปลืองแบตเตอรี่ของโทรศัพท์คุณ ขึ้นอยู่กับว่าข้อมูลมากแค่ไหน\nแชร์ แลกเปลี่ยนข้อมูลสถานที่ๆคุณอยู่โดยที่คุณควบคุมได้ และปลอดภัย\n\nกรุณาใส่พาสเวิร์ด"
+rls_string r_string_step4_title "Who are you?"
+rls_string r_string_step4_text1 "Enter your existing account details.\n\nThis looks like 'name@gmail.com' or 'name@googlemail.com'."
+rls_string r_string_step4_text2 "Choose a new username and password to start using buddycloud.  If you have already registered for buddycloud on another phone, enter those details here."
 
-rls_string r_string_step5_title "ติดต่อ ติดตาม เอาไว้"
-rls_string r_string_step5_text "รับการแจ้งเตือนบริการใหม่ๆและเวอร์ชันใหม่ๆจาก buddycloud กรุณาให้ email ของคุณไว้ เราจะเก็บรักษาไว้เป็นความลับ"
-
-rls_string r_string_step6_title "ยินดีด้วย!"
-rls_string r_string_step6_text "การเซ็ตอัพเสร็จสิ้นแล้ว ขณะนี้คุณจะถูกเชื่อมต่อและลงทะเบียนเข้าใช้ช่องต่างๆของ buddycloud"
-rls_string r_string_step6_question "คุณต้องการให้ buddycloud เปิดอัตโนมัติเมื่อคุณเปิดเครื่องโทรศัพท์หรือไม่?"
+rls_string r_string_step5_title "ยินดีด้วย!"
+rls_string r_string_step5_text "You are setup and ready to use buddycloud channels."
+rls_string r_string_step5_question "คุณต้องการให้ buddycloud เปิดอัตโนมัติเมื่อคุณเปิดเครื่องโทรศัพท์หรือไม่?"
 
 // End of File

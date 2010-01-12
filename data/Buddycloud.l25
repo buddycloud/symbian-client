@@ -20,8 +20,7 @@ rls_string r_string_translatedby "Translated by: wlcik"
 
 rls_string r_string_followingtab_hint "Odebírám"
 rls_string r_string_placestab_hint "Místa"
-rls_string r_string_explorertab_hint "Poblíž"
-rls_string r_string_channelstab_hint "Kanály"
+rls_string r_string_explorertab_hint "Explorer"
 
 // CBA
 rls_string r_string_options_menu "Volby"
@@ -150,11 +149,12 @@ rls_string r_string_note_requesting "Odesílám žádost..."
 rls_string r_string_note_channelrank "Žebříček"
 
 // Menu: Channels
+rls_string r_string_list_nearbytoyou "What's Nearby To Me"
 rls_string r_string_list_featuredchannels "Doporučené kanály"
 rls_string r_string_list_channelsyoumightlike "Kanály které se Ti mohou líbit"
 rls_string r_string_list_followersfavourites "Oblíbené kanály odběratelů"
 rls_string r_string_list_mostpopularchannels "Nejpopulárnější kanály"
-rls_string r_string_list_channelsneartoyou "Kanály v okolí"
+rls_string r_string_list_channelsneartoyou "Channels Near To Me"
 
 rls_string r_string_item_open "Otevřít"
 rls_string r_string_item_follow "Odebírat"
@@ -187,8 +187,6 @@ rls_string r_string_note_subscriptionrejected "Your subscription to this channel
 rls_string r_string_settings_account_title "Účet"
 rls_string r_string_settings_itemlist_fullname "Jméno a příjmení"
 rls_string r_string_settings_itemlist_fullname_hint "Tvé úplné jméno"
-rls_string r_string_settings_itemlist_email "E-mail"
-rls_string r_string_settings_itemlist_email_hint "Tvůj e-mail"
 rls_string r_string_settings_itemlist_username "Uživatelské jméno"
 rls_string r_string_settings_itemlist_username_hint "XMPP server username"
 rls_string r_string_settings_itemlist_password "Heslo"
@@ -292,6 +290,7 @@ rls_string r_string_serverresolveerror_text "XMPP server could not be resolved. 
 // Delete Item Message
 rls_string r_string_deleteitem_title "Potvrdit odstranění"
 rls_string r_string_deleteitem_text "Opravdu odstranit?"
+rls_string r_string_deletechannel_text "Deleting this channel will also delete all content.\n\nAre you sure?"
 
 // Sms/Email Messages
 rls_string r_string_invitemessage_title "Přidej se k nám na buddycloud!"
@@ -325,17 +324,17 @@ rls_string r_string_note_offline "Offline"
 rls_string r_string_step2_title "Buď známý!"
 rls_string r_string_step2_text "buddycloud channels Ti přináší novou možnost jak ukázat svou vyjímečnost ostatním.\n\nS buddycloud channels se můžeš proslavit svou jedinečnou znalostí místa či tématu a vybudovat si komunitu odběratelů."
 
-rls_string r_string_step3_title "Co vše můžeš dělat?"
-rls_string r_string_step3_text "S buddycloud můžeš vytvářet kanály zaměřené na témata o která se zajímáš, nebo si vytvořit svůj osobní kanál týkající se jen Tebe. buddycloud bude automaticky sdílet Tvoji polohu s Tvými odběrateli formou srozumitelných záložek či na úrovni města s kýmkoli dalším.\n\nProsím zvol si své uživatelské jméno:"
+rls_string r_string_step3_title "How do you want to log in?"
+rls_string r_string_step3_text "Recommended: Instantly sign-in using your Google account (or any Jabber account).\n\nAlternatively: Register for a buddycloud account."
+rls_string r_string_step3_label1 "Use existing account"
+rls_string r_string_step3_label2 "Register new account"
 
-rls_string r_string_step4_title "Tvé výhody"
-rls_string r_string_step4_text "buddycloud přináší novou úroveň interakce s odběrateli a můžeš sledovat rostoucí popularitu svého kanálu. To vše při nízkých nárocích na datové přenosy a bez plýtvání energií Tvého telefonu. Můžeš sdílet svou polohu nepřetržitě ale bezpečně. \n\nZvol si bezpečné heslo:"
+rls_string r_string_step4_title "Who are you?"
+rls_string r_string_step4_text1 "Enter your existing account details.\n\nThis looks like 'name@gmail.com' or 'name@googlemail.com'."
+rls_string r_string_step4_text2 "Choose a new username and password to start using buddycloud.  If you have already registered for buddycloud on another phone, enter those details here."
 
-rls_string r_string_step5_title "Zůstaň v obraze"
-rls_string r_string_step5_text "Buď informován o nových službách buddycloud a nových verzích klienta.\n\nProsím zadej svůj e-mail(volitelně), bude v bezpečí:"
-
-rls_string r_string_step6_title "Gratuluji!"
-rls_string r_string_step6_text "Nastavení je dokončeno. Teď budeš připojen a přihlášen k buddycloud channels."
-rls_string r_string_step6_question "Přeješ si aby se buddycloud od nynějška spouštěl po zapnutí telefonu?"
+rls_string r_string_step5_title "Gratuluji!"
+rls_string r_string_step5_text "You are setup and ready to use buddycloud channels."
+rls_string r_string_step5_question "Přeješ si aby se buddycloud od nynějška spouštěl po zapnutí telefonu?"
 
 // End of File

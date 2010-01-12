@@ -22,6 +22,12 @@
 
 void CBuddycloudPlacesView::ConstructL(CBuddycloudLogic* aBuddycloudLogic) {
 	BaseConstructL(R_PLACES_VIEW);
+	
+#ifdef __SERIES60_40__
+	if(Toolbar()) {
+		Toolbar()->SetToolbarObserver(this);
+	}
+#endif
 
 	iBuddycloudLogic = aBuddycloudLogic;
 }
@@ -50,13 +56,18 @@ void CBuddycloudPlacesView::HandleCommandL(TInt aCommand) {
 		
 		AppUi()->HandleCommandL(aCommand);
 	}
-	else if(aCommand == EAknSoftkeyBack) {
-		AppUi()->ActivateLocalViewL(KFollowingViewId);
-	}
 	else if(iContainer) {
 		iContainer->HandleCommandL(aCommand);
 	}
 }
+
+#ifdef __SERIES60_40__
+void CBuddycloudPlacesView::OfferToolbarEventL(TInt aCommandId) {
+	if(iContainer) {
+		iContainer->HandleCommandL(aCommandId);
+	}
+}
+#endif
 
 void CBuddycloudPlacesView::DoActivateL(const TVwsViewId& /*aPrevViewId*/,TUid aCustomMessageId, const TDesC8& /*aCustomMessage*/) {
 	if (!iContainer) {

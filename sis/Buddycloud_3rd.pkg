@@ -10,7 +10,7 @@
 &EN
 ;
 ; standard SIS file header
-#{"Buddycloud"},(0x2000C4A4),0,5,18
+#{"Buddycloud"},(0x2000C4A4),0,5,21
 ;
 ;Localised Vendor name
 %{"buddycloud"}
@@ -27,7 +27,6 @@
 "$(EPOCROOT)Epoc32\data\z\resource\apps\Buddycloud_Tab.mif"             -"!:\resource\apps\Buddycloud_Tab.mif"
 "$(EPOCROOT)Epoc32\data\z\resource\apps\Buddycloud_List.mif"            -"!:\resource\apps\Buddycloud_List.mif"
 "$(EPOCROOT)Epoc32\data\z\resource\apps\Buddycloud_Arrow.mif"           -"!:\resource\apps\Buddycloud_Arrow.mif"
-"$(EPOCROOT)Epoc32\data\z\resource\apps\Buddycloud_Toolbar.mif"         -"!:\resource\apps\Buddycloud_Toolbar.mif"
 
 ;Main resources
 "$(EPOCROOT)Epoc32\data\z\resource\apps\Buddycloud.rsc"                 -"!:\resource\apps\Buddycloud.rsc"   
@@ -71,15 +70,13 @@
 "..\gfx\contact.png"		                                            -"!:\private\2000C4A4\contact.png"
 "..\gfx\channel.png"			                                        -"!:\private\2000C4A4\channel.png"
 "..\gfx\notice.png"			                                            -"!:\private\2000C4A4\notice.png"
+"..\gfx\place.png"			                                            -"!:\private\2000C4A4\place.png"
+"..\gfx\link.png"			                                            -"!:\private\2000C4A4\link.png"
 "..\gfx\message1.png"		                                            -"!:\private\2000C4A4\message1.png"
 "..\gfx\message2.png"		                                            -"!:\private\2000C4A4\message2.png"
 "..\gfx\message3.png"		                                            -"!:\private\2000C4A4\message3.png"
-"..\gfx\place.png"			                                            -"!:\private\2000C4A4\place.png"
-"..\gfx\place.png"			                                            -"!:\private\2000C4A4\place.png"
 "..\gfx\positioning1.png"		                                        -"!:\private\2000C4A4\positioning1.png"
 "..\gfx\positioning2.png"		                                        -"!:\private\2000C4A4\positioning2.png"
-"..\gfx\link.png"			                                            -"!:\private\2000C4A4\link.png"
-"..\gfx\typing.png"			                                            -"!:\private\2000C4A4\typing.png"
 "..\gfx\locked.png"			                                            -"!:\private\2000C4A4\locked.png"
 "..\gfx\directory.png"			                                        -"!:\private\2000C4A4\directory.png"
 

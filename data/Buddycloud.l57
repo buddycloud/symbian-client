@@ -20,8 +20,7 @@ rls_string r_string_translatedby "heidelberg תורגם על ידי אנטון �
 
 rls_string r_string_followingtab_hint "עוקב"
 rls_string r_string_placestab_hint "מקומות"
-rls_string r_string_explorertab_hint "בקרבת מקום"
-rls_string r_string_channelstab_hint "ערוצים"
+rls_string r_string_explorertab_hint "Explorer"
 
 // CBA
 rls_string r_string_options_menu "הגדרות"
@@ -150,11 +149,12 @@ rls_string r_string_note_requesting "...בטעינה"
 rls_string r_string_note_channelrank "מקום"
 
 // Menu: Channels
+rls_string r_string_list_nearbytoyou "What's Nearby To Me"
 rls_string r_string_list_featuredchannels "ערוצים מובחרים"
 rls_string r_string_list_channelsyoumightlike "ערוצים שאולי תאהב"
 rls_string r_string_list_followersfavourites "ערוצים הנעקבים ביותר"
 rls_string r_string_list_mostpopularchannels "ערוצים הכי פופולריים"
-rls_string r_string_list_channelsneartoyou "ערוצים בסביבתך"
+rls_string r_string_list_channelsneartoyou "Channels Near To Me"
 
 rls_string r_string_item_open "לפתוח"
 rls_string r_string_item_follow "עקב"
@@ -187,8 +187,6 @@ rls_string r_string_note_subscriptionrejected "Your subscription to this channel
 rls_string r_string_settings_account_title "חשבון"
 rls_string r_string_settings_itemlist_fullname "שם מלא"
 rls_string r_string_settings_itemlist_fullname_hint "שמך המלא"
-rls_string r_string_settings_itemlist_email "כתובת אלקטרונית"
-rls_string r_string_settings_itemlist_email_hint "כתובת אלקטרונית שלך"
 rls_string r_string_settings_itemlist_username "שם משתמש"
 rls_string r_string_settings_itemlist_username_hint "XMPP server username"
 rls_string r_string_settings_itemlist_password "סיסמא"
@@ -292,6 +290,7 @@ rls_string r_string_serverresolveerror_text "XMPP server could not be resolved. 
 // Delete Item Message
 rls_string r_string_deleteitem_title "לאשר הסרה"
 rls_string r_string_deleteitem_text "בטוח שאתה רוצה להסיר את זה?"
+rls_string r_string_deletechannel_text "Deleting this channel will also delete all content.\n\nAre you sure?"
 
 // Sms/Email Messages
 rls_string r_string_invitemessage_title "!הצטרף אלינו בבאדיקלאוד"
@@ -325,17 +324,17 @@ rls_string r_string_note_offline "מנותק"
 rls_string r_string_step2_title "!היה מפורסם"
 rls_string r_string_step2_text "באדיקלאוד נותן לך דרך תקשורת חדשה להתקשר עם אנשים שעוקבים אחריך. באדיקלאוד נותן לך הזדמנות להתפרסם בזכות ידע שלך על נושא או מקום מסויים וליצור קהילה של אוהדים"
 
-rls_string r_string_step3_title "?מה אתה יכול לעשות"
-rls_string r_string_step3_text "עם באדיקלאוד ניתן ליצור ערוצים לפי עניין או ערוצים אישיים. באדיקלאוד יעדכן את מיקומך אוטומטית עם אנשים שעוקבים אחריך, או ברמת עיר עם כולם. הנא בחר שם יחודי בשביל הרשמה"
+rls_string r_string_step3_title "How do you want to log in?"
+rls_string r_string_step3_text "Recommended: Instantly sign-in using your Google account (or any Jabber account).\n\nAlternatively: Register for a buddycloud account."
+rls_string r_string_step3_label1 "Use existing account"
+rls_string r_string_step3_label2 "Register new account"
 
-rls_string r_string_step4_title "יתרונות שלך"
-rls_string r_string_step4_text "באדיקלאוד פותח בפנייך רמת אִינְטֶרְאַקְטִיבִיות חדשה עם אוהדך ומראה פופולריות של ערוציך. היה מחובר במשך כל היום בעלויות נמוכות וללא לחרוש על סוללה בזכות ניהול חכם של התוכנה. שתף אחרים במיקומך בצורה מבוקרת. הנא הכנס סיסמא בטוחה"
+rls_string r_string_step4_title "Who are you?"
+rls_string r_string_step4_text1 "Enter your existing account details.\n\nThis looks like 'name@gmail.com' or 'name@googlemail.com'."
+rls_string r_string_step4_text2 "Choose a new username and password to start using buddycloud.  If you have already registered for buddycloud on another phone, enter those details here."
 
-rls_string r_string_step5_title "הישאר בקשר"
-rls_string r_string_step5_text "היה מעודכן לגבי שירותים חדשים וגרסאות חדשות של תוכנה זו. הנא השאיר כתובת אלקטרונית (אופציונלי) לא נעביר אותה לגורם שלישי:"
-
-rls_string r_string_step6_title "!ברכות"
-rls_string r_string_step6_text "התקנה הושלמה. כעת יתבצע חיבור לתוכנה"
-rls_string r_string_step6_question "?להריץ תוכנה בעת הפעלת טלפון"
+rls_string r_string_step5_title "!ברכות"
+rls_string r_string_step5_text "You are setup and ready to use buddycloud channels."
+rls_string r_string_step5_question "?להריץ תוכנה בעת הפעלת טלפון"
 
 // End of File

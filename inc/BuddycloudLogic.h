@@ -20,7 +20,6 @@
 #include "AvatarRepository.h"
 #include "BuddycloudConstants.h"
 #include "BuddycloudFollowing.h"
-#include "BuddycloudList.h"
 #include "BuddycloudPlaces.h"
 #include "BuddycloudNearby.h"
 #include "DiscussionManager.h"
@@ -40,7 +39,7 @@
 */
 
 enum TDescSettingItems {
-	ESettingItemFullName, ESettingItemEmailAddress, ESettingItemUsername, ESettingItemPassword, ESettingItemServer,
+	ESettingItemFullName, ESettingItemUsername, ESettingItemPassword, ESettingItemServer,
 	ESettingItemPrivateMessageToneFile, ESettingItemChannelPostToneFile, ESettingItemDirectReplyToneFile,
 	ESettingItemTwitterUsername, ESettingItemTwitterPassword
 };
@@ -174,7 +173,7 @@ class CBuddycloudLogic : public CBase, MLocationEngineNotification, MTimeInterfa
 		void SetLocationResource(TBuddycloudLocationResource aResource, TBool aEnable);
 		TBool GetLocationResourceDataAvailable(TBuddycloudLocationResource aResource);
 		
-		void ValidateUsername();
+		void ValidateUsername(TBool aCheckServer = true);
 		
 		void LanguageSettingChanged();
 		void NotificationSettingChanged(TIntSettingItems aItem);
@@ -232,7 +231,7 @@ class CBuddycloudLogic : public CBase, MLocationEngineNotification, MTimeInterfa
 		void HandlePubsubRequestL(const TDesC8& aStanza);
 		
     public: // Flag/Tag
-    	void FlagPostAbusiveL(const TDesC& aNode, const TDesC8& aNodeItemId);
+    	void FlagTagNodeItemL(const TDesC8& aType, const TDesC& aNode, const TDesC8& aNodeItemId);
 	
 	public: // Channels
 		TInt FollowChannelL(const TDesC& aNode);
@@ -252,13 +251,6 @@ class CBuddycloudLogic : public CBase, MLocationEngineNotification, MTimeInterfa
 
 	public: // From MDiscussionReadObserver
 		void DiscussionRead(TDesC& aDiscussionId, TInt aItemId);
-
-	public: // Filtering
-		TDesC& GetFollowingFilterText();
-		void SetFollowingFilterTextL(const TDesC& aFilter);
-
-	private:
-		void FilterFollowersL();
 
 	private: // Reading/Writing state to file
 		void LoadSettingsAndItems();
@@ -284,7 +276,7 @@ class CBuddycloudLogic : public CBase, MLocationEngineNotification, MTimeInterfa
 		void RemoveStatusObserver();
 
 	public: // Following
-		CBuddycloudListStore* GetFollowingStore();
+		CBuddycloudFollowingStore* GetFollowingStore();
 		
 		CFollowingRosterItem* GetOwnItem();
 		void UnfollowItemL(TInt aItemId);
@@ -436,8 +428,7 @@ class CBuddycloudLogic : public CBase, MLocationEngineNotification, MTimeInterfa
        
         // Account settings
         TBuf<32> iSettingFullName;
-        TBuf<32> iSettingEmailAddress;
-        TBuf<64> iSettingUsername;
+         TBuf<64> iSettingUsername;
         TBuf<32> iSettingPassword;
         TBuf<64> iSettingXmppServer;
         
@@ -455,15 +446,12 @@ class CBuddycloudLogic : public CBase, MLocationEngineNotification, MTimeInterfa
         RPointerArray<CBuddycloudNearbyPlace> iNearbyPlaces;
  
 		// Stores
-        CBuddycloudListStore* iFollowingList;
+        CBuddycloudFollowingStore* iFollowingList;
         CBuddycloudPlaceStore* iPlaceList;
         CDiscussionManager* iDiscussionManager;
        
         TInt iNextItemId;
-
-        HBufC* iFollowingFilterText;
-        TBool iFilteringFollowers;
-
+ 
         // Debug
         RFileLogger iLog;
 

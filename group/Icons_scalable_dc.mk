@@ -50,13 +50,13 @@ RESOURCE :
 	mifconv $(SETUPTARGETFILENAME) $(SETUPMBG) \
 		/c8 $(ICONDIR)\Logo.svg /c8 $(ICONDIR)\Splash.svg /c8 $(ICONDIR)\Tick.svg
 	mifconv $(TABTARGETFILENAME) $(TABMBG) \
-		/c8 $(ICONDIR)\TabContact.svg /c8 $(ICONDIR)\TabPlace.svg /c8 $(ICONDIR)\TabExplore.svg /c8 $(ICONDIR)\TabChannel.svg /c8 $(ICONDIR)\TabAccount.svg /c8 $(ICONDIR)\TabPreferences.svg /c8 $(ICONDIR)\TabNotifications.svg /c8 $(ICONDIR)\TabBeacons.svg
+		/c8 $(ICONDIR)\TabContact.svg /c8 $(ICONDIR)\TabPlace.svg /c8 $(ICONDIR)\TabExplore.svg /c8 $(ICONDIR)\TabAccount.svg /c8 $(ICONDIR)\TabPreferences.svg /c8 $(ICONDIR)\TabNotifications.svg /c8 $(ICONDIR)\TabBeacons.svg
 	mifconv $(LISTTARGETFILENAME) $(LISTMBG) \
 		/c8 $(ICONDIR)\Phone.svg /c8 $(ICONDIR)\Letter.svg /c8 $(ICONDIR)\ListContact.svg /c8 $(ICONDIR)\ListChannel.svg /c8 $(ICONDIR)\ListPlace.svg /c8 $(ICONDIR)\Facebook.svg /c8 $(ICONDIR)\Twitter.svg
 	mifconv $(ARROWTARGETFILENAME) $(ARROWMBG) \
 		/c8 $(ICONDIR)\Arrow1.svg /c8 $(ICONDIR)\Arrow2.svg
 	mifconv $(TOOLBARTARGETFILENAME) $(TOOLBARMBG) \
-		/c8 $(ICONDIR)\ToolbarChannelPost.svg /c8 $(ICONDIR)\ToolbarMessage.svg /c8 $(ICONDIR)\ToolbarMessageReply.svg /c8 $(ICONDIR)\ToolbarSearch.svg /c8 $(ICONDIR)\ToolbarUnreadJump.svg
+		/c8 $(ICONDIR)\ToolbarChannelPost.svg /c8 $(ICONDIR)\ToolbarPrivateMessage.svg /c8 $(ICONDIR)\ToolbarMessageReply.svg /c8 $(ICONDIR)\ToolbarSearch.svg /c8 $(ICONDIR)\ToolbarUnreadJump.svg  /c8 $(ICONDIR)\ToolbarMessagePost.svg /c8 $(ICONDIR)\ToolbarBookmarkPlace.svg
 		
 FREEZE : do_nothing
 

@@ -20,8 +20,7 @@ rls_string r_string_translatedby "翻译: Dim Yu（余凌云）"
 
 rls_string r_string_followingtab_hint "追随者及频道"
 rls_string r_string_placestab_hint "地点"
-rls_string r_string_explorertab_hint "在附近的"
-rls_string r_string_channelstab_hint "频道"
+rls_string r_string_explorertab_hint "Explorer"
 
 // CBA
 rls_string r_string_options_menu "选项"
@@ -150,11 +149,12 @@ rls_string r_string_note_requesting "正在请求..."
 rls_string r_string_note_channelrank "等级"
 
 // Menu: Channels
+rls_string r_string_list_nearbytoyou "What's Nearby To Me"
 rls_string r_string_list_featuredchannels "精选频道"
 rls_string r_string_list_channelsyoumightlike "你可能喜欢的频道"
 rls_string r_string_list_followersfavourites "追随者的最爱"
 rls_string r_string_list_mostpopularchannels "最受欢迎的频道"
-rls_string r_string_list_channelsneartoyou "在你附近的频道"
+rls_string r_string_list_channelsneartoyou "Channels Near To Me"
 
 rls_string r_string_item_open "打开"
 rls_string r_string_item_follow "加入"
@@ -187,8 +187,6 @@ rls_string r_string_note_subscriptionrejected "Your subscription to this channel
 rls_string r_string_settings_account_title "账号"
 rls_string r_string_settings_itemlist_fullname "全名"
 rls_string r_string_settings_itemlist_fullname_hint "您的全名"
-rls_string r_string_settings_itemlist_email "E-mail地址"
-rls_string r_string_settings_itemlist_email_hint "你的e-mail地址"
 rls_string r_string_settings_itemlist_username "用户名"
 rls_string r_string_settings_itemlist_username_hint "XMPP服务用户名"
 rls_string r_string_settings_itemlist_password "密码"
@@ -292,6 +290,7 @@ rls_string r_string_serverresolveerror_text "XMPP server could not be resolved. 
 // Delete Item Message
 rls_string r_string_deleteitem_title "确认删除"
 rls_string r_string_deleteitem_text "你真的确定要删除吗？"
+rls_string r_string_deletechannel_text "Deleting this channel will also delete all content.\n\nAre you sure?"
 
 // Sms/Email Messages
 rls_string r_string_invitemessage_title "加入我们吧！"
@@ -325,17 +324,17 @@ rls_string r_string_note_offline "离线"
 rls_string r_string_step2_title "欢迎加入buddycloud!"
 rls_string r_string_step2_text "buddycloud频道给予你以一种全新的方式来对你频道的追随者讲述你身边奇妙事情的机会。buddycloud频道赋予你因了解一个地方或一个话题，并为你频道的追随者建立一个网络社区而成名的能力。"
 
-rls_string r_string_step3_title "你可以干什么？"
-rls_string r_string_step3_text "在buddycloud上面，你可以创造一个以你所擅长的话题的频道，或者是一个关于你的个人频道。buddycloud会自动把你的准确坐标以一个书签的形式与你的跟随这分享,或者与城市的其他人分享。请选择一个独一无二的用户名，然后开始旅程:"
+rls_string r_string_step3_title "How do you want to log in?"
+rls_string r_string_step3_text "Recommended: Instantly sign-in using your Google account (or any Jabber account).\n\nAlternatively: Register for a buddycloud account."
+rls_string r_string_step3_label1 "Use existing account"
+rls_string r_string_step3_label2 "Register new account"
 
-rls_string r_string_step4_title "你的利益"
-rls_string r_string_step4_text "buddycloud既为你和你的追随者们提供了新一级的互动体验，也展示了你的频道蒸蒸日上的知名度。buddycloud占用较少内存,使用能耗低,就算终日不断电也不会耗尽电池电量。buddycloud还能安全,可控地与人即时共享你的地理位置\n\n请输入密码:"
+rls_string r_string_step4_title "Who are you?"
+rls_string r_string_step4_text1 "Enter your existing account details.\n\nThis looks like 'name@gmail.com' or 'name@googlemail.com'."
+rls_string r_string_step4_text2 "Choose a new username and password to start using buddycloud.  If you have already registered for buddycloud on another phone, enter those details here."
 
-rls_string r_string_step5_title "保持联系"
-rls_string r_string_step5_text "为接收buddycloud的服务信息和新版本信息的通知。请留下你的电子邮箱地址（可选），我们会确保你的邮箱地址的信息安全："
-
-rls_string r_string_step6_title "恭喜！"
-rls_string r_string_step6_text "设定完成。现在连接并登录到buddycloud频道"
-rls_string r_string_step6_question "你愿意从现在开始在手机启动时自动运行buddycloud吗？"
+rls_string r_string_step5_title "恭喜！"
+rls_string r_string_step5_text "You are setup and ready to use buddycloud channels."
+rls_string r_string_step5_question "你愿意从现在开始在手机启动时自动运行buddycloud吗？"
 
 // End of File

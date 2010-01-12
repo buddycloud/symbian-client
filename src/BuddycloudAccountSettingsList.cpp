@@ -148,10 +148,6 @@ CAknSettingItem* CBuddycloudAccountSettingsList::CreateSettingItemL (TInt aIdent
 			aSettingItem = new (ELeave) CAknTextSettingItem(aIdentifier, iBuddycloudLogic->GetDescSetting(ESettingItemFullName));
 			aSettingItem->SetSettingPageFlags(CAknTextSettingPage::EZeroLengthAllowed | CAknTextSettingPage::EPredictiveTextEntryPermitted);
 			break;
-		case ESettingAccountEmailAddress:
-			aSettingItem = new (ELeave) CAknTextSettingItem(aIdentifier, iBuddycloudLogic->GetDescSetting(ESettingItemEmailAddress));
-			aSettingItem->SetSettingPageFlags(CAknTextSettingPage::EZeroLengthAllowed | CAknTextSettingPage::EPredictiveTextEntryPermitted);
-			break;
 		case ESettingAccountUsername:
 			aSettingItem = new (ELeave) CAknTextSettingItem(aIdentifier, iBuddycloudLogic->GetDescSetting(ESettingItemUsername));
 			break;

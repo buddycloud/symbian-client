@@ -20,8 +20,7 @@ rls_string r_string_translatedby "vertaling door: maebs"
 
 rls_string r_string_followingtab_hint "Aan het volgen"
 rls_string r_string_placestab_hint "Plaatsen"
-rls_string r_string_explorertab_hint "Dichtbij"
-rls_string r_string_channelstab_hint "Kanalen"
+rls_string r_string_explorertab_hint "Explorer"
 
 // CBA
 rls_string r_string_options_menu "Voorkeuren"
@@ -150,11 +149,12 @@ rls_string r_string_note_requesting "Aanvragen..."
 rls_string r_string_note_channelrank "Rang"
 
 // Menu: Channels
+rls_string r_string_list_nearbytoyou "What's Nearby To Me"
 rls_string r_string_list_featuredchannels "Featured Channels"
 rls_string r_string_list_channelsyoumightlike "Channels die je misschien leuk vindt"
 rls_string r_string_list_followersfavourites "Aanhangers' Favorieten "
 rls_string r_string_list_mostpopularchannels "Meest populair channels"
-rls_string r_string_list_channelsneartoyou "Kanalen dichtbij u"
+rls_string r_string_list_channelsneartoyou "Channels Near To Me"
 
 rls_string r_string_item_open "Openen"
 rls_string r_string_item_follow "Volgen"
@@ -187,8 +187,6 @@ rls_string r_string_note_subscriptionrejected "Your subscription to this channel
 rls_string r_string_settings_account_title "Account"
 rls_string r_string_settings_itemlist_fullname "Naam"
 rls_string r_string_settings_itemlist_fullname_hint "Uw naam"
-rls_string r_string_settings_itemlist_email "E-mail adres"
-rls_string r_string_settings_itemlist_email_hint "Uw e-mail adres"
 rls_string r_string_settings_itemlist_username "Gebruikersnaam"
 rls_string r_string_settings_itemlist_username_hint "XMPP server username"
 rls_string r_string_settings_itemlist_password "Wachtwoord"
@@ -292,6 +290,7 @@ rls_string r_string_serverresolveerror_text "XMPP server could not be resolved. 
 // Delete Item Message
 rls_string r_string_deleteitem_title "Verwijdering bevestigen"
 rls_string r_string_deleteitem_text "Weet u zeker dat u dit wilt verwijderen?"
+rls_string r_string_deletechannel_text "Deleting this channel will also delete all content.\n\nAre you sure?"
 
 // Sms/Email Messages
 rls_string r_string_invitemessage_title "Meld je aan op buddycloud!"
@@ -325,17 +324,17 @@ rls_string r_string_note_offline "Offline"
 rls_string r_string_step2_title "Wordt beroemd!"
 rls_string r_string_step2_text "buddycloud channels geven u een nieuwe wijze om u bekend te maken.\n\nU kunt uw eigen channels aanmaken voor uw unieke kennis aan de wereld te laten zien, kan over een plaats zijn of een bepaald onderwerp, en om een gemeenschap van aanhangers op te bouwen."
 
-rls_string r_string_step3_title "What can you do?"
-rls_string r_string_step3_text "Met buddycloud u kunt een onderwerp channel aanmaken mbt. je experte kennis, of een persoonlijke channel die echt om jou gaat. Buddycloud gaat automatisch je positie delen als een bookmark met je aanhangers, of in de steden-niveau met alle anderen.\n\nHier uw buddycloud gebruikersnaam invullen of kies een nieuwe naam om te beginnen:"
+rls_string r_string_step3_title "How do you want to log in?"
+rls_string r_string_step3_text "Recommended: Instantly sign-in using your Google account (or any Jabber account).\n\nAlternatively: Register for a buddycloud account."
+rls_string r_string_step3_label1 "Use existing account"
+rls_string r_string_step3_label2 "Register new account"
 
-rls_string r_string_step4_title "Uw gewin"
-rls_string r_string_step4_text "buddycloud gives you a new level of interactivity with your followers and shows your channel's rising popularity. Keep going all day at low costs and without depleting your phone's battery, due to buddycloud's low data usage. Share your location continuously, yet in a controlled, safe way.\n\nPlease enter a secure password:"
+rls_string r_string_step4_title "Who are you?"
+rls_string r_string_step4_text1 "Enter your existing account details.\n\nThis looks like 'name@gmail.com' or 'name@googlemail.com'."
+rls_string r_string_step4_text2 "Choose a new username and password to start using buddycloud.  If you have already registered for buddycloud on another phone, enter those details here."
 
-rls_string r_string_step5_title "Stay in touch"
-rls_string r_string_step5_text "Wilt u op de hoogte gehouden voor updates van dit applicatie?\n\nTyp hieronder uw email adres (optioneel), wij houden dit prive:"
-
-rls_string r_string_step6_title "Gefeliciteerd!"
-rls_string r_string_step6_text "De setup is nu voltooid. U wordt nu verbonden."
-rls_string r_string_step6_question "Wilt u dat buddycloud automatisch opgestart als u uw telefoontoestel aan zet? "
+rls_string r_string_step5_title "Gefeliciteerd!"
+rls_string r_string_step5_text "You are setup and ready to use buddycloud channels."
+rls_string r_string_step5_question "Wilt u dat buddycloud automatisch opgestart als u uw telefoontoestel aan zet? "
 
 // End of File

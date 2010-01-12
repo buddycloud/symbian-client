@@ -171,10 +171,8 @@ void CXmppEngine::TimerExpired(TInt aExpiryId) {
 				iEngineState = EXmppInitialize;
 				iStateTimer->After(45000000);
 	
-				TcpIpDebug(_L8("XMPP  Connection Attempt"), (iConnectionAttempts + 1));
-				iConnectionAttempts++;
-	
-				iTcpIpEngine->ConnectL(*iHostName, iHostPort);
+				// Connect or resolve
+				ConnectOrResolveL();
 				break;
 			case EXmppInitialize:
 			case EXmppConnecting:
@@ -288,12 +286,11 @@ void CXmppEngine::SetResourceL(const TDesC8& aResource) {
 	iResource = aResource.AllocL();
 }
 
-void CXmppEngine::ConnectL(TBool aColdConnect) {
+void CXmppEngine::ConnectL() {
 #ifdef _DEBUG
 	iEngineObserver->XmppDebug(_L8("XMPP  CXmppEngine::ConnectL"));
 #endif
 	
-	TPtr aHostName(iHostName->Des());
 	TPtr8 aUsername(iUsername->Des());
 	TPtr8 aPassword(iPassword->Des());
 
@@ -301,22 +298,9 @@ void CXmppEngine::ConnectL(TBool aColdConnect) {
 		iEngineState = EXmppInitialize;
 		iLastError = EXmppNone;
 		iConnectionAttempts = 0;
-		iConnectionCold = aColdConnect;
-
-		// For Debugging
-		TcpIpDebug(_L8("XMPP  Connection Attempt"), (iConnectionAttempts + 1));
-
-		if(aHostName.Length() > 0) {
-			// Connect to server
-			iTcpIpEngine->ConnectL(aHostName, iHostPort);
-		}
-		else {
-			// Server resolve required
-			TBuf8<255> aQueryData(*iXmppServer);
-			aQueryData.Insert(0, _L8("_xmpp-client._tcp."));
-			
-			iTcpIpEngine->ResolveHostNameL(aQueryData);
-		}
+		
+		// Connect or resolve
+		ConnectOrResolveL();	
 	}
 	else {
 		iEngineObserver->XmppError(EXmppAuthorizationNotDefined);
@@ -378,6 +362,25 @@ void CXmppEngine::SetXmppServerL(const TDesC8& aXmppServer) {
 		delete iXmppServer;
 	
 	iXmppServer = aXmppServer.AllocL();
+}
+
+void CXmppEngine::ConnectOrResolveL() {
+	TPtr aHostName(iHostName->Des());
+	
+	iConnectionAttempts++;
+	TcpIpDebug(_L8("XMPP  Connection Attempt"), iConnectionAttempts);
+
+	if(aHostName.Length() > 0) {
+		// Connect to server
+		iTcpIpEngine->ConnectL(aHostName, iHostPort);
+	}
+	else {
+		// Server resolve required
+		TBuf8<255> aQueryData(*iXmppServer);
+		aQueryData.Insert(0, _L8("_xmpp-client._tcp."));
+		
+		iTcpIpEngine->ResolveHostNameL(aQueryData);
+	}	
 }
 
 void CXmppEngine::SendQueuedXmppStanzas() {
@@ -790,18 +793,14 @@ void CXmppEngine::XmppStanzaAcknowledgedL(const TDesC8& aStanza, const TDesC8& a
 	else if(aId.Compare(_L8("roster1")) == 0) {
 		// Receive Roster				
 		if(iRosterObserver) {
-			if(iConnectionCold) {
-				CTextUtilities* aTextUtilities = CTextUtilities::NewLC();
+			CTextUtilities* aTextUtilities = CTextUtilities::NewLC();
 				
-				iRosterObserver->RosterOwnJidL(aTextUtilities->Utf8ToUnicodeL(aXmlParser->GetStringAttribute(_L8("to"))));
-				CleanupStack::PopAndDestroy(); // aTextUtilities
+			iRosterObserver->RosterOwnJidL(aTextUtilities->Utf8ToUnicodeL(aXmlParser->GetStringAttribute(_L8("to"))));
+			CleanupStack::PopAndDestroy(); // aTextUtilities
 
-				if(aAttributeType.Compare(_L8("result")) == 0) {
-					if(aXmlParser->MoveToElement(_L8("query"))) {
-						iRosterObserver->RosterItemsL(aXmlParser->GetStringData(), false);
-					}
-					
-					iConnectionCold = false;
+			if(aAttributeType.Compare(_L8("result")) == 0) {
+				if(aXmlParser->MoveToElement(_L8("query"))) {
+					iRosterObserver->RosterItemsL(aXmlParser->GetStringData(), false);
 				}
 			}
 		}
@@ -1072,22 +1071,17 @@ void CXmppEngine::Error(TTcpIpEngineError aError) {
 		case ETcpIpSecureFailed:
 			iLastError = EXmppTlsFailed;
 		default:
-			if(iConnectionAttempts < 10) {
-				// Attempt reconnect
-				iEngineState = EXmppReconnect;
-				iEngineObserver->XmppStateChanged(EXmppReconnect);
-				iStateTimer->After(30000000);
-			}
-			else {
+			if(iConnectionAttempts > 5) {
 				// Connection failed too many times
 				HostResolved(_L(""), 5222);
 				
-				// Re-resolve of server required
-				TBuf8<255> aQueryData(*iXmppServer);
-				aQueryData.Insert(0, _L8("_xmpp-client._tcp."));
-				
-				iTcpIpEngine->ResolveHostNameL(aQueryData);				
-			}			
+				iConnectionAttempts = 0;
+			}
+			
+			// Attempt reconnect
+			iEngineState = EXmppReconnect;
+			iEngineObserver->XmppStateChanged(EXmppReconnect);
+			iStateTimer->After(30000000);
 			break;
 	}
 }

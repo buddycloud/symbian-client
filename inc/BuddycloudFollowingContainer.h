@@ -88,10 +88,10 @@ class CBuddycloudFollowingContainer : public CBuddycloudListComponent, MBuddyclo
 		
 		TInt iNewMessagesOffset;
 		
-		// Search Field
-		CEikEdwin* iSearchEdwin;
-		TBool iSearchVisible;
-		TInt iSearchLength;
+		// Edwin
+		CEikEdwin* iEdwin;
+		TBool iEdwinVisible;
+		TInt iEdwinLength;
 
 		// Images
 		TSize iArrow1Size;
@@ -102,7 +102,7 @@ class CBuddycloudFollowingContainer : public CBuddycloudListComponent, MBuddyclo
 		CFbsBitmap* iArrow2Bitmap;
 		CFbsBitmap* iArrow2Mask;	
 
-		CBuddycloudListStore* iItemStore;
+		CBuddycloudFollowingStore* iItemStore;
 };
 
 #endif

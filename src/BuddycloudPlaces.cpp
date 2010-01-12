@@ -229,6 +229,7 @@ CBuddycloudPlaceStore* CBuddycloudPlaceStore::NewL() {
 CBuddycloudPlaceStore* CBuddycloudPlaceStore::NewLC() {
 	CBuddycloudPlaceStore* self = new (ELeave) CBuddycloudPlaceStore();
 	CleanupStack::PushL(self);
+	self->ConstructL();
 	return self;
 }
 

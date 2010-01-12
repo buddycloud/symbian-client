@@ -7,6 +7,7 @@
 ============================================================================
 */
 
+#include <aknmessagequerydialog.h>
 #include <avkon.hrh>
 #include <Buddycloud_lang.rsg>
 #include "BuddycloudChannelInfoContainer.h"
@@ -275,9 +276,19 @@ void CBuddycloudChannelInfoContainer::HandleCommandL(TInt aCommand) {
 		iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KEditChannelViewId), TUid::Uid(0), aViewReference);					
 	}
 	else if(aCommand == EMenuDeleteCommand) {
-		iBuddycloudLogic->UnfollowChannelL(iChannelItem->GetItemId());
+		HBufC* aMessageText = iCoeEnv->AllocReadResourceLC(R_LOCALIZED_STRING_DELETECHANNEL_TEXT);		
 		
-		iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KFollowingViewId));					
+		CAknMessageQueryDialog* aDialog = new (ELeave) CAknMessageQueryDialog();
+		aDialog->PrepareLC(R_DELETE_DIALOG);	
+		aDialog->SetMessageTextL(*aMessageText);
+		
+		if(aDialog->RunLD() != 0) {
+			iBuddycloudLogic->UnfollowChannelL(iChannelItem->GetItemId());
+
+			iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KFollowingViewId));	
+		}
+		
+		CleanupStack::PopAndDestroy(); // aMessageText
 	}
 	else if(aCommand == EMenuSeeFollowersCommand) {
 		TViewReferenceBuf aViewReference;	

@@ -20,8 +20,7 @@ rls_string r_string_translatedby "Translated by: gulli"
 
 rls_string r_string_followingtab_hint "Foigt"
 rls_string r_string_placestab_hint "Platzl"
-rls_string r_string_explorertab_hint "Ned weid weg ned"
-rls_string r_string_channelstab_hint "Tschännls"
+rls_string r_string_explorertab_hint "Explorer"
 
 // CBA
 rls_string r_string_options_menu "Optionen"
@@ -150,11 +149,12 @@ rls_string r_string_note_requesting "Wart a biß'l..."
 rls_string r_string_note_channelrank "Rang"
 
 // Menu: Channels
+rls_string r_string_list_nearbytoyou "What's Nearby To Me"
 rls_string r_string_list_featuredchannels "B'sondanne Tschännl"
 rls_string r_string_list_channelsyoumightlike "Tschännl di Da g'foin kannten"
 rls_string r_string_list_followersfavourites "Ohänga's Favorit'n"
 rls_string r_string_list_mostpopularchannels "Vui meg'n di Tschännl"
-rls_string r_string_list_channelsneartoyou "Tschännl in Deina Dunstwoikn"
+rls_string r_string_list_channelsneartoyou "Channels Near To Me"
 
 rls_string r_string_item_open "Aufmacha"
 rls_string r_string_item_follow "Foig"
@@ -187,8 +187,6 @@ rls_string r_string_note_subscriptionrejected "Na moga. Schleich Di."
 rls_string r_string_settings_account_title "Konto"
 rls_string r_string_settings_itemlist_fullname "Volla Name"
 rls_string r_string_settings_itemlist_fullname_hint "Voller Name"
-rls_string r_string_settings_itemlist_email "E-mail Adress"
-rls_string r_string_settings_itemlist_email_hint "Dei E-mail Adress'"
 rls_string r_string_settings_itemlist_username "Usanama"
 rls_string r_string_settings_itemlist_username_hint "XMPP sörva usanama"
 rls_string r_string_settings_itemlist_password "Passwort"
@@ -292,6 +290,7 @@ rls_string r_string_serverresolveerror_text "XMPP server could not be resolved. 
 // Delete Item Message
 rls_string r_string_deleteitem_title "Bestätigung"
 rls_string r_string_deleteitem_text "Mogs'D des wirkli ausmerz'n?"
+rls_string r_string_deletechannel_text "Deleting this channel will also delete all content.\n\nAre you sure?"
 
 // Sms/Email Messages
 rls_string r_string_invitemessage_title "Do sitz' Di zuawa bei buddycloud!"
@@ -325,17 +324,17 @@ rls_string r_string_note_offline "Offline"
 rls_string r_string_step2_title "Werd bekannt wiara bunta Hund!"
 rls_string r_string_step2_text "Loß' nua olle wiss'n wos fiara Hund daß'D bist. buddycloud Tschännls macht's meglich. Organisier' Da a Ohängaschaft de si seig'n loß'n ko und dann zoag earna wo da Bartl an Most hoilt.   "
 
-rls_string r_string_step3_title "Wos kost'D damit na ofanga?"
-rls_string r_string_step3_text "Moch wos'D wuillst bei buddycloud. Richt an Tschännl zu am bestimmt'n Thema ei oda werd zum Voinarzist'n in Deim eigena Tschännl. buddycloud zoagt Deine Ohänga an welcham g'speichat'n Platzl das'D bist. D'andern seign nua d'Stodt, wo's'D bist. Gib Dein Usanama ei oda suach da an g'scheid'n Usanama aus dann kost a scho losleg'n:"
+rls_string r_string_step3_title "How do you want to log in?"
+rls_string r_string_step3_text "Recommended: Instantly sign-in using your Google account (or any Jabber account).\n\nAlternatively: Register for a buddycloud account."
+rls_string r_string_step3_label1 "Use existing account"
+rls_string r_string_step3_label2 "Register new account"
 
-rls_string r_string_step4_title "Des host davo"
-rls_string r_string_step4_text "Mit buddycloud werst interaktiv vom andan Stern mit Deine Ohaenga und im Ranking kost na seig'n wias Di so schlogst. Mia ham an minimalen Datenvakehr, oiso loß buddycloud am besten imma laffa, weil's ned vui kost und a an akku ned vui auszuzelt. So kost dann a imma olle wiss'n loß'n wos'D bist ohne daß'D dabei d'Hos'n owiloßt.\nSuach da bittschön a Passwort aus: "
+rls_string r_string_step4_title "Who are you?"
+rls_string r_string_step4_text1 "Enter your existing account details.\n\nThis looks like 'name@gmail.com' or 'name@googlemail.com'."
+rls_string r_string_step4_text2 "Choose a new username and password to start using buddycloud.  If you have already registered for buddycloud on another phone, enter those details here."
 
-rls_string r_string_step5_title "Loß' Di oschaug'n"
-rls_string r_string_step5_text "Mia datten Di gern informier'n, wenn's neie Dienste oda Versionen vo buddycloud hot. Gib uns hoit bittschön Dei E-mail, mia passen a g'scheit d'rauf auf (muaßt oba ned):"
-
-rls_string r_string_step6_title "Gratuliere nachat!"
-rls_string r_string_step6_text "Adelheid glei is soweit!\nMia vabid'n und meid'n Di jetzda pfei'grod bei buddycloud Tschännls o."
-rls_string r_string_step6_question "Mogst, daß buddycloud automatisch start, wennst Dei Händy o'schoitst?"
+rls_string r_string_step5_title "Gratuliere nachat!"
+rls_string r_string_step5_text "You are setup and ready to use buddycloud channels."
+rls_string r_string_step5_question "Mogst, daß buddycloud automatisch start, wennst Dei Händy o'schoitst?"
 
 // End of File

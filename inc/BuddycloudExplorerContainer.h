@@ -33,6 +33,10 @@ class CBuddycloudExplorerContainer : public CBuddycloudListComponent, public MAk
 		CBuddycloudExplorerContainer(MViewAccessorObserver* aViewAccessor, CBuddycloudLogic* aBuddycloudLogic);
 		void ConstructL(const TRect& aRect, TViewReference aQueryReference);
         ~CBuddycloudExplorerContainer();
+        
+	private: // Directory
+		void CreateRootExplorerDirectoryL();
+		void CreateDirectoryItemL(const TDesC& aId, TInt aTitleResource);
 
 	public: // From MBuddycloudLogicNotificationObserver
 		void NotificationEvent(TBuddycloudLogicNotificationType aEvent, TInt aId = KErrNotFound);
@@ -41,7 +45,7 @@ class CBuddycloudExplorerContainer : public CBuddycloudListComponent, public MAk
 		void ParseAndSendXmppStanzasL(const TDesC8& aStanza);
 		
 	private: // Level query/result management
-		void PushLevelL(const TDesC& aTitle, const TDesC8& aStanza);
+		void PushLevelL(const TDesC& aTitle, const TDesC8& aStanza, TBool aAutoRefresh = false);
 		void PopLevelL();
 		void RefreshLevelL();
 
@@ -78,9 +82,6 @@ class CBuddycloudExplorerContainer : public CBuddycloudListComponent, public MAk
 		CAknNavigationControlContainer* iNaviPane;
 		CAknNavigationDecorator* iNaviDecorator;
 		CAknTabGroup* iTabGroup;
-		
-		// Strings
-		HBufC* iLocalizedRank;
 		
 		// Query/result management
 		TExplorerState iExplorerState;

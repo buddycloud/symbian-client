@@ -120,6 +120,12 @@ CExplorerResultItem::~CExplorerResultItem() {
 	if(iGeoloc) {
 		delete iGeoloc;
 	}
+	
+	for(TInt i = 0; i < iStatistics.Count(); i++) {
+		delete iStatistics[i];
+	}
+	
+	iStatistics.Close();
 }
 
 void CExplorerResultItem::ConstructL() {
@@ -145,14 +151,6 @@ void CExplorerResultItem::SetOverlayId(TInt aOverlayId) {
 	iOverlayId = aOverlayId;
 }
 
-TInt CExplorerResultItem::GetRank() {
-	return iRank;
-}
-
-void CExplorerResultItem::SetRank(TInt aRank) {
-	iRank = aRank;
-}
-
 TDesC& CExplorerResultItem::GetId() {
 	return *iId;
 }
@@ -163,6 +161,22 @@ void CExplorerResultItem::SetIdL(const TDesC& aId) {
 	}
 
 	iId = aId.AllocL();	
+}
+
+TInt CExplorerResultItem::StatisticCount() {
+	return iStatistics.Count();
+}
+
+TDesC& CExplorerResultItem::GetStatistic(TInt aIndex) {
+	if(aIndex >= 0 && aIndex < iStatistics.Count()) {
+		return *iStatistics[aIndex];
+	}
+	
+	return iNullString;
+}
+
+void CExplorerResultItem::AddStatisticL(const TDesC& aStatistic) {
+	iStatistics.Append(aStatistic.AllocL());
 }
 
 CGeolocData* CExplorerResultItem::GetGeoloc() {
@@ -179,10 +193,10 @@ void CExplorerResultItem::SetGeolocL(CGeolocData* aGeoloc) {
 	
 	// Set id
 	if(iGeoloc->GetString(EGeolocUri).Length() > 0) {
-		TInt aResult = iGeoloc->GetString(EGeolocUri).LocateReverse('/');
+		TInt aLocate = iGeoloc->GetString(EGeolocUri).LocateReverse('/');
 		
-		if(aResult != KErrNotFound) {
-			TLex aLex(iGeoloc->GetString(EGeolocUri).Mid(aResult + 1));
+		if(aLocate != KErrNotFound) {
+			TLex aLex(iGeoloc->GetString(EGeolocUri).Mid(aLocate + 1));
 			aLex.Val(iItemId);
 		}
 	}
@@ -220,7 +234,7 @@ void CExplorerResultItem::UpdateFromGeolocL() {
 	}
 	
 	SetDescriptionL(pDescription);
-	CleanupStack::PopAndDestroy(2); // CExplorerResultItem, aTextUtilities	
+	CleanupStack::PopAndDestroy(2); // aDescription, aTextUtilities	
 }
 
 /*
@@ -286,6 +300,14 @@ void CExplorerQueryLevel::SetQueriedStanzaL(const TDesC8& aStanza) {
 	}
 
 	iQueriedStanza = aStanza.AllocL();		
+}
+
+TBool CExplorerQueryLevel::AutoRefresh() {
+	return iAutoRefresh;
+}
+
+void CExplorerQueryLevel::SetAutoRefresh(TBool aAutoRefresh) {
+	iAutoRefresh = aAutoRefresh;
 }
 
 void CExplorerQueryLevel::ClearResultItems() {

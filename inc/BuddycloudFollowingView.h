@@ -37,11 +37,8 @@ class CBuddycloudFollowingView : public CAknView, MViewAccessorObserver, MAknToo
 
 	public: // From CAknView
 		TUid Id() const;
-		void ProcessCommandL(TInt aCommand);
-		void HandleCommandL(TInt aCommand);
-	
-	public: // From MEikMenuObserver
 		void DynInitMenuPaneL(TInt aResourceId, CEikMenuPane* aMenuPane);
+		void HandleCommandL(TInt aCommand);
 		
 #ifdef __SERIES60_40__
 	public: // From MAknToolbarObserver

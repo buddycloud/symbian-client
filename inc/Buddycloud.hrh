@@ -19,7 +19,6 @@
 enum TDefaultTabs {
 	ETabFollowing = 1, 
 	ETabPlaces, 
-	ETabChannels,
 	ETabExplorer
 };
 
@@ -112,7 +111,6 @@ enum TSettingsTabs {
 // Settings
 enum TSettingsAccountItems {
 	ESettingAccountFullName = 1, 
-	ESettingAccountEmailAddress,
 	ESettingAccountUsername, 
 	ESettingAccountPassword,
 	ESettingAccountServer

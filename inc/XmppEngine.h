@@ -142,7 +142,7 @@ class CXmppEngine : public CBase, MTcpIpEngineNotification, MConnectionMonitorNo
 		
 		void SetResourceL(const TDesC8& aResource);
 
-		void ConnectL(TBool aConnectionCold);
+		void ConnectL();
 		void SendAuthorization();
 		void Disconnect();
 		
@@ -155,6 +155,7 @@ class CXmppEngine : public CBase, MTcpIpEngineNotification, MConnectionMonitorNo
 		
 	private:
 		void SetXmppServerL(const TDesC8& aXmppServer);
+		void ConnectOrResolveL();
 		
 	public: // Stanza handling
 		void SendQueuedXmppStanzas();
@@ -214,7 +215,6 @@ class CXmppEngine : public CBase, MTcpIpEngineNotification, MConnectionMonitorNo
 
 		TXmppEngineState iEngineState;
 		TXmppEngineError iLastError;
-		TBool iConnectionCold;
 
 		CCustomTimer* iStateTimer;
 		CCustomTimer* iReadTimer;

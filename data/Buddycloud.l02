@@ -20,8 +20,7 @@ rls_string r_string_translatedby "Traduit par: Catymag"
 
 rls_string r_string_followingtab_hint "Suivant"
 rls_string r_string_placestab_hint "Places"
-rls_string r_string_explorertab_hint "A proximité"
-rls_string r_string_channelstab_hint "Chaînes"
+rls_string r_string_explorertab_hint "Explorer"
 
 // CBA
 rls_string r_string_options_menu "Options"
@@ -150,11 +149,12 @@ rls_string r_string_note_requesting "Demander..."
 rls_string r_string_note_channelrank "Classement"
 
 // Menu: Channels
+rls_string r_string_list_nearbytoyou "What's Nearby To Me"
 rls_string r_string_list_featuredchannels "Chaînes"
 rls_string r_string_list_channelsyoumightlike "Chaînes vous pouvez aimer"
 rls_string r_string_list_followersfavourites "Favoris des adeptes"
 rls_string r_string_list_mostpopularchannels "Les Chaînes les plus populaires "
-rls_string r_string_list_channelsneartoyou "Chaînes près de vous"
+rls_string r_string_list_channelsneartoyou "Channels Near To Me"
 
 rls_string r_string_item_open "Ouvert"
 rls_string r_string_item_follow "Suivre"
@@ -187,8 +187,6 @@ rls_string r_string_note_subscriptionrejected "Your subscription to this channel
 rls_string r_string_settings_account_title "Compte"
 rls_string r_string_settings_itemlist_fullname "Nom complet"
 rls_string r_string_settings_itemlist_fullname_hint "Votre nom"
-rls_string r_string_settings_itemlist_email "E-mail"
-rls_string r_string_settings_itemlist_email_hint "Votre adresse e-mail"
 rls_string r_string_settings_itemlist_username "Nom d'utilisateur"
 rls_string r_string_settings_itemlist_username_hint "XMPP server username"
 rls_string r_string_settings_itemlist_password "Mot de passe"
@@ -292,6 +290,7 @@ rls_string r_string_serverresolveerror_text "XMPP server could not be resolved. 
 // Delete Item Message
 rls_string r_string_deleteitem_title "Confirmer la suppression"
 rls_string r_string_deleteitem_text "Êtes-vous sûr de vouloir le supprimer ?"
+rls_string r_string_deletechannel_text "Deleting this channel will also delete all content.\n\nAre you sure?"
 
 // Sms/Email Messages
 rls_string r_string_invitemessage_title "Rejoignez-nous sur buddycloud!"
@@ -325,17 +324,17 @@ rls_string r_string_note_offline "Offline"
 rls_string r_string_step2_title "Sois célèbre!"
 rls_string r_string_step2_text "buddycloud chaînes vous donne une nouvelle façon de diffuser votre pèculiaritès à vos disciples. les buddycloud chaines vous permettent de devenir célèbre pour votres connaissances sur un lieu ou un sujet et à construire une communauté d'adeptes."
 
-rls_string r_string_step3_title "Que pouvez-vous faire?"
-rls_string r_string_step3_text "Avec buddycloud vous pouvez créer une chaîne autour de ce sujet vous êtes bon, ou une chaine  sur vous. buddycloud automatiquement part de votre position actuelle comme un signet pour votres disciples, ou au niveau de la ville avec tout le monde.\n\nS'il vous plaît choisir un nom d'utilisateur unique pour commencer:"
+rls_string r_string_step3_title "How do you want to log in?"
+rls_string r_string_step3_text "Recommended: Instantly sign-in using your Google account (or any Jabber account).\n\nAlternatively: Register for a buddycloud account."
+rls_string r_string_step3_label1 "Use existing account"
+rls_string r_string_step3_label2 "Register new account"
 
-rls_string r_string_step4_title "Vos avantages"
-rls_string r_string_step4_text "buddycloud vous offre un nouveau niveau d'interactivité avec vos fidèles et montre votre chaîne de popularité croissante. Continuez tous les jours  sans épuiser la batterie de votre téléphone,  en raison de la faible utilisation des data. Partagez votre position en permanence, mais sous contrôleet en sécurité.\n\nS'il vous plaît, entrez un mot de passe sûr:"
+rls_string r_string_step4_title "Who are you?"
+rls_string r_string_step4_text1 "Enter your existing account details.\n\nThis looks like 'name@gmail.com' or 'name@googlemail.com'."
+rls_string r_string_step4_text2 "Choose a new username and password to start using buddycloud.  If you have already registered for buddycloud on another phone, enter those details here."
 
-rls_string r_string_step5_title "Restez en contact"
-rls_string r_string_step5_text "Soyez informé des nouveaux des services buddycloud et des nouvelles versions de ce soft.\n\nS'il vous plaît laissez-nous votre adresse e-mail (facultatif), nous allons la garder en sécurité:"
-
-rls_string r_string_step6_title "Felicitations"
-rls_string r_string_step6_text "L'installation est maintenant terminée. Vous allez maintenant être connecté et inscrit pour buddycloud chaines."
-rls_string r_string_step6_question "Aimeriez-vous mettre en marche buddycloud lorsque vous allumez votre téléphone à partir de maintenant?"
+rls_string r_string_step5_title "Felicitations"
+rls_string r_string_step5_text "You are setup and ready to use buddycloud channels."
+rls_string r_string_step5_question "Aimeriez-vous mettre en marche buddycloud lorsque vous allumez votre téléphone à partir de maintenant?"
 
 // End of File

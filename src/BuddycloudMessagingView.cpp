@@ -74,7 +74,7 @@ void CBuddycloudMessagingView::DoActivateL(const TVwsViewId& /*aPrevViewId*/, TU
 		
 		if(aQuery.iData.Length() == 0) {
 			// Nothing referenced, get channel node as default
-			CBuddycloudListStore* aItemStore = iBuddycloudLogic->GetFollowingStore();
+			CBuddycloudFollowingStore* aItemStore = iBuddycloudLogic->GetFollowingStore();
 			CFollowingItem* aItem = static_cast <CFollowingItem*> (aItemStore->GetItemById(aCustomMessageId.iUid));
 					
 			if(aItem && aItem->GetItemType() >= EItemRoster) {

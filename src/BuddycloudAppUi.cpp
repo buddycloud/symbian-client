@@ -23,23 +23,23 @@
 #include "Buddycloud.hrh"
 #include "Buddycloud.hlp.hrh"
 #include "Buddycloud.pan"
-#include "BuddycloudAppUi.h"
-#include "BuddycloudSetupView.h"
 #include "BuddycloudAccountSettingsView.h"
-#include "BuddycloudPreferencesSettingsView.h"
-#include "BuddycloudNotificationsSettingsView.h"
+#include "BuddycloudAppUi.h"
 #include "BuddycloudBeaconSettingsView.h"
 #include "BuddycloudChannelInfoView.h"
 #include "BuddycloudCommunitiesView.h"
-#include "BuddycloudFollowingView.h"
-#include "BuddycloudMessagingView.h"
-#include "BuddycloudPlacesView.h"
-#include "BuddycloudExplorerView.h"
-#include "BuddycloudChannelsView.h"
-#include "BuddycloudEditPlaceView.h"
-#include "BuddycloudEditChannelView.h"
 #include "BuddycloudConstants.h"
+#include "BuddycloudEditChannelView.h"
+#include "BuddycloudEditPlaceView.h"
+#include "BuddycloudExplorerView.h"
+#include "BuddycloudFollowing.h"
+#include "BuddycloudFollowingView.h"
 #include "BuddycloudIconIds.h"
+#include "BuddycloudMessagingView.h"
+#include "BuddycloudNotificationsSettingsView.h"
+#include "BuddycloudPlacesView.h"
+#include "BuddycloudPreferencesSettingsView.h"
+#include "BuddycloudSetupView.h"
 #include "FileUtilities.h"
 #include "PhoneUtilities.h"
 
@@ -139,12 +139,6 @@ void CBuddycloudAppUi::CreateViewsL() {
 	CleanupStack::PushL(aViewExplorer);
 	aViewExplorer->ConstructL(iBuddycloudLogic);
 	AddViewL(aViewExplorer);
-	CleanupStack::Pop();
-	
-	CBuddycloudChannelsView* aViewChannels = new (ELeave) CBuddycloudChannelsView;
-	CleanupStack::PushL(aViewChannels);
-	aViewChannels->ConstructL(iBuddycloudLogic);
-	AddViewL(aViewChannels);
 	CleanupStack::Pop();
 
 	CBuddycloudEditPlaceView* aViewEditPlace = new (ELeave) CBuddycloudEditPlaceView;
@@ -427,9 +421,9 @@ void CBuddycloudAppUi::NotificationEvent(TBuddycloudLogicNotificationType aEvent
 		ActivateLocalViewL(KEditPlaceViewId, TUid::Uid(aId), _L8(""));
 	}
 	else if(aEvent == ENotificationAuthenticationFailed) {
-		ActivateLocalViewL(KAccountSettingsViewId, TUid::Uid(2), _L8(""));
+		ActivateLocalViewL(KAccountSettingsViewId, TUid::Uid(1), _L8(""));
 	}
 	else if(aEvent == ENotificationServerResolveFailed) {
-		ActivateLocalViewL(KAccountSettingsViewId, TUid::Uid(4), _L8(""));
+		ActivateLocalViewL(KAccountSettingsViewId, TUid::Uid(3), _L8(""));
 	}
 }

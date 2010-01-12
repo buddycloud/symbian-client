@@ -59,6 +59,9 @@ RESOURCE AVKON_VIEW r_messaging_view
 RESOURCE AVKON_VIEW r_places_view
 {
 	menubar = r_places_options_menubar;
+#ifdef __SERIES60_40__
+	toolbar = r_places_toolbar;
+#endif
 	cba = R_AVKON_SOFTKEYS_OPTIONS_BACK;
 }
 
@@ -204,8 +207,8 @@ RESOURCE AVKON_TOOLBAR r_status_toolbar
 					{
 						helptxt = r_string_item_viewprivatemessages;
 					    bmpfile = "\\resource\\apps\\Buddycloud_Toolbar.mif";
-					    bmpid = EMbmToolbariconidsToolbarmessage;
-					    bmpmask = EMbmToolbariconidsToolbarmessage;
+					    bmpid = EMbmToolbariconidsToolbarprivatemessage;
+					    bmpmask = EMbmToolbariconidsToolbarprivatemessage;
 					}
 				};
 			};
@@ -248,8 +251,8 @@ RESOURCE AVKON_TOOLBAR r_messaging_toolbar
 					{
 						helptxt = r_string_options_postmessage;
 					    bmpfile = "\\resource\\apps\\Buddycloud_Toolbar.mif";
-					    bmpid = EMbmToolbariconidsToolbarmessage;
-					    bmpmask = EMbmToolbariconidsToolbarmessage;
+					    bmpid = EMbmToolbariconidsToolbarmessagepost;
+					    bmpmask = EMbmToolbariconidsToolbarmessagepost;
 					}
 				};
 			};
@@ -272,6 +275,50 @@ RESOURCE AVKON_TOOLBAR r_messaging_toolbar
 				};
 			};
 		}
+	};
+}
+
+RESOURCE AVKON_TOOLBAR r_places_toolbar
+{
+	flags = KAknToolbarFixed;
+	items =
+	{
+			TBAR_CTRL
+			{
+				type = EAknCtButton;
+				id = EMenuBookmarkPlaceCommand;
+				control = AVKON_BUTTON
+				{
+					states =
+					{
+						AVKON_BUTTON_STATE
+						{
+							helptxt = r_string_options_setcurrent;
+						    bmpfile = "\\resource\\apps\\Buddycloud_Toolbar.mif";
+						    bmpid = EMbmToolbariconidsToolbarbookmarkplace;
+						    bmpmask = EMbmToolbariconidsToolbarbookmarkplace;
+						}
+					};
+				};
+			},
+			TBAR_CTRL
+			{
+				type = EAknCtButton;
+				id = EMenuNewSearchCommand;
+				control = AVKON_BUTTON
+				{
+					states =
+					{
+						AVKON_BUTTON_STATE
+						{
+							helptxt = r_string_options_newsearch;
+						    bmpfile = "\\resource\\apps\\Buddycloud_Toolbar.mif";
+						    bmpid = EMbmToolbariconidsToolbarsearch;
+						    bmpmask = EMbmToolbariconidsToolbarsearch;
+						}
+					};
+				};
+			}
 	};
 }
 #endif
@@ -516,13 +563,13 @@ RESOURCE MENU_PANE r_status_options_item_menu
 		},
 		MENU_ITEM
 		{ 
-			command = EMenuGetPlaceInfoCommand; 
-			txt = r_string_item_showplacedetails;
+			command = EMenuChannelInfoCommand; 
+			txt = r_string_item_showchanneldetails;
 		},
 		MENU_ITEM
 		{ 
-			command = EMenuChannelInfoCommand; 
-			txt = r_string_item_showchanneldetails;
+			command = EMenuGetPlaceInfoCommand; 
+			txt = r_string_item_showplacedetails;
 		},
 		MENU_ITEM
 		{ 
@@ -1001,13 +1048,13 @@ RESOURCE MENU_PANE r_explorer_options_item_menu
 		},
 		MENU_ITEM
 		{ 
-			command = EMenuPrivateMessagesCommand; 
-			txt = r_string_item_viewprivatemessages;
+			command = EMenuChannelMessagesCommand; 
+			txt = r_string_item_viewchannelmessages;
 		},
 		MENU_ITEM
 		{ 
-			command = EMenuChannelMessagesCommand; 
-			txt = r_string_item_viewchannelmessages;
+			command = EMenuPrivateMessagesCommand; 
+			txt = r_string_item_viewprivatemessages;
 		},
 		MENU_ITEM
 		{ 
@@ -1216,12 +1263,6 @@ RESOURCE AVKON_SETTING_ITEM_LIST r_account_settings_item_list
 		},
 		AVKON_SETTING_ITEM
 		{
-			identifier = ESettingAccountEmailAddress;
-			setting_page_resource = r_settings_item_email_page;
-			name = r_string_settings_itemlist_email;
-		},
-		AVKON_SETTING_ITEM
-		{
 			identifier = ESettingAccountUsername;
 			setting_page_resource = r_settings_item_username_page;
 			name = r_string_settings_itemlist_username;
@@ -1247,14 +1288,6 @@ RESOURCE AVKON_SETTING_PAGE r_settings_item_fullname_page
 	type = EEikCtEdwin;
 	editor_resource_id = r_allcase64_edwin;
 	hint_text = r_string_settings_itemlist_fullname_hint;
-}
-
-RESOURCE AVKON_SETTING_PAGE r_settings_item_email_page
-{
-	label = r_string_settings_itemlist_email;
-	type = EEikCtEdwin;
-	editor_resource_id = r_allcase64_edwin;
-	hint_text = r_string_settings_itemlist_email_hint;
 }
 
 RESOURCE AVKON_SETTING_PAGE r_settings_item_username_page
@@ -1960,7 +1993,6 @@ RESOURCE TBUF r_localized_string_appname { buf = r_string_app_caption; }
 RESOURCE TBUF r_localized_string_followingtab_hint { buf = r_string_followingtab_hint; }
 RESOURCE TBUF r_localized_string_placestab_hint { buf = r_string_placestab_hint; }
 RESOURCE TBUF r_localized_string_explorertab_hint { buf = r_string_explorertab_hint; }
-RESOURCE TBUF r_localized_string_channelstab_hint { buf = r_string_channelstab_hint; }
 RESOURCE TBUF r_localized_string_menuitem_group { buf = r_string_options_itemchannel; }
 RESOURCE TBUF r_localized_string_item_newchannel { buf = r_string_item_newchannel; }
 RESOURCE TBUF r_localized_string_item_newplace { buf = r_string_item_newplace; }
@@ -1980,6 +2012,7 @@ RESOURCE TBUF r_localized_string_followingrequest_title { buf = r_string_followi
 RESOURCE TBUF r_localized_string_followingrequest_text { buf = r_string_followerrequest_text; }
 RESOURCE TBUF r_localized_string_serverresolveerror_title { buf = r_string_serverresolveerror_title; }
 RESOURCE TBUF r_localized_string_serverresolveerror_text { buf = r_string_serverresolveerror_text; }
+RESOURCE TBUF r_localized_string_deletechannel_text { buf = r_string_deletechannel_text; }
 
 // Settings
 RESOURCE TBUF r_localized_string_newplace_title { buf = r_string_newplace_title; }
@@ -2016,6 +2049,7 @@ RESOURCE TBUF r_localized_string_note_channelexists { buf = r_string_note_channe
 
 // Channels
 RESOURCE TBUF r_localized_string_options_explore { buf = r_string_options_explore; }
+RESOURCE TBUF r_localized_string_list_nearbytoyou { buf = r_string_list_nearbytoyou; }
 RESOURCE TBUF r_localized_string_list_featuredchannels { buf = r_string_list_featuredchannels; }
 RESOURCE TBUF r_localized_string_list_channelsyoumightlike { buf = r_string_list_channelsyoumightlike; }
 RESOURCE TBUF r_localized_string_list_followersfavourites { buf = r_string_list_followersfavourites; }
@@ -2075,13 +2109,16 @@ RESOURCE TBUF r_localized_string_step2_title { buf = r_string_step2_title; }
 RESOURCE TBUF r_localized_string_step2_text { buf = r_string_step2_text; }
 RESOURCE TBUF r_localized_string_step3_title { buf = r_string_step3_title; }
 RESOURCE TBUF r_localized_string_step3_text { buf = r_string_step3_text; }
+RESOURCE TBUF r_localized_string_step3_label1 { buf = r_string_step3_label1; }
+RESOURCE TBUF r_localized_string_step3_label2 { buf = r_string_step3_label2; }
 RESOURCE TBUF r_localized_string_step4_title { buf = r_string_step4_title; }
-RESOURCE TBUF r_localized_string_step4_text { buf = r_string_step4_text; }
+RESOURCE TBUF r_localized_string_step4_text1 { buf = r_string_step4_text1; }
+RESOURCE TBUF r_localized_string_step4_text2 { buf = r_string_step4_text2; }
+RESOURCE TBUF r_localized_string_step4_label1 { buf = r_string_settings_itemlist_username; }
+RESOURCE TBUF r_localized_string_step4_label2 { buf = r_string_settings_itemlist_password; }
 RESOURCE TBUF r_localized_string_step5_title { buf = r_string_step5_title; }
 RESOURCE TBUF r_localized_string_step5_text { buf = r_string_step5_text; }
-RESOURCE TBUF r_localized_string_step6_title { buf = r_string_step6_title; }
-RESOURCE TBUF r_localized_string_step6_text { buf = r_string_step6_text; }
-RESOURCE TBUF r_localized_string_step6_question { buf = r_string_step6_question; }
+RESOURCE TBUF r_localized_string_step5_question { buf = r_string_step5_question; }
 
 // ---------------------------------------------------------------------------- 
 //

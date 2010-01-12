@@ -93,8 +93,11 @@ class CBuddycloudListStore : public CBase {
 		static CBuddycloudListStore* NewL();
 		static CBuddycloudListStore* NewLC();
 		~CBuddycloudListStore();
+		
+	protected:
+		void ConstructL();
 
-	public:
+	public: // Count & get items
 		TInt Count();
 
 		CBuddycloudListItem* GetItemByIndex(TInt aIndex);
@@ -103,21 +106,36 @@ class CBuddycloudListStore : public CBase {
 		TInt GetIdByIndex(TInt aIndex);
 		TInt GetIndexById(TInt aItemId);
 
+	public: // Move items
 		void MoveItemByIndex(TInt aIndex, TInt aPosition);
 		void MoveItemById(TInt aItemId, TInt aPosition);
 
+	public: // Add & insert items
 		void AddItem(CBuddycloudListItem* aItem);
 		void InsertItem(TInt aIndex, CBuddycloudListItem* aItem);
 
+	public: // Remove & delete items
 		void RemoveItemByIndex(TInt aIndex);
 		void RemoveItemById(TInt aItemId);
 		void RemoveAll();
 
 		void DeleteItemByIndex(TInt aIndex);
 		void DeleteItemById(TInt aItemId);
+		
+	public: // Filter items
+		TDesC& GetFilterText();
+		TBool SetFilterTextL(const TDesC& aFilterText);
+		
+	protected: 
+		virtual void FilterItemL(TInt aIndex);
+		
+	private:
+		void FilterL();
 
 	protected:
 		RPointerArray<CBuddycloudListItem> iItemStore;
+		
+		HBufC* iFilterText;
 };
 
 #endif /* BUDDYCLOUDLIST_H_ */

@@ -63,19 +63,19 @@ void CBuddycloudFollowingContainer::ConstructL(const TRect& aRect, TInt aItem) {
 	SetTitleL(*aTitle);
 	CleanupStack::PopAndDestroy();
 
-	// Search Field
-	iSearchEdwin = new (ELeave) CEikEdwin();
-	iSearchEdwin->MakeVisible(true);
-	iSearchEdwin->SetFocus(true);
-	iSearchEdwin->SetContainerWindowL(*this);
+	// Edwin
+	iEdwin = new (ELeave) CEikEdwin();
+	iEdwin->MakeVisible(true);
+	iEdwin->SetFocus(true);
+	iEdwin->SetContainerWindowL(*this);
 
 	TResourceReader aReader;
 	iEikonEnv->CreateResourceReaderLC(aReader, R_SEARCH_EDWIN);
-	iSearchEdwin->ConstructFromResourceL(aReader);
+	iEdwin->ConstructFromResourceL(aReader);
 	CleanupStack::PopAndDestroy(); // aReader
 
-	iSearchEdwin->SetAknEditorFlags(EAknEditorFlagNoT9 | EAknEditorFlagNoEditIndicators);
-	iSearchEdwin->SetAknEditorCase(EAknEditorLowerCase);
+	iEdwin->SetAknEditorFlags(EAknEditorFlagNoT9 | EAknEditorFlagNoEditIndicators);
+	iEdwin->SetAknEditorCase(EAknEditorLowerCase);
 	ConfigureEdwinL();
 
 	iBuddycloudLogic->AddStatusObserver(this);
@@ -98,9 +98,9 @@ CBuddycloudFollowingContainer::~CBuddycloudFollowingContainer() {
 		iBuddycloudLogic->RemoveStatusObserver();
 	}
 
-	// Search Field
-	if(iSearchEdwin)
-		delete iSearchEdwin;
+	// Edwin
+	if(iEdwin)
+		delete iEdwin;
 	
 	AknIconUtils::DestroyIconData(iArrow1Bitmap);	
 
@@ -165,39 +165,39 @@ void CBuddycloudFollowingContainer::ConfigureEdwinL() {
 	aCharFormat.iFontPresentation.iTextColor = iColourText;
 	aCharFormatMask.SetAll();
 	aCharFormatLayer->SetL(aCharFormat, aCharFormatMask);
-	iSearchEdwin->SetCharFormatLayer(aCharFormatLayer);  // Edwin takes the ownership
+	iEdwin->SetCharFormatLayer(aCharFormatLayer);  // Edwin takes the ownership
 	CleanupStack::Pop(aCharFormatLayer);
 }
 
 void CBuddycloudFollowingContainer::DisplayEdwin(TBool aShowEdwin) {
 	iRect = Rect();
 
-	if(iSearchEdwin) {
-		TRect aFieldRect = iSearchEdwin->Rect();
+	if(iEdwin) {
+		TRect aFieldRect = iEdwin->Rect();
 		
 		if(aShowEdwin) {
 			// Show edwin
 			aFieldRect = TRect(i10NormalFont->FontMaxHeight(), (iRect.Height() - i10NormalFont->FontMaxHeight() - 2), (iRect.Width() - i10NormalFont->FontMaxHeight()), (iRect.Height() - 2));
-			iSearchEdwin->SetRect(aFieldRect);
+			iEdwin->SetRect(aFieldRect);
 			
-			iRect.SetHeight(iRect.Height() - iSearchEdwin->Rect().Height() - 6);
+			iRect.SetHeight(iRect.Height() - iEdwin->Rect().Height() - 6);
 			
 			RepositionItems(iSnapToItem);
-			iSearchVisible = true;
+			iEdwinVisible = true;
 		}
 		else {
 			// Dont show edwin
 			aFieldRect = TRect(i10NormalFont->FontMaxHeight(), (iRect.Height() + 2), (iRect.Width() - i10NormalFont->FontMaxHeight()), (iRect.Height() + aFieldRect.Height() + 2));
-			iSearchEdwin->SetFocus(false);
-			iSearchEdwin->SetRect(aFieldRect);
-			iSearchEdwin->SetFocus(true);
+			iEdwin->SetFocus(false);
+			iEdwin->SetRect(aFieldRect);
+			iEdwin->SetFocus(true);
 			
-			if(iSearchVisible) {
+			if(iEdwinVisible) {
 				iSelectedItem = KErrNotFound;
 				RepositionItems(true);
 			}
 			
-			iSearchVisible = false;
+			iEdwinVisible = false;
 		}
 	}
 }
@@ -316,12 +316,12 @@ void CBuddycloudFollowingContainer::SizeChanged() {
 	RenderWrappedText(iSelectedItem);
 	RepositionItems(iSnapToItem);
 	
-	// Search Field
-	if(iSearchEdwin) {
-		iSearchEdwin->SetTextL(&iBuddycloudLogic->GetFollowingFilterText());
-		iSearchEdwin->HandleTextChangedL();
+	// Edwin
+	if(iEdwin) {
+		iEdwin->SetTextL(&iItemStore->GetFilterText());
+		iEdwin->HandleTextChangedL();
 
-		if(iSearchEdwin->TextLength() > 0 || iSearchVisible) {
+		if(iEdwin->TextLength() > 0 || iEdwinVisible) {
 			// Show
 			DisplayEdwin(true);
 		}
@@ -333,12 +333,12 @@ void CBuddycloudFollowingContainer::SizeChanged() {
 }
 
 TInt CBuddycloudFollowingContainer::CountComponentControls() const {
-	return 1; // iSearchEdwin
+	return 1; // iEdwin
 }
 
 CCoeControl* CBuddycloudFollowingContainer::ComponentControl(TInt aIndex) const {
 	if(aIndex == 0) {
-		return iSearchEdwin;
+		return iEdwin;
 	}
 	
 	return NULL;
@@ -738,11 +738,11 @@ void CBuddycloudFollowingContainer::RenderListItems() {
 #endif		
 	}
 	
-	// Draw Search Field
-	if(iSearchEdwin->IsVisible()) {
-		iBufferGc->SetClippingRect(Rect());
+	// Draw edwin
+	if(iEdwin->IsVisible()) {
+		iBufferGc->CancelClippingRect();
 
-		TRect aFieldRect = iSearchEdwin->Rect();
+		TRect aFieldRect = iEdwin->Rect();
 		aFieldRect.Grow(2, 2);
 		iBufferGc->SetBrushColor(iColourText);
 		iBufferGc->SetPenColor(iColourText);
@@ -903,12 +903,8 @@ void CBuddycloudFollowingContainer::DynInitMenuPaneL(TInt aResourceId, CEikMenuP
 				aMenuPane->SetItemDimmed(EMenuAcceptCommand, false);
 				aMenuPane->SetItemDimmed(EMenuDeclineCommand, false);
 				
-				if(aItem->GetIdType() == EIdRoster) {
-					CBuddycloudListItem* aSubscribedItem = iItemStore->GetItemById(iBuddycloudLogic->IsSubscribedTo(aItem->GetId(), EItemRoster));
-					
-					if(aSubscribedItem == NULL) {
-						aMenuPane->SetItemDimmed(EMenuAcceptAndFollowCommand, false);
-					}
+				if(aItem->GetIdType() == EIdRoster && !iBuddycloudLogic->IsSubscribedTo(aItem->GetId(), EItemRoster)) {
+					aMenuPane->SetItemDimmed(EMenuAcceptAndFollowCommand, false);
 				}
 			}
 			else if(aItem->GetItemType() == EItemRoster) {
@@ -1007,7 +1003,7 @@ void CBuddycloudFollowingContainer::HandleCommandL(TInt aCommand) {
 		CFollowingRosterItem* aOwnItem = iBuddycloudLogic->GetOwnItem();
 		
 		if(aOwnItem && aOwnItem->GetDescription().Length() > 0) {
-			aMood.Copy(aOwnItem->GetDescription());
+			aMood.Copy(aOwnItem->GetDescription().Left(aMood.MaxLength()));
 		}
 
 		CAknTextQueryDialog* dlg = CAknTextQueryDialog::NewL(aMood, CAknQueryDialog::ENoTone);
@@ -1131,29 +1127,12 @@ void CBuddycloudFollowingContainer::HandleCommandL(TInt aCommand) {
 	else if(aCommand == EMenuDeclineCommand) {
 		iBuddycloudLogic->RespondToNoticeL(iSelectedItem, ENoticeDecline);
 	}
-	else if(aCommand == EMenuNewSearchCommand || aCommand == EAknSoftkeyBack) {
-		// Reset filter
-		iBuddycloudLogic->SetFollowingFilterTextL(_L(""));
-		iSearchEdwin->SetTextL(&iBuddycloudLogic->GetFollowingFilterText());
-		iSearchEdwin->HandleTextChangedL();
-		
-		if(aCommand == EMenuNewSearchCommand && !iSearchVisible) {
-			// Show search filter
-			DisplayEdwin(true);
-		}
-		else {
-			// Hide search filter
-			DisplayEdwin(false);
-		}
-		
-		// Back to top
-		RenderScreen();
-	}
 	else if(aCommand == EMenuSeeFollowingCommand || aCommand == EMenuSeeFollowersCommand || aCommand == EMenuSeeProducingCommand) {
 		CFollowingItem* aItem = static_cast <CFollowingItem*> (iItemStore->GetItemById(iSelectedItem));
 
 		if(aItem && aItem->GetItemType() >= EItemRoster) {
 			TViewReferenceBuf aViewReference;
+			aViewReference().iCallbackRequested = true;
 			aViewReference().iCallbackViewId = KFollowingViewId;
 			aViewReference().iOldViewData.iId = iSelectedItem;
 			
@@ -1196,6 +1175,7 @@ void CBuddycloudFollowingContainer::HandleCommandL(TInt aCommand) {
 
 		if(aItem) {
 			TViewReferenceBuf aViewReference;
+			aViewReference().iCallbackRequested = true;
 			aViewReference().iCallbackViewId = KFollowingViewId;
 			aViewReference().iOldViewData.iId = iSelectedItem;
 			
@@ -1217,6 +1197,32 @@ void CBuddycloudFollowingContainer::HandleCommandL(TInt aCommand) {
 			aViewReference().iNewViewData = aQuery;
 			
 			iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KExplorerViewId), TUid::Uid(0), aViewReference);		
+		}
+	}
+	else if(aCommand == EMenuNewSearchCommand || aCommand == EAknSoftkeyBack) {
+		if(aCommand == EAknSoftkeyBack && iItemStore->GetFilterText().Length() == 0) {
+			// Hide application
+			TApaTask aTask(iEikonEnv->WsSession());
+			aTask.SetWgId(CEikonEnv::Static()->RootWin().Identifier());
+			aTask.SendToBackground();
+		}
+		else {	
+			// Reset filter
+			iItemStore->SetFilterTextL(_L(""));
+			iEdwin->SetTextL(&iItemStore->GetFilterText());
+			iEdwin->HandleTextChangedL();
+			
+			if(aCommand == EMenuNewSearchCommand && !iEdwinVisible) {
+				// Show search filter
+				DisplayEdwin(true);
+			}
+			else {
+				// Hide search filter
+				DisplayEdwin(false);
+			}
+			
+			// Back to top
+			RenderScreen();
 		}
 	}
 }
@@ -1270,31 +1276,35 @@ TKeyResponse CBuddycloudFollowingContainer::OfferKeyEventL(const TKeyEvent& aKey
 		}
 	}
 	else if(aType == EEventKeyDown) {
-		if(iSearchEdwin->TextLength() == 0 && aKeyEvent.iScanCode == EStdKeyRightArrow) {
+		if(iEdwin->TextLength() == 0 && aKeyEvent.iScanCode == EStdKeyRightArrow) {
 			iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KPlacesViewId), TUid::Uid(0), _L8(""));
 			aResult = EKeyWasConsumed;
 		}
 	}
 
-	// If key not consumed pass to iSearchEdwin
+	// If key not consumed pass to iEdwin
 	if(aResult == EKeyWasNotConsumed) {
-		iSearchEdwin->OfferKeyEventL(aKeyEvent, aType);
+		iEdwin->OfferKeyEventL(aKeyEvent, aType);
 
-		if(iSearchLength == 0 && iSearchEdwin->TextLength() > 0) {
+		if(iEdwinLength == 0 && iEdwin->TextLength() > 0) {
 			// Show
 			DisplayEdwin(true);
 		}
-		else if(iSearchLength > 0 && iSearchEdwin->TextLength() == 0) {
+		else if(iEdwinLength > 0 && iEdwin->TextLength() == 0) {
 			// Dont Show
 			DisplayEdwin(false);
 		}
 		
 		// Filter Contacts
 		TBuf<64> aFilterText;
-		iSearchEdwin->GetText(aFilterText);
-		iBuddycloudLogic->SetFollowingFilterTextL(aFilterText);
+		iEdwin->GetText(aFilterText);
+		iEdwinLength = iEdwin->TextLength();
 		
-		iSearchLength = iSearchEdwin->TextLength();
+		if(iItemStore->SetFilterTextL(aFilterText)) {
+			RepositionItems(iSnapToItem);
+			RenderScreen();
+		}
+		
 		aResult = EKeyWasConsumed;
 	}
 

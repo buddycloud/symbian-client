@@ -183,4 +183,21 @@ class CFollowingRosterItem : public CFollowingChannelItem {
 		RPointerArray<CGeolocData> iGeolocs;
 };
 
+/*
+----------------------------------------------------------------------------
+--
+-- CBuddycloudFollowingStore
+--
+----------------------------------------------------------------------------
+*/
+
+class CBuddycloudFollowingStore : public CBuddycloudListStore {		
+	public:
+		static CBuddycloudFollowingStore* NewL();
+		static CBuddycloudFollowingStore* NewLC();
+
+	protected: // From CBuddycloudListStore
+		void FilterItemL(TInt aIndex);
+};
+
 #endif /*BUDDYCLOUDFOLLOWING_H_*/

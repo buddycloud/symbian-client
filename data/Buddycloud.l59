@@ -20,8 +20,7 @@ rls_string r_string_translatedby "Translated by: vic. vicaerith@gmail.com"
 
 rls_string r_string_followingtab_hint "Mengikuti"
 rls_string r_string_placestab_hint "Tempat"
-rls_string r_string_explorertab_hint "Dekat"
-rls_string r_string_channelstab_hint "saluran-saluran"
+rls_string r_string_explorertab_hint "Explorer"
 
 // CBA
 rls_string r_string_options_menu "Pilihan"
@@ -150,11 +149,12 @@ rls_string r_string_note_requesting "Permintaan..."
 rls_string r_string_note_channelrank "Ranking"
 
 // Menu: Channels
+rls_string r_string_list_nearbytoyou "What's Nearby To Me"
 rls_string r_string_list_featuredchannels "Saluran utama"
 rls_string r_string_list_channelsyoumightlike "Saluran yang mungkin kamu suka"
 rls_string r_string_list_followersfavourites "Favorit pengikut"
 rls_string r_string_list_mostpopularchannels "Saluran Paling Populer"
-rls_string r_string_list_channelsneartoyou "Saluran di dekatmu"
+rls_string r_string_list_channelsneartoyou "Channels Near To Me"
 
 rls_string r_string_item_open "Buka"
 rls_string r_string_item_follow "Ikuti"
@@ -187,8 +187,6 @@ rls_string r_string_note_subscriptionrejected "Your subscription to this channel
 rls_string r_string_settings_account_title "Akun"
 rls_string r_string_settings_itemlist_fullname "Nama lengkap"
 rls_string r_string_settings_itemlist_fullname_hint "Nama lengkap anda"
-rls_string r_string_settings_itemlist_email "Alamat E-mail"
-rls_string r_string_settings_itemlist_email_hint "Alamat E-mail anda"
 rls_string r_string_settings_itemlist_username "Nama penguna"
 rls_string r_string_settings_itemlist_username_hint "XMPP server username"
 rls_string r_string_settings_itemlist_password "Kata sandi"
@@ -292,6 +290,7 @@ rls_string r_string_serverresolveerror_text "XMPP server could not be resolved. 
 // Delete Item Message
 rls_string r_string_deleteitem_title "Konfirmasi penghapusan"
 rls_string r_string_deleteitem_text "Kamu yakin mau menghapus ini ?"
+rls_string r_string_deletechannel_text "Deleting this channel will also delete all content.\n\nAre you sure?"
 
 // Sms/Email Messages
 rls_string r_string_invitemessage_title "Bergabung bersama kami di buddycloud!"
@@ -325,17 +324,17 @@ rls_string r_string_note_offline "Offline"
 rls_string r_string_step2_title "Jadilah Terkenal!"
 rls_string r_string_step2_text "Saluran2 buddycloud memberikan cara baru untuk menyiarkan kehebatanmu ke pengikutmu.\n\nSaluran2 buddycloud bisa membuatmu terkenal atas pengetahuan unikmu mengenai tempat,topik,dan membangun komunitas dari pengikutmu."
 
-rls_string r_string_step3_title "Apa yg bisa kamu lakukan?"
-rls_string r_string_step3_text "Dengan BC kamu bisa membuat saluran/channel topic yang kamu kuasai. Atau apapun mengenai kamu di saluran/channel pribadi. BC secara otomatis akan membagi/share lokasimu berada sebagai penanda tempat yg berarti bersama pengikutmu,atau dalam satu daerah dengan orang lain.\n\nSilahkan masukan username atau username baru untuk memulai:"
+rls_string r_string_step3_title "How do you want to log in?"
+rls_string r_string_step3_text "Recommended: Instantly sign-in using your Google account (or any Jabber account).\n\nAlternatively: Register for a buddycloud account."
+rls_string r_string_step3_label1 "Use existing account"
+rls_string r_string_step3_label2 "Register new account"
 
-rls_string r_string_step4_title "Keuntungan kamu"
-rls_string r_string_step4_text "Buddycloud memberikan tingkatan selanjutnya dari pergaulanmu dengan pengikutmu dan memperlihatkan kepopuleran saluranmu. Online seharian tanpa khawatir kehabisan pulsa atau bateraimu. Berbagi lokasi tapi tetap terjaga dengan cara aman.\n\nSilahkan masukkan kata sandi yang aman:"
+rls_string r_string_step4_title "Who are you?"
+rls_string r_string_step4_text1 "Enter your existing account details.\n\nThis looks like 'name@gmail.com' or 'name@googlemail.com'."
+rls_string r_string_step4_text2 "Choose a new username and password to start using buddycloud.  If you have already registered for buddycloud on another phone, enter those details here."
 
-rls_string r_string_step5_title "Tetap terhubung"
-rls_string r_string_step5_text "Dapatkan pemberitahuan dari layanan terbaru dan versi terbaru dari aplikasi buddycloud.\n\nMohon masukkan e-mail anda (optional),kami akan merahasiakannya:"
-
-rls_string r_string_step6_title "Selamat!"
-rls_string r_string_step6_text "Pengaturan selesai. Kamu sekarang akan terhubung dan terdaftar di saluran buddycloud."
-rls_string r_string_step6_question "Apakah kamu mau memulai buddycloud sejak telepon dihidupkan dari sekarang?"
+rls_string r_string_step5_title "Selamat!"
+rls_string r_string_step5_text "You are setup and ready to use buddycloud channels."
+rls_string r_string_step5_question "Apakah kamu mau memulai buddycloud sejak telepon dihidupkan dari sekarang?"
 
 // End of File

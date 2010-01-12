@@ -1,6 +1,33 @@
 Change Log
 ==========
 
+0.05.21
+
+- [bug] Add more specific character ignoring on 'Write post/comment' popup
+- Remove CBuddycloudChannelsView & CBuddycloudChannelsContainer
+- Merge Channels tab logic into Explorer tab
+- Rework of CBuddycloudSetupContainer to allow other accounts to my used
+- Remove email setting item and all references to it
+
+0.05.20
+
+- Removal of Following Item filtering logic from CBuddycloudLogic
+- Implementation of generic filtering logic in CBuddycloudListStore
+- Extend CBuddycloudListStore filter for CBuddycloudFollowingStore
+- [bug] Fix showing pressed number on 'Write post/comment' popup
+- Implementation of filtering logic into CBuddycloudPlacesContainer
+- Add toolbar to CBuddycloudPlacesContainer
+- Update of toolbar icons, add toolbar icon for bookmark place
+- Add logic for sending 'Like post' stanza
+- Add a confirmation dialog to 'Delete channel'
+
+0.05.19
+
+- [bug] Fix the view callback for CBuddycloudFollowingContainer explorer events
+- [bug] Fix own author name in own private message atom entries
+- Added some extra connection debuging information in TcpIpEngine
+- Cleanup of some replicated XmppEngine code
+
 0.05.18
 
 - Publish users full name into atom entries

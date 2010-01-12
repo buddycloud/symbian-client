@@ -22,9 +22,8 @@ const TInt KIconPlace        = -6;
 const TInt KIconNoPosition   = -7;
 const TInt KIconPositioning  = -8;
 const TInt KIconLink         = -9;
-const TInt KOverlayTyping    = -32;
-const TInt KOverlayLocked    = -33;
-const TInt KOverlayDirectory = -34;
-const TInt KOverlayReply     = -35;
+const TInt KOverlayLocked    = -32;
+const TInt KOverlayDirectory = -33;
+const TInt KOverlayReply     = -34;
 
 #endif

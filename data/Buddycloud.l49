@@ -20,8 +20,7 @@ rls_string r_string_translatedby "Translated by: tpike"
 
 rls_string r_string_followingtab_hint "Järgneb"
 rls_string r_string_placestab_hint "Asukoht"
-rls_string r_string_explorertab_hint "Lähedal"
-rls_string r_string_channelstab_hint "Kanalid"
+rls_string r_string_explorertab_hint "Explorer"
 
 // CBA
 rls_string r_string_options_menu "Seaded"
@@ -150,11 +149,12 @@ rls_string r_string_note_requesting "Taotlen..."
 rls_string r_string_note_channelrank "Arv"
 
 // Menu: Channels
+rls_string r_string_list_nearbytoyou "What's Nearby To Me"
 rls_string r_string_list_featuredchannels "Soositumad kanalid"
 rls_string r_string_list_channelsyoumightlike "Kanalid, mis sulle võiksid meeldida"
 rls_string r_string_list_followersfavourites "Järgnejate Lemmikud"
 rls_string r_string_list_mostpopularchannels "Populaarsemad kanalid"
-rls_string r_string_list_channelsneartoyou "Kanalid sinu lähedal"
+rls_string r_string_list_channelsneartoyou "Channels Near To Me"
 
 rls_string r_string_item_open "Ava"
 rls_string r_string_item_follow "Järgne"
@@ -187,8 +187,6 @@ rls_string r_string_note_subscriptionrejected "Your subscription to this channel
 rls_string r_string_settings_account_title "Konto"
 rls_string r_string_settings_itemlist_fullname "Täielik nimi"
 rls_string r_string_settings_itemlist_fullname_hint "Sinu täisnimi"
-rls_string r_string_settings_itemlist_email "E-posti aadress"
-rls_string r_string_settings_itemlist_email_hint "Sinu e-posti aadress"
 rls_string r_string_settings_itemlist_username "Kasutajanimi"
 rls_string r_string_settings_itemlist_username_hint "XMPP server username"
 rls_string r_string_settings_itemlist_password "Salasõna"
@@ -292,6 +290,7 @@ rls_string r_string_serverresolveerror_text "XMPP server could not be resolved. 
 // Delete Item Message
 rls_string r_string_deleteitem_title "Kinnita eemaldamine"
 rls_string r_string_deleteitem_text "Oled sa kindel, et soovid seda kustutada?"
+rls_string r_string_deletechannel_text "Deleting this channel will also delete all content.\n\nAre you sure?"
 
 // Sms/Email Messages
 rls_string r_string_invitemessage_title "Liitu meiega buddycloudi!"
@@ -325,17 +324,17 @@ rls_string r_string_note_offline "Offline"
 rls_string r_string_step2_title "Ole kuulus!"
 rls_string r_string_step2_text "Buddycloudi kanalid annavad sulle uue võimaluse edastada oma hiilgust oma järgijatele.\n\nBuddycloud kanalite abil võid saada populaarseks  oma unikaalsete teadmistega asukohtadest või teemadest ja luua gruppe järgijatega."
 
-rls_string r_string_step3_title "Mida sa saad teha?"
-rls_string r_string_step3_text "buddycloudiga saad luua kanali teemaga, mida oskad hästi, või isikliku kanali kõik endast. buddycloud automaatselt, punktuaalselt jagab nagu järjehoidja  sinu praeguse asukoha sinu järgijatega või linna tasandil kõigi teistega.\n\nPalun vali unikaalne kasutaja nimi alustamiseks:"
+rls_string r_string_step3_title "How do you want to log in?"
+rls_string r_string_step3_text "Recommended: Instantly sign-in using your Google account (or any Jabber account).\n\nAlternatively: Register for a buddycloud account."
+rls_string r_string_step3_label1 "Use existing account"
+rls_string r_string_step3_label2 "Register new account"
 
-rls_string r_string_step4_title "Sinu kasud"
-rls_string r_string_step4_text "buddycloud annab su ja su järgijate interaktiivsusele uue taseme ning näitab sinu kanali kasvavat populaarsust. Võid kasutada kogu päeva madala hinna tõttu ja vähese aku kulutusega, mis on tingitud buddycloud vähese andmete kasutamisega. Jaga oma asukohta pidevalt nüüdseks kontrollitud, ohutul viisil.\n\nPalun sisesa turvaline salasõna: "
+rls_string r_string_step4_title "Who are you?"
+rls_string r_string_step4_text1 "Enter your existing account details.\n\nThis looks like 'name@gmail.com' or 'name@googlemail.com'."
+rls_string r_string_step4_text2 "Choose a new username and password to start using buddycloud.  If you have already registered for buddycloud on another phone, enter those details here."
 
-rls_string r_string_step5_title "Püsi ühenduses"
-rls_string r_string_step5_text "Et saada informatsiooni uute buddycloud teenuste ja uute versioonide kohta, palun jäta meile oma e-posti aadress (kohustuslik), me hoiame seda ainult omateada :"
-
-rls_string r_string_step6_title "Ônnitlen!"
-rls_string r_string_step6_text "Asetused on nyyd valmis. Sind ühendatakse ja sa logid buddycloudi sisse."
-rls_string r_string_step6_question "Kas sa soovid alati avada buddycloudy, kui sa lülitad oma telefoni sisse?"
+rls_string r_string_step5_title "Ônnitlen!"
+rls_string r_string_step5_text "You are setup and ready to use buddycloud channels."
+rls_string r_string_step5_question "Kas sa soovid alati avada buddycloudy, kui sa lülitad oma telefoni sisse?"
 
 // End of File

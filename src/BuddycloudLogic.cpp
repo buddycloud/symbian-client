@@ -83,9 +83,6 @@ CBuddycloudLogic::~CBuddycloudLogic() {
 	if(iLastNodeIdReceived) 
 		delete iLastNodeIdReceived;
 
-	if(iFollowingFilterText)
-		delete iFollowingFilterText;
-
 	// Engines
 	if(iLocationEngine)
 		delete iLocationEngine;
@@ -171,10 +168,7 @@ void CBuddycloudLogic::ConstructL() {
 	WriteToLog(_L8("BL    Initialize CBuddycloudFollowingStore"));
 #endif
 
-	iFollowingList = CBuddycloudListStore::NewL();
-
- 	iFollowingFilterText = HBufC::NewL(0);
- 	iFilteringFollowers = false;
+	iFollowingList = CBuddycloudFollowingStore::NewL();
 	
 #ifdef _DEBUG
 	WriteToLog(_L8("BL    Initialize CXmppEngine"));
@@ -328,7 +322,7 @@ void CBuddycloudLogic::ConnectToXmppServerL() {
 	
 	iXmppEngine->SetAccountDetailsL(iSettingUsername, iSettingPassword);
 	iXmppEngine->SetServerDetailsL(iSettingXmppServer);
-	iXmppEngine->ConnectL(iConnectionCold);
+	iXmppEngine->ConnectL();
 }
 
 void CBuddycloudLogic::SendPresenceL() {
@@ -515,7 +509,7 @@ TBool CBuddycloudLogic::GetLocationResourceDataAvailable(TBuddycloudLocationReso
 	return false;
 }
 
-void CBuddycloudLogic::ValidateUsername() {
+void CBuddycloudLogic::ValidateUsername(TBool aCheckServer) {
 	iSettingUsername.LowerCase();
 	iSettingXmppServer.Zero();
 	
@@ -527,7 +521,7 @@ void CBuddycloudLogic::ValidateUsername() {
 		}
 	}
 	
-	if(iSettingUsername.Locate('@') == KErrNotFound) {
+	if(aCheckServer && iSettingUsername.Length() > 0 && iSettingUsername.Locate('@') == KErrNotFound) {
 		iSettingUsername.Append(_L("@buddycloud.com"));
 		iSettingXmppServer.Append(_L("jabber.buddycloud.com"));
 	}
@@ -580,8 +574,6 @@ void CBuddycloudLogic::NotificationSettingChanged(TIntSettingItems aItem) {
 
 TDes& CBuddycloudLogic::GetDescSetting(TDescSettingItems aItem) {
 	switch(aItem) {
-		case ESettingItemEmailAddress:
-			return iSettingEmailAddress;
 		case ESettingItemUsername:
 			return iSettingUsername;
 		case ESettingItemPassword:
@@ -2129,22 +2121,23 @@ void CBuddycloudLogic::HandlePubsubRequestL(const TDesC8& aStanza) {
 	CleanupStack::PopAndDestroy(); // aXmlParser
 }
 
-void CBuddycloudLogic::FlagPostAbusiveL(const TDesC& aNode, const TDesC8& aNodeItemId) {
+void CBuddycloudLogic::FlagTagNodeItemL(const TDesC8& aType, const TDesC& aNode, const TDesC8& aNodeItemId) {
 #ifdef _DEBUG
-	WriteToLog(_L8("BL    CBuddycloudLogic::FlagPostAbusiveL"));
+	WriteToLog(_L8("BL    CBuddycloudLogic::FlagTagNodeItemL"));
 #endif
 	
 	TPtrC8 aEncNode(iTextUtilities->UnicodeToUtf8L(aNode));			
 	
-	_LIT8(KFlagPostStanza, "<iq to='tagger.buddycloud.com' type='set' id='flagpost:%02d'><flagtag xmlns='http://buddycloud.com/feedback'><x xmlns='jabber:x:data' type='submit'><field var='FORM_TYPE' type='hidden'><value>buddycloud:flag:post</value></field><field var='flag#channel'><value></value></field><field var='flag#itemid'><value></value></field></x></flagtag></iq>\r\n");	
-	HBufC8* aFlagPostStanza = HBufC8::NewLC(KFlagPostStanza().Length() + KBuddycloudPubsubServer().Length() + aEncNode.Length() + aNodeItemId.Length());
-	TPtr8 pFlagPostStanza(aFlagPostStanza->Des());
-	pFlagPostStanza.AppendFormat(KFlagPostStanza, GetNewIdStamp());
-	pFlagPostStanza.Insert(307, aNodeItemId);
-	pFlagPostStanza.Insert(259, aEncNode);
+	_LIT8(KFlagTagPostStanza, "<iq to='tagger.buddycloud.com' type='set' id='tagger:%02d'><flagtag xmlns='http://buddycloud.com/feedback'><x xmlns='jabber:x:data' type='submit'><field var='FORM_TYPE' type='hidden'><value>buddycloud::post</value></field><field var='flag#channel'><value></value></field><field var='flag#itemid'><value></value></field></x></flagtag></iq>\r\n");	
+	HBufC8* aFlagTagPostStanza = HBufC8::NewLC(KFlagTagPostStanza().Length() + aType.Length() + aEncNode.Length() + aNodeItemId.Length());
+	TPtr8 pFlagTagPostStanza(aFlagTagPostStanza->Des());
+	pFlagTagPostStanza.AppendFormat(KFlagTagPostStanza, GetNewIdStamp());
+	pFlagTagPostStanza.Insert(301, aNodeItemId);
+	pFlagTagPostStanza.Insert(253, aEncNode);
+	pFlagTagPostStanza.Insert(199, aType);
 
-	iXmppEngine->SendAndForgetXmppStanza(pFlagPostStanza, true);
-	CleanupStack::PopAndDestroy(); // aFlagPostStanza
+	iXmppEngine->SendAndForgetXmppStanza(pFlagTagPostStanza, true);
+	CleanupStack::PopAndDestroy(); // aFlagTagPostStanza
 }
 
 TInt CBuddycloudLogic::FollowChannelL(const TDesC& aNode) {
@@ -2574,84 +2567,6 @@ void CBuddycloudLogic::DiscussionRead(TDesC& /*aDiscussionId*/, TInt aItemId) {
 	}
 }
 
-TDesC& CBuddycloudLogic::GetFollowingFilterText() {
-	return *iFollowingFilterText;
-}
-
-void CBuddycloudLogic::SetFollowingFilterTextL(const TDesC& aFilter) {
-	TPtr pContactFilter(iFollowingFilterText->Des());
-
-	if(pContactFilter.Compare(aFilter) != 0) {
-		if(iFollowingFilterText) {
-			delete iFollowingFilterText;
-			iFollowingFilterText = NULL;
-		}
-
-		iFollowingFilterText = aFilter.AllocL();
-
-		TRAPD(aErr, FilterFollowersL());
-
-		if(aErr != KErrNone) {
-			TBuf8<256> aLog;
-			aLog.Format(_L8("LOGIC CBuddycloudLogic::FilterContacts Trap: %d"), aErr);
-			WriteToLog(aLog);
-		}
-	}	
-}
-
-void CBuddycloudLogic::FilterFollowersL() {
-#ifdef _DEBUG
-	WriteToLog(_L8("BL    CBuddycloudLogic::FilterFollowersL"));
-#endif
-
-	TPtr aFilterText(iFollowingFilterText->Des());
-
-	if(aFilterText.Length() == 0) {
-		iFilteringFollowers = false;
-
-		// Reset Filter
-		for(TInt i = 0; i < iFollowingList->Count(); i++) {
-			iFollowingList->GetItemByIndex(i)->SetFiltered(true);
-		}
-	}
-	else {
-		TBool aToFilter;
-
-		iFilteringFollowers = true;
-
-		for(TInt i = 0; i < iFollowingList->Count(); i++) {
-			CFollowingItem* aItem = static_cast <CFollowingItem*> (iFollowingList->GetItemByIndex(i));
-
-			aToFilter = false;
-
-			if(aItem->GetItemType() >= EItemRoster) {
-				if(aFilterText.Length() <= aItem->GetTitle().Length()) {
-					// Item title
-					if(aItem->GetTitle().FindF(aFilterText) != KErrNotFound) {
-						aToFilter = true;
-					}
-				}
-				
-				if(!aToFilter && aItem->GetItemType() == EItemRoster) {
-					CFollowingRosterItem* aRosterItem = static_cast <CFollowingRosterItem*> (aItem);
-					TPtrC aPlaceName(aRosterItem->GetGeolocItem(EGeolocItemCurrent)->GetString(EGeolocText));
-					
-					// Place
-					if(aFilterText.Length() <= aPlaceName.Length()) {
-						if(aPlaceName.FindF(aFilterText) != KErrNotFound) {
-							aToFilter = true;
-						}
-					}
-				}
-			}
-
-			aItem->SetFiltered(aToFilter);
-		}
-	}
-
-	NotifyNotificationObservers(ENotificationFollowingItemsUpdated);
-}
-
 /*
 ----------------------------------------------------------------------------
 --
@@ -2721,7 +2636,6 @@ void CBuddycloudLogic::LoadSettingsAndItemsL() {
 				
 				if(aXmlParser->MoveToElement(_L8("account"))) {
 					iSettingFullName.Copy(iTextUtilities->Utf8ToUnicodeL(aXmlParser->GetStringAttribute(_L8("fullname"))));	
-					iSettingEmailAddress.Copy(iTextUtilities->Utf8ToUnicodeL(aXmlParser->GetStringAttribute(_L8("email"))));
 					iSettingUsername.Copy(iTextUtilities->Utf8ToUnicodeL(aXmlParser->GetStringAttribute(_L8("username"))));
 					iSettingPassword.Copy(iTextUtilities->Utf8ToUnicodeL(aXmlParser->GetStringAttribute(_L8("password"))));										
 					iSettingXmppServer.Copy(iTextUtilities->Utf8ToUnicodeL(aXmlParser->GetStringAttribute(_L8("server"))));										
@@ -2973,12 +2887,6 @@ void CBuddycloudLogic::SaveSettingsAndItemsL() {
 		if(iSettingFullName.Length() > 0) {
 			aFile.WriteL(_L8(" fullname='"));
 			aFile.WriteL(iTextUtilities->UnicodeToUtf8L(iSettingFullName));
-			aFile.WriteL(_L8("'"));
-		}
-
-		if(iSettingEmailAddress.Length() > 0) {
-			aFile.WriteL(_L8(" email='"));
-			aFile.WriteL(iTextUtilities->UnicodeToUtf8L(iSettingEmailAddress));
 			aFile.WriteL(_L8("'"));
 		}
 
@@ -3457,7 +3365,7 @@ void CBuddycloudLogic::RemoveStatusObserver() {
 ----------------------------------------------------------------------------
 */
 
-CBuddycloudListStore* CBuddycloudLogic::GetFollowingStore() {
+CBuddycloudFollowingStore* CBuddycloudLogic::GetFollowingStore() {
 	return iFollowingList;
 }
 
@@ -3648,6 +3556,7 @@ void CBuddycloudLogic::PostMessageL(TInt aItemId, TDesC& aId, TDesC& aContent, c
 			CAtomEntryData* aAtomEntry = CAtomEntryData::NewLC();
 			aAtomEntry->SetIdL(aThreadData);
 			aAtomEntry->SetPublishTime(aCurrentTime);
+			aAtomEntry->SetAuthorNameL(iOwnItem->GetId());	
 			aAtomEntry->SetAuthorJidL(iOwnItem->GetId());	
 			aAtomEntry->GetLocation()->SetStringL(EGeolocText, iOwnItem->GetGeolocItem(EGeolocItemCurrent)->GetString(EGeolocText));			
 			aAtomEntry->SetContentL(aContent);			
@@ -4751,9 +4660,6 @@ void CBuddycloudLogic::XmppError(TXmppEngineError aError) {
 		HBufC8* aEncPassword = iTextUtilities->UnicodeToUtf8L(iSettingPassword).AllocLC();
 		TPtrC8 pEncPassword(aEncPassword->Des());
 		
-		HBufC8* aEncEmailAddress = iTextUtilities->UnicodeToUtf8L(iSettingEmailAddress).AllocLC();
-		TPtrC8 pEncEmailAddress(aEncEmailAddress->Des());
-		
 		HBufC8* aEncFullName = iTextUtilities->UnicodeToUtf8L(iSettingFullName).AllocLC();
 		TPtrC8 pEncFirstName(aEncFullName->Des());
 		TPtrC8 pEncLastName;
@@ -4765,10 +4671,9 @@ void CBuddycloudLogic::XmppError(TXmppEngineError aError) {
 		
 		_LIT8(KFirstNameElement, "<firstname></firstname>");
 		_LIT8(KLastNameElement, "<lastname></lastname>");
-		_LIT8(KEmailElement, "<email></email>");
 		
 		_LIT8(KRegisterStanza, "<iq type='set' id='%02d:%02d'><query xmlns='jabber:iq:register'><username></username><password></password></query></iq>\r\n");
-		HBufC8* aRegisterStanza = HBufC8::NewLC(KRegisterStanza().Length() + pEncUsername.Length() + pEncPassword.Length() + KFirstNameElement().Length() + pEncFirstName.Length() + KLastNameElement().Length() + pEncLastName.Length() + KEmailElement().Length() + pEncEmailAddress.Length());
+		HBufC8* aRegisterStanza = HBufC8::NewLC(KRegisterStanza().Length() + pEncUsername.Length() + pEncPassword.Length() + KFirstNameElement().Length() + pEncFirstName.Length() + KLastNameElement().Length() + pEncLastName.Length());
 		TPtr8 pRegisterStanza(aRegisterStanza->Des());
 		pRegisterStanza.AppendFormat(KRegisterStanza, EXmppIdRegistration, GetNewIdStamp());
 		
@@ -4784,17 +4689,11 @@ void CBuddycloudLogic::XmppError(TXmppEngineError aError) {
 			pRegisterStanza.Insert(pRegisterStanza.Length() - 15 - 11, pEncLastName);
 		}
 		
-		// Email
-		if(pEncEmailAddress.Length() > 0) {
-			pRegisterStanza.Insert(pRegisterStanza.Length() - 15, KEmailElement);
-			pRegisterStanza.Insert(pRegisterStanza.Length() - 15 - 8, pEncEmailAddress);
-		}
-		
 		pRegisterStanza.Insert(91, pEncPassword);
 		pRegisterStanza.Insert(70, pEncUsername);
 
 		iXmppEngine->SendAndAcknowledgeXmppStanza(pRegisterStanza, this, false, EXmppPriorityHigh);
-		CleanupStack::PopAndDestroy(5); // aRegisterStanza, aEncFullName, aEncEmailAddress, aEncPassword, aEncUsername
+		CleanupStack::PopAndDestroy(4); // aRegisterStanza, aEncFullName, aEncPassword, aEncUsername
 	}
 	else if(aError == EXmppServerUnresolved) {	
 		// Server could not be resolved

@@ -84,12 +84,14 @@ class CExplorerResultItem : public CBuddycloudListItem {
 		TInt GetOverlayId();
 		void SetOverlayId(TInt aOverlayId);
 		
-		TInt GetRank();
-		void SetRank(TInt aRank);
-		
 	public:
 		TDesC& GetId();
 		void SetIdL(const TDesC& aId);
+		
+	public:
+		TInt StatisticCount();
+		TDesC& GetStatistic(TInt aIndex);
+		void AddStatisticL(const TDesC& aStatistic);
 		
 	public:
 		CGeolocData* GetGeoloc();
@@ -98,12 +100,13 @@ class CExplorerResultItem : public CBuddycloudListItem {
 		void UpdateFromGeolocL();
 	
 	protected:
-		TExplorerItemType iResultType;
-		
+		TExplorerItemType iResultType;		
 		TInt iOverlayId;
-		TInt iRank;
 		
 		HBufC* iId;
+		TPtrC iNullString;
+		
+		RPointerArray<HBufC> iStatistics;
 		
 		CGeolocData* iGeoloc;
 };
@@ -134,12 +137,18 @@ class CExplorerQueryLevel : public CBase {
 		void SetQueriedStanzaL(const TDesC8& aStanza);
 		
 	public:
+		TBool AutoRefresh();
+		void SetAutoRefresh(TBool aAutoRefresh);
+		
+	public:
 		void ClearResultItems();
 		void AppendSortedItem(CExplorerResultItem* aResultItem, TSortByType aSort = ESortByUnsorted);
 	
 	protected:
 		HBufC* iQueryTitle;
 		HBufC8* iQueriedStanza;
+		
+		TBool iAutoRefresh;
 				
 	public:
 		TInt iSelectedResultItem;

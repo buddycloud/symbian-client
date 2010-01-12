@@ -12,6 +12,7 @@
 
 #include <coecntrl.h>
 #include <eikedwin.h>
+#include <eikseced.h>
 #include <fbs.h>
 #include "BuddycloudLogic.h"
 #include "Timer.h"
@@ -29,7 +30,7 @@
 */
 
 enum TSetupStep {
-	EStep1, EStep2, EStep3, EStep4, EStep5, EStep6
+	EStep1, EStep2, EStep3, EStep4, EStep5
 };
 
 /*
@@ -47,6 +48,11 @@ class CBuddycloudSetupContainer : public CCoeControl, MTimeoutNotification {
 		~CBuddycloudSetupContainer();
 
 	private:
+		void RepositionButtons();
+		
+		void ConfigureEdwinsL();
+		void RepositionEdwins();
+		
 		void ConfigureFonts();
 		void ReleaseFonts();
 
@@ -81,6 +87,7 @@ class CBuddycloudSetupContainer : public CCoeControl, MTimeoutNotification {
 		TRect iRect;
 		TSetupStep iSetupStep;
 		TRgb iColorFade;
+		TBool iNewRegistration;
 		
 		// Screen Buffer
 		CFbsBitmap* iBufferBitmap;
@@ -110,12 +117,20 @@ class CBuddycloudSetupContainer : public CCoeControl, MTimeoutNotification {
 		
 		// Text
 		HBufC* iNextText;
+		
 		RPointerArray<HBufC> iTitleArray;
 		RPointerArray<HBufC> iTextArray;
 		RPointerArray<HBufC> iQuestionArray;
 		
-		// Edwin
-		CEikEdwin* iEdwin;
+		// Label data
+		HBufC* iLabelText1;
+		TRect iLabelRect1;
+		
+		HBufC* iLabelText2;		
+		TRect iLabelRect2;
+		
+		CEikEdwin* iUsernameEdwin;
+		CEikSecretEditor* iPasswordEdwin;
 		
 #ifdef __SERIES60_40__
 		MTouchFeedback* iTouchFeedback;

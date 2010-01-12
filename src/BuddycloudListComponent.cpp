@@ -154,18 +154,16 @@ void CBuddycloudListComponent::ConfigureSkin() {
 	iBgContext = CAknsBasicBackgroundControlContext::NewL(KAknsIIDQsnBgAreaMain, iRect, false);
 	
 	// Colors
-	AknsUtils::GetCachedColor(AknsUtils::SkinInstance(), iColourHighlight, KAknsIIDQsnIconColors, 15);
-	iColourHighlightTrans = iColourHighlight;
-	iColourHighlightTrans.SetAlpha(125);
-	AknsUtils::GetCachedColor(AknsUtils::SkinInstance(), iColourHighlightBorder, KAknsIIDQsnIconColors, 8);
-	iColourHighlightBorderTrans = iColourHighlightBorder;
-	iColourHighlightBorderTrans.SetAlpha(125);
 	AknsUtils::GetCachedColor(AknsUtils::SkinInstance(), iColourTextSelected, KAknsIIDQsnTextColors, EAknsCIQsnTextColorsCG10);
+	// AknsUtils::GetCachedColor(AknsUtils::SkinInstance(), iColourTextLink, KAknsIIDQsnHighlightColors, EAknsCIQsnHighlightColorsCG3);
+	AknsUtils::GetCachedColor(AknsUtils::SkinInstance(), iColourTextLink, KAknsIIDQsnTextColors, EAknsCIQsnTextColorsCG21);
+	AknsUtils::GetCachedColor(AknsUtils::SkinInstance(), iColourText, KAknsIIDQsnTextColors, EAknsCIQsnTextColorsCG6);
+	
+	iColourTextLink = TRgb((iColourTextLink.Red() + iColourTextSelected.Red()) / 2, (iColourTextLink.Green() + iColourTextSelected.Green()) / 2, (iColourTextLink.Blue() + iColourTextSelected.Blue()) / 2);
+	
 	iColourTextSelectedTrans = iColourTextSelected;
 	iColourTextSelectedTrans.SetAlpha(125);
-	AknsUtils::GetCachedColor(AknsUtils::SkinInstance(), iColourTextLink, KAknsIIDQsnHighlightColors, EAknsCIQsnHighlightColorsCG3);
-	AknsUtils::GetCachedColor(AknsUtils::SkinInstance(), iColourText, KAknsIIDQsnTextColors, EAknsCIQsnTextColorsCG6);
-	iColourTextLink = TRgb((iColourTextLink.Red()/2) + (iColourText.Red()/2), (iColourTextLink.Green()/2) + (iColourText.Green()/2), (iColourTextLink.Blue()/2) + (iColourText.Blue()/2));
+	
 	iColourTextTrans = iColourText;
 	iColourTextTrans.SetAlpha(125);
 }
@@ -302,16 +300,7 @@ void CBuddycloudListComponent::RenderItemFrame(TRect aFrame) {
 	aInner.Shrink(7, 7);
 
 	iBufferGc->SetBrushStyle(CGraphicsContext::ENullBrush);
-
-	if(!AknsDrawUtils::DrawFrame(AknsUtils::SkinInstance(), *iBufferGc, aFrame, aInner, KAknsIIDQsnFrList, KAknsIIDDefault)) {
-		iBufferGc->SetBrushStyle(CGraphicsContext::ESolidBrush);
-		iBufferGc->SetBrushColor(iColourHighlightTrans);
-		iBufferGc->SetPenColor(iColourHighlightBorder);
-		iBufferGc->SetPenSize(TSize(3, 3));
-		iBufferGc->DrawRoundRect(aFrame, TSize(3, 3));
-		iBufferGc->SetPenSize(TSize(1, 1));
-	}
-
+	AknsDrawUtils::DrawFrame(AknsUtils::SkinInstance(), *iBufferGc, aFrame, aInner, KAknsIIDQsnFrList, KAknsIIDDefault);
 	iBufferGc->SetBrushStyle(CGraphicsContext::ESolidBrush);
 }
 

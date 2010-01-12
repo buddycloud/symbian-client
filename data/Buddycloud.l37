@@ -20,8 +20,7 @@ rls_string r_string_translatedby "abduliam : ترجم من قبل"
 
 rls_string r_string_followingtab_hint "تال"
 rls_string r_string_placestab_hint "الأماكن"
-rls_string r_string_explorertab_hint "قريب"
-rls_string r_string_channelstab_hint "قنوات"
+rls_string r_string_explorertab_hint "Explorer"
 
 // CBA
 rls_string r_string_options_menu "خيارات"
@@ -150,11 +149,12 @@ rls_string r_string_note_requesting "الطالبة"
 rls_string r_string_note_channelrank "رتبة"
 
 // Menu: Channels
+rls_string r_string_list_nearbytoyou "What's Nearby To Me"
 rls_string r_string_list_featuredchannels "قنوات المميز"
 rls_string r_string_list_channelsyoumightlike "القنوات قد ترغب في"
 rls_string r_string_list_followersfavourites "أتباع 'المفضلة"
 rls_string r_string_list_mostpopularchannels "الأكثر شعبية قنوات"
-rls_string r_string_list_channelsneartoyou "القنوات بالقرب من أنت"
+rls_string r_string_list_channelsneartoyou "Channels Near To Me"
 
 rls_string r_string_item_open "يفتح"
 rls_string r_string_item_follow "يتبع"
@@ -187,8 +187,6 @@ rls_string r_string_note_subscriptionrejected "Your subscription to this channel
 rls_string r_string_settings_account_title "الحساب"
 rls_string r_string_settings_itemlist_fullname "الاسم الكامل"
 rls_string r_string_settings_itemlist_fullname_hint "اسمك الكامل"
-rls_string r_string_settings_itemlist_email "عنوانك الألكتروني"
-rls_string r_string_settings_itemlist_email_hint "لديك عنوان بريد إلكتروني"
 rls_string r_string_settings_itemlist_username "اسم المستخدم"
 rls_string r_string_settings_itemlist_username_hint "سرور XMPP المستخدم"
 rls_string r_string_settings_itemlist_password "كلمة السر"
@@ -292,6 +290,7 @@ rls_string r_string_serverresolveerror_text "XMPP server could not be resolved. 
 // Delete Item Message
 rls_string r_string_deleteitem_title "تاكد من الإزالة"
 rls_string r_string_deleteitem_text "هل انت متاكد من انك تريد انتزيل هذه؟"
+rls_string r_string_deletechannel_text "Deleting this channel will also delete all content.\n\nAre you sure?"
 
 // Sms/Email Messages
 rls_string r_string_invitemessage_title "buddycloud على الانضمام إلينا!"
@@ -325,17 +324,17 @@ rls_string r_string_note_offline "متواجد حاليا"
 rls_string r_string_step2_title "كن مشهور!"
 rls_string r_string_step2_text "قنوات buddycloud يتيح لك طريقة جديدة للبث بك الذهول لأتباعك. قنوات buddycloud تمكنك من أن تصبح مشهورة لعلمك فريدة من نوعها حول مكان أو موضوع ، وعلى بناء المجتمع من أتباعه."
 
-rls_string r_string_step3_title "ماذا يمكنك ان تفعل؟"
-rls_string r_string_step3_text "مع buddycloud يمكنك إنشاء قناة موضوع حول ما كنت عند حسن ، أو قناة شخصية كل عنك. buddycloud تلقائيا حصة موقعك الحالية كعلامة ذات مغزى المكان الخاص بك مع أتباعه ، أو على مستوى المدينة مع شخص آخر. buddycloud من فضلك أدخل اسم المستخدم أو اختيار اسم مستخدم جديد لبدء العمل :"
+rls_string r_string_step3_title "How do you want to log in?"
+rls_string r_string_step3_text "Recommended: Instantly sign-in using your Google account (or any Jabber account).\n\nAlternatively: Register for a buddycloud account."
+rls_string r_string_step3_label1 "Use existing account"
+rls_string r_string_step3_label2 "Register new account"
 
-rls_string r_string_step4_title "المنافع الخاصة بك"
-rls_string r_string_step4_text "buddycloud يمنحك مستوى جديد من التفاعل مع أتباعك ويبين قناتك في ارتفاع شعبيته. تستمر طوال اليوم وبتكلفة منخفضة ودون استنفاد طاقة بطارية الهاتف الخاص بك ، وذلك بسبب انخفاض buddycloud لبيانات الاستخدام. حصة موقعك بشكل مستمر ، ولكن في الخاضعة للرقابة ، طريقة آمنة. الرجاء إدخال كلمة مرور آمنة :"
+rls_string r_string_step4_title "Who are you?"
+rls_string r_string_step4_text1 "Enter your existing account details.\n\nThis looks like 'name@gmail.com' or 'name@googlemail.com'."
+rls_string r_string_step4_text2 "Choose a new username and password to start using buddycloud.  If you have already registered for buddycloud on another phone, enter those details here."
 
-rls_string r_string_step5_title "البقاء على اتصال"
-rls_string r_string_step5_text "الحصول على إخطار buddycloud خدمات جديدة وإصدارات جديدة من هذه الوكالة. يرجى ترك لنا عنوان بريدك الالكتروني (اختياري) ، وسنقوم إبقائها آمنة :"
-
-rls_string r_string_step6_title "مبرووك"
-rls_string r_string_step6_text "الإعداد اكتملت الآن. أنت الآن سوف تكون متصلة وقعت على buddycloud القنوات."
-rls_string r_string_step6_question "هل ترغب في بدء buddycloud عند تشغيل الهاتف من الآن فصاعدا؟"
+rls_string r_string_step5_title "مبرووك"
+rls_string r_string_step5_text "You are setup and ready to use buddycloud channels."
+rls_string r_string_step5_question "هل ترغب في بدء buddycloud عند تشغيل الهاتف من الآن فصاعدا؟"
 
 // End of File

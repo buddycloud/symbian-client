@@ -20,8 +20,7 @@ rls_string r_string_translatedby "Translated by: mossad"
 
 rls_string r_string_followingtab_hint "Următorul"
 rls_string r_string_placestab_hint "Locuri"
-rls_string r_string_explorertab_hint "In apropiere"
-rls_string r_string_channelstab_hint "Canale"
+rls_string r_string_explorertab_hint "Explorer"
 
 // CBA
 rls_string r_string_options_menu "Opţiuni"
@@ -150,11 +149,12 @@ rls_string r_string_note_requesting "Cer..."
 rls_string r_string_note_channelrank "Gradul"
 
 // Menu: Channels
+rls_string r_string_list_nearbytoyou "What's Nearby To Me"
 rls_string r_string_list_featuredchannels "Canalele Populare"
 rls_string r_string_list_channelsyoumightlike "Canale care ar putea sa-ti placa"
 rls_string r_string_list_followersfavourites "Adepţii 'Favoriti'"
 rls_string r_string_list_mostpopularchannels "Cele mai populare canale"
-rls_string r_string_list_channelsneartoyou "Canale de langa tine"
+rls_string r_string_list_channelsneartoyou "Channels Near To Me"
 
 rls_string r_string_item_open "Deschide"
 rls_string r_string_item_follow "Urmareste"
@@ -187,8 +187,6 @@ rls_string r_string_note_subscriptionrejected "Your subscription to this channel
 rls_string r_string_settings_account_title "Cont"
 rls_string r_string_settings_itemlist_fullname "Numele complet"
 rls_string r_string_settings_itemlist_fullname_hint "Numele dvs. complet"
-rls_string r_string_settings_itemlist_email "Adresa de Email"
-rls_string r_string_settings_itemlist_email_hint "Adresa de e-mail"
 rls_string r_string_settings_itemlist_username "Nume de utilizator"
 rls_string r_string_settings_itemlist_username_hint "XMPP server username"
 rls_string r_string_settings_itemlist_password "Parola"
@@ -292,6 +290,7 @@ rls_string r_string_serverresolveerror_text "XMPP server could not be resolved. 
 // Delete Item Message
 rls_string r_string_deleteitem_title "Confirma stergerea"
 rls_string r_string_deleteitem_text "Esti sigur ca vrei sa stergi aceasta?"
+rls_string r_string_deletechannel_text "Deleting this channel will also delete all content.\n\nAre you sure?"
 
 // Sms/Email Messages
 rls_string r_string_invitemessage_title "Alaturate in buddycloud"
@@ -325,17 +324,17 @@ rls_string r_string_note_offline "Offline"
 rls_string r_string_step2_title "Fii celebru"
 rls_string r_string_step2_text "canalele buddycloud va ofera o noua modalitate de a difuza talentul/cunostiintele dvs. catre adeptii/urmaritorii tai.\n\nbuddycloud canale va ajuta sa deveniti faimos pt cunostiintele dvs. unice despre un loc sau un subiect si sa creati o comunitate de adepti/urmaritori."
 
-rls_string r_string_step3_title "ce poti sa faci?"
-rls_string r_string_step3_text "Cu buddycloud poti creea un subiect in canal sau un canal personal despre tine. Buddycloud o sa arate automat locatia ta impreuna cu ce-i care te urmeaza sau la un nivel pe oras cu ceilalti.\n\nIntrodu-ti userul sau alege un nou user ca sa incepi :"
+rls_string r_string_step3_title "How do you want to log in?"
+rls_string r_string_step3_text "Recommended: Instantly sign-in using your Google account (or any Jabber account).\n\nAlternatively: Register for a buddycloud account."
+rls_string r_string_step3_label1 "Use existing account"
+rls_string r_string_step3_label2 "Register new account"
 
-rls_string r_string_step4_title "Beneficiul dvs"
-rls_string r_string_step4_text "buddycloud va ofera un nou nivel de interactivitate cu adeptii/urmaritorii dvs. si va creste popularitatea canalului.  Continua toata ziua, la costuri mici si fara depletie de pe telefon pe baterie,  datorita nivelului scazut de date folosit de buddycloud. Impartasi-ti/Imparti-ti locatia continuu, intrun mod sigur si controlat.\n\nVa rugam sa introduceti o parola sigura:"
+rls_string r_string_step4_title "Who are you?"
+rls_string r_string_step4_text1 "Enter your existing account details.\n\nThis looks like 'name@gmail.com' or 'name@googlemail.com'."
+rls_string r_string_step4_text2 "Choose a new username and password to start using buddycloud.  If you have already registered for buddycloud on another phone, enter those details here."
 
-rls_string r_string_step5_title "Pastram legatura"
-rls_string r_string_step5_text "Fi notificat de noi servicii si noi versiuni ale aplicatiei buddycloud.\n\nVa rugam, lasati adresa de mail (optional), o vom pastra in siguranta:"
-
-rls_string r_string_step6_title "Felicitari!"
-rls_string r_string_step6_text "Conectarea e completa. Acum vei fi conectat si ingregistract la canalele buddycloud"
-rls_string r_string_step6_question "Vrei ca de acum inainte cand pornesti telefonul buddycloud sa porneasca automat?"
+rls_string r_string_step5_title "Felicitari!"
+rls_string r_string_step5_text "You are setup and ready to use buddycloud channels."
+rls_string r_string_step5_question "Vrei ca de acum inainte cand pornesti telefonul buddycloud sa porneasca automat?"
 
 // End of File

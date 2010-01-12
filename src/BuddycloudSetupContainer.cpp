@@ -40,28 +40,19 @@ void CBuddycloudSetupContainer::ConstructL() {
 	// Touch
 	iTouchFeedback = MTouchFeedback::Instance();
 	
+	EnableDragEvents();
+	
 	if(!iTouchFeedback->FeedbackEnabledForThisApp()) {
 		iTouchFeedback->SetFeedbackEnabledForThisApp(true);
 	}
 #endif
 	
 	// Edwin
-	iEdwin = new (ELeave) CEikEdwin();
-	iEdwin->MakeVisible(false);
-	iEdwin->SetFocus(false);
-	iEdwin->SetContainerWindowL(*this);
-
-	TResourceReader aReader;
-	iEikonEnv->CreateResourceReaderLC(aReader, R_SEARCH_EDWIN);
-	iEdwin->ConstructFromResourceL(aReader);
-	CleanupStack::PopAndDestroy(); // aReader
-
-	iEdwin->SetAknEditorLocalLanguage(ELangEnglish);
-	iEdwin->SetAknEditorFlags(EAknEditorFlagDefault);
-	iEdwin->SetOnlyASCIIChars(true);
+	ConfigureEdwinsL();
 	
-	// Fonts
-	ConfigureFonts();
+	// Text
+	iLabelText1 = iCoeEnv->AllocReadResourceL(R_LOCALIZED_STRING_STEP3_LABEL1);
+	iLabelText2 = iCoeEnv->AllocReadResourceL(R_LOCALIZED_STRING_STEP3_LABEL2);
 
 	SetExtentToWholeScreen();	
 	ResizeCachedImagesL();
@@ -113,12 +104,20 @@ CBuddycloudSetupContainer::~CBuddycloudSetupContainer() {
 	if(iTickMask)
 		delete iTickMask;
 	
-	// Text
-	if(iEdwin)
-		delete iEdwin;
+	// Label data
+	if(iUsernameEdwin)
+		delete iUsernameEdwin;
+	if(iPasswordEdwin)
+		delete iPasswordEdwin;
 	
+	// Text
 	if(iNextText)
 		delete iNextText;
+
+	if(iLabelText1)
+		delete iLabelText1;
+	if(iLabelText2)
+		delete iLabelText2;
 	
 	ClearTextArrayL(iTitleArray);
 	iTitleArray.Close();
@@ -129,6 +128,68 @@ CBuddycloudSetupContainer::~CBuddycloudSetupContainer() {
 	
 	// Fonts
 	ReleaseFonts();
+}
+
+void CBuddycloudSetupContainer::RepositionButtons() {
+	TInt aFontHeight = iSymbolFont->FontMaxHeight();
+	
+	iLabelRect2.SetRect(aFontHeight, iRect.Height() - 5 - (aFontHeight * 2), iRect.Width() - aFontHeight, iRect.Height() - 5);
+	iLabelRect1.SetRect(aFontHeight, iLabelRect2.iTl.iY - 5 - (aFontHeight * 2), iRect.Width() - aFontHeight, iLabelRect2.iTl.iY - 5);
+}
+
+void CBuddycloudSetupContainer::ConfigureEdwinsL() {
+	// Username
+	iUsernameEdwin = new (ELeave) CEikEdwin();
+	iUsernameEdwin->ConstructL(EAknEditorFlagDefault, 0, 64, 1);
+	iUsernameEdwin->SetAknEditorCase(EAknEditorLowerCase);
+	iUsernameEdwin->SetAknEditorPermittedCaseModes(EAknEditorLowerCase);
+	iUsernameEdwin->SetAknEditorAllowedInputModes(EAknEditorTextInputMode);
+	iUsernameEdwin->SetAknEditorCurrentInputMode(EAknEditorTextInputMode);
+	iUsernameEdwin->SetAknEditorLocalLanguage(ELangEnglish);
+	iUsernameEdwin->SetOnlyASCIIChars(true);
+	iUsernameEdwin->SetContainerWindowL(*this);
+	iUsernameEdwin->MakeVisible(false);
+	iUsernameEdwin->SetFocus(false);
+
+	// Password
+	iPasswordEdwin = new (ELeave) CEikSecretEditor();
+
+	TResourceReader aReader;
+	iCoeEnv->CreateResourceReaderLC(aReader, R_PASSWORD_EDWIN);
+	iPasswordEdwin->ConstructFromResourceL(aReader);
+	CleanupStack::PopAndDestroy();	
+	
+	iPasswordEdwin->SetBorder(0);
+	iPasswordEdwin->SetContainerWindowL(*this);
+	iPasswordEdwin->MakeVisible(false);
+	iPasswordEdwin->SetFocus(false);
+}
+
+void CBuddycloudSetupContainer::RepositionEdwins() {
+	if(iUsernameEdwin && iPasswordEdwin) {
+		// Password
+		TRect aFieldRect = iUsernameEdwin->Rect();
+		TInt aFontHeight = iSymbolFont->FontMaxHeight();
+		
+		aFieldRect.SetRect(aFontHeight, (iRect.Height() - aFieldRect.Height() - aFontHeight - 2), (iRect.Width() - aFontHeight), (iRect.Height() - aFontHeight - 2));		
+#ifdef __SERIES60_40__
+		aFieldRect.iBr.iX = (iRect.Width() - iSymbolFont->TextWidthInPixels(*iNextText) - (aFontHeight * 2) - 4);
+#endif
+		
+		iPasswordEdwin->SetRect(aFieldRect);
+		
+		//Username
+		aFieldRect.iBr.iX = (iRect.Width() - aFontHeight);
+		aFieldRect.iBr.iY = aFieldRect.iTl.iY - 5;
+		aFieldRect.iTl.iY = aFieldRect.iBr.iY - iPasswordEdwin->Rect().Height();
+		
+		if(iPasswordEdwin->IsFocused()) {
+			aFieldRect.iBr.iY = aFieldRect.iBr.iY - 4 - iNormalFont->HeightInPixels();
+			aFieldRect.iTl.iY = aFieldRect.iTl.iY - 4 - iNormalFont->HeightInPixels();
+		}
+		
+		iUsernameEdwin->SetRect(aFieldRect);
+	}	
 }
 
 void CBuddycloudSetupContainer::ConfigureFonts() {
@@ -152,61 +213,54 @@ void CBuddycloudSetupContainer::ConstructNextStepL() {
 	else if(iSetupStep == EStep2) {
 		iSetupStep = EStep3;		
 		ConstructTextL();
-		
-		iEdwin->SetTextL(&iBuddycloudLogic->GetDescSetting(ESettingItemUsername));
-		iEdwin->SelectAllL();
-
-		iEdwin->SetAknEditorCurrentInputMode(EAknEditorTextInputMode);
-		iEdwin->SetAknEditorPermittedCaseModes(EAknEditorLowerCase);
-		iEdwin->SetAknEditorCurrentCase(EAknEditorLowerCase);
-		
-		iEdwin->MakeVisible(true);
-		iEdwin->SetFocus(true);
 	}
-	else if(iSetupStep == EStep3) {
-		iEdwin->GetText(iBuddycloudLogic->GetDescSetting(ESettingItemUsername));
-		iBuddycloudLogic->ValidateUsername();
+	else if(iSetupStep == EStep3) {	
+		iSetupStep = EStep4;		
+		ConstructTextL();
+		RepositionEdwins();
 		
-		if(iBuddycloudLogic->GetDescSetting(ESettingItemUsername).Length() == 0) {
-			iEdwin->SetTextL(&iBuddycloudLogic->GetDescSetting(ESettingItemUsername));
-			iEdwin->SelectAllL();
-		}
-		else {
-			iSetupStep = EStep4;
-			ConstructTextL();
-			
-			iEdwin->SetTextL(&iBuddycloudLogic->GetDescSetting(ESettingItemPassword));
-			iEdwin->SelectAllL();
-			
-			iEdwin->SetAknEditorAllowedInputModes(EAknEditorSecretAlphaInputMode);
-			iEdwin->SetAknEditorCurrentInputMode(EAknEditorSecretAlphaInputMode);
-			iEdwin->SetAknEditorPermittedCaseModes(EAknEditorAllCaseModes);
-			iEdwin->SetAknEditorCurrentCase(EAknEditorLowerCase);
-			iEdwin->SetAknEditorFlags(EAknEditorFlagNoT9);
-		}
+		iUsernameEdwin->SetTextL(&iBuddycloudLogic->GetDescSetting(ESettingItemUsername));
+		iUsernameEdwin->SelectAllL();
+		iUsernameEdwin->MakeVisible(true);
+		iUsernameEdwin->SetFocus(true);
+		
+		iPasswordEdwin->SetText(iBuddycloudLogic->GetDescSetting(ESettingItemPassword));
+		iPasswordEdwin->MakeVisible(true);
 	}
 	else if(iSetupStep == EStep4) {
-		iSetupStep = EStep5;
-		ConstructTextL();
-
-		iEdwin->GetText(iBuddycloudLogic->GetDescSetting(ESettingItemPassword));
+		iUsernameEdwin->GetText(iBuddycloudLogic->GetDescSetting(ESettingItemUsername));
+		iPasswordEdwin->GetText(iBuddycloudLogic->GetDescSetting(ESettingItemPassword));
 		
-		iEdwin->SetTextL(&iBuddycloudLogic->GetDescSetting(ESettingItemEmailAddress));
-		iEdwin->SelectAllL();
+		iBuddycloudLogic->ValidateUsername(iNewRegistration);
 		
-		iEdwin->SetAknEditorAllowedInputModes(EAknEditorAllInputModes);
-		iEdwin->SetAknEditorCurrentInputMode(EAknEditorTextInputMode);
-		iEdwin->SetAknEditorPermittedCaseModes(EAknEditorAllCaseModes);
-		iEdwin->SetAknEditorCurrentCase(EAknEditorLowerCase);
-		iEdwin->SetAknEditorFlags(EAknEditorFlagDefault);
-	}
-	else if(iSetupStep == EStep5) {
-		iSetupStep = EStep6;
-		ConstructTextL();
-
-		iEdwin->GetText(iBuddycloudLogic->GetDescSetting(ESettingItemEmailAddress));	
-		iEdwin->MakeVisible(false);
-		iEdwin->SetFocus(false);
+		iUsernameEdwin->SetTextL(&iBuddycloudLogic->GetDescSetting(ESettingItemUsername));
+		
+		TPtrC aUsername(iBuddycloudLogic->GetDescSetting(ESettingItemUsername));	
+		
+		if(aUsername.Length() == 0 || 
+				(!iNewRegistration && (aUsername.Locate('@') == KErrNotFound || aUsername.Locate('.') == KErrNotFound))) {		
+			
+			iUsernameEdwin->SetFocus(true);
+			iPasswordEdwin->SetFocus(false);
+			
+			RepositionEdwins();
+		}
+		else if(iBuddycloudLogic->GetDescSetting(ESettingItemPassword).Length() == 0) {		
+			iPasswordEdwin->SetFocus(true);
+			iUsernameEdwin->SetFocus(false);
+			
+			RepositionEdwins();
+		}
+		else {
+			iSetupStep = EStep5;
+			ConstructTextL();
+			
+			iUsernameEdwin->MakeVisible(false);
+			iUsernameEdwin->SetFocus(false);
+			
+			iPasswordEdwin->MakeVisible(false);
+			iPasswordEdwin->SetFocus(false);
+		}
 	}
 }
 
@@ -221,21 +275,31 @@ void CBuddycloudSetupContainer::ConstructTextL() {
 	}
 	else if(iSetupStep == EStep4) {
 		WordWrapL(iTitleArray, i12BoldFont, R_LOCALIZED_STRING_STEP4_TITLE, iRect.Width() - 6);
-		WordWrapL(iTextArray, iNormalFont, R_LOCALIZED_STRING_STEP4_TEXT, iRect.Width() - 6);
+		
+		if(!iNewRegistration) {
+			WordWrapL(iTextArray, iNormalFont, R_LOCALIZED_STRING_STEP4_TEXT1, iRect.Width() - 6);
+		}
+		else {
+			WordWrapL(iTextArray, iNormalFont, R_LOCALIZED_STRING_STEP4_TEXT2, iRect.Width() - 6);
+		}
+		
+		if(iLabelText1)
+			delete iLabelText1;
+		if(iLabelText2)
+			delete iLabelText2;
+
+		iLabelText1 = iCoeEnv->AllocReadResourceL(R_LOCALIZED_STRING_STEP4_LABEL1);
+		iLabelText2 = iCoeEnv->AllocReadResourceL(R_LOCALIZED_STRING_STEP4_LABEL2);
 	}
 	else if(iSetupStep == EStep5) {
 		WordWrapL(iTitleArray, i12BoldFont, R_LOCALIZED_STRING_STEP5_TITLE, iRect.Width() - 6);
 		WordWrapL(iTextArray, iNormalFont, R_LOCALIZED_STRING_STEP5_TEXT, iRect.Width() - 6);
-	}
-	else if(iSetupStep == EStep6) {
-		WordWrapL(iTitleArray, i12BoldFont, R_LOCALIZED_STRING_STEP6_TITLE, iRect.Width() - 6);
-		WordWrapL(iTextArray, iNormalFont, R_LOCALIZED_STRING_STEP6_TEXT, iRect.Width() - 6);
-		WordWrapL(iQuestionArray, iNormalFont, R_LOCALIZED_STRING_STEP6_QUESTION, iRect.Width() - i12BoldFont->FontMaxHeight() - 6);
+		WordWrapL(iQuestionArray, iNormalFont, R_LOCALIZED_STRING_STEP5_QUESTION, iRect.Width() - i12BoldFont->FontMaxHeight() - 6);
 	}
 }
 
 void CBuddycloudSetupContainer::WordWrapL(RPointerArray<HBufC>& aArray, CFont* aFont, TInt aTextResource, TInt aWidth) {
-	HBufC* aUnformattedText = iEikonEnv->AllocReadResourceLC(aTextResource);
+	HBufC* aUnformattedText = iCoeEnv->AllocReadResourceLC(aTextResource);
 	TPtr pUnformattedText(aUnformattedText->Des());
 	
 	// Clear
@@ -357,7 +421,64 @@ void CBuddycloudSetupContainer::RenderScreen() {
 			iBufferGc->DrawText(*iTextArray[i], TPoint(3, aTextPos));
 		}
 		
-		if(iSetupStep == EStep6) {
+		if(iSetupStep == EStep3) {
+			// Button 1
+			iBufferGc->SetBrushColor(!iNewRegistration ? KRgbGreen : KRgbGray);
+			iBufferGc->SetPenColor(!iNewRegistration ? KRgbDarkGreen : KRgbDarkGray);
+			iBufferGc->DrawRoundRect(iLabelRect1, TSize(3, 3));	
+			
+			iBufferGc->SetPenColor(!iNewRegistration ? KRgbBlack : KRgbDarkGray);
+			iBufferGc->DrawText(*iLabelText1, TPoint((iRect.Width() / 2) - (iNormalFont->TextWidthInPixels(*iLabelText1) / 2), iLabelRect1.iTl.iY + (iLabelRect1.Height() / 2) + iNormalFont->DescentInPixels()));
+			
+			// Button 2
+			iBufferGc->SetBrushColor(iNewRegistration ? KRgbGreen : KRgbGray);
+			iBufferGc->SetPenColor(iNewRegistration ? KRgbDarkGreen : KRgbDarkGray);
+			iBufferGc->DrawRoundRect(iLabelRect2, TSize(3, 3));
+			
+			iBufferGc->SetPenColor(iNewRegistration ? KRgbBlack : KRgbDarkGray);
+			iBufferGc->DrawText(*iLabelText2, TPoint((iRect.Width() / 2) - (iNormalFont->TextWidthInPixels(*iLabelText2) / 2), iLabelRect2.iTl.iY + (iLabelRect2.Height() / 2) + iNormalFont->DescentInPixels()));
+		}
+		else if(iSetupStep == EStep4) {
+			// Edwin
+			if(iUsernameEdwin->IsVisible()) {
+				TRect aFieldRect = iUsernameEdwin->Rect();
+				aFieldRect.Grow(2, 2);
+				
+				if(iUsernameEdwin->IsFocused()) {
+					iBufferGc->SetPenColor(KRgbBlack);
+					iBufferGc->DrawText(*iLabelText1, TPoint(aFieldRect.iTl.iX + 10, aFieldRect.iTl.iY - 5));
+					
+					iBufferGc->SetBrushColor(KRgbGreen);
+					iBufferGc->SetPenColor(KRgbGreen);
+				}
+				else {
+					iBufferGc->SetBrushColor(KRgbGray);
+					iBufferGc->SetPenColor(KRgbGray);
+				}
+				
+				iBufferGc->DrawRoundRect(aFieldRect, TSize(2, 2));
+			}
+			
+			if(iPasswordEdwin->IsVisible()) {
+				TRect aFieldRect = iPasswordEdwin->Rect();
+				aFieldRect.Grow(2, 2);
+				
+				if(iPasswordEdwin->IsFocused()) {
+					iBufferGc->SetPenColor(KRgbBlack);
+					iBufferGc->DrawText(*iLabelText2, TPoint(aFieldRect.iTl.iX + 10, aFieldRect.iTl.iY - 5));
+					
+					iBufferGc->SetBrushColor(KRgbGreen);
+					iBufferGc->SetPenColor(KRgbGreen);
+				}
+				else {
+					iBufferGc->SetBrushColor(KRgbGray);
+					iBufferGc->SetPenColor(KRgbGray);
+				}
+				
+				iBufferGc->DrawRoundRect(aFieldRect, TSize(2, 2));
+			}
+		}
+		else if(iSetupStep == EStep5) {
 			// Checkbox
 			aTextPos += iNormalFont->HeightInPixels();
 					
@@ -385,16 +506,9 @@ void CBuddycloudSetupContainer::RenderScreen() {
 		iBufferGc->DiscardFont();
 	}
 	
-	// Edwin
-	if(iEdwin->IsVisible()) {
-		TRect aFieldRect = iEdwin->Rect();
-		aFieldRect.Grow(2, 2);
-		iBufferGc->SetBrushColor(KRgbBlack);
-		iBufferGc->SetPenColor(KRgbBlack);
-		iBufferGc->DrawRoundRect(aFieldRect, TSize(2, 2));
-	}
-	
-	if(iSetupStep == EStep2 || iSetupStep > EStep4 || iEdwin->TextLength() > 0) {
+	if(iSetupStep == EStep2 || iSetupStep == EStep5 || 
+			(iSetupStep == EStep4 && (iUsernameEdwin->TextLength() > 0 || iPasswordEdwin->Buffer().Length() > 0))) {
+		
 		TPtr pNextText(iNextText->Des());
 
 		iBufferGc->UseFont(iSymbolFont);
@@ -456,26 +570,21 @@ void CBuddycloudSetupContainer::SizeChanged() {
 	if(iBufferGc)
 		delete iBufferGc;
 	
-	ResizeCachedImagesL();
-	ConstructTextL();
-	
 	// Fonts
 	ReleaseFonts();
 	ConfigureFonts();
 	
-	// Edwin
-	if(iEdwin) {
-		TPtr pNextText(iNextText->Des());
-		TRect aFieldRect = iEdwin->Rect();
-		TInt aFontHeight = iSymbolFont->FontMaxHeight();
-#ifdef __SERIES60_40__
-		aFieldRect = TRect(aFontHeight, (iRect.Height() - aFieldRect.Height() - aFontHeight - 2), (iRect.Width() - iSymbolFont->TextWidthInPixels(pNextText) - (aFontHeight * 2) - 4), (iRect.Height() - aFontHeight - 2));
-#else
-		aFieldRect = TRect(aFontHeight, (iRect.Height() - aFieldRect.Height() - aFontHeight - 2), (iRect.Width() - aFontHeight), (iRect.Height() - aFontHeight - 2));
-#endif
-		iEdwin->SetRect(aFieldRect);
-	}
+	// Images & text
+	ResizeCachedImagesL();
+	ConstructTextL();
 	
+	RepositionButtons();
+	
+	// Edwin
+	iPasswordEdwin->AknSetFont(*iNormalFont);
+
+	RepositionEdwins();
+		
 	// Initialize Double Buffer
 	iBufferBitmap = new (ELeave) CFbsBitmap();
 	PanicIfError(_L("SC-BC"), iBufferBitmap->Create(iRect.Size(), CEikonEnv::Static()->ScreenDevice()->DisplayMode()));
@@ -494,18 +603,15 @@ void CBuddycloudSetupContainer::Draw(const TRect& /*aRect*/) const {
 }
 
 TInt CBuddycloudSetupContainer::CountComponentControls() const {
-	if(iSetupStep >= EStep3 && iSetupStep <= EStep5) {
-		return 1;
-	}
-	
-	return 0;			
+	return 2;
 }
 
-CCoeControl* CBuddycloudSetupContainer::ComponentControl(TInt aIndex) const {
-	if(iSetupStep >= EStep3 && iSetupStep <= EStep5) {
-		if(aIndex == 0) {
-			return iEdwin;
-		}
+CCoeControl* CBuddycloudSetupContainer::ComponentControl(TInt aIndex) const {	
+	if(aIndex == 0) {
+		return iUsernameEdwin;
+	}
+	else if(aIndex == 1) {
+		return iPasswordEdwin;
 	}
 	
 	return NULL;
@@ -514,16 +620,31 @@ CCoeControl* CBuddycloudSetupContainer::ComponentControl(TInt aIndex) const {
 TKeyResponse CBuddycloudSetupContainer::OfferKeyEventL(const TKeyEvent& aKeyEvent, TEventCode aType) {
 	TKeyResponse aResult = EKeyWasNotConsumed;
 	
-	if(aKeyEvent.iCode >= 63554 && aKeyEvent.iCode <= 63557) {
-		aResult = EKeyWasConsumed;
-		
-		switch(iSetupStep) {
-			case EStep1:
-			case EStep2:
-			case EStep5:
+	if(aType == EEventKey) {
+		if(iSetupStep == EStep3 && (aKeyEvent.iCode == EKeyUpArrow || aKeyEvent.iCode == EKeyDownArrow)) {
+			iNewRegistration = !iNewRegistration;
+			
+			aResult = EKeyWasConsumed;
+		}
+		else if(iSetupStep == EStep4 && (aKeyEvent.iCode == EKeyUpArrow || aKeyEvent.iCode == EKeyDownArrow)) {
+			if(iUsernameEdwin->IsFocused()) {
+				iUsernameEdwin->SetFocus(false);
+				iPasswordEdwin->SetFocus(true);
+			}
+			else {
+				iPasswordEdwin->SetFocus(false);
+				iUsernameEdwin->SetFocus(true);
+			}
+			
+			RepositionEdwins();
+			
+			aResult = EKeyWasConsumed;
+		}
+		else if(aKeyEvent.iCode >= 63554 && aKeyEvent.iCode <= 63557) {
+			if(iSetupStep < EStep5) {
 				ConstructNextStepL();
-				break;
-			case EStep6:
+			}
+			else if(iSetupStep == EStep5) {
 				if(aKeyEvent.iCode == 63557) {
 					TBool& aAutoStart = iBuddycloudLogic->GetBoolSetting(ESettingItemAutoStart);
 					aAutoStart = !aAutoStart;
@@ -531,21 +652,19 @@ TKeyResponse CBuddycloudSetupContainer::OfferKeyEventL(const TKeyEvent& aKeyEven
 				else {
 					iBuddycloudLogic->ConnectL();
 					ReportEventL(MCoeControlObserver::EEventRequestExit);
-				}
-				break;
-			default:
-				if(iEdwin->TextLength() > 0) {
-					ConstructNextStepL();
-				}
-				break;
+				}				
+			}
+			
+			aResult = EKeyWasConsumed;
 		}
 	}
 	
-	if(aResult == EKeyWasNotConsumed) {
-		aResult = EKeyWasConsumed;
-	
-		if(iEdwin->IsVisible()) {
-			iEdwin->OfferKeyEventL(aKeyEvent, aType);
+	if(aResult == EKeyWasNotConsumed && iSetupStep == EStep4) {
+		if(iUsernameEdwin->IsFocused()) {
+			aResult = iUsernameEdwin->OfferKeyEventL(aKeyEvent, aType);
+		}
+		else if(iPasswordEdwin->IsFocused()) {
+			aResult = iPasswordEdwin->OfferKeyEventL(aKeyEvent, aType);
 		}
 	}
 	
@@ -556,29 +675,72 @@ TKeyResponse CBuddycloudSetupContainer::OfferKeyEventL(const TKeyEvent& aKeyEven
 
 #ifdef __SERIES60_40__
 void CBuddycloudSetupContainer::HandlePointerEventL(const TPointerEvent &aPointerEvent) {
-	CCoeControl::HandlePointerEventL(aPointerEvent);
+	CCoeControl::HandlePointerEventL(aPointerEvent);	
 	
 	// Handle touch events
-	if(aPointerEvent.iType == TPointerEvent::EButton1Up) {
-		TKeyEvent aKeyEvent;
-		
-		if(iNextButton.Contains(aPointerEvent.iPosition)) {
-			// Provide feedback
-			iTouchFeedback->InstantFeedback(ETouchFeedbackBasic);
-
-			// Trigger event
-			aKeyEvent.iCode = 63555;
-			OfferKeyEventL(aKeyEvent, EEventKeyUp);			
+	if(aPointerEvent.iType == TPointerEvent::EButton1Down || aPointerEvent.iType == TPointerEvent::EDrag) {
+		if(iSetupStep == EStep3) {
+			if(iLabelRect1.Contains(aPointerEvent.iPosition)) {
+				iNewRegistration = false;
+			}
+			else if(iLabelRect2.Contains(aPointerEvent.iPosition)) {
+				iNewRegistration = true;
+			}
 		}
-		else if(iCheckbox.Contains(aPointerEvent.iPosition)) {
+	}
+	else if(aPointerEvent.iType == TPointerEvent::EButton1Up) {
+		TBool aFeedback = false;
+
+		if(iSetupStep <= EStep2) {
+			ConstructNextStepL();
+			
+			aFeedback = true;
+		}
+		else if(iSetupStep == EStep3) {
+			if(iLabelRect1.Contains(aPointerEvent.iPosition) || iLabelRect2.Contains(aPointerEvent.iPosition)) {
+				
+				// Move on to next step
+				iNewRegistration = iLabelRect2.Contains(aPointerEvent.iPosition);
+				ConstructNextStepL();
+				
+				aFeedback = true;
+			}
+		}
+		else if(iSetupStep == EStep4) {
+			if(iPasswordEdwin->Rect().Contains(aPointerEvent.iPosition) || iUsernameEdwin->Rect().Contains(aPointerEvent.iPosition)) {
+				iPasswordEdwin->SetFocus(iPasswordEdwin->Rect().Contains(aPointerEvent.iPosition));
+				iUsernameEdwin->SetFocus(iUsernameEdwin->Rect().Contains(aPointerEvent.iPosition));
+				
+				RepositionEdwins();
+				
+				aFeedback = true;
+			}
+			else if(iNextButton.Contains(aPointerEvent.iPosition)) {
+				ConstructNextStepL();
+				
+				aFeedback = true;
+			}
+		}
+		else if(iSetupStep == EStep5) {
+			if(iCheckbox.Contains(aPointerEvent.iPosition)) {
+				TBool& aAutoStart = iBuddycloudLogic->GetBoolSetting(ESettingItemAutoStart);
+				
+				aAutoStart = !aAutoStart;
+				aFeedback = true;
+			}
+			else if(iNextButton.Contains(aPointerEvent.iPosition)) {
+				iBuddycloudLogic->ConnectL();
+				ReportEventL(MCoeControlObserver::EEventRequestExit);
+			}
+		}
+		
+		if(aFeedback) {
 			// Provide feedback
 			iTouchFeedback->InstantFeedback(ETouchFeedbackBasic);
-
-			// Trigger event
-			aKeyEvent.iCode = 63557;
-			OfferKeyEventL(aKeyEvent, EEventKeyUp);			
-		}	
+		}
 	}
+	
+	RenderScreen();
 }
 #endif
 

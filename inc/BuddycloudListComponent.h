@@ -129,15 +129,10 @@ class CBuddycloudListComponent : public CCoeControl, MBuddycloudLogicNotificatio
 		CAvatarRepository* iAvatarRepository;
 
 		// Colours
-		TRgb iColourHighlight;
-		TRgb iColourHighlightBorder;
 		TRgb iColourText;
  		TRgb iColourTextLink;
-		TRgb iColourTextSelected;
-		
-		TRgb iColourHighlightTrans;
-		TRgb iColourHighlightBorderTrans;
 		TRgb iColourTextTrans;
+		TRgb iColourTextSelected;		
 		TRgb iColourTextSelectedTrans;
 
 		// Current selected(highlighted) item

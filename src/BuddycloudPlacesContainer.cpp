@@ -67,6 +67,21 @@ void CBuddycloudPlacesContainer::ConstructL(const TRect& aRect, TInt aPlaceId) {
 	SetTitleL(*aTitle);
 	CleanupStack::PopAndDestroy();
 
+	// Edwin
+	iEdwin = new (ELeave) CEikEdwin();
+	iEdwin->MakeVisible(true);
+	iEdwin->SetFocus(true);
+	iEdwin->SetContainerWindowL(*this);
+
+	TResourceReader aReader;
+	iEikonEnv->CreateResourceReaderLC(aReader, R_SEARCH_EDWIN);
+	iEdwin->ConstructFromResourceL(aReader);
+	CleanupStack::PopAndDestroy(); // aReader
+
+	iEdwin->SetAknEditorFlags(EAknEditorFlagNoT9 | EAknEditorFlagNoEditIndicators);
+	iEdwin->SetAknEditorCase(EAknEditorLowerCase);
+	ConfigureEdwinL();
+
 	iPlaceStore = iBuddycloudLogic->GetPlaceStore();
 
 	SetRect(iRect);
@@ -96,6 +111,57 @@ CBuddycloudPlacesContainer::~CBuddycloudPlacesContainer() {
 	
 	if(iLocalizedUpdatingPlace)
 		delete iLocalizedUpdatingPlace;
+	
+	// Edwin
+	if(iEdwin)
+		delete iEdwin;
+}
+
+void CBuddycloudPlacesContainer::ConfigureEdwinL() {
+	TCharFormat aCharFormat;
+	TCharFormatMask aCharFormatMask;
+	CCharFormatLayer* aCharFormatLayer = CEikonEnv::NewDefaultCharFormatLayerL();
+	CleanupStack::PushL(aCharFormatLayer);
+	
+	aCharFormatLayer->Sense(aCharFormat, aCharFormatMask);
+	aCharFormat.iFontPresentation.iTextColor = iColourText;
+	aCharFormatMask.SetAll();
+	aCharFormatLayer->SetL(aCharFormat, aCharFormatMask);
+	iEdwin->SetCharFormatLayer(aCharFormatLayer);  // Edwin takes the ownership
+	CleanupStack::Pop(aCharFormatLayer);
+}
+
+void CBuddycloudPlacesContainer::DisplayEdwin(TBool aShowEdwin) {
+	iRect = Rect();
+
+	if(iEdwin) {
+		TRect aFieldRect = iEdwin->Rect();
+		
+		if(aShowEdwin) {
+			// Show edwin
+			aFieldRect = TRect(i10NormalFont->FontMaxHeight(), (iRect.Height() - i10NormalFont->FontMaxHeight() - 2), (iRect.Width() - i10NormalFont->FontMaxHeight()), (iRect.Height() - 2));
+			iEdwin->SetRect(aFieldRect);
+			
+			iRect.SetHeight(iRect.Height() - iEdwin->Rect().Height() - 6);
+			
+			RepositionItems(iSnapToItem);
+			iEdwinVisible = true;
+		}
+		else {
+			// Dont show edwin
+			aFieldRect = TRect(i10NormalFont->FontMaxHeight(), (iRect.Height() + 2), (iRect.Width() - i10NormalFont->FontMaxHeight()), (iRect.Height() + aFieldRect.Height() + 2));
+			iEdwin->SetFocus(false);
+			iEdwin->SetRect(aFieldRect);
+			iEdwin->SetFocus(true);
+			
+			if(iEdwinVisible) {
+				iSelectedItem = KErrNotFound;
+				RepositionItems(true);
+			}
+			
+			iEdwinVisible = false;
+		}
+	}
 }
 
 void CBuddycloudPlacesContainer::NotificationEvent(TBuddycloudLogicNotificationType aEvent, TInt aId) {
@@ -198,11 +264,46 @@ void CBuddycloudPlacesContainer::GetHelpContext(TCoeHelpContext& aContext) const
 	}
 }
 
+void CBuddycloudPlacesContainer::HandleResourceChange(TInt aType) {
+	CBuddycloudListComponent::HandleResourceChange(aType);
+	
+	if(aType == KAknsMessageSkinChange){
+		ConfigureEdwinL();
+	}
+}
+
 void CBuddycloudPlacesContainer::SizeChanged() {
 	CBuddycloudListComponent::SizeChanged();
 
 	RenderWrappedText(iSelectedItem);
 	RepositionItems(iSnapToItem);
+	
+	// Edwin
+	if(iEdwin) {
+		iEdwin->SetTextL(&iPlaceStore->GetFilterText());
+		iEdwin->HandleTextChangedL();
+
+		if(iEdwin->TextLength() > 0 || iEdwinVisible) {
+			// Show
+			DisplayEdwin(true);
+		}
+		else {
+			// Dont Show
+			DisplayEdwin(false);
+		}
+	}
+}
+
+TInt CBuddycloudPlacesContainer::CountComponentControls() const {
+	return 1; // iEdwin
+}
+
+CCoeControl* CBuddycloudPlacesContainer::ComponentControl(TInt aIndex) const {
+	if(aIndex == 0) {
+		return iEdwin;
+	}
+	
+	return NULL;
 }
 
 TInt CBuddycloudPlacesContainer::CalculateItemSize(TInt aIndex) {
@@ -271,7 +372,7 @@ void CBuddycloudPlacesContainer::RenderListItems() {
 
 	iBufferGc->SetBrushStyle(CGraphicsContext::ESolidBrush);
 
-	if(iPlaceStore->Count() > 0) {
+	if(iPlaceStore->Count() > 0 && iTotalListSize > 0) {
 		TInt aItemSize = 0;
 
 		TTime aTimeNow;
@@ -284,281 +385,283 @@ void CBuddycloudPlacesContainer::RenderListItems() {
 		for(TInt i = 0; i < iPlaceStore->Count(); i++) {
 			CBuddycloudExtendedPlace* aPlace = static_cast <CBuddycloudExtendedPlace*> (iPlaceStore->GetItemByIndex(i));
 
-			// Calculate item size
-			aItemSize = CalculateItemSize(i);
-
-			// Test to start the page drawing
-			if(aDrawPos + aItemSize > 0) {
-				TInt aItemDrawPos = aDrawPos;
-				TPtrC aDirectionalText(iTextUtilities->BidiLogicalToVisualL(aPlace->GetTitle()));
-				
-#ifdef __SERIES60_40__
-				iListItems.Append(TListItem(aPlace->GetItemId(), TRect(0, aItemDrawPos, (Rect().Width() - iRightBarSpacer), (aItemDrawPos + aItemSize))));
-#endif
-				
-				// Render frame & avatar
-				if(aPlace->GetItemId() == iSelectedItem) {
-					RenderItemFrame(TRect(iLeftBarSpacer + 1, aItemDrawPos, (Rect().Width() - iRightBarSpacer), (aItemDrawPos + aItemSize)));
-					
-					iBufferGc->SetPenColor(iColourTextSelected);
-							
-					iBufferGc->SetClippingRect(TRect(iLeftBarSpacer + 3, aItemDrawPos, (iRect.Width() - iRightBarSpacer - 3), iRect.Height()));
-					iBufferGc->SetBrushStyle(CGraphicsContext::ENullBrush);
-
-					if(i == 0) {						
-						// Cell
-						if(iBuddycloudLogic->GetLocationResourceDataAvailable(EResourceCell)) {
-							iBufferGc->BitBltMasked(TPoint(iLeftBarSpacer + 6, (aItemDrawPos + 2)), iAvatarRepository->GetImage(KIconPositioning, false, iIconMidmapSize), TRect(0, 0, (iItemIconSize / 2), (iItemIconSize / 2)), iAvatarRepository->GetImage(KIconPositioning, true, iIconMidmapSize), true);
-						}
-						else {
-							iBufferGc->BitBltMasked(TPoint(iLeftBarSpacer + 6, (aItemDrawPos + 2)), iAvatarRepository->GetImage(KIconNoPosition, false, iIconMidmapSize), TRect(0, 0, (iItemIconSize / 2), (iItemIconSize / 2)), iAvatarRepository->GetImage(KIconNoPosition, true, iIconMidmapSize), true);
-						}
-						
-						// Wifi
-						if(iBuddycloudLogic->GetLocationResourceDataAvailable(EResourceWlan)) {
-							iBufferGc->BitBltMasked(TPoint((iLeftBarSpacer + 6 + (iItemIconSize / 2)), (aItemDrawPos + 2)), iAvatarRepository->GetImage(KIconPositioning, false, iIconMidmapSize), TRect((iItemIconSize / 2), 0, iItemIconSize, (iItemIconSize / 2)), iAvatarRepository->GetImage(KIconPositioning, true, iIconMidmapSize), true);
-						}
-						else {
-							iBufferGc->BitBltMasked(TPoint((iLeftBarSpacer + 6 + (iItemIconSize / 2)), (aItemDrawPos + 2)), iAvatarRepository->GetImage(KIconNoPosition, false, iIconMidmapSize), TRect((iItemIconSize / 2), 0, iItemIconSize, (iItemIconSize / 2)), iAvatarRepository->GetImage(KIconNoPosition, true, iIconMidmapSize), true);
-						}
-						
-						// Gps
-						if(iBuddycloudLogic->GetLocationResourceDataAvailable(EResourceGps)) {
-							iBufferGc->BitBltMasked(TPoint(iLeftBarSpacer + 6, (aItemDrawPos + 2 + (iItemIconSize / 2))), iAvatarRepository->GetImage(KIconPositioning, false, iIconMidmapSize), TRect(0, (iItemIconSize / 2), (iItemIconSize / 2), iItemIconSize), iAvatarRepository->GetImage(KIconPositioning, true, iIconMidmapSize), true);
-						}
-						else {
-							iBufferGc->BitBltMasked(TPoint(iLeftBarSpacer + 6, (aItemDrawPos + 2 + (iItemIconSize / 2))), iAvatarRepository->GetImage(KIconNoPosition, false, iIconMidmapSize), TRect(0, (iItemIconSize / 2), (iItemIconSize / 2), iItemIconSize), iAvatarRepository->GetImage(KIconNoPosition, true, iIconMidmapSize), true);
-						}
-						
-						// Bluetooth
-						if(iBuddycloudLogic->GetLocationResourceDataAvailable(EResourceBt)) {
-							iBufferGc->BitBltMasked(TPoint((iLeftBarSpacer + 6 + (iItemIconSize / 2)), (aItemDrawPos + 2 + (iItemIconSize / 2))), iAvatarRepository->GetImage(KIconPositioning, false, iIconMidmapSize), TRect((iItemIconSize / 2), (iItemIconSize / 2), iItemIconSize, iItemIconSize), iAvatarRepository->GetImage(KIconPositioning, true, iIconMidmapSize), true);
-						}
-						else {
-							iBufferGc->BitBltMasked(TPoint((iLeftBarSpacer + 6 + (iItemIconSize / 2)), (aItemDrawPos + 2 + (iItemIconSize / 2))), iAvatarRepository->GetImage(KIconNoPosition, false, iIconMidmapSize), TRect((iItemIconSize / 2), (iItemIconSize / 2), iItemIconSize, iItemIconSize), iAvatarRepository->GetImage(KIconNoPosition, true, iIconMidmapSize), true);
-						}
-					}
-					else {
-						// Avatar
-						iBufferGc->BitBltMasked(TPoint(iLeftBarSpacer + 6, (aItemDrawPos + 2)), iAvatarRepository->GetImage(KIconPlace, false, iIconMidmapSize), TRect(0, 0, iItemIconSize, iItemIconSize), iAvatarRepository->GetImage(KIconPlace, true, iIconMidmapSize), true);
+			if(aPlace->Filtered()) {
+				// Calculate item size
+				aItemSize = CalculateItemSize(i);
 	
-						// Public
-						if(!aPlace->Shared()) {
-							iBufferGc->BitBltMasked(TPoint(iLeftBarSpacer + 6, (aItemDrawPos + 2)), iAvatarRepository->GetImage(KOverlayLocked, false, iIconMidmapSize), TRect(0, 0, iItemIconSize, iItemIconSize), iAvatarRepository->GetImage(KOverlayLocked, true, iIconMidmapSize), true);
-						}
-					}
-					
-					iBufferGc->SetBrushStyle(CGraphicsContext::ESolidBrush);
-				}
-				else {
-					iBufferGc->SetClippingRect(TRect(iLeftBarSpacer + 0, aItemDrawPos, (iRect.Width() - iRightBarSpacer - 1), iRect.Height()));
-					iBufferGc->SetPenColor(iColourText);
+				// Test to start the page drawing
+				if(aDrawPos + aItemSize > 0) {
+					TInt aItemDrawPos = aDrawPos;
+					TPtrC aDirectionalText(iTextUtilities->BidiLogicalToVisualL(aPlace->GetTitle()));
 					
 #ifdef __SERIES60_40__
-					aItemDrawPos += i10BoldFont->DescentInPixels();
+					iListItems.Append(TListItem(aPlace->GetItemId(), TRect(0, aItemDrawPos, (Rect().Width() - iRightBarSpacer), (aItemDrawPos + aItemSize))));
 #endif
-
-					// Avatar
-					iBufferGc->SetBrushStyle(CGraphicsContext::ENullBrush);
-					iBufferGc->BitBltMasked(TPoint(iLeftBarSpacer + (iUnselectedItemIconTextOffset / 2) - (iItemIconSize / 4), (aItemDrawPos + 1)), iAvatarRepository->GetImage(KIconPlace, false, (iIconMidmapSize + 1)), TRect(0, 0, (iItemIconSize / 2), (iItemIconSize / 2)), iAvatarRepository->GetImage(KIconPlace, true, (iIconMidmapSize + 1)), true);
 					
-					// Public
-					if(!aPlace->Shared()) {
-						iBufferGc->BitBltMasked(TPoint(iLeftBarSpacer + (iUnselectedItemIconTextOffset / 2) - (iItemIconSize / 4), (aItemDrawPos + 1)), iAvatarRepository->GetImage(KOverlayLocked, false, (iIconMidmapSize + 1)), TRect(0, 0, (iItemIconSize / 2), (iItemIconSize / 2)), iAvatarRepository->GetImage(KOverlayLocked, true, (iIconMidmapSize + 1)), true);
-					}
-					
-					iBufferGc->SetBrushStyle(CGraphicsContext::ESolidBrush);	
-				}
-				
-				if(i == 0) {
-					if(aPlace->GetItemId() <= 0 || aPlace->GetItemId() == iBuddycloudLogic->GetMyPlaceId()) {
-						// This is top place item (On the road..., Near... etc)
-						CFollowingRosterItem* aOwnItem = iBuddycloudLogic->GetOwnItem();
+					// Render frame & avatar
+					if(aPlace->GetItemId() == iSelectedItem) {
+						RenderItemFrame(TRect(iLeftBarSpacer + 1, aItemDrawPos, (Rect().Width() - iRightBarSpacer), (aItemDrawPos + aItemSize)));
 						
-						if(aOwnItem) {
-							CGeolocData* aGeoloc = aOwnItem->GetGeolocItem(EGeolocItemCurrent);
-							
-							if(aGeoloc->GetString(EGeolocText).Length() > 0) {
-								aDirectionalText.Set(iTextUtilities->BidiLogicalToVisualL(aGeoloc->GetString(EGeolocText)));
-							}
-						}
-					}
-				}
-				
-				if(aDirectionalText.Length() == 0) {
-					aDirectionalText.Set(iTextUtilities->BidiLogicalToVisualL(*iLocalizedUpdatingPlace));
-					iBufferGc->SetPenColor(iColourTextSelectedTrans);
-				}
-				
-				// Render content header
-				if(aPlace->GetItemId() == iSelectedItem) {
-					// Name
-					if(i13BoldFont->TextCount(aDirectionalText, (iRect.Width() - iSelectedItemIconTextOffset - 2 - iLeftBarSpacer - iRightBarSpacer)) < aDirectionalText.Length()) {
-						iBufferGc->UseFont(i10BoldFont);
-					}
-					else {
-						iBufferGc->UseFont(i13BoldFont);
-					}
-
-					aItemDrawPos += i13BoldFont->HeightInPixels();
-					iBufferGc->DrawText(aDirectionalText, TPoint(iLeftBarSpacer + iSelectedItemIconTextOffset, aItemDrawPos));
-					aItemDrawPos += i13BoldFont->FontMaxDescent();
-					iBufferGc->DiscardFont();
-				}
-				else {
-					// Name
-					iBufferGc->UseFont(i10BoldFont);
-					aItemDrawPos += i10BoldFont->HeightInPixels();
-					iBufferGc->DrawText(aDirectionalText, TPoint(iLeftBarSpacer + iUnselectedItemIconTextOffset, aItemDrawPos));
-					aItemDrawPos += i10BoldFont->FontMaxDescent();
-					iBufferGc->DiscardFont();
-				}	
-				
-				// Render content								
-				iBufferGc->UseFont(i10ItalicFont);
-			
-				if(aPlace->GetItemId() == iSelectedItem) {					
-					if(aPlace->GetDescription().Length() > 0) {
-						if(aPlace->GetItemId() <= 0 && iBuddycloudLogic->GetMyMotionState() == EMotionStationary) {
-							iBufferGc->SetUnderlineStyle(EUnderlineOn);					
-						}
-						
-						// Wrapped text
-						for(TInt i = 0; i < iWrappedTextArray.Count(); i++) {
-							aItemDrawPos += i10ItalicFont->HeightInPixels();
-							iBufferGc->DrawText(*iWrappedTextArray[i], TPoint(iLeftBarSpacer + iSelectedItemIconTextOffset, aItemDrawPos));
-						}
-					}
-					
-					if(aItemDrawPos - aDrawPos < (iItemIconSize + 2)) {
-						aItemDrawPos = (aDrawPos + iItemIconSize + 2);
-					}
-					
-					if(aPlace->GetItemId() <= 0) {
-						iBufferGc->SetUnderlineStyle(EUnderlineOff);
-						
-						// Pattern quality
-						if(iBuddycloudLogic->GetMyMotionState() > EMotionStationary) {
-							iBufferGc->UseFont(i10NormalFont);
-							aBuf.Copy(iTextUtilities->BidiLogicalToVisualL(*iLocalizedLearningPlace));
-							aBuf.AppendFormat(_L(": %d%%"), iBuddycloudLogic->GetMyPatternQuality());
-							aItemDrawPos += i10NormalFont->HeightInPixels();
-							iBufferGc->DrawText(aBuf, TPoint(iLeftBarSpacer + 5, aItemDrawPos));
-							iBufferGc->DiscardFont();
-						}												
-					}
-					else {						
 						iBufferGc->SetPenColor(iColourTextSelected);
+								
+						iBufferGc->SetClippingRect(TRect(iLeftBarSpacer + 3, aItemDrawPos, (iRect.Width() - iRightBarSpacer - 3), iRect.Height()));
+						iBufferGc->SetBrushStyle(CGraphicsContext::ENullBrush);
 	
-						// Population
-						if(aPlace->GetPopulation() > 0) {
-							aBuf.Copy(iTextUtilities->BidiLogicalToVisualL(*iLocalizedPlacePopulation));
-							aBuf.AppendFormat(_L(": %d"), aPlace->GetPopulation());
-	
-							iBufferGc->UseFont(i10NormalFont);
-							aItemDrawPos += i10NormalFont->HeightInPixels();
-							iBufferGc->DrawText(aBuf, TPoint(iLeftBarSpacer + 5, aItemDrawPos));
-							iBufferGc->DiscardFont();
-						}
-	
-						// Visits
-						if(aPlace->GetVisits() > 0) {
-							aBuf.Copy(iTextUtilities->BidiLogicalToVisualL(*iLocalizedPlaceVisits));
-							aBuf.AppendFormat(_L(": %d"), aPlace->GetVisits());
-	
-							if(aPlace->GetVisits() > 1 && aPlace->GetTotalSeconds() > 0) {
-								TReal aVisitTime;
-								if(aPlace->GetTotalSeconds() < 3600) {
-									aVisitTime = (TReal)aPlace->GetTotalSeconds() / 60.0;
-									aBuf.AppendFormat(_L(" (%.1f mins)"), aVisitTime);
-								}
-								else if(aPlace->GetTotalSeconds() < 86400) {
-									aVisitTime = ((TReal)aPlace->GetTotalSeconds() / 60.0) / 60.0;
-									aBuf.AppendFormat(_L(" (%.1f hours)"), aVisitTime);
-								}
-								else {
-									aVisitTime = (((TReal)aPlace->GetTotalSeconds() / 60.0) / 60.0) / 24.0;
-									aBuf.AppendFormat(_L(" (%.1f days)"), aVisitTime);
-								}
-							}
-	
-							iBufferGc->UseFont(i10NormalFont);
-							aItemDrawPos += i10NormalFont->HeightInPixels();
-							iBufferGc->DrawText(aBuf, TPoint(iLeftBarSpacer + 5, aItemDrawPos));
-							iBufferGc->DiscardFont();
-						}
-	
-						if(aPlace->GetPlaceSeen() != EPlaceNotSeen) {
-							// Time
-							TTime aTime = aPlace->GetLastSeen();
-							aTime += User::UTCOffset();
-	
-							if(aTime.DayNoInYear() == aTimeNow.DayNoInYear()) {
-								aTime.FormatL(aBuf, _L(": %J%:1%T%B"));
-							}
-							else if(aTime > aTimeNow - TTimeIntervalDays(6)) {
-								aTime.FormatL(aBuf, _L(": %E at %J%:1%T%B"));
+						if(i == 0) {						
+							// Cell
+							if(iBuddycloudLogic->GetLocationResourceDataAvailable(EResourceCell)) {
+								iBufferGc->BitBltMasked(TPoint(iLeftBarSpacer + 6, (aItemDrawPos + 2)), iAvatarRepository->GetImage(KIconPositioning, false, iIconMidmapSize), TRect(0, 0, (iItemIconSize / 2), (iItemIconSize / 2)), iAvatarRepository->GetImage(KIconPositioning, true, iIconMidmapSize), true);
 							}
 							else {
-								aTime.FormatL(aBuf, _L(": %J%:1%T%B on %F%N %*D%X"));
+								iBufferGc->BitBltMasked(TPoint(iLeftBarSpacer + 6, (aItemDrawPos + 2)), iAvatarRepository->GetImage(KIconNoPosition, false, iIconMidmapSize), TRect(0, 0, (iItemIconSize / 2), (iItemIconSize / 2)), iAvatarRepository->GetImage(KIconNoPosition, true, iIconMidmapSize), true);
 							}
 							
-							aBuf.Insert(0, iTextUtilities->BidiLogicalToVisualL(*iLocalizedPlaceLastSeen));
+							// Wifi
+							if(iBuddycloudLogic->GetLocationResourceDataAvailable(EResourceWlan)) {
+								iBufferGc->BitBltMasked(TPoint((iLeftBarSpacer + 6 + (iItemIconSize / 2)), (aItemDrawPos + 2)), iAvatarRepository->GetImage(KIconPositioning, false, iIconMidmapSize), TRect((iItemIconSize / 2), 0, iItemIconSize, (iItemIconSize / 2)), iAvatarRepository->GetImage(KIconPositioning, true, iIconMidmapSize), true);
+							}
+							else {
+								iBufferGc->BitBltMasked(TPoint((iLeftBarSpacer + 6 + (iItemIconSize / 2)), (aItemDrawPos + 2)), iAvatarRepository->GetImage(KIconNoPosition, false, iIconMidmapSize), TRect((iItemIconSize / 2), 0, iItemIconSize, (iItemIconSize / 2)), iAvatarRepository->GetImage(KIconNoPosition, true, iIconMidmapSize), true);
+							}
+							
+							// Gps
+							if(iBuddycloudLogic->GetLocationResourceDataAvailable(EResourceGps)) {
+								iBufferGc->BitBltMasked(TPoint(iLeftBarSpacer + 6, (aItemDrawPos + 2 + (iItemIconSize / 2))), iAvatarRepository->GetImage(KIconPositioning, false, iIconMidmapSize), TRect(0, (iItemIconSize / 2), (iItemIconSize / 2), iItemIconSize), iAvatarRepository->GetImage(KIconPositioning, true, iIconMidmapSize), true);
+							}
+							else {
+								iBufferGc->BitBltMasked(TPoint(iLeftBarSpacer + 6, (aItemDrawPos + 2 + (iItemIconSize / 2))), iAvatarRepository->GetImage(KIconNoPosition, false, iIconMidmapSize), TRect(0, (iItemIconSize / 2), (iItemIconSize / 2), iItemIconSize), iAvatarRepository->GetImage(KIconNoPosition, true, iIconMidmapSize), true);
+							}
+							
+							// Bluetooth
+							if(iBuddycloudLogic->GetLocationResourceDataAvailable(EResourceBt)) {
+								iBufferGc->BitBltMasked(TPoint((iLeftBarSpacer + 6 + (iItemIconSize / 2)), (aItemDrawPos + 2 + (iItemIconSize / 2))), iAvatarRepository->GetImage(KIconPositioning, false, iIconMidmapSize), TRect((iItemIconSize / 2), (iItemIconSize / 2), iItemIconSize, iItemIconSize), iAvatarRepository->GetImage(KIconPositioning, true, iIconMidmapSize), true);
+							}
+							else {
+								iBufferGc->BitBltMasked(TPoint((iLeftBarSpacer + 6 + (iItemIconSize / 2)), (aItemDrawPos + 2 + (iItemIconSize / 2))), iAvatarRepository->GetImage(KIconNoPosition, false, iIconMidmapSize), TRect((iItemIconSize / 2), (iItemIconSize / 2), iItemIconSize, iItemIconSize), iAvatarRepository->GetImage(KIconNoPosition, true, iIconMidmapSize), true);
+							}
+						}
+						else {
+							// Avatar
+							iBufferGc->BitBltMasked(TPoint(iLeftBarSpacer + 6, (aItemDrawPos + 2)), iAvatarRepository->GetImage(KIconPlace, false, iIconMidmapSize), TRect(0, 0, iItemIconSize, iItemIconSize), iAvatarRepository->GetImage(KIconPlace, true, iIconMidmapSize), true);
+		
+							// Public
+							if(!aPlace->Shared()) {
+								iBufferGc->BitBltMasked(TPoint(iLeftBarSpacer + 6, (aItemDrawPos + 2)), iAvatarRepository->GetImage(KOverlayLocked, false, iIconMidmapSize), TRect(0, 0, iItemIconSize, iItemIconSize), iAvatarRepository->GetImage(KOverlayLocked, true, iIconMidmapSize), true);
+							}
+						}
+						
+						iBufferGc->SetBrushStyle(CGraphicsContext::ESolidBrush);
+					}
+					else {
+						iBufferGc->SetClippingRect(TRect(iLeftBarSpacer + 0, aItemDrawPos, (iRect.Width() - iRightBarSpacer - 1), iRect.Height()));
+						iBufferGc->SetPenColor(iColourText);
+						
+#ifdef __SERIES60_40__
+						aItemDrawPos += i10BoldFont->DescentInPixels();
+#endif
 	
-							// Visit Length
-							if(aPlace->GetVisitSeconds() > 0) {
-								TReal aVisitTime;
-	
-								if(aPlace->GetVisitSeconds() < 3600) {
-									aVisitTime = (TReal)aPlace->GetVisitSeconds() / 60.0;
-									aBuf.AppendFormat(_L(" (%.1f mins)"), aVisitTime);
-								}
-								else if(aPlace->GetVisitSeconds() < 86400) {
-									aVisitTime = ((TReal)aPlace->GetVisitSeconds() / 60.0) / 60.0;
-									aBuf.AppendFormat(_L(" (%.1f hours)"), aVisitTime);
-								}
-								else {
-									aVisitTime = (((TReal)aPlace->GetVisitSeconds() / 60.0) / 60.0) / 24.0;
-									aBuf.AppendFormat(_L(" (%.1f days)"), aVisitTime);
+						// Avatar
+						iBufferGc->SetBrushStyle(CGraphicsContext::ENullBrush);
+						iBufferGc->BitBltMasked(TPoint(iLeftBarSpacer + (iUnselectedItemIconTextOffset / 2) - (iItemIconSize / 4), (aItemDrawPos + 1)), iAvatarRepository->GetImage(KIconPlace, false, (iIconMidmapSize + 1)), TRect(0, 0, (iItemIconSize / 2), (iItemIconSize / 2)), iAvatarRepository->GetImage(KIconPlace, true, (iIconMidmapSize + 1)), true);
+						
+						// Public
+						if(!aPlace->Shared()) {
+							iBufferGc->BitBltMasked(TPoint(iLeftBarSpacer + (iUnselectedItemIconTextOffset / 2) - (iItemIconSize / 4), (aItemDrawPos + 1)), iAvatarRepository->GetImage(KOverlayLocked, false, (iIconMidmapSize + 1)), TRect(0, 0, (iItemIconSize / 2), (iItemIconSize / 2)), iAvatarRepository->GetImage(KOverlayLocked, true, (iIconMidmapSize + 1)), true);
+						}
+						
+						iBufferGc->SetBrushStyle(CGraphicsContext::ESolidBrush);	
+					}
+					
+					if(i == 0) {
+						if(aPlace->GetItemId() <= 0 || aPlace->GetItemId() == iBuddycloudLogic->GetMyPlaceId()) {
+							// This is top place item (On the road..., Near... etc)
+							CFollowingRosterItem* aOwnItem = iBuddycloudLogic->GetOwnItem();
+							
+							if(aOwnItem) {
+								CGeolocData* aGeoloc = aOwnItem->GetGeolocItem(EGeolocItemCurrent);
+								
+								if(aGeoloc->GetString(EGeolocText).Length() > 0) {
+									aDirectionalText.Set(iTextUtilities->BidiLogicalToVisualL(aGeoloc->GetString(EGeolocText)));
 								}
 							}
-	
-							iBufferGc->UseFont(i10NormalFont);
-							aItemDrawPos += i10NormalFont->HeightInPixels();
-							iBufferGc->DrawText(aBuf, TPoint(iLeftBarSpacer + 5, aItemDrawPos));
-							iBufferGc->DiscardFont();
-						}					
+						}
 					}
-				}
-				else if(aPlace->GetItemId() > 0 && aPlace->GetDescription().Length() > 0) {
-					HBufC* aAddress = aPlace->GetDescription().AllocLC();
-					TPtr pAddress(aAddress->Des());
 					
-					TInt aDisplayedText = i10ItalicFont->TextCount(pAddress, (iRect.Width() - iUnselectedItemIconTextOffset - 2 - iRightBarSpacer));
-						
-					if(aDisplayedText < pAddress.Length()) {
-						pAddress.Delete((aDisplayedText - 3), pAddress.Length());
-						pAddress.Append(_L("..."));
+					if(aDirectionalText.Length() == 0) {
+						aDirectionalText.Set(iTextUtilities->BidiLogicalToVisualL(*iLocalizedUpdatingPlace));
+						iBufferGc->SetPenColor(iColourTextSelectedTrans);
 					}
+					
+					// Render content header
+					if(aPlace->GetItemId() == iSelectedItem) {
+						// Name
+						if(i13BoldFont->TextCount(aDirectionalText, (iRect.Width() - iSelectedItemIconTextOffset - 2 - iLeftBarSpacer - iRightBarSpacer)) < aDirectionalText.Length()) {
+							iBufferGc->UseFont(i10BoldFont);
+						}
+						else {
+							iBufferGc->UseFont(i13BoldFont);
+						}
+	
+						aItemDrawPos += i13BoldFont->HeightInPixels();
+						iBufferGc->DrawText(aDirectionalText, TPoint(iLeftBarSpacer + iSelectedItemIconTextOffset, aItemDrawPos));
+						aItemDrawPos += i13BoldFont->FontMaxDescent();
+						iBufferGc->DiscardFont();
+					}
+					else {
+						// Name
+						iBufferGc->UseFont(i10BoldFont);
+						aItemDrawPos += i10BoldFont->HeightInPixels();
+						iBufferGc->DrawText(aDirectionalText, TPoint(iLeftBarSpacer + iUnselectedItemIconTextOffset, aItemDrawPos));
+						aItemDrawPos += i10BoldFont->FontMaxDescent();
+						iBufferGc->DiscardFont();
+					}	
+					
+					// Render content								
+					iBufferGc->UseFont(i10ItalicFont);
+				
+					if(aPlace->GetItemId() == iSelectedItem) {					
+						if(aPlace->GetDescription().Length() > 0) {
+							if(aPlace->GetItemId() <= 0 && iBuddycloudLogic->GetMyMotionState() == EMotionStationary) {
+								iBufferGc->SetUnderlineStyle(EUnderlineOn);					
+							}
+							
+							// Wrapped text
+							for(TInt i = 0; i < iWrappedTextArray.Count(); i++) {
+								aItemDrawPos += i10ItalicFont->HeightInPixels();
+								iBufferGc->DrawText(*iWrappedTextArray[i], TPoint(iLeftBarSpacer + iSelectedItemIconTextOffset, aItemDrawPos));
+							}
+						}
 						
-					aDirectionalText.Set(iTextUtilities->BidiLogicalToVisualL(pAddress));
-					aItemDrawPos += i10ItalicFont->HeightInPixels();
-					iBufferGc->DrawText(aDirectionalText, TPoint(iLeftBarSpacer + iUnselectedItemIconTextOffset, aItemDrawPos));
-
-					CleanupStack::PopAndDestroy(); // aAddress
+						if(aItemDrawPos - aDrawPos < (iItemIconSize + 2)) {
+							aItemDrawPos = (aDrawPos + iItemIconSize + 2);
+						}
+						
+						if(aPlace->GetItemId() <= 0) {
+							iBufferGc->SetUnderlineStyle(EUnderlineOff);
+							
+							// Pattern quality
+							if(iBuddycloudLogic->GetMyMotionState() > EMotionStationary) {
+								iBufferGc->UseFont(i10NormalFont);
+								aBuf.Copy(iTextUtilities->BidiLogicalToVisualL(*iLocalizedLearningPlace));
+								aBuf.AppendFormat(_L(": %d%%"), iBuddycloudLogic->GetMyPatternQuality());
+								aItemDrawPos += i10NormalFont->HeightInPixels();
+								iBufferGc->DrawText(aBuf, TPoint(iLeftBarSpacer + 5, aItemDrawPos));
+								iBufferGc->DiscardFont();
+							}												
+						}
+						else {						
+							iBufferGc->SetPenColor(iColourTextSelected);
+		
+							// Population
+							if(aPlace->GetPopulation() > 0) {
+								aBuf.Copy(iTextUtilities->BidiLogicalToVisualL(*iLocalizedPlacePopulation));
+								aBuf.AppendFormat(_L(": %d"), aPlace->GetPopulation());
+		
+								iBufferGc->UseFont(i10NormalFont);
+								aItemDrawPos += i10NormalFont->HeightInPixels();
+								iBufferGc->DrawText(aBuf, TPoint(iLeftBarSpacer + 5, aItemDrawPos));
+								iBufferGc->DiscardFont();
+							}
+		
+							// Visits
+							if(aPlace->GetVisits() > 0) {
+								aBuf.Copy(iTextUtilities->BidiLogicalToVisualL(*iLocalizedPlaceVisits));
+								aBuf.AppendFormat(_L(": %d"), aPlace->GetVisits());
+		
+								if(aPlace->GetVisits() > 1 && aPlace->GetTotalSeconds() > 0) {
+									TReal aVisitTime;
+									if(aPlace->GetTotalSeconds() < 3600) {
+										aVisitTime = (TReal)aPlace->GetTotalSeconds() / 60.0;
+										aBuf.AppendFormat(_L(" (%.1f mins)"), aVisitTime);
+									}
+									else if(aPlace->GetTotalSeconds() < 86400) {
+										aVisitTime = ((TReal)aPlace->GetTotalSeconds() / 60.0) / 60.0;
+										aBuf.AppendFormat(_L(" (%.1f hours)"), aVisitTime);
+									}
+									else {
+										aVisitTime = (((TReal)aPlace->GetTotalSeconds() / 60.0) / 60.0) / 24.0;
+										aBuf.AppendFormat(_L(" (%.1f days)"), aVisitTime);
+									}
+								}
+		
+								iBufferGc->UseFont(i10NormalFont);
+								aItemDrawPos += i10NormalFont->HeightInPixels();
+								iBufferGc->DrawText(aBuf, TPoint(iLeftBarSpacer + 5, aItemDrawPos));
+								iBufferGc->DiscardFont();
+							}
+		
+							if(aPlace->GetPlaceSeen() != EPlaceNotSeen) {
+								// Time
+								TTime aTime = aPlace->GetLastSeen();
+								aTime += User::UTCOffset();
+		
+								if(aTime.DayNoInYear() == aTimeNow.DayNoInYear()) {
+									aTime.FormatL(aBuf, _L(": %J%:1%T%B"));
+								}
+								else if(aTime > aTimeNow - TTimeIntervalDays(6)) {
+									aTime.FormatL(aBuf, _L(": %E at %J%:1%T%B"));
+								}
+								else {
+									aTime.FormatL(aBuf, _L(": %J%:1%T%B on %F%N %*D%X"));
+								}
+								
+								aBuf.Insert(0, iTextUtilities->BidiLogicalToVisualL(*iLocalizedPlaceLastSeen));
+		
+								// Visit Length
+								if(aPlace->GetVisitSeconds() > 0) {
+									TReal aVisitTime;
+		
+									if(aPlace->GetVisitSeconds() < 3600) {
+										aVisitTime = (TReal)aPlace->GetVisitSeconds() / 60.0;
+										aBuf.AppendFormat(_L(" (%.1f mins)"), aVisitTime);
+									}
+									else if(aPlace->GetVisitSeconds() < 86400) {
+										aVisitTime = ((TReal)aPlace->GetVisitSeconds() / 60.0) / 60.0;
+										aBuf.AppendFormat(_L(" (%.1f hours)"), aVisitTime);
+									}
+									else {
+										aVisitTime = (((TReal)aPlace->GetVisitSeconds() / 60.0) / 60.0) / 24.0;
+										aBuf.AppendFormat(_L(" (%.1f days)"), aVisitTime);
+									}
+								}
+		
+								iBufferGc->UseFont(i10NormalFont);
+								aItemDrawPos += i10NormalFont->HeightInPixels();
+								iBufferGc->DrawText(aBuf, TPoint(iLeftBarSpacer + 5, aItemDrawPos));
+								iBufferGc->DiscardFont();
+							}					
+						}
+					}
+					else if(aPlace->GetItemId() > 0 && aPlace->GetDescription().Length() > 0) {
+						HBufC* aAddress = aPlace->GetDescription().AllocLC();
+						TPtr pAddress(aAddress->Des());
+						
+						TInt aDisplayedText = i10ItalicFont->TextCount(pAddress, (iRect.Width() - iUnselectedItemIconTextOffset - 2 - iRightBarSpacer));
+							
+						if(aDisplayedText < pAddress.Length()) {
+							pAddress.Delete((aDisplayedText - 3), pAddress.Length());
+							pAddress.Append(_L("..."));
+						}
+							
+						aDirectionalText.Set(iTextUtilities->BidiLogicalToVisualL(pAddress));
+						aItemDrawPos += i10ItalicFont->HeightInPixels();
+						iBufferGc->DrawText(aDirectionalText, TPoint(iLeftBarSpacer + iUnselectedItemIconTextOffset, aItemDrawPos));
+	
+						CleanupStack::PopAndDestroy(); // aAddress
+					}
+					
+					iBufferGc->DiscardFont();
+					
+					// Collect details if required
+					if(aPlace->GetRevision() == KErrNotFound) {
+						iBuddycloudLogic->GetPlaceDetailsL(aPlace->GetItemId());
+					}
+	
+					iBufferGc->CancelClippingRect();
 				}
-				
-				iBufferGc->DiscardFont();
-				
-				// Collect details if required
-				if(aPlace->GetRevision() == KErrNotFound) {
-					iBuddycloudLogic->GetPlaceDetailsL(aPlace->GetItemId());
-				}
-
-				iBufferGc->CancelClippingRect();
-			}
 			
-			aDrawPos += (aItemSize + 1);
+				aDrawPos += (aItemSize + 1);
+			}
 
 			// Finish page drawing
 			if(aDrawPos > iRect.Height()) {
@@ -567,20 +670,39 @@ void CBuddycloudPlacesContainer::RenderListItems() {
 		}
 	}
 	else {
-		// No places
-		aDrawPos = ((iRect.Height() / 2) - ((iWrappedTextArray.Count() * i10BoldFont->HeightInPixels()) / 2));
-		
 		iBufferGc->UseFont(i10BoldFont);
 		iBufferGc->SetPenColor(iColourText);
-		
-		for(TInt i = 0; i < iWrappedTextArray.Count(); i++) {
-			aDrawPos += i10ItalicFont->HeightInPixels();
-			iBufferGc->DrawText(iWrappedTextArray[i]->Des(), TPoint(((iLeftBarSpacer + ((iRect.Width() - iLeftBarSpacer - iRightBarSpacer) / 2) - (i10BoldFont->TextWidthInPixels(iWrappedTextArray[i]->Des()) / 2))), aDrawPos));
+
+		if(iPlaceStore->Count() > 0) {
+			// No results
+			aDrawPos = ((iRect.Height() / 2) - (i10BoldFont->HeightInPixels() / 2));
+			
+			HBufC* aNoResults = iEikonEnv->AllocReadResourceLC(R_LOCALIZED_STRING_NOTE_NORESULTSFOUND);		
+			iBufferGc->DrawText(*aNoResults, TPoint(((iLeftBarSpacer + ((iRect.Width() - iLeftBarSpacer - iRightBarSpacer) / 2)) - (i10BoldFont->TextWidthInPixels(*aNoResults) / 2)), aDrawPos));
+			CleanupStack::PopAndDestroy();// aNoResults	
+		}
+		else {
+			// No places
+			aDrawPos = ((iRect.Height() / 2) - ((iWrappedTextArray.Count() * i10BoldFont->HeightInPixels()) / 2));
+						
+			for(TInt i = 0; i < iWrappedTextArray.Count(); i++) {
+				aDrawPos += i10ItalicFont->HeightInPixels();
+				iBufferGc->DrawText(iWrappedTextArray[i]->Des(), TPoint(((iLeftBarSpacer + ((iRect.Width() - iLeftBarSpacer - iRightBarSpacer) / 2)) - (i10BoldFont->TextWidthInPixels(iWrappedTextArray[i]->Des()) / 2)), aDrawPos));
+			}
 		}
 		
 		iBufferGc->DiscardFont();
+	}
+	
+	// Draw edwin
+	if(iEdwin->IsVisible()) {
+		iBufferGc->CancelClippingRect();
 
-		iSelectedItem = KErrNotFound;
+		TRect aFieldRect = iEdwin->Rect();
+		aFieldRect.Grow(2, 2);
+		iBufferGc->SetBrushColor(iColourText);
+		iBufferGc->SetPenColor(iColourText);
+		iBufferGc->DrawRoundRect(aFieldRect, TSize(2, 2));
 	}
 }
 
@@ -599,28 +721,30 @@ void CBuddycloudPlacesContainer::RepositionItems(TBool aSnapToItem) {
 		// Check if current item exists
 		CBuddycloudExtendedPlace* aPlace = static_cast <CBuddycloudExtendedPlace*> (iPlaceStore->GetItemById(iSelectedItem));
 		
-		if(aPlace == NULL) {
+		if(aPlace == NULL || !aPlace->Filtered()) {
 			iSelectedItem = KErrNotFound;
 		}
 		
 		for(TInt i = 0; i < iPlaceStore->Count(); i++) {
 			aPlace = static_cast <CBuddycloudExtendedPlace*> (iPlaceStore->GetItemByIndex(i));
 			
-			if(iSelectedItem == KErrNotFound) {
-				iSelectedItem = aPlace->GetItemId();
-				RenderWrappedText(iSelectedItem);
-			}
-			
-			aItemSize = CalculateItemSize(i);
-			
-			if(aSnapToItem && aPlace->GetItemId() == iSelectedItem) {
-				if(iTotalListSize + (aItemSize / 2) > (iRect.Height() / 2)) {
-					iScrollbarHandlePosition = (iTotalListSize + (aItemSize / 2)) - (iRect.Height() / 2);
+			if(aPlace && aPlace->Filtered()) {
+				if(iSelectedItem == KErrNotFound) {
+					iSelectedItem = aPlace->GetItemId();
+					RenderWrappedText(iSelectedItem);
 				}
+				
+				aItemSize = CalculateItemSize(i);
+				
+				if(aSnapToItem && aPlace->GetItemId() == iSelectedItem) {
+					if(iTotalListSize + (aItemSize / 2) > (iRect.Height() / 2)) {
+						iScrollbarHandlePosition = (iTotalListSize + (aItemSize / 2)) - (iRect.Height() / 2);
+					}
+				}
+				
+				// Increment total list size
+				iTotalListSize += (aItemSize + 1);
 			}
-			
-			// Increment total list size
-			iTotalListSize += (aItemSize + 1);
 		}
 	}
 	
@@ -752,7 +876,9 @@ void CBuddycloudPlacesContainer::HandleCommandL(TInt aCommand) {
 		iBuddycloudLogic->GetPlaceDetailsL(iSelectedItem);
 	}
 	else if(aCommand == EMenuBookmarkPlaceCommand) {
-		iBuddycloudLogic->SetCurrentPlaceL();
+		if(iBuddycloudLogic->GetState() == ELogicOnline) {
+			iBuddycloudLogic->SetCurrentPlaceL();
+		}
 	}
 	else if(aCommand == EMenuSetAsPlaceCommand) {
 		HBufC* aHeaderText = CEikonEnv::Static()->AllocReadResourceLC(R_LOCALIZED_STRING_RELEARNPLACE_TITLE);
@@ -862,6 +988,30 @@ void CBuddycloudPlacesContainer::HandleCommandL(TInt aCommand) {
 			iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KExplorerViewId), TUid::Uid(iSelectedItem), aViewReference);	
 		}
 	}
+	else if(aCommand == EMenuNewSearchCommand || aCommand == EAknSoftkeyBack) {
+		if(aCommand == EAknSoftkeyBack && iPlaceStore->GetFilterText().Length() == 0) {
+			// Back to Following tab
+			iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KFollowingViewId));
+		}
+		else {	
+			// Reset filter
+			iPlaceStore->SetFilterTextL(_L(""));
+			iEdwin->SetTextL(&iPlaceStore->GetFilterText());
+			iEdwin->HandleTextChangedL();
+			
+			if(aCommand == EMenuNewSearchCommand && !iEdwinVisible) {
+				// Show search filter
+				DisplayEdwin(true);
+			}
+			else {
+				// Hide search filter
+				DisplayEdwin(false);
+			}
+			
+			// Back to top
+			RenderScreen();
+		}
+	}
 }
 
 TKeyResponse CBuddycloudPlacesContainer::OfferKeyEventL(const TKeyEvent& aKeyEvent, TEventCode aType) {
@@ -872,16 +1022,37 @@ TKeyResponse CBuddycloudPlacesContainer::OfferKeyEventL(const TKeyEvent& aKeyEve
 			TInt aIndex = iPlaceStore->GetIndexById(iSelectedItem);
 
 			if(aIndex > 0) {
-				HandleItemSelection(iPlaceStore->GetItemByIndex(aIndex-1)->GetItemId());
+				for(TInt i = (aIndex - 1); i >= 0; i--) {
+					CBuddycloudListItem* aPlace = iPlaceStore->GetItemByIndex(i);
+					
+					if(aPlace && aPlace->Filtered()) {
+						HandleItemSelection(aPlace->GetItemId());
+						break;
+					}
+				}
 			}
 
 			aResult = EKeyWasConsumed;
 		}
 		else if(aKeyEvent.iCode == EKeyDownArrow) {
-			TInt aIndex = iPlaceStore->GetIndexById(iSelectedItem);
-
-			if(aIndex < iPlaceStore->Count() - 1) {
-				HandleItemSelection(iPlaceStore->GetItemByIndex(aIndex+1)->GetItemId());
+			if(iPlaceStore->Count() > 0) {
+				TInt aIndex = iPlaceStore->GetIndexById(iSelectedItem);
+				
+				if(aIndex == iPlaceStore->Count() - 1) {
+					// Last item
+					aIndex = KErrNotFound;
+				}
+	
+				if(aIndex < iPlaceStore->Count() - 1) {
+					for(TInt i = (aIndex + 1); i < iPlaceStore->Count(); i++) {
+						CBuddycloudListItem* aPlace = iPlaceStore->GetItemByIndex(i);
+						
+						if(aPlace && aPlace->Filtered()) {
+							HandleItemSelection(aPlace->GetItemId());
+							break;
+						}
+					}
+				}
 			}
 
 			aResult = EKeyWasConsumed;
@@ -898,10 +1069,36 @@ TKeyResponse CBuddycloudPlacesContainer::OfferKeyEventL(const TKeyEvent& aKeyEve
 			aResult = EKeyWasConsumed;
 		}
 		else if(aKeyEvent.iScanCode == EStdKeyRightArrow) {
-			iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KChannelsViewId), TUid::Uid(0), _L8(""));
+			iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KExplorerViewId), TUid::Uid(0), _L8(""));
 
 			aResult = EKeyWasConsumed;
 		}
+	}
+
+	// If key not consumed pass to iEdwin
+	if(aResult == EKeyWasNotConsumed) {
+		iEdwin->OfferKeyEventL(aKeyEvent, aType);
+
+		if(iEdwinLength == 0 && iEdwin->TextLength() > 0) {
+			// Show
+			DisplayEdwin(true);
+		}
+		else if(iEdwinLength > 0 && iEdwin->TextLength() == 0) {
+			// Dont Show
+			DisplayEdwin(false);
+		}
+		
+		// Filter Contacts
+		TBuf<64> aFilterText;
+		iEdwin->GetText(aFilterText);
+		iEdwinLength = iEdwin->TextLength();
+		
+		if(iPlaceStore->SetFilterTextL(aFilterText)) {
+			RepositionItems(iSnapToItem);
+			RenderScreen();
+		}
+		
+		aResult = EKeyWasConsumed;
 	}
 
 	return aResult;
