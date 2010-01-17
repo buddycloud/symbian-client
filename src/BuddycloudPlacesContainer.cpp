@@ -140,6 +140,9 @@ void CBuddycloudPlacesContainer::DisplayEdwin(TBool aShowEdwin) {
 		if(aShowEdwin) {
 			// Show edwin
 			aFieldRect = TRect(i10NormalFont->FontMaxHeight(), (iRect.Height() - i10NormalFont->FontMaxHeight() - 2), (iRect.Width() - i10NormalFont->FontMaxHeight()), (iRect.Height() - 2));
+#ifdef __SERIES60_40__
+			aFieldRect.iTl.iY = aFieldRect.iTl.iY - (aFieldRect.Height() / 2);
+#endif
 			iEdwin->SetRect(aFieldRect);
 			
 			iRect.SetHeight(iRect.Height() - iEdwin->Rect().Height() - 6);
@@ -543,7 +546,7 @@ void CBuddycloudPlacesContainer::RenderListItems() {
 							if(iBuddycloudLogic->GetMyMotionState() > EMotionStationary) {
 								iBufferGc->UseFont(i10NormalFont);
 								aBuf.Copy(iTextUtilities->BidiLogicalToVisualL(*iLocalizedLearningPlace));
-								aBuf.AppendFormat(_L(": %d%%"), iBuddycloudLogic->GetMyPatternQuality());
+								aBuf.AppendFormat(_L(" : %d%%"), iBuddycloudLogic->GetMyPatternQuality());
 								aItemDrawPos += i10NormalFont->HeightInPixels();
 								iBufferGc->DrawText(aBuf, TPoint(iLeftBarSpacer + 5, aItemDrawPos));
 								iBufferGc->DiscardFont();
@@ -555,7 +558,7 @@ void CBuddycloudPlacesContainer::RenderListItems() {
 							// Population
 							if(aPlace->GetPopulation() > 0) {
 								aBuf.Copy(iTextUtilities->BidiLogicalToVisualL(*iLocalizedPlacePopulation));
-								aBuf.AppendFormat(_L(": %d"), aPlace->GetPopulation());
+								aBuf.AppendFormat(_L(" : %d"), aPlace->GetPopulation());
 		
 								iBufferGc->UseFont(i10NormalFont);
 								aItemDrawPos += i10NormalFont->HeightInPixels();
@@ -566,7 +569,7 @@ void CBuddycloudPlacesContainer::RenderListItems() {
 							// Visits
 							if(aPlace->GetVisits() > 0) {
 								aBuf.Copy(iTextUtilities->BidiLogicalToVisualL(*iLocalizedPlaceVisits));
-								aBuf.AppendFormat(_L(": %d"), aPlace->GetVisits());
+								aBuf.AppendFormat(_L(" : %d"), aPlace->GetVisits());
 		
 								if(aPlace->GetVisits() > 1 && aPlace->GetTotalSeconds() > 0) {
 									TReal aVisitTime;
@@ -596,13 +599,13 @@ void CBuddycloudPlacesContainer::RenderListItems() {
 								aTime += User::UTCOffset();
 		
 								if(aTime.DayNoInYear() == aTimeNow.DayNoInYear()) {
-									aTime.FormatL(aBuf, _L(": %J%:1%T%B"));
+									aTime.FormatL(aBuf, _L(" : %J%:1%T%B"));
 								}
 								else if(aTime > aTimeNow - TTimeIntervalDays(6)) {
-									aTime.FormatL(aBuf, _L(": %E at %J%:1%T%B"));
+									aTime.FormatL(aBuf, _L(" : %E at %J%:1%T%B"));
 								}
 								else {
-									aTime.FormatL(aBuf, _L(": %J%:1%T%B on %F%N %*D%X"));
+									aTime.FormatL(aBuf, _L(" : %J%:1%T%B on %F%N %*D%X"));
 								}
 								
 								aBuf.Insert(0, iTextUtilities->BidiLogicalToVisualL(*iLocalizedPlaceLastSeen));
@@ -845,22 +848,17 @@ void CBuddycloudPlacesContainer::DynInitMenuPaneL(TInt aResourceId, CEikMenuPane
 	}
 	else if(aResourceId == R_EXPLORER_OPTIONS_EXPLORE_MENU) {
 		aMenuPane->SetItemDimmed(EMenuSeeFollowersCommand, true);
-		aMenuPane->SetItemDimmed(EMenuSeePlacesCommand, true);
+		aMenuPane->SetItemDimmed(EMenuSeeModeratorsCommand, true);
+		aMenuPane->SetItemDimmed(EMenuSeperator, true);
 		aMenuPane->SetItemDimmed(EMenuSeeFollowingCommand, true);
+		aMenuPane->SetItemDimmed(EMenuSeeModeratingCommand, true);
 		aMenuPane->SetItemDimmed(EMenuSeeProducingCommand, true);
 		aMenuPane->SetItemDimmed(EMenuSeeNearbyCommand, true);
-		aMenuPane->SetItemDimmed(EMenuSeeBeenHereCommand, true);
-		aMenuPane->SetItemDimmed(EMenuSeeGoingHereCommand, true);
 		
 		CBuddycloudExtendedPlace* aPlace = static_cast <CBuddycloudExtendedPlace*> (iPlaceStore->GetItemById(iSelectedItem));
 
-		if(aPlace) {
-			if(aPlace->GetGeoloc()->GetReal(EGeolocLatitude) != 0.0 && aPlace->GetGeoloc()->GetReal(EGeolocLongitude) != 0.0) {				
-				aMenuPane->SetItemDimmed(EMenuSeeNearbyCommand, false);
-			}
-			
-			aMenuPane->SetItemDimmed(EMenuSeeBeenHereCommand, false);
-			aMenuPane->SetItemDimmed(EMenuSeeGoingHereCommand, false);
+		if(aPlace && (aPlace->GetGeoloc()->GetReal(EGeolocLatitude) != 0.0 || aPlace->GetGeoloc()->GetReal(EGeolocLongitude) != 0.0)) {				
+			aMenuPane->SetItemDimmed(EMenuSeeNearbyCommand, false);
 		}
 	}
 }
@@ -944,48 +942,15 @@ void CBuddycloudPlacesContainer::HandleCommandL(TInt aCommand) {
 		CBuddycloudExtendedPlace* aPlace = static_cast <CBuddycloudExtendedPlace*> (iPlaceStore->GetItemById(iSelectedItem));
 
 		if(aPlace) {
-			CGeolocData* aGeoloc = aPlace->GetGeoloc();
-			
 			TViewReferenceBuf aViewReference;
+			aViewReference().iCallbackRequested = true;
 			aViewReference().iCallbackViewId = KPlacesViewId;
 			aViewReference().iOldViewData.iId = iSelectedItem;
 			
-			// Query		
-			TViewData aQuery = CExplorerStanzaBuilder::BuildNearbyXmppStanza(aGeoloc->GetReal(EGeolocLatitude), aGeoloc->GetReal(EGeolocLongitude));
-
-			iEikonEnv->ReadResourceL(aQuery.iTitle, R_LOCALIZED_STRING_TITLE_NEARBYTO);
-			aQuery.iTitle.Replace(aQuery.iTitle.Find(_L("$OBJECT")), 7, aGeoloc->GetString(EGeolocText).Left((aQuery.iTitle.MaxLength() - aQuery.iTitle.Length() + 7)));		
+			CExplorerStanzaBuilder::BuildButlerXmppStanza(aViewReference().iNewViewData.iData, iBuddycloudLogic->GetNewIdStamp(), aPlace->GetGeoloc()->GetReal(EGeolocLatitude), aPlace->GetGeoloc()->GetReal(EGeolocLongitude));
+			CExplorerStanzaBuilder::BuildTitleFromResource(aViewReference().iNewViewData.iTitle, R_LOCALIZED_STRING_TITLE_NEARBYTO, _L("$OBJECT"), aPlace->GetGeoloc()->GetString(EGeolocText));
 			
-			aViewReference().iNewViewData = aQuery;
-
-			iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KExplorerViewId), TUid::Uid(iSelectedItem), aViewReference);		
-		}
-	}
-	else if(aCommand == EMenuSeeBeenHereCommand || aCommand == EMenuSeeGoingHereCommand) {
-		CBuddycloudExtendedPlace* aPlace = static_cast <CBuddycloudExtendedPlace*> (iPlaceStore->GetItemById(iSelectedItem));
-
-		if(aPlace) {
-			TViewReferenceBuf aViewReference;
-			aViewReference().iCallbackViewId = KPlacesViewId;
-			aViewReference().iOldViewData.iId = iSelectedItem;
-			
-			// Query
-			TViewData aQuery;
-
-			if(aCommand == EMenuSeeBeenHereCommand) {
-				aQuery = CExplorerStanzaBuilder::BuildPlaceVisitorsXmppStanza(_L8("past"), aPlace->GetItemId());
-				iEikonEnv->ReadResourceL(aQuery.iTitle, R_LOCALIZED_STRING_TITLE_WHOSBEENTO);
-			}
-			else {
-				aQuery = CExplorerStanzaBuilder::BuildPlaceVisitorsXmppStanza(_L8("next"), aPlace->GetItemId());
-				iEikonEnv->ReadResourceL(aQuery.iTitle, R_LOCALIZED_STRING_TITLE_WHOSGOINGTO);
-			}
-			
-			aQuery.iTitle.Replace(aQuery.iTitle.Find(_L("$PLACE")), 6, aPlace->GetGeoloc()->GetString(EGeolocText).Left((aQuery.iTitle.MaxLength() - aQuery.iTitle.Length() + 6)));		
-			
-			aViewReference().iNewViewData = aQuery;
-			
-			iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KExplorerViewId), TUid::Uid(iSelectedItem), aViewReference);	
+			iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KExplorerViewId), TUid::Uid(0), aViewReference);		
 		}
 	}
 	else if(aCommand == EMenuNewSearchCommand || aCommand == EAknSoftkeyBack) {

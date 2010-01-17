@@ -13,6 +13,8 @@
 CHARACTER_SET UTF8
 
 rls_string r_string_app_caption "buddycloud"
+rls_string r_string_menuseperator "──────────"
+
 // DO NOT TRANSLATE
 
 rls_string r_string_langcode "il"
@@ -86,7 +88,7 @@ rls_string r_string_settings_usersettings "הגדרות"
 rls_string r_string_settings_communitysettings "להתחלק און ליין"
 rls_string r_string_settings_clearconnection "להחליף חיבור"
 
-rls_string r_string_note_followinglistempty "אינך עוקב אחרי משהו. השתמת בסרגלים 'ערוצים' ו'סביבה' בשביל להוסיף דברים לעקוב אחריהם"
+rls_string r_string_note_followinglistempty "You are not following anything.\n\nUse the Explorer tab to search for things to follow."
 
 // Menu: Messaging
 rls_string r_string_options_postrequest "Request post privilege"
@@ -124,29 +126,30 @@ rls_string r_string_note_placeslistempty "לא שמרת מקומות. לחץ 'א
 // Menu: Nearby
 rls_string r_string_options_refresh "טען מחדש"
 rls_string r_string_item_placeinfo "פרטי מקום"
-rls_string r_string_item_personinfo "פרטים אודות אדם זה"
 rls_string r_string_item_setcurrent "לקבוע כמקום זה"
 rls_string r_string_item_subscribe "להוסיף לחשבון שלי"
 
 // Menu: Explorer
 rls_string r_string_options_explore "למד סביבה"
 rls_string r_string_item_seefollowers "לראות אנשים שעוקבים"
-rls_string r_string_item_seeplaces "ראה מקומות"
+rls_string r_string_item_seemoderators "See moderators"
 rls_string r_string_item_seefollowing "אני עוקב אחרי"
+rls_string r_string_item_seemoderating "See moderating"
 rls_string r_string_item_seeproducing "ערוצים שפתח"
 rls_string r_string_item_seenearby "מי בסביבה"
-rls_string r_string_item_seebeenhere "מי היה כאן"
-rls_string r_string_item_seegoinghere "מי הולך לבוא לכאן"
 
-rls_string r_string_title_isfollowing "$USER עוקב"
 rls_string r_string_title_followedby "$OBJECT עוקבים אחרי"
+rls_string r_string_title_moderatedby "$OBJECT's moderators"
+rls_string r_string_title_isfollowing "$USER עוקב"
+rls_string r_string_title_ismoderating "$USER is moderating"
 rls_string r_string_title_isproducing "$USER יצר ערוצים"
 rls_string r_string_title_nearbyto "$OBJECT קרוב ל "
-rls_string r_string_title_whosbeento "$PLACE מי היה ב"
-rls_string r_string_title_whosgoingto " $PLACE מי הולך ל"
 
 rls_string r_string_note_requesting "...בטעינה"
 rls_string r_string_note_channelrank "מקום"
+rls_string r_string_note_channelsince "Days broadcasting"
+rls_string r_string_note_channelowner "Produced by"
+rls_string r_string_note_channellocation "Channel location"
 
 // Menu: Channels
 rls_string r_string_list_nearbytoyou "What's Nearby To Me"
@@ -161,22 +164,21 @@ rls_string r_string_item_follow "עקב"
 rls_string r_string_item_unfollow "להפסיק לעקוב"
 
 // Channel: Settings & Configuration
-rls_string r_string_note_personalchannelcreated "!ברוך הבא לערוצים של באדיקלאוד $USER\n זהו ערוץ אישי שלך בבאדיקלאוד. ערוץ זה כולו שלך ונותן לך אפשר להתכבת\n עם אנשים שעוקבים אחריך"
 rls_string r_string_note_mediauploadready " $LINK באפשרותך להעלות את הקובץ שלך לכתובת זאת "
 
 rls_string r_string_item_changerole "Change permission"
 rls_string r_string_changerole_itemlist_outcast "להטיל חרם"
-rls_string r_string_changerole_itemlist_follower "To follower"
-rls_string r_string_changerole_itemlist_publisher "To publisher"
-rls_string r_string_changerole_itemlist_moderator "To moderator"
+rls_string r_string_changerole_itemlist_follower "עוקב"
+rls_string r_string_changerole_itemlist_publisher "Follower + post"
+rls_string r_string_changerole_itemlist_moderator "מנהל ערוץ"
 
 rls_string r_string_note_affiliationrequest_title "Publish request"
 rls_string r_string_note_affiliationrequest_text "$USER has requested permission to post in this channel. To approve this request press 'Accept', else press 'Decline'."
 
 rls_string r_string_note_affiliationoutcast "You have been banned from the channel. You now cannot read or post content in this channel."
-rls_string r_string_note_affiliationmember "You have become a follower of the channel. You can now read, but not post content in this channel."
-rls_string r_string_note_affiliationpublisher "You have become a publisher of the channel. You can now read and post content in this channel."
-rls_string r_string_note_affiliationmoderator "You have become a moderator of the channel. You can now read, post, and manage content in this channel."
+rls_string r_string_note_affiliationmember "You can now read, but not post content in this channel."
+rls_string r_string_note_affiliationpublisher "You can now read and post content in this channel."
+rls_string r_string_note_affiliationmoderator "You can now read, post, and moderate content in this channel."
 
 rls_string r_string_note_subscriptionrequest_text "$USER has requested to follow this channel. To approve this request press 'Accept', else press 'Decline'."
 rls_string r_string_note_subscriptionpending "Your subscription request has been sent to the channel's producer."

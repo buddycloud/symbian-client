@@ -45,11 +45,14 @@ class CTextUtilities : public CBase {
 		void Base64Encode(const TDesC8& aSrc, TDes8& aDest);
 		
 	public: // Bidi coding
-		TPtrC BidiLogicalToVisualL(TDesC& aText);
+		TPtrC BidiLogicalToVisualL(const TDesC& aText);
 
 	private:
 		void FindAndReplace(TPtrC8 aFind, TPtrC8 aReplace);
 
+	public:
+		void FindAndReplace(TDes& aString, TChar aFind, TChar aReplace);
+		
 	private:
 		HBufC* iUnicode;
 		HBufC8* iUtf8;

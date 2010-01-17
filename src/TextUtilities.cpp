@@ -128,9 +128,9 @@ TDesC8& CTextUtilities::UnicodeToUtf8L(const TDesC& aUnicode) {
 		FindAndReplace(_L8("\""), _L8("&quot;"));
 		FindAndReplace(_L8("<"), _L8("&lt;"));
 		FindAndReplace(_L8(">"), _L8("&gt;"));
-		FindAndReplace(_L8("\n"), _L8("&#10;"));
-		FindAndReplace(_L8("\r"), _L8("&#13;"));
-		FindAndReplace(_L8("\x01"), _L8("&#10;"));
+//		FindAndReplace(_L8("\n"), _L8("&#10;"));
+//		FindAndReplace(_L8("\r"), _L8("&#13;"));
+//		FindAndReplace(_L8("\x01"), _L8("&#10;"));
 	}
 	
 	return *iUtf8;
@@ -150,8 +150,8 @@ TDesC& CTextUtilities::Utf8ToUnicodeL(const TDesC8& aUtf8) {
 		TPtr pUnicode(iUnicode->Des());
 		
 		// First convert HTML to UTF8
-		FindAndReplace(_L8("&#13;"), _L8("\r"));
-		FindAndReplace(_L8("&#10;"), _L8("\n"));
+//		FindAndReplace(_L8("&#13;"), _L8("\r"));
+//		FindAndReplace(_L8("&#10;"), _L8("\n"));
 		FindAndReplace(_L8("&gt;"), _L8(">"));
 		FindAndReplace( _L8("&lt;"), _L8("<"));
 		FindAndReplace(_L8("&quot;"), _L8("\""));
@@ -194,7 +194,7 @@ void CTextUtilities::Base64Encode(const TDesC8& aSrc, TDes8& aDest) {
 	aBase64Encoder.Encode(aSrc, aDest);
 }
 
-TPtrC CTextUtilities::BidiLogicalToVisualL(TDesC& aText) {
+TPtrC CTextUtilities::BidiLogicalToVisualL(const TDesC& aText) {
 	if(iBidi) {
 		delete iBidi;
 		iBidi = NULL;
@@ -242,3 +242,12 @@ void CTextUtilities::FindAndReplace(TPtrC8 aFind, TPtrC8 aReplace) {
 		aOldResult += aReplace.Length();
 	}
 }
+
+void CTextUtilities::FindAndReplace(TDes& aString, TChar aFind, TChar aReplace) {
+	TInt aLocate = KErrNotFound;
+
+	while((aLocate = aString.Locate(aFind)) != KErrNotFound) {
+		aString[aLocate] = aReplace;
+	}
+}
+

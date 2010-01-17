@@ -13,6 +13,8 @@
 CHARACTER_SET UTF8
 
 rls_string r_string_app_caption "buddycloud"
+rls_string r_string_menuseperator "──────────"
+
 // DO NOT TRANSLATE
 
 rls_string r_string_langcode "ee"
@@ -86,7 +88,7 @@ rls_string r_string_settings_usersettings "Eelistused"
 rls_string r_string_settings_communitysettings "Jaga onlines"
 rls_string r_string_settings_clearconnection "Muuda ühendust"
 
-rls_string r_string_note_followinglistempty "Sa ei ole järgnemas midagi.\n\nKasutage kanaleid ja Explorer vahekaarte asjade otsimiseks et neile järgneda. "
+rls_string r_string_note_followinglistempty "You are not following anything.\n\nUse the Explorer tab to search for things to follow."
 
 // Menu: Messaging
 rls_string r_string_options_postrequest "Request post privilege"
@@ -124,29 +126,30 @@ rls_string r_string_note_placeslistempty "Sul ei ole märgitud asukohti.\nEt sed
 // Menu: Nearby
 rls_string r_string_options_refresh "Uuenda"
 rls_string r_string_item_placeinfo "Asukoht täpsemalt"
-rls_string r_string_item_personinfo "Kasutaja info"
 rls_string r_string_item_setcurrent "Määra praeguseks asukohaks"
 rls_string r_string_item_subscribe "Lisa minu asukohad"
 
 // Menu: Explorer
 rls_string r_string_options_explore "Uuri"
 rls_string r_string_item_seefollowers "Vaata järgnejaid"
-rls_string r_string_item_seeplaces "Vaata asukohti"
+rls_string r_string_item_seemoderators "See moderators"
 rls_string r_string_item_seefollowing "Vaata järgnemist"
+rls_string r_string_item_seemoderating "See moderating"
 rls_string r_string_item_seeproducing "Vaata loodud"
 rls_string r_string_item_seenearby "Vaata läheduses"
-rls_string r_string_item_seebeenhere "Kes oli siin"
-rls_string r_string_item_seegoinghere "Kes läheb siia"
 
-rls_string r_string_title_isfollowing "$USER järgneb"
 rls_string r_string_title_followedby "$OBJECT's järgnejad"
+rls_string r_string_title_moderatedby "$OBJECT's moderators"
+rls_string r_string_title_isfollowing "$USER järgneb"
+rls_string r_string_title_ismoderating "$USER is moderating"
 rls_string r_string_title_isproducing "$USER loodud"
 rls_string r_string_title_nearbyto "Läheduses $OBJECT"
-rls_string r_string_title_whosbeento "Kes oli $PLACE"
-rls_string r_string_title_whosgoingto "Kes läheb $PLACE"
 
 rls_string r_string_note_requesting "Taotlen..."
 rls_string r_string_note_channelrank "Arv"
+rls_string r_string_note_channelsince "Days broadcasting"
+rls_string r_string_note_channelowner "Produced by"
+rls_string r_string_note_channellocation "Channel location"
 
 // Menu: Channels
 rls_string r_string_list_nearbytoyou "What's Nearby To Me"
@@ -161,22 +164,21 @@ rls_string r_string_item_follow "Järgne"
 rls_string r_string_item_unfollow "Lõpeta järgnemine"
 
 // Channel: Settings & Configuration
-rls_string r_string_note_personalchannelcreated "Tere tulemast buddycloudi $USER!\n\nSee on sinu isiklik kanal buddycloudis. See kanal on tervenisti sinu ja sa saad edastada seda oma järgijatele!"
 rls_string r_string_note_mediauploadready "Sa võid nüüd oma meedia üles laadida $LINK"
 
 rls_string r_string_item_changerole "Change permission"
 rls_string r_string_changerole_itemlist_outcast "Keela selles kanalis"
-rls_string r_string_changerole_itemlist_follower "To follower"
-rls_string r_string_changerole_itemlist_publisher "To publisher"
-rls_string r_string_changerole_itemlist_moderator "To moderator"
+rls_string r_string_changerole_itemlist_follower "Järgneja"
+rls_string r_string_changerole_itemlist_publisher "Follower + post"
+rls_string r_string_changerole_itemlist_moderator "Moderaator"
 
 rls_string r_string_note_affiliationrequest_title "Publish request"
 rls_string r_string_note_affiliationrequest_text "$USER has requested permission to post in this channel. To approve this request press 'Accept', else press 'Decline'."
 
 rls_string r_string_note_affiliationoutcast "You have been banned from the channel. You now cannot read or post content in this channel."
-rls_string r_string_note_affiliationmember "You have become a follower of the channel. You can now read, but not post content in this channel."
-rls_string r_string_note_affiliationpublisher "You have become a publisher of the channel. You can now read and post content in this channel."
-rls_string r_string_note_affiliationmoderator "You have become a moderator of the channel. You can now read, post, and manage content in this channel."
+rls_string r_string_note_affiliationmember "You can now read, but not post content in this channel."
+rls_string r_string_note_affiliationpublisher "You can now read and post content in this channel."
+rls_string r_string_note_affiliationmoderator "You can now read, post, and moderate content in this channel."
 
 rls_string r_string_note_subscriptionrequest_text "$USER has requested to follow this channel. To approve this request press 'Accept', else press 'Decline'."
 rls_string r_string_note_subscriptionpending "Your subscription request has been sent to the channel's producer."

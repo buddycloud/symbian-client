@@ -10,6 +10,8 @@
 ============================================================================
 */
 
+#include <eikenv.h>
+#include "AvatarConstants.h"
 #include "BuddycloudExplorer.h"
 #include "TextUtilities.h"
 
@@ -21,74 +23,40 @@
 ----------------------------------------------------------------------------
 */
 		
-TViewData CExplorerStanzaBuilder::BuildNearbyXmppStanza(TExplorerItemType aType, const TDesC8& aReferenceId, TInt aOptionsLimit) {
-	TViewData aQuery;			
-	
-	_LIT8(KNearbyStanza, "<iq to='butler.buddycloud.com' type='get' id='exp_nearby1'><query xmlns='urn:oslo:nearbyobjects'><reference type='' id=''/><options limit='%d'/></query></iq>\r\n");
-	aQuery.iData.Format(KNearbyStanza, aOptionsLimit);	
-	aQuery.iData.Insert(120, aReferenceId);
-	
-	switch(aType) {
-		case EExplorerItemPerson:
-			aQuery.iData.Insert(114, _L8("person"));
-			break;
-		case EExplorerItemChannel:
-			aQuery.iData.Insert(114, _L8("channel"));
-			break;
-		default:
-			aQuery.iData.Insert(114, _L8("place"));
-			break;
-	}
-	
-	return aQuery;
+void CExplorerStanzaBuilder::BuildButlerXmppStanza(TDes8& aString, TInt aStampId, const TDesC8& aReferenceJid, TInt aOptionsLimit) {
+	_LIT8(KNearbyStanza, "<iq to='butler.buddycloud.com' type='get' id='%02d:%02d'><query xmlns='urn:oslo:nearbyobjects'><reference type='person' id='$JID'/><options limit='%d'/></query></iq>\r\n");
+	aString.Format(KNearbyStanza, EXmppIdGetNearbyObjects, aStampId, aOptionsLimit);	
+	aString.Replace(aString.Find(_L8("$JID")), 4, aReferenceJid);
 }
 		
-TViewData CExplorerStanzaBuilder::BuildNearbyXmppStanza(TReal aPointLatitude, TReal aPointLongitude, TInt aOptionsLimit) {
-	TViewData aQuery;			
-
-	_LIT8(KNearbyStanza, "<iq to='butler.buddycloud.com' type='get' id='exp_nearby1'><query xmlns='urn:oslo:nearbyobjects'><point lat='%.6f' lon='%.6f'/><options limit='%d'/></query></iq>\r\n");
-	aQuery.iData.Format(KNearbyStanza, aPointLatitude, aPointLongitude, aOptionsLimit);
-	
-	return aQuery;
+void CExplorerStanzaBuilder::BuildButlerXmppStanza(TDes8& aString, TInt aStampId, TReal aPointLatitude, TReal aPointLongitude, TInt aOptionsLimit) {
+	_LIT8(KNearbyStanza, "<iq to='butler.buddycloud.com' type='get' id='%02d:%02d'><query xmlns='urn:oslo:nearbyobjects'><point lat='%.6f' lon='%.6f'/><options limit='%d'/></query></iq>\r\n");
+	aString.Format(KNearbyStanza, EXmppIdGetNearbyObjects, aStampId, aPointLatitude, aPointLongitude, aOptionsLimit);
 }
 
-TViewData CExplorerStanzaBuilder::BuildChannelsXmppStanza(const TDesC8& aSubject, TExplorerChannelRole aRole, TInt aOptionsLimit) {
-	TViewData aQuery;			
-	
-	aQuery.iData.Append(_L8("<iq to='maitred.buddycloud.com' type='get' id='exp_channels1'><query xmlns='http://buddycloud.com/protocol/channels'><subject></subject></query></iq>\r\n"));
-	
-	if(aOptionsLimit > 0) {
-		TBuf8<32> aMaxElement;
-		aMaxElement.Format(_L8("<max>%d</max>"), aOptionsLimit);
-		aQuery.iData.Insert(136, aMaxElement);
-	}
-	
-	switch(aRole) {
-		case EChannelProducer:
-			aQuery.iData.Insert(136, _L8("<role>producer</role>"));
-			break;
-		case EChannelModerator:
-			aQuery.iData.Insert(136, _L8("<role>moderator</role>"));
-			break;
-		case EChannelFollower:
-			aQuery.iData.Insert(136, _L8("<role>follower</role>"));
-			break;
-		default:;
-	}
-	
-	aQuery.iData.Insert(126, aSubject);
-	
-	return aQuery;
+void CExplorerStanzaBuilder::BuildBroadcasterXmppStanza(TDes8& aString, TInt aStampId, const TDesC8& aNodeId) {
+	_LIT8(KBroadcasterStanza, "<iq to='' type='get' id='%02d:%02d'><pubsub xmlns='http://jabber.org/protocol/pubsub#owner'><affiliations node=''/></pubsub></iq>\r\n");
+	aString.Format(KBroadcasterStanza, EXmppIdGetNodeAffiliations, aStampId);
+	aString.Insert(aString.Length() - 119, KBuddycloudPubsubServer);
+	aString.Insert(aString.Length() - 19, aNodeId);
 }	
 
-TViewData CExplorerStanzaBuilder::BuildPlaceVisitorsXmppStanza(const TDesC8& aNode, TInt aPlaceId) {
-	TViewData aQuery;			
-	
-	_LIT8(KPlaceVisitorsStanza, "<iq to='butler.buddycloud.com' type='get' id='exp_visitors'><query xmlns='http://buddycloud.com/protocol/place#visitors' node=''><place><id>http://buddycloud.com/places/%d</id></place></query></iq>");
-	aQuery.iData.Format(KPlaceVisitorsStanza, aPlaceId);
-	aQuery.iData.Insert(127, aNode);
-	
-	return aQuery;
+void CExplorerStanzaBuilder::BuildMaitredXmppStanza(TDes8& aString, TInt aStampId, const TDesC8& aItemId,  const TDesC8& aItemVar) {
+	_LIT8(KMaitredStanza, "<iq to='maitred.buddycloud.com' type='get' id='%02d:%02d'><query xmlns='http://buddycloud.com/protocol/channels'><items id='' var=''/></query></iq>\r\n");
+	aString.AppendFormat(KMaitredStanza, EXmppIdGetMaitredList, aStampId);
+	aString.Insert(aString.Length() - 25, aItemId);
+	aString.Insert(aString.Length() - 18, aItemVar);
+}
+
+void CExplorerStanzaBuilder::BuildTitleFromResource(TDes& aString, TInt aResourceId, const TDesC& aReplaceData, const TDesC& aWithData) {
+	if(aResourceId != KErrNotFound) {
+		CEikonEnv::Static()->ReadResource(aString, aResourceId);		
+		TInt aLocate = aString.FindF(aReplaceData);
+		
+		if(aLocate != KErrNotFound) {
+			aString.Replace(aLocate, aReplaceData.Length(), aWithData.Left(aString.MaxLength() - aString.Length() + aReplaceData.Length()));
+		}
+	}
 }
 
 /*
@@ -126,6 +94,11 @@ CExplorerResultItem::~CExplorerResultItem() {
 	}
 	
 	iStatistics.Close();
+}
+
+CExplorerResultItem::CExplorerResultItem() {
+	iResultType = EExplorerItemPerson;
+	iIconId = KIconPerson;
 }
 
 void CExplorerResultItem::ConstructL() {
@@ -177,6 +150,14 @@ TDesC& CExplorerResultItem::GetStatistic(TInt aIndex) {
 
 void CExplorerResultItem::AddStatisticL(const TDesC& aStatistic) {
 	iStatistics.Append(aStatistic.AllocL());
+}
+
+TXmppPubsubAffiliation CExplorerResultItem::GetChannelAffiliation() {
+	return iAffiliation;
+}
+
+void CExplorerResultItem::SetChannelAffiliation(TXmppPubsubAffiliation aAffiliation) {
+	iAffiliation = aAffiliation;
 }
 
 CGeolocData* CExplorerResultItem::GetGeoloc() {
@@ -273,6 +254,7 @@ CExplorerQueryLevel::~CExplorerQueryLevel() {
 
 void CExplorerQueryLevel::ConstructL() {
 	iSelectedResultItem = 0;
+	iQueriedChannel = NULL;
 	
 	iQueryTitle = HBufC::NewL(0);
 	iQueriedStanza = HBufC8::NewL(0);	
@@ -302,12 +284,12 @@ void CExplorerQueryLevel::SetQueriedStanzaL(const TDesC8& aStanza) {
 	iQueriedStanza = aStanza.AllocL();		
 }
 
-TBool CExplorerQueryLevel::AutoRefresh() {
-	return iAutoRefresh;
+CFollowingChannelItem* CExplorerQueryLevel::GetQueriedChannel() {
+	return iQueriedChannel;
 }
 
-void CExplorerQueryLevel::SetAutoRefresh(TBool aAutoRefresh) {
-	iAutoRefresh = aAutoRefresh;
+void CExplorerQueryLevel::SetQueriedChannel(CFollowingChannelItem* aChannelItem) {
+	iQueriedChannel = aChannelItem;
 }
 
 void CExplorerQueryLevel::ClearResultItems() {

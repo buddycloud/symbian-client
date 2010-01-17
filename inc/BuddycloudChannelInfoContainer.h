@@ -15,6 +15,10 @@
 #include "ViewReference.h"
 #include "XmppInterfaces.h"
 
+enum TChannelInfoState {
+	EChannelInfoRequesting, EChannelInfoFailed, EChannelInfoCollected
+};
+
 /*
 ----------------------------------------------------------------------------
 --
@@ -29,6 +33,10 @@ class CBuddycloudChannelInfoContainer : public CBuddycloudListComponent, MXmppSt
 		CBuddycloudChannelInfoContainer(CBuddycloudLogic* aBuddycloudLogic);
 		void ConstructL(const TRect& aRect, TViewReference aQueryReference);
         ~CBuddycloudChannelInfoContainer();
+        
+	private:
+		void AddStatisticL(TInt aTitleResource, TInt aValueResource);
+		void AddStatisticL(TInt aTitleResource, TDesC& aValue);
 	
 	private: // From CBuddycloudListComponent
 		void RenderWrappedText(TInt aIndex);
@@ -55,13 +63,17 @@ class CBuddycloudChannelInfoContainer : public CBuddycloudListComponent, MXmppSt
 		MXmppWriteInterface* iXmppInterface;
 		TViewReference iQueryReference;
 		
-		TBool iDataCollected;
+		TChannelInfoState iCollectionState;
 		
 		CFollowingChannelItem* iChannelItem;
 		
 		HBufC* iChannelTitle;
-		HBufC* iChannelDescription;
 		
+		// Description
+		HBufC* iChannelDescription;
+		RPointerArray<HBufC> iWrappedDescription;
+		
+		// Statistics
 		RPointerArray<HBufC> iStatistics;
 };
 

@@ -34,9 +34,6 @@ CCompressionEngine::~CCompressionEngine() {
 		delete iDecompressor;
 }
 
-CCompressionEngine::CCompressionEngine() {
-}
-
 void CCompressionEngine::ConstructL(MCompressionObserver* aObserver) {
 	iObserver = aObserver;
 
@@ -45,11 +42,6 @@ void CCompressionEngine::ConstructL(MCompressionObserver* aObserver) {
 }
 
 void CCompressionEngine::ResetL() {
-	iOutgoingRaw = 0;
-	iOutgoingZip = 0;
-	iIncomingRaw = 0;
-	iIncomingZip = 0;
-
 	iCompressor->ResetL();
 	iDecompressor->ResetL();
 }
@@ -57,8 +49,6 @@ void CCompressionEngine::ResetL() {
 void CCompressionEngine::DeflateL(const TDesC8& aData) {
 	TInt aFlush = Z_NO_FLUSH;
 	TPtrC8 pDataBuffer(aData);
-	
-	iOutgoingRaw += pDataBuffer.Length(); 
 	
 	TBuf8<256> aOutput;
 	TInt aAvailableOutput = aOutput.MaxLength();	
@@ -91,10 +81,7 @@ void CCompressionEngine::DeflateL(const TDesC8& aData) {
 			
 			if( aAvailableOutput < aOutput.MaxLength() ) {
 				// Copy output
-				TPtrC8 pOutput = iCompressor->OutputDescriptor();
-				iOutgoingZip += pOutput.Length(); 
-				
-				iObserver->DataDeflated(pOutput);
+				iObserver->DataDeflated(iCompressor->OutputDescriptor());
 				
 				// Set Output
 				aOutput.Zero();
@@ -106,8 +93,6 @@ void CCompressionEngine::DeflateL(const TDesC8& aData) {
 }
 
 void CCompressionEngine::InflateL(const TDesC8& aData) {
-	iIncomingZip += aData.Length(); 
-
 	TBuf8<256> aOutput;
 	TInt aAvailableOutput = aOutput.MaxLength();
 
@@ -122,10 +107,7 @@ void CCompressionEngine::InflateL(const TDesC8& aData) {
 		
 		if( aAvailableOutput < aOutput.MaxLength() ) {
 			// Copy output to stream
-			TPtrC8 pOutput = iDecompressor->OutputDescriptor();
-			iIncomingRaw += pOutput.Length(); 
-		
-			iObserver->DataInflated(pOutput);
+			iObserver->DataInflated(iDecompressor->OutputDescriptor());
 			
 			if( aAvailableOutput == 0 ) {
 				// Set Output
@@ -134,22 +116,4 @@ void CCompressionEngine::InflateL(const TDesC8& aData) {
 			}
 		}
 	} while( aAvailableOutput == 0 );
-}
-
-void CCompressionEngine::WriteDebugL() {
-#ifdef _DEBUG
-	if(iOutgoingRaw > 0 && iIncomingRaw > 0) {
-		iObserver->CompressionDebug(_L8("CE    ------------------ Compression Statistics -------------------"));
-		
-		TReal aOutgoing = (100.0 / iOutgoingRaw)*iOutgoingZip;
-		TReal aIncoming = (100.0 / iIncomingRaw)*iIncomingZip;
-		
-		TBuf8<256> aMessage;
-		aMessage.Format(_L8("CE    - Outgoing: %d bytes, compressed %d bytes (%2.1f%%)"), iOutgoingRaw, iOutgoingZip, aOutgoing);
-		iObserver->CompressionDebug(aMessage);
-		aMessage.Format(_L8("CE    - Incoming: %d bytes, decompressed %d bytes (%2.1f%%)"), iIncomingZip, iIncomingRaw, aIncoming);
-		iObserver->CompressionDebug(aMessage);
-		iObserver->CompressionDebug(_L8("CE    -------------------------------------------------------------"));
-	}
-#endif
 }

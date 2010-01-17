@@ -13,6 +13,8 @@
 CHARACTER_SET UTF8
 
 rls_string r_string_app_caption "buddycloud"
+rls_string r_string_menuseperator "──────────"
+
 // DO NOT TRANSLATE
 
 rls_string r_string_langcode "cz"
@@ -86,7 +88,7 @@ rls_string r_string_settings_usersettings "Předvolby"
 rls_string r_string_settings_communitysettings "Sdílet online"
 rls_string r_string_settings_clearconnection "Změnit připojení"
 
-rls_string r_string_note_followinglistempty "Neodebíráš žádné položky.\n\nPoužij záložky Kanál a Průzkumník k nalezení obsahu k odběru."
+rls_string r_string_note_followinglistempty "You are not following anything.\n\nUse the Explorer tab to search for things to follow."
 
 // Menu: Messaging
 rls_string r_string_options_postrequest "Request post privilege"
@@ -124,29 +126,30 @@ rls_string r_string_note_placeslistempty "Tvé záložky neobsahují žádná m�
 // Menu: Nearby
 rls_string r_string_options_refresh "Obnovit"
 rls_string r_string_item_placeinfo "Detaily místa"
-rls_string r_string_item_personinfo "Údaje o osobě"
 rls_string r_string_item_setcurrent "Nastavit jako toto místo"
 rls_string r_string_item_subscribe "Přidat k mým Místům"
 
 // Menu: Explorer
 rls_string r_string_options_explore "Prozkoumat"
 rls_string r_string_item_seefollowers "Zobrazit odebírající"
-rls_string r_string_item_seeplaces "Zobrazit místa"
+rls_string r_string_item_seemoderators "See moderators"
 rls_string r_string_item_seefollowing "Zobrazit odebírané"
+rls_string r_string_item_seemoderating "See moderating"
 rls_string r_string_item_seeproducing "Zobrazit vytvořené"
 rls_string r_string_item_seenearby "Zobrazit okolí"
-rls_string r_string_item_seebeenhere "Kdo tu byl"
-rls_string r_string_item_seegoinghere "Kdo sem jde"
 
-rls_string r_string_title_isfollowing "$USER odebírá"
 rls_string r_string_title_followedby "Odběratelé $OBJECT"
+rls_string r_string_title_moderatedby "$OBJECT's moderators"
+rls_string r_string_title_isfollowing "$USER odebírá"
+rls_string r_string_title_ismoderating "$USER is moderating"
 rls_string r_string_title_isproducing "$USER vytváří"
 rls_string r_string_title_nearbyto "V blízkosti $OBJECT"
-rls_string r_string_title_whosbeento "Kdo byl na/u $PLACE"
-rls_string r_string_title_whosgoingto "Kdo jde k $PLACE"
 
 rls_string r_string_note_requesting "Odesílám žádost..."
 rls_string r_string_note_channelrank "Žebříček"
+rls_string r_string_note_channelsince "Days broadcasting"
+rls_string r_string_note_channelowner "Produced by"
+rls_string r_string_note_channellocation "Channel location"
 
 // Menu: Channels
 rls_string r_string_list_nearbytoyou "What's Nearby To Me"
@@ -161,22 +164,21 @@ rls_string r_string_item_follow "Odebírat"
 rls_string r_string_item_unfollow "Zrušit odběr"
 
 // Channel: Settings & Configuration
-rls_string r_string_note_personalchannelcreated "Vítej na buddycloud channels $USER!\n\nToto je Tvůj osobní kanál, na kterém se můžeš s ostatními podělit o vše co uznáš za vhodné!"
 rls_string r_string_note_mediauploadready "You can now upload your media file at $LINK"
 
 rls_string r_string_item_changerole "Change permission"
 rls_string r_string_changerole_itemlist_outcast "Zakázat vstup na kanál"
-rls_string r_string_changerole_itemlist_follower "To follower"
-rls_string r_string_changerole_itemlist_publisher "To publisher"
-rls_string r_string_changerole_itemlist_moderator "To moderator"
+rls_string r_string_changerole_itemlist_follower "Odběratel"
+rls_string r_string_changerole_itemlist_publisher "Follower + post"
+rls_string r_string_changerole_itemlist_moderator "Moderátor"
 
 rls_string r_string_note_affiliationrequest_title "Publish request"
 rls_string r_string_note_affiliationrequest_text "$USER has requested permission to post in this channel. To approve this request press 'Accept', else press 'Decline'."
 
 rls_string r_string_note_affiliationoutcast "You have been banned from the channel. You now cannot read or post content in this channel."
-rls_string r_string_note_affiliationmember "You have become a follower of the channel. You can now read, but not post content in this channel."
-rls_string r_string_note_affiliationpublisher "You have become a publisher of the channel. You can now read and post content in this channel."
-rls_string r_string_note_affiliationmoderator "You have become a moderator of the channel. You can now read, post, and manage content in this channel."
+rls_string r_string_note_affiliationmember "You can now read, but not post content in this channel."
+rls_string r_string_note_affiliationpublisher "You can now read and post content in this channel."
+rls_string r_string_note_affiliationmoderator "You can now read, post, and moderate content in this channel."
 
 rls_string r_string_note_subscriptionrequest_text "$USER has requested to follow this channel. To approve this request press 'Accept', else press 'Decline'."
 rls_string r_string_note_subscriptionpending "Your subscription request has been sent to the channel's producer."

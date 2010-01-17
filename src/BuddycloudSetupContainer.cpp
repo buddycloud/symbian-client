@@ -150,6 +150,13 @@ void CBuddycloudSetupContainer::ConfigureEdwinsL() {
 	iUsernameEdwin->SetContainerWindowL(*this);
 	iUsernameEdwin->MakeVisible(false);
 	iUsernameEdwin->SetFocus(false);
+	
+#ifdef __SERIES60_40__
+	TRect aFieldRect = iUsernameEdwin->Rect();
+	aFieldRect.SetHeight(aFieldRect.Height() + (aFieldRect.Height() / 2));
+	
+	iUsernameEdwin->SetRect(aFieldRect);
+#endif
 
 	// Password
 	iPasswordEdwin = new (ELeave) CEikSecretEditor();
@@ -159,7 +166,7 @@ void CBuddycloudSetupContainer::ConfigureEdwinsL() {
 	iPasswordEdwin->ConstructFromResourceL(aReader);
 	CleanupStack::PopAndDestroy();	
 	
-	iPasswordEdwin->SetBorder(0);
+	iPasswordEdwin->SetBorder(TGulBorder::ENone);
 	iPasswordEdwin->SetContainerWindowL(*this);
 	iPasswordEdwin->MakeVisible(false);
 	iPasswordEdwin->SetFocus(false);
@@ -170,7 +177,7 @@ void CBuddycloudSetupContainer::RepositionEdwins() {
 		// Password
 		TRect aFieldRect = iUsernameEdwin->Rect();
 		TInt aFontHeight = iSymbolFont->FontMaxHeight();
-		
+				
 		aFieldRect.SetRect(aFontHeight, (iRect.Height() - aFieldRect.Height() - aFontHeight - 2), (iRect.Width() - aFontHeight), (iRect.Height() - aFontHeight - 2));		
 #ifdef __SERIES60_40__
 		aFieldRect.iBr.iX = (iRect.Width() - iSymbolFont->TextWidthInPixels(*iNextText) - (aFontHeight * 2) - 4);
@@ -460,8 +467,12 @@ void CBuddycloudSetupContainer::RenderScreen() {
 			}
 			
 			if(iPasswordEdwin->IsVisible()) {
-				TRect aFieldRect = iPasswordEdwin->Rect();
+				TRect aFieldRect = iPasswordEdwin->Rect();				
+#ifdef __SERIES60_40__
+				aFieldRect.SetHeight(aFieldRect.Height() + 2);
+#else
 				aFieldRect.Grow(2, 2);
+#endif
 				
 				if(iPasswordEdwin->IsFocused()) {
 					iBufferGc->SetPenColor(KRgbBlack);

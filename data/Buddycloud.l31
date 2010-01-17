@@ -13,6 +13,8 @@
 CHARACTER_SET UTF8
 
 rls_string r_string_app_caption "buddycloud"
+rls_string r_string_menuseperator "──────────"
+
 // DO NOT TRANSLATE
 
 rls_string r_string_langcode "cn"
@@ -86,7 +88,7 @@ rls_string r_string_settings_usersettings "使用设定"
 rls_string r_string_settings_communitysettings "在线共享"
 rls_string r_string_settings_clearconnection "更改连接"
 
-rls_string r_string_note_followinglistempty "您没有添加任何人。请使用频道和探索选项来搜索并添加追随者"
+rls_string r_string_note_followinglistempty "You are not following anything.\n\nUse the Explorer tab to search for things to follow."
 
 // Menu: Messaging
 rls_string r_string_options_postrequest "Request post privilege"
@@ -124,29 +126,30 @@ rls_string r_string_note_placeslistempty "您还未标记地点.请点击选项�
 // Menu: Nearby
 rls_string r_string_options_refresh "刷新"
 rls_string r_string_item_placeinfo "地点详情"
-rls_string r_string_item_personinfo "个人信息"
 rls_string r_string_item_setcurrent "设置成这个地点"
 rls_string r_string_item_subscribe "添加到我的地点"
 
 // Menu: Explorer
 rls_string r_string_options_explore "探索"
 rls_string r_string_item_seefollowers "查看追随者"
-rls_string r_string_item_seeplaces "查看地点"
+rls_string r_string_item_seemoderators "See moderators"
 rls_string r_string_item_seefollowing "查看我所追随的"
+rls_string r_string_item_seemoderating "See moderating"
 rls_string r_string_item_seeproducing "查看我所创造的"
 rls_string r_string_item_seenearby "查看附近用户"
-rls_string r_string_item_seebeenhere "谁到过这"
-rls_string r_string_item_seegoinghere "谁要到这"
 
-rls_string r_string_title_isfollowing "$USER加入了"
 rls_string r_string_title_followedby "$OBJECT的跟随者"
+rls_string r_string_title_moderatedby "$OBJECT's moderators"
+rls_string r_string_title_isfollowing "$USER加入了"
+rls_string r_string_title_ismoderating "$USER is moderating"
 rls_string r_string_title_isproducing "$USER创造的频道"
 rls_string r_string_title_nearbyto "在$OBJECT附近"
-rls_string r_string_title_whosbeento "谁到过$PLACE"
-rls_string r_string_title_whosgoingto "谁要到$PLACE"
 
 rls_string r_string_note_requesting "正在请求..."
 rls_string r_string_note_channelrank "等级"
+rls_string r_string_note_channelsince "Days broadcasting"
+rls_string r_string_note_channelowner "Produced by"
+rls_string r_string_note_channellocation "Channel location"
 
 // Menu: Channels
 rls_string r_string_list_nearbytoyou "What's Nearby To Me"
@@ -161,22 +164,21 @@ rls_string r_string_item_follow "加入"
 rls_string r_string_item_unfollow "删除"
 
 // Channel: Settings & Configuration
-rls_string r_string_note_personalchannelcreated "$USER，欢迎来到buddycloud！这是你在buddycloud上的个人频道。这个频道是属于你的并且可以让你对频道内所有的追随者进行广播！"
 rls_string r_string_note_mediauploadready "你可以在此链接上传你的多媒体文件 $LINK"
 
 rls_string r_string_item_changerole "Change permission"
 rls_string r_string_changerole_itemlist_outcast "禁止这个频道"
-rls_string r_string_changerole_itemlist_follower "To follower"
-rls_string r_string_changerole_itemlist_publisher "To publisher"
-rls_string r_string_changerole_itemlist_moderator "To moderator"
+rls_string r_string_changerole_itemlist_follower "追随者"
+rls_string r_string_changerole_itemlist_publisher "Follower + post"
+rls_string r_string_changerole_itemlist_moderator "版主"
 
 rls_string r_string_note_affiliationrequest_title "Publish request"
 rls_string r_string_note_affiliationrequest_text "$USER has requested permission to post in this channel. To approve this request press 'Accept', else press 'Decline'."
 
 rls_string r_string_note_affiliationoutcast "You have been banned from the channel. You now cannot read or post content in this channel."
-rls_string r_string_note_affiliationmember "You have become a follower of the channel. You can now read, but not post content in this channel."
-rls_string r_string_note_affiliationpublisher "You have become a publisher of the channel. You can now read and post content in this channel."
-rls_string r_string_note_affiliationmoderator "You have become a moderator of the channel. You can now read, post, and manage content in this channel."
+rls_string r_string_note_affiliationmember "You can now read, but not post content in this channel."
+rls_string r_string_note_affiliationpublisher "You can now read and post content in this channel."
+rls_string r_string_note_affiliationmoderator "You can now read, post, and moderate content in this channel."
 
 rls_string r_string_note_subscriptionrequest_text "$USER has requested to follow this channel. To approve this request press 'Accept', else press 'Decline'."
 rls_string r_string_note_subscriptionpending "Your subscription request has been sent to the channel's producer."

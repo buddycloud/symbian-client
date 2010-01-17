@@ -307,6 +307,10 @@ MXmppWriteInterface* CBuddycloudLogic::GetXmppInterface() {
 	return (MXmppWriteInterface*)iXmppEngine;
 }
 
+TInt CBuddycloudLogic::GetNewIdStamp() {
+	return (++iIdStamp) % 100;
+}
+
 void CBuddycloudLogic::GetConnectionStatistics(TInt& aDataSent, TInt& aDataReceived) {
 	iXmppEngine->GetConnectionStatistics(aDataSent, aDataReceived);
 }
@@ -396,10 +400,6 @@ void CBuddycloudLogic::SendPresenceSubscriptionL(const TDesC8& aJid, const TDesC
 	
 	iXmppEngine->SendAndForgetXmppStanza(pSubscribeStanza, true, EXmppPriorityHigh);
 	CleanupStack::PopAndDestroy(); // aSubscribeStanza
-}
-
-TInt CBuddycloudLogic::GetNewIdStamp() {
-	return (++iIdStamp) % 100;
 }
 
 /*
@@ -2145,14 +2145,15 @@ TInt CBuddycloudLogic::FollowChannelL(const TDesC& aNode) {
 	WriteToLog(_L8("BL    CBuddycloudLogic::FollowChannelL"));
 #endif
 	
-	_LIT(KRootNode, "/channel/");
-	HBufC* aNodeId = HBufC::NewLC(aNode.Length() + KRootNode().Length());
+	_LIT(KRootNode, "/channel");
+	HBufC* aNodeId = HBufC::NewLC(aNode.Length() + KRootNode().Length() + 1);
 	TPtr pNodeId(aNodeId->Des());
 	pNodeId.Append(aNode);
 	pNodeId.LowerCase();
 	
 	if(pNodeId.Find(KRootNode) != 0) {
 		// Add node root if not found
+		pNodeId.Insert(0, _L("/"));		
 		pNodeId.Insert(0, KRootNode);		
 	}	
 	
@@ -5078,6 +5079,7 @@ void CBuddycloudLogic::XmppStanzaAcknowledgedL(const TDesC8& aStanza, const TDes
 				else if(aIdEnum == EXmppIdRequestMediaPost) {
 					// Media post request
 					if(aXmlParser->MoveToElement(_L8("uploaduri"))) {
+						TPtrC8 aDataUploaduri(aXmlParser->GetStringData());
 						TLex8 aItemLex(aId.Mid(aId.LocateReverse(':') + 1));
 						TInt aItemId = KErrNotFound;
 						
@@ -5087,6 +5089,7 @@ void CBuddycloudLogic::XmppStanzaAcknowledgedL(const TDesC8& aStanza, const TDes
 							if(aItem && aItem->GetItemType() >= EItemRoster) {						
 								// Create discussion entry
 								CAtomEntryData* aAtomEntry = CAtomEntryData::NewLC();
+								aAtomEntry->SetIdL(aDataUploaduri);
 								aAtomEntry->SetPrivate(true);
 								aAtomEntry->SetDirectReply(true);
 								aAtomEntry->SetIconId(KIconChannel);							
@@ -5094,12 +5097,12 @@ void CBuddycloudLogic::XmppStanzaAcknowledgedL(const TDesC8& aStanza, const TDes
 								aAtomEntry->SetAuthorNameL(_L("Media Uploader"));
 									
 								HBufC* aResourceText = CEikonEnv::Static()->AllocReadResourceLC(R_LOCALIZED_STRING_NOTE_MEDIAUPLOADREADY);					
-								TPtrC aDataUploaduri = iTextUtilities->Utf8ToUnicodeL(aXmlParser->GetStringData());
+								TPtrC aEncUploaduri(iTextUtilities->Utf8ToUnicodeL(aDataUploaduri));
 								
-								HBufC* aMessageText = HBufC::NewLC(aResourceText->Des().Length() + aDataUploaduri.Length());
+								HBufC* aMessageText = HBufC::NewLC(aResourceText->Des().Length() + aEncUploaduri.Length());
 								TPtr pMessageText(aMessageText->Des());
 								pMessageText.Append(*aResourceText);
-								pMessageText.Replace(pMessageText.Find(_L("$LINK")), 5, aDataUploaduri);							
+								pMessageText.Replace(pMessageText.Find(_L("$LINK")), 5, aEncUploaduri);							
 								
 								aAtomEntry->SetContentL(pMessageText);
 								CleanupStack::PopAndDestroy(2); // aMessageText, aResourceText

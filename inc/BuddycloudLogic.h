@@ -155,6 +155,8 @@ class CBuddycloudLogic : public CBase, MLocationEngineNotification, MTimeInterfa
 		
 		MXmppWriteInterface* GetXmppInterface();
 		
+		TInt GetNewIdStamp();
+		
 		void GetConnectionStatistics(TInt& aDataSent, TInt& aDataReceived);
 
 	private:
@@ -163,8 +165,6 @@ class CBuddycloudLogic : public CBase, MLocationEngineNotification, MTimeInterfa
 		void SendPresenceL();
 		void AddRosterManagementItemL(const TDesC8& aJid);
 		void SendPresenceSubscriptionL(const TDesC8& aTo, const TDesC8& aType, const TDesC8& aOptionalData = KNullDesC8);
-		
-		TInt GetNewIdStamp();
 		
 	public: // Settings
 		void ResetStoredDataL();
@@ -264,7 +264,7 @@ class CBuddycloudLogic : public CBase, MLocationEngineNotification, MTimeInterfa
 		void BackupOldLog();
 		void WriteToLog(const TDesC8& aText);
 
-	private: // Time Stamp
+	public: // Server time stamp
 		TTime TimeStamp();
 
 	public: // Observers

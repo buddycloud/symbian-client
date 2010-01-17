@@ -62,6 +62,7 @@ class CBuddycloudEditChannelList : public CAknSettingItemList, MXmppStanzaObserv
 
 		CFollowingChannelItem* iChannelItem;
 		TBool iChannelSaveAllowed;
+		TBool iChannelEditAllowed;
 		
 		TInt iTitleResourceId;
 		

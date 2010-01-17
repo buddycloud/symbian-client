@@ -819,12 +819,8 @@ void CXmppEngine::DataDeflated(const TDesC8& aDeflatedData) {
 	}
 }
 
-void CXmppEngine::CompressionDebug(const TDesC8& aDebug) {
-	iEngineObserver->XmppDebug(aDebug);
-}
-
 void CXmppEngine::DataInflated(const TDesC8& aInflatedData) {
-	TRAPD(aErr, ReadFromStreamL(aInflatedData));
+	ReadFromStreamL(aInflatedData);
 }
 
 void CXmppEngine::DataRead(const TDesC8& aMessage) {
@@ -832,10 +828,10 @@ void CXmppEngine::DataRead(const TDesC8& aMessage) {
 	
 	// Handle data received
 	if(iStreamCompressed) {
-		TRAPD(aErr, iCompressionEngine->InflateL(aMessage));
+		iCompressionEngine->InflateL(aMessage);
 	}
 	else {
-		TRAPD(aErr, ReadFromStreamL(aMessage));
+		ReadFromStreamL(aMessage);
 	}
 	
 	// Set timeout for next read
@@ -846,98 +842,78 @@ void CXmppEngine::ReadFromStreamL(const TDesC8& aData) {
 	TPtr8 pInputBuffer(iInputBuffer->Des());
 	TBool aProcessedStanza;
 
-	TInt aFirstCloseMarker = KErrNotFound;
-	TInt aMarker = KErrNotFound;
-
 	// Check if the stream buffer has room, if not increase size
-	if(pInputBuffer.Length() + aData.Length() > pInputBuffer.MaxLength()) {
-		iInputBuffer = iInputBuffer->ReAlloc(pInputBuffer.MaxLength()+aData.Length());
+	if((pInputBuffer.Length() + aData.Length()) > pInputBuffer.MaxLength()) {
+		iInputBuffer = iInputBuffer->ReAlloc(pInputBuffer.Length() + aData.Length());
 		pInputBuffer.Set(iInputBuffer->Des());
 	}
 
-	// Add new char to stream buffer
+	// Add new data to stream buffer & trim whitespaces
 	pInputBuffer.Append(aData);
-
-	// Make sure there are no leading whitespaces
 	pInputBuffer.TrimLeft();
 
 	do {
 		aProcessedStanza = false;
 
-		// Locate first close bracket
-		aFirstCloseMarker = pInputBuffer.Locate('>');
+		//  Locate first close bracket
+		TInt aStanzaClosedMarker = pInputBuffer.Locate('>');
 
-		// See if buffer contains '>'
-		if(aFirstCloseMarker != KErrNotFound) {
+		if(aStanzaClosedMarker != KErrNotFound) {
 			if(iEngineState == EXmppLoggingIn) {
 				// Test for '<?xml...' and '<stream:stream...'
-				aMarker = pInputBuffer.Find(_L8("<?xml"));
-	
-				if(aMarker == KErrNotFound) {
-					aMarker = pInputBuffer.Find(_L8("<stream:stream"));
-				}
-	
-				if(aMarker != KErrNotFound) {
-					// Return without processing
-					ProcessStanzaInBufferL(aFirstCloseMarker+1);
-	
+				if(pInputBuffer.Find(_L8("<?xml")) != KErrNotFound || pInputBuffer.Find(_L8("<stream:stream")) != KErrNotFound) {
+					pInputBuffer.Delete(0, (aStanzaClosedMarker + 1));
+					
 					aProcessedStanza = true;
 				}
 			}
 			
 			if(!aProcessedStanza) {
-				if(pInputBuffer[aFirstCloseMarker-1] == TUint('/')) {
+				if(pInputBuffer[aStanzaClosedMarker - 1] == TUint('/')) {
 					// Test for <example/>
-					ProcessStanzaInBufferL(aFirstCloseMarker+1);
-	
+					ProcessStanzaInBufferL(aStanzaClosedMarker + 1);
+
+					pInputBuffer.Set(iInputBuffer->Des());	
 					aProcessedStanza = true;
 				}
 				else {
-					// Locate the end of the Element name
-					aMarker = pInputBuffer.Locate(' ');
-	
-					if(aMarker != KErrNotFound && aFirstCloseMarker < aMarker) {
-						aMarker = aFirstCloseMarker;
+					// Locate the end of the element name
+					TInt aElementMarker = pInputBuffer.Locate(' ');
+					
+					if(aElementMarker == KErrNotFound || aStanzaClosedMarker < aElementMarker) {
+						aElementMarker = aStanzaClosedMarker;
 					}
 	
-					if(aMarker != KErrNotFound) {
-						// Get and cleanup Element name
-						// '<example' to '</example>'
-						HBufC8* aElementName = HBufC8::NewLC(aMarker + 2);
-						TPtr8 pElementName(aElementName->Des());
-						pElementName.Append(pInputBuffer.Left(aMarker));
-						pElementName.Append('>');
-						pElementName.Insert(1, _L8("/"));
-	
-						// Find stanza close
-						aFirstCloseMarker = pInputBuffer.Find(pElementName);
-	
-						if(aFirstCloseMarker != KErrNotFound) {
-							// We have a complete stanza
-							ProcessStanzaInBufferL(aFirstCloseMarker + pElementName.Length());
-	
-							aProcessedStanza = true;
-						}
-	
-						CleanupStack::PopAndDestroy(aElementName);
+					// Get and cleanup Element name
+					// '<example' to '</example>'
+					HBufC8* aElementName = HBufC8::NewLC(aElementMarker + 2);
+					TPtr8 pElementName(aElementName->Des());
+					pElementName.Append(pInputBuffer.Left(aElementMarker));
+					pElementName.Append('>');
+					pElementName.Insert(1, _L8("/"));
+
+					// Find stanza close
+					if((aStanzaClosedMarker = pInputBuffer.Find(pElementName)) != KErrNotFound) {
+						// We have a complete stanza
+						ProcessStanzaInBufferL(aStanzaClosedMarker + pElementName.Length());
+						
+						pInputBuffer.Set(iInputBuffer->Des());
+						aProcessedStanza = true;
 					}
-				}
+
+					CleanupStack::PopAndDestroy(aElementName);
+				}				
 			}
 		}
-		
-		pInputBuffer.Set(iInputBuffer->Des());
 	} while( aProcessedStanza );
 }
 
 void CXmppEngine::ProcessStanzaInBufferL(TInt aLength) {
 	TPtr8 pInputBuffer(iInputBuffer->Des());
-	TRAPD(aErr, HandleXmppStanzaL(pInputBuffer.Left(aLength)));
+	
+	HandleXmppStanzaL(pInputBuffer.Left(aLength));
 	
 	pInputBuffer.Delete(0, aLength);
-
-	if(aErr != KErrNone) {
-		TcpIpDebug(_L8("XMPP  Panic"), aErr);
-	}
 }
 
 void CXmppEngine::DataWritten(const TDesC8& aMessage) {
@@ -980,7 +956,6 @@ void CXmppEngine::NotifyEvent(TTcpIpEngineState aTcpEngineState) {
 			iTcpIpEngine->Read();
 
 			// Reset compression engine
-			iCompressionEngine->WriteDebugL();
 			iCompressionEngine->ResetL();
 
 			iConnectionAttempts = 0;

@@ -32,18 +32,24 @@ RESOURCE TBUF r_default_document_name
 
 RESOURCE EIK_APP_INFO {}
 
+// -----------------------------------------------------------------------------
+//
+// Application version
+//
+// -----------------------------------------------------------------------------
+
 RESOURCE TBUF r_string_appversion 
 {
-	buf = "S60_9_0.05.21"; 
+	buf = "S60_9_0.05.24"; 
 }
 
-rls_string r_string_about_text "©2009 buddycloud\nVersion: 0.05.21\nhttp://buddycloud.com\n\nData Sent: %dKB\nData Received: %dKB" 
+rls_string r_string_about_text "©2009 buddycloud\nVersion: 0.05.24\nhttp://buddycloud.com\n\nData Sent: %dKB\nData Received: %dKB" 
 
 RESOURCE TBUF r_localized_string_about_text { buf = r_string_about_text; }
 
 // -----------------------------------------------------------------------------
 //
-//    Tabs
+// Tabs
 //
 // -----------------------------------------------------------------------------
 //
@@ -166,7 +172,7 @@ RESOURCE AKN_ICON_ARRAY r_icons_list
     };
 }
  
- // -----------------------------------------------------------------------------
+// -----------------------------------------------------------------------------
 //   
 // Define language association and texts (non-localised)
 //   

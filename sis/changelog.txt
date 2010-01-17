@@ -1,6 +1,33 @@
 Change Log
 ==========
 
+0.05.24
+
+- [bug] Only call/open CBuddycloudEditChannelList for not found topic channels (not user channels)
+- Cleanup of CBuddycloudMessagingContainer menu for privately shown channel posts
+- Allow privately shown channel posts to be deleted
+- Convert 0x2029 to 0x000A (EParagraphDelimiter to ELineBreak) after channel description edit
+- Add creation_date & channel_rank statistics to CBuddycloudChannelInfoContainer
+- Add 'Change permission' channel moderation into CBuddycloudExplorerContainer
+- Display affiliation bar in CBuddycloudExplorerContainer when needed
+- Add owners query to 'See moderators' also
+- Update from 99translations
+
+0.05.23
+
+- Add 'See moderators' to Explorer menu
+- Rewrite of CExplorerStanzaBuilder for Maitred NG stanzas
+- Adaption of all code to use the rewritten CExplorerStanzaBuilder
+- Rewrite of CBuddycloudExplorerContainer's XmppStanzaAcknowledgedL to handle new stanzas
+
+0.05.22
+
+- [bug] Fix not overwriting of channel pubsub#access_model with 'open' on edit
+- Some XmppEngine stream buffer ReadFromStreamL cleanup
+- Remove the debug statastics from the CompressionEngine
+- Add title wrapping to CBuddycloudChannelInfoContainer
+- Add access_model & node_id statistics to CBuddycloudChannelInfoContainer
+
 0.05.21
 
 - [bug] Add more specific character ignoring on 'Write post/comment' popup
@@ -8,6 +35,7 @@ Change Log
 - Merge Channels tab logic into Explorer tab
 - Rework of CBuddycloudSetupContainer to allow other accounts to my used
 - Remove email setting item and all references to it
+- Make edwin's bigger for touch devices
 
 0.05.20
 

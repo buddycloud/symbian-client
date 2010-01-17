@@ -825,31 +825,31 @@ void CBuddycloudMessagingContainer::RenderListItems() {
 				}
 				
 				// Affiliation
-				if(aEntry->GetAuthorAffiliation() == EPubsubAffiliationOwner) {
-					iBufferGc->SetBrushColor(TRgb(237, 88, 47));
-					iBufferGc->SetPenColor(TRgb(237, 88, 47, 125));			
-				}
-				else if(aEntry->GetAuthorAffiliation() == EPubsubAffiliationModerator) {
-					iBufferGc->SetBrushColor(TRgb(246, 170, 44));
-					iBufferGc->SetPenColor(TRgb(246, 170, 44, 125));	
-				}
-				else {
-					iBufferGc->SetBrushColor(TRgb(175, 175, 175));
-					iBufferGc->SetPenColor(TRgb(175, 175, 175, 125));					
+				if(aEntry->GetAuthorAffiliation() > EPubsubAffiliationPublisher) {
+					if(aEntry->GetAuthorAffiliation() == EPubsubAffiliationOwner) {
+						// Owner
+						iBufferGc->SetBrushColor(TRgb(237, 88, 47));
+						iBufferGc->SetPenColor(TRgb(237, 88, 47, 125));			
+					}
+					else {
+						// Moderator
+						iBufferGc->SetBrushColor(TRgb(246, 170, 44));
+						iBufferGc->SetPenColor(TRgb(246, 170, 44, 125));	
+					}
+					
+					TRect aAffiliationBox(TRect(2, aItemRect.iTl.iY, iLeftBarSpacer - 1, aItemRect.iBr.iY));
+					
+					if(iLayoutMirrored) {
+						aAffiliationBox = TRect(iRightBarSpacer + 2, aItemRect.iTl.iY, iRect.Width() - 1, aItemRect.iBr.iY);
+					}				
+								
+					iBufferGc->SetPenStyle(CGraphicsContext::ENullPen);
+					iBufferGc->DrawRect(aAffiliationBox);
+					iBufferGc->SetPenStyle(CGraphicsContext::ESolidPen);
+					iBufferGc->DrawLine(TPoint(aAffiliationBox.iTl.iX - 1, aAffiliationBox.iTl.iY), TPoint(aAffiliationBox.iTl.iX - 1, aAffiliationBox.iBr.iY));
+					iBufferGc->DrawLine(TPoint(aAffiliationBox.iBr.iX, aAffiliationBox.iTl.iY), aAffiliationBox.iBr);
 				}
 				
-				TRect aAffiliationBox(TRect(2, aItemRect.iTl.iY, iLeftBarSpacer - 1, aItemRect.iBr.iY));
-				
-				if(iLayoutMirrored) {
-					aAffiliationBox = TRect(iRightBarSpacer + 2, aItemRect.iTl.iY, iRect.Width() - 1, aItemRect.iBr.iY);
-				}				
-							
-				iBufferGc->SetPenStyle(CGraphicsContext::ENullPen);
-				iBufferGc->DrawRect(aAffiliationBox);
-				iBufferGc->SetPenStyle(CGraphicsContext::ESolidPen);
-				iBufferGc->DrawLine(TPoint(aAffiliationBox.iTl.iX - 1, aAffiliationBox.iTl.iY), TPoint(aAffiliationBox.iTl.iX - 1, aAffiliationBox.iBr.iY));
-				iBufferGc->DrawLine(TPoint(aAffiliationBox.iBr.iX, aAffiliationBox.iTl.iY), aAffiliationBox.iBr);
-
 				// Render frame & select font colour
 				if(i == iSelectedItem) {
 					RenderItemFrame(aItemRect);
@@ -1168,7 +1168,7 @@ void CBuddycloudMessagingContainer::DynInitMenuPaneL(TInt aResourceId, CEikMenuP
 			}
 		}
 
-		if(iIsChannel) {
+		if(iIsChannel && (iDiscussion->GetUnreadEntries() > 0 || iBuddycloudLogic->GetState() == ELogicOnline)) {
 			aMenuPane->SetItemDimmed(EMenuOptionsChannelCommand, false);
 		}
 				
@@ -1217,30 +1217,41 @@ void CBuddycloudMessagingContainer::DynInitMenuPaneL(TInt aResourceId, CEikMenuP
 						// Channel management
 						if(iIsChannel) {
 							// Delete post
-							if(aChannelItem->GetPubsubAffiliation() >= EPubsubAffiliationModerator) {
-								aMenuPane->SetItemDimmed(EMenuLikePostCommand, false);
+							if(aEntry->Private() || 
+									(aChannelItem->GetPubsubAffiliation() >= EPubsubAffiliationModerator && 
+											aEntry->GetAuthorAffiliation() <= aChannelItem->GetPubsubAffiliation())) {
+								
 								aMenuPane->SetItemDimmed(EMenuDeletePostCommand, false);
 							}
 							
 							// When not own post
-							if(aEntry->GetAuthorJid().Compare(iBuddycloudLogic->GetOwnItem()->GetId()) != 0) {
-								// Change user permissions
-								if(aChannelItem->GetPubsubAffiliation() >= EPubsubAffiliationModerator && 
-										aEntry->GetAuthorAffiliation() < aChannelItem->GetPubsubAffiliation()) {
-									
-									aMenuPane->SetItemDimmed(EMenuChangePermissionCommand, false);
+							if(aEntry->GetAuthorJid().Length() > 0) {
+								// Like post
+								if(aChannelItem->GetPubsubAffiliation() >= EPubsubAffiliationModerator) {
+									aMenuPane->SetItemDimmed(EMenuLikePostCommand, false);
 								}
-								
-								// Report post
-								if(aChannelItem->GetPubsubAffiliation() >= EPubsubAffiliationPublisher) {
-									aMenuPane->SetItemDimmed(EMenuReportPostCommand, false);
+							
+								if(aEntry->GetAuthorJid().Compare(iBuddycloudLogic->GetOwnItem()->GetId()) != 0) {
+									// Change user permissions
+									if(aChannelItem->GetPubsubAffiliation() >= EPubsubAffiliationModerator && 
+											aEntry->GetAuthorAffiliation() < aChannelItem->GetPubsubAffiliation()) {
+										
+										aMenuPane->SetItemDimmed(EMenuChangePermissionCommand, false);
+									}
+									
+									// Report post
+									if(aChannelItem->GetPubsubAffiliation() >= EPubsubAffiliationPublisher) {
+										aMenuPane->SetItemDimmed(EMenuReportPostCommand, false);
+									}
 								}
 							}
 						}
 					}
 					
 					// Follow
-					if(!iBuddycloudLogic->IsSubscribedTo(aEntry->GetAuthorJid(), EItemRoster)) {
+					if(aEntry->GetAuthorJid().Length() > 0 && 
+							!iBuddycloudLogic->IsSubscribedTo(aEntry->GetAuthorJid(), EItemRoster)) {
+						
 						aMenuPane->SetItemDimmed(EMenuFollowCommand, false);
 					}	
 				}
@@ -1249,13 +1260,17 @@ void CBuddycloudMessagingContainer::DynInitMenuPaneL(TInt aResourceId, CEikMenuP
 	}
 	else if(aResourceId == R_MESSAGING_OPTIONS_CHANNEL_MENU) {
 		aMenuPane->SetItemDimmed(EMenuMarkReadCommand, true);
+		aMenuPane->SetItemDimmed(EMenuSeeFollowersCommand, true);
+		aMenuPane->SetItemDimmed(EMenuSeeModeratorsCommand, true);
 		aMenuPane->SetItemDimmed(EMenuEditChannelCommand, true);
 		
 		if(iDiscussion->GetUnreadEntries() > 0) {
 			aMenuPane->SetItemDimmed(EMenuMarkReadCommand, false);
 		}
 		
-		if(iIsChannel) {
+		if(iBuddycloudLogic->GetState() == ELogicOnline) {
+			aMenuPane->SetItemDimmed(EMenuSeeFollowersCommand, false);
+			aMenuPane->SetItemDimmed(EMenuSeeModeratorsCommand, false);
 			aMenuPane->SetItemDimmed(EMenuEditChannelCommand, false);
 		}		
 	}
@@ -1389,7 +1404,12 @@ void CBuddycloudMessagingContainer::HandleCommandL(TInt aCommand) {
 		
 		if(aEntry) {
 			if(aCommand == EMenuDeletePostCommand) {
-				iBuddycloudLogic->RetractPubsubNodeItemL(iItem->GetId(), aEntry->GetId());
+				if(aEntry->Private()) {
+					iDiscussion->DeleteEntryById(aEntry->GetId());
+				}
+				else {
+					iBuddycloudLogic->RetractPubsubNodeItemL(iItem->GetId(), aEntry->GetId());
+				}
 			}
 			else if(aCommand == EMenuLikePostCommand) {
 				iBuddycloudLogic->FlagTagNodeItemL(KTaggerTag, iItem->GetId(), aEntry->GetId());
@@ -1411,25 +1431,28 @@ void CBuddycloudMessagingContainer::HandleCommandL(TInt aCommand) {
 		
 		RenderScreen();
 	}
-	else if(aCommand == EMenuSeeFollowersCommand) {
+	else if(aCommand == EMenuSeeFollowersCommand || aCommand == EMenuSeeModeratorsCommand) {
+		TPtrC8 aEncId(iTextUtilities->UnicodeToUtf8L(*iMessagingId));
+		TInt aResourceId = KErrNotFound;
+		
 		TViewReferenceBuf aViewReference;
 		aViewReference().iCallbackRequested = true;
 		aViewReference().iCallbackViewId = KMessagingViewId;
 		aViewReference().iOldViewData.iId = iItem->GetItemId();
-
-		// Query
-		TViewData aQuery;
 		
-		aQuery.iData.Append(_L8("<iq to='' type='get' id='exp_followers'><pubsub xmlns='http://jabber.org/protocol/pubsub#owner'><affiliations node=''/></pubsub></iq>"));
-		aQuery.iData.Insert(116, iTextUtilities->UnicodeToUtf8L(*iMessagingId));
-		aQuery.iData.Insert(8, KBuddycloudPubsubServer);
+		if(aCommand == EMenuSeeModeratorsCommand) {
+			CExplorerStanzaBuilder::BuildMaitredXmppStanza(aViewReference().iNewViewData.iData, iBuddycloudLogic->GetNewIdStamp(), aEncId, _L8("owner"));
+			CExplorerStanzaBuilder::BuildMaitredXmppStanza(aViewReference().iNewViewData.iData, iBuddycloudLogic->GetNewIdStamp(), aEncId, _L8("moderator"));
+			aResourceId = R_LOCALIZED_STRING_TITLE_MODERATEDBY;
+		}
+		else {
+			CExplorerStanzaBuilder::BuildBroadcasterXmppStanza(aViewReference().iNewViewData.iData, iBuddycloudLogic->GetNewIdStamp(), aEncId);
+			aResourceId = R_LOCALIZED_STRING_TITLE_FOLLOWEDBY;
+		}
 		
-		iEikonEnv->ReadResourceL(aQuery.iTitle, R_LOCALIZED_STRING_TITLE_FOLLOWEDBY);
-		aQuery.iTitle.Replace(aQuery.iTitle.Find(_L("$OBJECT")), 7, iMessagingObject.iTitle.Left(aQuery.iTitle.MaxLength() - aQuery.iTitle.Length() + 7));
-	
-		aViewReference().iNewViewData = aQuery;
+		CExplorerStanzaBuilder::BuildTitleFromResource(aViewReference().iNewViewData.iTitle, aResourceId, _L("$OBJECT"), iMessagingObject.iTitle);
 		
-		iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KExplorerViewId), TUid::Uid(0), aViewReference);		
+		iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KExplorerViewId), TUid::Uid(0), aViewReference);					
 	}	
 	else if(aCommand == EMenuEditChannelCommand) {
 		TViewReferenceBuf aViewReference;	
@@ -1547,7 +1570,7 @@ void CBuddycloudMessagingContainer::HandleCommandL(TInt aCommand) {
 			TInt aSelectedIndex = 0;
 			
 			// Show list dialog
-			CAknListQueryDialog* aDialog = new( ELeave ) CAknListQueryDialog(&aSelectedIndex);
+			CAknListQueryDialog* aDialog = new (ELeave) CAknListQueryDialog(&aSelectedIndex);
 			aDialog->PrepareLC(R_LIST_CHANGEPERMISSION);
 			aDialog->ListBox()->SetCurrentItemIndex(1);
 

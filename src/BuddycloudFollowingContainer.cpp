@@ -178,6 +178,9 @@ void CBuddycloudFollowingContainer::DisplayEdwin(TBool aShowEdwin) {
 		if(aShowEdwin) {
 			// Show edwin
 			aFieldRect = TRect(i10NormalFont->FontMaxHeight(), (iRect.Height() - i10NormalFont->FontMaxHeight() - 2), (iRect.Width() - i10NormalFont->FontMaxHeight()), (iRect.Height() - 2));
+#ifdef __SERIES60_40__
+			aFieldRect.iTl.iY = aFieldRect.iTl.iY - (aFieldRect.Height() / 2);
+#endif
 			iEdwin->SetRect(aFieldRect);
 			
 			iRect.SetHeight(iRect.Height() - iEdwin->Rect().Height() - 6);
@@ -916,7 +919,10 @@ void CBuddycloudFollowingContainer::DynInitMenuPaneL(TInt aResourceId, CEikMenuP
 				
 				if(aRosterItem->GetId(EIdChannel).Length() > 0) {
 					aMenuPane->SetItemDimmed(EMenuChannelMessagesCommand, false);
-					aMenuPane->SetItemDimmed(EMenuChannelInfoCommand, false);
+					
+					if(iBuddycloudLogic->GetState() == ELogicOnline) {
+						aMenuPane->SetItemDimmed(EMenuChannelInfoCommand, false);
+					}
 				}
 
 				if(!aRosterItem->OwnItem()) {
@@ -937,7 +943,10 @@ void CBuddycloudFollowingContainer::DynInitMenuPaneL(TInt aResourceId, CEikMenuP
 				CFollowingChannelItem* aChannelItem = static_cast <CFollowingChannelItem*> (aItem);								
 				
 				aMenuPane->SetItemDimmed(EMenuChannelMessagesCommand, false);
-				aMenuPane->SetItemDimmed(EMenuChannelInfoCommand, false);
+				
+				if(iBuddycloudLogic->GetState() == ELogicOnline) {
+					aMenuPane->SetItemDimmed(EMenuChannelInfoCommand, false);
+				}
 				
 				if(aChannelItem->GetPubsubAffiliation() < EPubsubAffiliationOwner) {
 					aMenuPane->SetItemDimmed(EMenuUnfollowCommand, false);
@@ -948,6 +957,7 @@ void CBuddycloudFollowingContainer::DynInitMenuPaneL(TInt aResourceId, CEikMenuP
 	else if(aResourceId == R_STATUS_OPTIONS_UPDATE_MENU) {
 		aMenuPane->SetItemDimmed(EMenuChannelMessagesCommand, true);
 		aMenuPane->SetItemDimmed(EMenuPrivateMessagesCommand, true);
+		aMenuPane->SetItemDimmed(EMenuChannelInfoCommand, true);
 		
 		CFollowingItem* aItem = static_cast <CFollowingItem*> (iItemStore->GetItemById(iSelectedItem));
 
@@ -961,30 +971,41 @@ void CBuddycloudFollowingContainer::DynInitMenuPaneL(TInt aResourceId, CEikMenuP
 			if(aRosterItem->GetUnread() > 0) {
 				aMenuPane->SetItemDimmed(EMenuPrivateMessagesCommand, false);
 			}
+			
+			if(iBuddycloudLogic->GetState() == ELogicOnline) {
+				aMenuPane->SetItemDimmed(EMenuChannelInfoCommand, false);
+			}
 		}
 	}
 	else if(aResourceId == R_EXPLORER_OPTIONS_EXPLORE_MENU) {
 		aMenuPane->SetItemDimmed(EMenuSeeFollowersCommand, true);
-		aMenuPane->SetItemDimmed(EMenuSeePlacesCommand, true);
+		aMenuPane->SetItemDimmed(EMenuSeeModeratorsCommand, true);
+		aMenuPane->SetItemDimmed(EMenuSeperator, true);
 		aMenuPane->SetItemDimmed(EMenuSeeFollowingCommand, true);
+		aMenuPane->SetItemDimmed(EMenuSeeModeratingCommand, true);
 		aMenuPane->SetItemDimmed(EMenuSeeProducingCommand, true);
 		aMenuPane->SetItemDimmed(EMenuSeeNearbyCommand, true);
-		aMenuPane->SetItemDimmed(EMenuSeeBeenHereCommand, true);
-		aMenuPane->SetItemDimmed(EMenuSeeGoingHereCommand, true);
 		
 		CFollowingItem* aItem = static_cast <CFollowingItem*> (iItemStore->GetItemById(iSelectedItem));
 
 		if(aItem && aItem->GetItemType() >= EItemRoster) {
 			if(aItem->GetId().Length() > 0) {
 				aMenuPane->SetItemDimmed(EMenuSeeFollowersCommand, false);
+				
+				if(aItem->GetItemType() == EItemChannel) {
+					aMenuPane->SetItemDimmed(EMenuSeeModeratorsCommand, false);
+				}
+				else {
+					aMenuPane->SetItemDimmed(EMenuSeperator, false);
+				}
 			}
 			
 			if(aItem->GetItemType() == EItemRoster) {
 				aMenuPane->SetItemDimmed(EMenuSeeFollowingCommand, false);
+				aMenuPane->SetItemDimmed(EMenuSeeModeratingCommand, false);
 				aMenuPane->SetItemDimmed(EMenuSeeProducingCommand, false);
+				aMenuPane->SetItemDimmed(EMenuSeeNearbyCommand, false);
 			}
-
-			aMenuPane->SetItemDimmed(EMenuSeeNearbyCommand, false);
 		}
 	}
 }
@@ -1065,6 +1086,20 @@ void CBuddycloudFollowingContainer::HandleCommandL(TInt aCommand) {
 			iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KMessagingViewId), TUid::Uid(iSelectedItem), aViewReference);					
 		}
 	}
+	else if(aCommand == EMenuChannelInfoCommand) {
+		CFollowingItem* aItem = static_cast <CFollowingItem*> (iItemStore->GetItemById(iSelectedItem));
+
+		if(aItem && aItem->GetItemType() >= EItemRoster) {
+			TViewReferenceBuf aViewReference;	
+			aViewReference().iCallbackRequested = true;
+			aViewReference().iCallbackViewId = KFollowingViewId;
+			aViewReference().iOldViewData.iId = iSelectedItem;
+			aViewReference().iNewViewData.iTitle.Copy(aItem->GetTitle());
+			aViewReference().iNewViewData.iData.Copy(aItem->GetId());
+
+			iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KChannelInfoViewId), TUid::Uid(0), aViewReference);			
+		}
+	}
 	else if(aCommand == EMenuGetPlaceInfoCommand) {
 		CFollowingItem* aItem = static_cast <CFollowingItem*> (iItemStore->GetItemById(iSelectedItem));
 
@@ -1104,20 +1139,6 @@ void CBuddycloudFollowingContainer::HandleCommandL(TInt aCommand) {
 			CleanupStack::PopAndDestroy(3); // aTextUtilities, aMessage, aHeader
 		}
 	}
-	else if(aCommand == EMenuChannelInfoCommand) {
-		CFollowingItem* aItem = static_cast <CFollowingItem*> (iItemStore->GetItemById(iSelectedItem));
-
-		if(aItem && aItem->GetItemType() >= EItemRoster) {
-			TViewReferenceBuf aViewReference;	
-			aViewReference().iCallbackRequested = true;
-			aViewReference().iCallbackViewId = KFollowingViewId;
-			aViewReference().iOldViewData.iId = iSelectedItem;
-			aViewReference().iNewViewData.iTitle.Copy(aItem->GetTitle());
-			aViewReference().iNewViewData.iData.Copy(aItem->GetId());
-
-			iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KChannelInfoViewId), TUid::Uid(0), aViewReference);			
-		}
-	}
 	else if(aCommand == EMenuAcceptCommand) {
 		iBuddycloudLogic->RespondToNoticeL(iSelectedItem, ENoticeAccept);
 	}
@@ -1127,74 +1148,73 @@ void CBuddycloudFollowingContainer::HandleCommandL(TInt aCommand) {
 	else if(aCommand == EMenuDeclineCommand) {
 		iBuddycloudLogic->RespondToNoticeL(iSelectedItem, ENoticeDecline);
 	}
-	else if(aCommand == EMenuSeeFollowingCommand || aCommand == EMenuSeeFollowersCommand || aCommand == EMenuSeeProducingCommand) {
+	else if(aCommand == EMenuSeeFollowingCommand || aCommand == EMenuSeeModeratingCommand || aCommand == EMenuSeeProducingCommand || 
+			aCommand == EMenuSeeFollowersCommand || aCommand == EMenuSeeModeratorsCommand) {	
+		
 		CFollowingItem* aItem = static_cast <CFollowingItem*> (iItemStore->GetItemById(iSelectedItem));
 
 		if(aItem && aItem->GetItemType() >= EItemRoster) {
+			TPtrC8 aEncId(iTextUtilities->UnicodeToUtf8L(aItem->GetId()));	
+			TInt aResourceId = KErrNotFound;
+			
 			TViewReferenceBuf aViewReference;
 			aViewReference().iCallbackRequested = true;
 			aViewReference().iCallbackViewId = KFollowingViewId;
 			aViewReference().iOldViewData.iId = iSelectedItem;
 			
-			// Query
-			TViewData aQuery;
-			
-			if(aItem->GetItemType() == EItemChannel || (aItem->GetItemType() == EItemRoster && aCommand == EMenuSeeFollowersCommand)) {
-				TPtrC8 aEncId = iTextUtilities->UnicodeToUtf8L(aItem->GetId());
-				
-				aQuery.iData.Append(_L8("<iq to='' type='get' id='exp_followers'><pubsub xmlns='http://jabber.org/protocol/pubsub#owner'><affiliations node=''/></pubsub></iq>"));
-				aQuery.iData.Insert(116, aEncId);
-				aQuery.iData.Insert(8, KBuddycloudPubsubServer);
-				
-				iEikonEnv->ReadResourceL(aQuery.iTitle, R_LOCALIZED_STRING_TITLE_FOLLOWEDBY);
-				aQuery.iTitle.Replace(aQuery.iTitle.Find(_L("$OBJECT")), 7, aItem->GetTitle());
-			}
-			else {
-				CFollowingRosterItem* aRosterItem = static_cast <CFollowingRosterItem*> (aItem);
-				TPtrC8 aSubjectId = iTextUtilities->UnicodeToUtf8L(aRosterItem->GetId());
-				
-				if(aCommand == EMenuSeeProducingCommand) {
-					aQuery = CExplorerStanzaBuilder::BuildChannelsXmppStanza(aSubjectId, EChannelProducer);
-					iEikonEnv->ReadResourceL(aQuery.iTitle, R_LOCALIZED_STRING_TITLE_ISPRODUCING);
+			if(aCommand == EMenuSeeFollowersCommand || aCommand == EMenuSeeModeratorsCommand) {
+				if(aCommand == EMenuSeeModeratorsCommand) {
+					CExplorerStanzaBuilder::BuildMaitredXmppStanza(aViewReference().iNewViewData.iData, iBuddycloudLogic->GetNewIdStamp(), aEncId, _L8("owner"));
+					CExplorerStanzaBuilder::BuildMaitredXmppStanza(aViewReference().iNewViewData.iData, iBuddycloudLogic->GetNewIdStamp(), aEncId, _L8("moderator"));
+					aResourceId = R_LOCALIZED_STRING_TITLE_MODERATEDBY;
 				}
 				else {
-					aQuery = CExplorerStanzaBuilder::BuildChannelsXmppStanza(aSubjectId, EChannelAll);
-					iEikonEnv->ReadResourceL(aQuery.iTitle, R_LOCALIZED_STRING_TITLE_ISFOLLOWING);
+					CExplorerStanzaBuilder::BuildMaitredXmppStanza(aViewReference().iNewViewData.iData, iBuddycloudLogic->GetNewIdStamp(), aEncId, _L8("publisher"));
+					CExplorerStanzaBuilder::BuildMaitredXmppStanza(aViewReference().iNewViewData.iData, iBuddycloudLogic->GetNewIdStamp(), aEncId, _L8("member"));
+					aResourceId = R_LOCALIZED_STRING_TITLE_FOLLOWEDBY;
 				}
 				
-				aQuery.iTitle.Replace(aQuery.iTitle.Find(_L("$USER")), 5, aItem->GetTitle());
+				CExplorerStanzaBuilder::BuildTitleFromResource(aViewReference().iNewViewData.iTitle, aResourceId, _L("$OBJECT"), aItem->GetTitle());
 			}
-						
-			aViewReference().iNewViewData = aQuery;
-			
-			iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KExplorerViewId), TUid::Uid(0), aViewReference);		
+			else if(aItem->GetItemType() == EItemRoster) {
+				CFollowingRosterItem* aRosterItem = static_cast <CFollowingRosterItem*> (aItem);
+				aEncId.Set(iTextUtilities->UnicodeToUtf8L(aRosterItem->GetId()));	
+				
+				if(aCommand == EMenuSeeProducingCommand) {
+					CExplorerStanzaBuilder::BuildMaitredXmppStanza(aViewReference().iNewViewData.iData, iBuddycloudLogic->GetNewIdStamp(), aEncId, _L8("owner"));
+					aResourceId = R_LOCALIZED_STRING_TITLE_ISPRODUCING;
+				}
+				else if(aCommand == EMenuSeeModeratingCommand) {
+					CExplorerStanzaBuilder::BuildMaitredXmppStanza(aViewReference().iNewViewData.iData, iBuddycloudLogic->GetNewIdStamp(), aEncId, _L8("moderator"));
+					aResourceId = R_LOCALIZED_STRING_TITLE_ISMODERATING;
+				}
+				else {
+					CExplorerStanzaBuilder::BuildMaitredXmppStanza(aViewReference().iNewViewData.iData, iBuddycloudLogic->GetNewIdStamp(), aEncId, _L8("publisher"));
+					CExplorerStanzaBuilder::BuildMaitredXmppStanza(aViewReference().iNewViewData.iData, iBuddycloudLogic->GetNewIdStamp(), aEncId, _L8("member"));
+					aResourceId = R_LOCALIZED_STRING_TITLE_ISFOLLOWING;
+				}
+				
+				CExplorerStanzaBuilder::BuildTitleFromResource(aViewReference().iNewViewData.iTitle, aResourceId, _L("$USER"), aItem->GetTitle());
+			}
+					
+			if(aViewReference().iNewViewData.iData.Length() > 0) {
+				iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KExplorerViewId), TUid::Uid(0), aViewReference);			
+			}
 		}
 	}
 	else if(aCommand == EMenuSeeNearbyCommand) {
 		CFollowingItem* aItem = static_cast <CFollowingItem*> (iItemStore->GetItemById(iSelectedItem));
 
-		if(aItem) {
+		if(aItem && aItem->GetItemType() == EItemRoster) {
+			CFollowingRosterItem* aRosterItem = static_cast <CFollowingRosterItem*> (aItem);
+			
 			TViewReferenceBuf aViewReference;
 			aViewReference().iCallbackRequested = true;
 			aViewReference().iCallbackViewId = KFollowingViewId;
 			aViewReference().iOldViewData.iId = iSelectedItem;
 			
-			// Query
-			TViewData aQuery;
-
-			if(aItem->GetItemType() == EItemRoster) {
-				CFollowingRosterItem* aRosterItem = static_cast <CFollowingRosterItem*> (aItem);
-				
-				aQuery = CExplorerStanzaBuilder::BuildNearbyXmppStanza(EExplorerItemPerson, iTextUtilities->UnicodeToUtf8L(aRosterItem->GetId()));
-			}
-			else {
-				aQuery = CExplorerStanzaBuilder::BuildNearbyXmppStanza(EExplorerItemChannel, iTextUtilities->UnicodeToUtf8L(aItem->GetId()));
-			}
-			
-			iEikonEnv->ReadResourceL(aQuery.iTitle, R_LOCALIZED_STRING_TITLE_NEARBYTO);
-			aQuery.iTitle.Replace(aQuery.iTitle.Find(_L("$OBJECT")), 7, aItem->GetTitle());
-			
-			aViewReference().iNewViewData = aQuery;
+			CExplorerStanzaBuilder::BuildButlerXmppStanza(aViewReference().iNewViewData.iData, iBuddycloudLogic->GetNewIdStamp(), iTextUtilities->UnicodeToUtf8L(aRosterItem->GetId()));
+			CExplorerStanzaBuilder::BuildTitleFromResource(aViewReference().iNewViewData.iTitle, R_LOCALIZED_STRING_TITLE_NEARBYTO, _L("$OBJECT"), aRosterItem->GetTitle());
 			
 			iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KExplorerViewId), TUid::Uid(0), aViewReference);		
 		}

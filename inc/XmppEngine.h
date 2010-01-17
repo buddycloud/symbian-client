@@ -186,7 +186,6 @@ class CXmppEngine : public CBase, MTcpIpEngineNotification, MConnectionMonitorNo
 	public: // From MCompressionObserver
 		void DataDeflated(const TDesC8& aDeflatedData);
 		void DataInflated(const TDesC8& aInflatedData);
-		void CompressionDebug(const TDesC8& aDebug);
 
 	public: // From MTcpIpEngineNotification
 		void HostResolved(const TDesC& aHostName, TInt aHostPort);

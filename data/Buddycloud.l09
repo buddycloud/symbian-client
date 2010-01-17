@@ -13,6 +13,8 @@
 CHARACTER_SET UTF8
 
 rls_string r_string_app_caption "buddycloud"
+rls_string r_string_menuseperator "──────────"
+
 // DO NOT TRANSLATE
 
 rls_string r_string_langcode "fi"
@@ -86,7 +88,7 @@ rls_string r_string_settings_usersettings "Ohjelman asetukset"
 rls_string r_string_settings_communitysettings "Jaa verkossa"
 rls_string r_string_settings_clearconnection "Vaihda yhteyttä"
 
-rls_string r_string_note_followinglistempty "Et seuraa vielä mitään.\n\nKäytä Kanavat ja Tutki-välilehtiä löytääksesi seurattavia kohteita."
+rls_string r_string_note_followinglistempty "You are not following anything.\n\nUse the Explorer tab to search for things to follow."
 
 // Menu: Messaging
 rls_string r_string_options_postrequest "Pyyntö etuoikeutetulle viestille"
@@ -124,29 +126,30 @@ rls_string r_string_note_placeslistempty "Sinulla ei ole merkittyjä paikkoja.\n
 // Menu: Nearby
 rls_string r_string_options_refresh "Päivitä"
 rls_string r_string_item_placeinfo "Paikan tiedot"
-rls_string r_string_item_personinfo "Henkilötiedot"
 rls_string r_string_item_setcurrent "Aseta täksi paikaksi"
 rls_string r_string_item_subscribe "Lisää omiin paikkoihin"
 
 // Menu: Explorer
 rls_string r_string_options_explore "Tutki lisää"
 rls_string r_string_item_seefollowers "Näytä seuraajat"
-rls_string r_string_item_seeplaces "Näytä paikat"
+rls_string r_string_item_seemoderators "See moderators"
 rls_string r_string_item_seefollowing "Näytä seurattavat"
+rls_string r_string_item_seemoderating "See moderating"
 rls_string r_string_item_seeproducing "Näytä tuotokset"
 rls_string r_string_item_seenearby "Näytä lähellä olevat"
-rls_string r_string_item_seebeenhere "Kuka on ollut täällä"
-rls_string r_string_item_seegoinghere "Kuka menee tänne"
 
-rls_string r_string_title_isfollowing "$USER seuraa"
 rls_string r_string_title_followedby "$OBJECT seuraajat"
+rls_string r_string_title_moderatedby "$OBJECT's moderators"
+rls_string r_string_title_isfollowing "$USER seuraa"
+rls_string r_string_title_ismoderating "$USER is moderating"
 rls_string r_string_title_isproducing "$USER tuottaa sisältöä"
 rls_string r_string_title_nearbyto "Lähellä kohdetta $OBJECT"
-rls_string r_string_title_whosbeento "Kuka on ollut paikassa $PLACE"
-rls_string r_string_title_whosgoingto "Kuka menee paikkaan $PLACE"
 
 rls_string r_string_note_requesting "Haetaan..."
 rls_string r_string_note_channelrank "Sijoitus"
+rls_string r_string_note_channelsince "Days broadcasting"
+rls_string r_string_note_channelowner "Produced by"
+rls_string r_string_note_channellocation "Channel location"
 
 // Menu: Channels
 rls_string r_string_list_nearbytoyou "What's Nearby To Me"
@@ -161,22 +164,21 @@ rls_string r_string_item_follow "Seuraa"
 rls_string r_string_item_unfollow "Lopeta seuraaminen"
 
 // Channel: Settings & Configuration
-rls_string r_string_note_personalchannelcreated "Tervetuloa buddycloud-kanaville $USER!\n\nTämä on henkilökohtainen kanavasi buddycloudissa. Kanava on täysin sinun omasi ja mahdollistaa viestittämisen seuraajillesi!"
 rls_string r_string_note_mediauploadready "Voit nyt ladata tiedoston $LINK"
 
 rls_string r_string_item_changerole "Muuta oikeuksia"
 rls_string r_string_changerole_itemlist_outcast "Estä pääsy kanavalle"
-rls_string r_string_changerole_itemlist_follower "Seuraajalle"
-rls_string r_string_changerole_itemlist_publisher "Julkaisijalle"
-rls_string r_string_changerole_itemlist_moderator "Moderaattorille"
+rls_string r_string_changerole_itemlist_follower "Follower"
+rls_string r_string_changerole_itemlist_publisher "Follower + post"
+rls_string r_string_changerole_itemlist_moderator "Moderator"
 
 rls_string r_string_note_affiliationrequest_title "Julkaise pyyntö"
 rls_string r_string_note_affiliationrequest_text "$USER on pyytänyt lupaa kirjoittaa kanavalle. Hyväksy pyyntö painamalla 'Hyväksy', muuten paina 'Hylkää'."
 
 rls_string r_string_note_affiliationoutcast "Sinut on kielletty kanavalta. Et voi lukea etkä kirjoittaa kanavalle."
-rls_string r_string_note_affiliationmember "Seuraat nyt tätä kanavaa. Voit nyt lukea mutta et kirjoittaa kanavalle."
-rls_string r_string_note_affiliationpublisher "Sinulla on nyt kanavalle julkaisu oikeudet. Sinulla on nyt oikeus lukea sekä kirjoittaa kanavalle."
-rls_string r_string_note_affiliationmoderator "Olet nyt kanavan moderaattori. Sinulla on oikeus lukea, kirjoittaa sekä hallita tätä kanavaa."
+rls_string r_string_note_affiliationmember "You can now read, but not post content in this channel."
+rls_string r_string_note_affiliationpublisher "You can now read and post content in this channel."
+rls_string r_string_note_affiliationmoderator "You can now read, post, and moderate content in this channel."
 
 rls_string r_string_note_subscriptionrequest_text "$USER on pyytänyt lupaa seurata kanavaa. Hyväksy pyyntö painamalla 'Hyväksy' muuten paina 'Hylkää'"
 rls_string r_string_note_subscriptionpending "Pyyntösi on nyt lähetetty kanavan tuottajalle."

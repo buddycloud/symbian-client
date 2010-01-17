@@ -14,9 +14,10 @@
 #define BUDDYCLOUDEXPLORER_H_
 
 #include <e32base.h>
+#include "BuddycloudConstants.h"
 #include "BuddycloudList.h"
+#include "BuddycloudFollowing.h"
 #include "GeolocData.h"
-#include "ViewReference.h"
 
 /*
 ----------------------------------------------------------------------------
@@ -25,10 +26,6 @@
 --
 ----------------------------------------------------------------------------
 */
-
-enum TExplorerChannelRole {
-	EChannelFollower, EChannelModerator, EChannelProducer, EChannelAll
-};
 
 enum TExplorerItemType {
 	EExplorerItemUnknown, EExplorerItemDirectory, EExplorerItemPlace, 
@@ -50,14 +47,17 @@ enum TExplorerState {
 class CExplorerStanzaBuilder {
 	public:
 		// Nearby stanzas
-		static TViewData BuildNearbyXmppStanza(TExplorerItemType aType, const TDesC8& aReferenceId, TInt aOptionsLimit = 10);
-		static TViewData BuildNearbyXmppStanza(TReal aPointLatitude, TReal aPointLongitude, TInt aOptionsLimit = 10);
-
-		// Channels stanzas
-		static TViewData BuildChannelsXmppStanza(const TDesC8& aSubject, TExplorerChannelRole aRole, TInt aOptionsLimit = 0);
-
-		// Place stanzas
-		static TViewData BuildPlaceVisitorsXmppStanza(const TDesC8& aNode, TInt aPlaceId);
+		static void BuildButlerXmppStanza(TDes8& aString, TInt aStampId, const TDesC8& aReferenceJid, TInt aOptionsLimit = 10);
+		static void BuildButlerXmppStanza(TDes8& aString, TInt aStampId, TReal aPointLatitude, TReal aPointLongitude, TInt aOptionsLimit = 10);
+			
+		// Broadcaster stanza
+		static void BuildBroadcasterXmppStanza(TDes8& aString, TInt aStampId, const TDesC8& aNodeId);
+		
+		// Maitred stanza
+		static void BuildMaitredXmppStanza(TDes8& aString, TInt aStampId, const TDesC8& aId,  const TDesC8& aVar);
+		
+		// Title editor
+		static void BuildTitleFromResource(TDes& aString, TInt aResourceId, const TDesC& aReplaceData, const TDesC& aWithData);
 };
 
 /*
@@ -75,6 +75,7 @@ class CExplorerResultItem : public CBuddycloudListItem {
 		~CExplorerResultItem();
 		
 	private:
+		CExplorerResultItem();
 		void ConstructL();
 	
 	public:
@@ -94,6 +95,10 @@ class CExplorerResultItem : public CBuddycloudListItem {
 		void AddStatisticL(const TDesC& aStatistic);
 		
 	public:
+		TXmppPubsubAffiliation GetChannelAffiliation();
+		void SetChannelAffiliation(TXmppPubsubAffiliation aAffiliation);
+		
+	public:
 		CGeolocData* GetGeoloc();
 		void SetGeolocL(CGeolocData* aGeoloc);
 		
@@ -107,6 +112,8 @@ class CExplorerResultItem : public CBuddycloudListItem {
 		TPtrC iNullString;
 		
 		RPointerArray<HBufC> iStatistics;
+		
+		TXmppPubsubAffiliation iAffiliation;
 		
 		CGeolocData* iGeoloc;
 };
@@ -137,8 +144,8 @@ class CExplorerQueryLevel : public CBase {
 		void SetQueriedStanzaL(const TDesC8& aStanza);
 		
 	public:
-		TBool AutoRefresh();
-		void SetAutoRefresh(TBool aAutoRefresh);
+		CFollowingChannelItem* GetQueriedChannel();
+		void SetQueriedChannel(CFollowingChannelItem* aChannelItem);
 		
 	public:
 		void ClearResultItems();
@@ -148,7 +155,7 @@ class CExplorerQueryLevel : public CBase {
 		HBufC* iQueryTitle;
 		HBufC8* iQueriedStanza;
 		
-		TBool iAutoRefresh;
+		CFollowingChannelItem* iQueriedChannel;
 				
 	public:
 		TInt iSelectedResultItem;

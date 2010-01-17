@@ -13,6 +13,8 @@
 CHARACTER_SET UTF8
 
 rls_string r_string_app_caption "buddycloud"
+rls_string r_string_menuseperator "──────────"
+
 // DO NOT TRANSLATE
 
 rls_string r_string_langcode "de"
@@ -86,7 +88,7 @@ rls_string r_string_settings_usersettings "So hob I's am liabst'n"
 rls_string r_string_settings_communitysettings "Uuii! Schaug!"
 rls_string r_string_settings_clearconnection "Vabindung wäxln"
 
-rls_string r_string_note_followinglistempty "Du foigst gar nermd/nix im Moment.\n\nSchau a moi ins Tschännl menü, do werst na scho wos find'n."
+rls_string r_string_note_followinglistempty "You are not following anything.\n\nUse the Explorer tab to search for things to follow."
 
 // Menu: Messaging
 rls_string r_string_options_postrequest "Mehat a mein Batz dazuagebn"
@@ -124,29 +126,30 @@ rls_string r_string_note_placeslistempty "Du host no koana Platzl g'speichat.\n\
 // Menu: Nearby
 rls_string r_string_options_refresh "No amoi nei"
 rls_string r_string_item_placeinfo "Platldetails"
-rls_string r_string_item_personinfo "Info vo dera Person"
 rls_string r_string_item_setcurrent "Dua so ois wenn I do war"
 rls_string r_string_item_subscribe "Des is aa mei Platzl"
 
 // Menu: Explorer
 rls_string r_string_options_explore "'rumschniffe'n"
 rls_string r_string_item_seefollowers "Ohänga"
-rls_string r_string_item_seeplaces "Platzl"
+rls_string r_string_item_seemoderators "See moderators"
 rls_string r_string_item_seefollowing "Foigt"
+rls_string r_string_item_seemoderating "See moderating"
 rls_string r_string_item_seeproducing "Eing'richtete Tschännl"
 rls_string r_string_item_seenearby "Ned weid weg ned"
-rls_string r_string_item_seebeenhere "Wer war scho do?"
-rls_string r_string_item_seegoinghere "Wer kimmt do her"
 
-rls_string r_string_title_isfollowing "$USER foigt"
 rls_string r_string_title_followedby "$OBJECT's Ohänga"
+rls_string r_string_title_moderatedby "$OBJECT's moderators"
+rls_string r_string_title_isfollowing "$USER foigt"
+rls_string r_string_title_ismoderating "$USER is moderating"
 rls_string r_string_title_isproducing "$USER hot eig'richt"
 rls_string r_string_title_nearbyto "Ned weid weg vo $OBJECT"
-rls_string r_string_title_whosbeento "Wer war scho dort: $PLACE"
-rls_string r_string_title_whosgoingto "Wer geht do hi: $PLACE"
 
 rls_string r_string_note_requesting "Wart a biß'l..."
 rls_string r_string_note_channelrank "Rang"
+rls_string r_string_note_channelsince "Days broadcasting"
+rls_string r_string_note_channelowner "Produced by"
+rls_string r_string_note_channellocation "Channel location"
 
 // Menu: Channels
 rls_string r_string_list_nearbytoyou "What's Nearby To Me"
@@ -161,22 +164,21 @@ rls_string r_string_item_follow "Foig"
 rls_string r_string_item_unfollow "Mia g'langt's!"
 
 // Channel: Settings & Configuration
-rls_string r_string_note_personalchannelcreated "Servus nachat und Herzlich Willkommen bei de buddycloud Tschännl $USER! Do host a glei amoi Dein eigana Tschännl bei buddycloud. Der g´hert Da ganz alloa und do drin kost Deine Ohänga g'scheit zuatext'n!"
 rls_string r_string_note_mediauploadready "Schick fei koan Schmarrn ned $LINK"
 
 rls_string r_string_item_changerole "Wo's derfa maha?"
 rls_string r_string_changerole_itemlist_outcast "Vabanna vom Tschännl"
-rls_string r_string_changerole_itemlist_follower "auf Ohänga"
-rls_string r_string_changerole_itemlist_publisher "Auf Batzdazuageba"
-rls_string r_string_changerole_itemlist_moderator "Auf Platzhiarsch"
+rls_string r_string_changerole_itemlist_follower "Follower"
+rls_string r_string_changerole_itemlist_publisher "Follower + post"
+rls_string r_string_changerole_itemlist_moderator "Moderator"
 
 rls_string r_string_note_affiliationrequest_title "Ofrage zum Batzdazuagebn"
 rls_string r_string_note_affiliationrequest_text "$USER mehat a sein Senft dazua gebn. Wenn's Da recht is druckst 'Freili', ansonsten 'Oba scho glei wirkli ned'"
 
 rls_string r_string_note_affiliationoutcast "So. Jetz hostas oba g'nau beinannt g'habt. Servus, machs guat."
-rls_string r_string_note_affiliationmember "Bist jetzad a Ohänga do harin. Kost nua lesn, oba ned Dein Batz dazuagebn."
-rls_string r_string_note_affiliationpublisher "Bist jetzad a Batzdazuageba do harin. Schreib fei koan Schmarrn ned."
-rls_string r_string_note_affiliationmoderator "Bist jetzed a Platzhiarsch do harin. Hobe d'Ehre."
+rls_string r_string_note_affiliationmember "You can now read, but not post content in this channel."
+rls_string r_string_note_affiliationpublisher "You can now read and post content in this channel."
+rls_string r_string_note_affiliationmoderator "You can now read, post, and moderate content in this channel."
 
 rls_string r_string_note_subscriptionrequest_text "$USER mehat dem Tschännl foign. Wenn's Da recht is druckst 'Freili', ansonsten 'Oba scho glei wirkli ned'"
 rls_string r_string_note_subscriptionpending "Dei Ofrage is an Platzhiarschn g'schickt worn."

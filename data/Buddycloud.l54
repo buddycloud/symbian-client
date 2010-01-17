@@ -13,6 +13,8 @@
 CHARACTER_SET UTF8
 
 rls_string r_string_app_caption "buddycloud"
+rls_string r_string_menuseperator "──────────"
+
 // DO NOT TRANSLATE
 
 rls_string r_string_langcode "gr"
@@ -86,7 +88,7 @@ rls_string r_string_settings_usersettings "Προτιμήσεις"
 rls_string r_string_settings_communitysettings "Μοίρασε online"
 rls_string r_string_settings_clearconnection "Αλλαγή σύνδεσης"
 
-rls_string r_string_note_followinglistempty "Δεν ακολουθάς τίποτα.\n\nΧρησιμοποιήσε τα κανάλια και τα Explorer tabs για αναζήτηση αντικειμένων για ακολουθία."
+rls_string r_string_note_followinglistempty "You are not following anything.\n\nUse the Explorer tab to search for things to follow."
 
 // Menu: Messaging
 rls_string r_string_options_postrequest "Request post privilege"
@@ -124,29 +126,30 @@ rls_string r_string_note_placeslistempty "Δεν έχεις μαρκαρισμέ
 // Menu: Nearby
 rls_string r_string_options_refresh "Ανανέωση"
 rls_string r_string_item_placeinfo "Θέσε λεπτομέρειες"
-rls_string r_string_item_personinfo "Πληροφορίες προσώπου"
 rls_string r_string_item_setcurrent "Ορισμός ως αυτής της τοποθεσίας"
 rls_string r_string_item_subscribe "Πρόσθεσε στις τοποθεσίες μου"
 
 // Menu: Explorer
 rls_string r_string_options_explore "Εξερεύνησε"
 rls_string r_string_item_seefollowers "Βλέπε ακόλουθους"
-rls_string r_string_item_seeplaces "Βλέπε τοποθεσίες"
+rls_string r_string_item_seemoderators "See moderators"
 rls_string r_string_item_seefollowing "Βλέπε παρακάτω"
+rls_string r_string_item_seemoderating "See moderating"
 rls_string r_string_item_seeproducing "Βλέπε παραγωγή"
 rls_string r_string_item_seenearby "Δες εδώ κοντά"
-rls_string r_string_item_seebeenhere "Ποιος ήταν εδώ"
-rls_string r_string_item_seegoinghere "Ποιος πηγαίνει εδω"
 
-rls_string r_string_title_isfollowing "$USER ακολουθά"
 rls_string r_string_title_followedby "$OBJECT's οπαδών"
+rls_string r_string_title_moderatedby "$OBJECT's moderators"
+rls_string r_string_title_isfollowing "$USER ακολουθά"
+rls_string r_string_title_ismoderating "$USER is moderating"
 rls_string r_string_title_isproducing "$USER is producing"
 rls_string r_string_title_nearbyto "Κοντά στο $OBJECT"
-rls_string r_string_title_whosbeento "Ποιος ήταν στο $PLACE"
-rls_string r_string_title_whosgoingto "Ποιος πηγαίνει στο $PLACE"
 
 rls_string r_string_note_requesting "Αίτηση..."
 rls_string r_string_note_channelrank "Βαθμός"
+rls_string r_string_note_channelsince "Days broadcasting"
+rls_string r_string_note_channelowner "Produced by"
+rls_string r_string_note_channellocation "Channel location"
 
 // Menu: Channels
 rls_string r_string_list_nearbytoyou "What's Nearby To Me"
@@ -161,22 +164,21 @@ rls_string r_string_item_follow "Ακολούθα"
 rls_string r_string_item_unfollow "Μην ακολουθάς"
 
 // Channel: Settings & Configuration
-rls_string r_string_note_personalchannelcreated "Καλώς ήλθατε στα κανάλια buddycloud $USER!\n\nΑυτό είναι το δικό σας προσωπικό κανάλι στο buddycloud. Αυτό το κανάλι είναι όλο δικό σας και σας επιτρέπει να μεταδίδεται στους οπαδούς σας!"
 rls_string r_string_note_mediauploadready "You can now upload your media file at $LINK"
 
 rls_string r_string_item_changerole "Change permission"
 rls_string r_string_changerole_itemlist_outcast "Απαγόρευσε από κανάλι"
-rls_string r_string_changerole_itemlist_follower "To follower"
-rls_string r_string_changerole_itemlist_publisher "To publisher"
-rls_string r_string_changerole_itemlist_moderator "To moderator"
+rls_string r_string_changerole_itemlist_follower "Οπαδός"
+rls_string r_string_changerole_itemlist_publisher "Follower + post"
+rls_string r_string_changerole_itemlist_moderator "Συντονιστής"
 
 rls_string r_string_note_affiliationrequest_title "Publish request"
 rls_string r_string_note_affiliationrequest_text "$USER has requested permission to post in this channel. To approve this request press 'Accept', else press 'Decline'."
 
 rls_string r_string_note_affiliationoutcast "You have been banned from the channel. You now cannot read or post content in this channel."
-rls_string r_string_note_affiliationmember "You have become a follower of the channel. You can now read, but not post content in this channel."
-rls_string r_string_note_affiliationpublisher "You have become a publisher of the channel. You can now read and post content in this channel."
-rls_string r_string_note_affiliationmoderator "You have become a moderator of the channel. You can now read, post, and manage content in this channel."
+rls_string r_string_note_affiliationmember "You can now read, but not post content in this channel."
+rls_string r_string_note_affiliationpublisher "You can now read and post content in this channel."
+rls_string r_string_note_affiliationmoderator "You can now read, post, and moderate content in this channel."
 
 rls_string r_string_note_subscriptionrequest_text "$USER has requested to follow this channel. To approve this request press 'Accept', else press 'Decline'."
 rls_string r_string_note_subscriptionpending "Your subscription request has been sent to the channel's producer."

@@ -23,7 +23,6 @@ class MCompressionObserver {
 	public:
 		virtual void DataDeflated(const TDesC8& aDeflatedData) = 0;
 		virtual void DataInflated(const TDesC8& aInflatedData) = 0;
-		virtual void CompressionDebug(const TDesC8& aDebug) = 0;
 };
 
 /*
@@ -41,7 +40,6 @@ class CCompressionEngine : public CBase {
 		~CCompressionEngine();
 
 	private:
-		CCompressionEngine();
 		void ConstructL(MCompressionObserver* aObserver);
 
 	public:
@@ -49,20 +47,12 @@ class CCompressionEngine : public CBase {
 			
 		void DeflateL(const TDesC8& aData);
 		void InflateL(const TDesC8& aData);
-		
-	public:
-		void WriteDebugL();
 
 	private:
 		MCompressionObserver* iObserver;
 
 		CEZStreamCompressor* iCompressor;
 		CEZStreamDecompressor* iDecompressor;
-		
-		TInt iOutgoingRaw;
-		TInt iOutgoingZip;
-		TInt iIncomingRaw;
-		TInt iIncomingZip;
 };
 
 #endif // COMPRESSIONENGINE_H_

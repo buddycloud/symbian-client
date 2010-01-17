@@ -14,6 +14,7 @@
 #define HLPUID 0x2001018F
 
 #define EApplicationExit 100
+#define EMenuSeperator 101
 
 // Tab Ids
 enum TDefaultTabs {
@@ -72,7 +73,7 @@ enum TSettingsTabs {
 #define EMenuPostMediaCommand 239
 #define EMenuRefreshCommand 240
 #define EMenuGetPlaceInfoCommand 241
-#define EMenuGetPersonInfoCommand 242
+//#define EMenuGetPersonInfoCommand 242
 #define EMenuNotificationOnCommand 243
 #define EMenuNotificationOffCommand 244
 
@@ -97,16 +98,17 @@ enum TSettingsTabs {
 #define EMenuMarkReadCommand 261
 
 #define EMenuSeeFollowersCommand 262
-#define EMenuSeePlacesCommand 263
+#define EMenuSeeModeratorsCommand 263
 #define EMenuSeeFollowingCommand 264
-#define EMenuSeeProducingCommand 265
-#define EMenuSeeNearbyCommand 266
-#define EMenuSeeBeenHereCommand 267
-#define EMenuSeeGoingHereCommand 268
+#define EMenuSeeModeratingCommand 265
+#define EMenuSeeProducingCommand 266
+#define EMenuSeeNearbyCommand 267
+//#define EMenuSeeBeenHereCommand 268
+//#define EMenuSeeGoingHereCommand 269
 
-#define EMenuAcceptCommand 269
-#define EMenuAcceptAndFollowCommand 270
-#define EMenuDeclineCommand 271
+#define EMenuAcceptCommand 270
+#define EMenuAcceptAndFollowCommand 271
+#define EMenuDeclineCommand 272
 
 // Settings
 enum TSettingsAccountItems {

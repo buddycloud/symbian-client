@@ -39,6 +39,8 @@ void CBuddycloudEditChannelList::ConstructL(const TRect& aRect, TViewData aQuery
 		iChannelItem = CFollowingChannelItem::NewL();
 		iChannelItem->SetTitleL(aEncData);
 		iChannelItem->SetIdL(aEncData);
+		
+		iChannelEditAllowed = true;
 	}	
 	
 	if(iChannelItem->GetId().Length() > 0) {
@@ -114,9 +116,12 @@ void CBuddycloudEditChannelList::LoadChannelDataL() {
 		// Copy channel data
 		iTitle.Copy(iChannelItem->GetTitle().Left(iTitle.MaxLength()));
 		iDescription.Copy(iChannelItem->GetDescription().Left(iDescription.MaxLength()));
+		
+		iTextUtilities->FindAndReplace(iDescription, TChar(10), TChar(8233));
 	}
-	else {
-		// Collect roster data
+	
+	if(iChannelSaveAllowed) {
+		// Recollect latest metadata
 		CollectChannelMetadataL(iChannelItem->GetId());
 	}
 }
@@ -127,6 +132,8 @@ TInt CBuddycloudEditChannelList::SaveChannelDataL() {
 	if(iChannelSaveAllowed) {
 		iChannelItem->SetIdL(iId);
 		iChannelItem->SetAccessModel((TXmppPubsubAccessModel)iAccess);
+		
+		iTextUtilities->FindAndReplace(iDescription, TChar(8233), TChar(10));
 		
 		if(iChannelItem->GetItemType() == EItemChannel) {
 			iChannelItem->SetTitleL(iTitle);
@@ -166,11 +173,15 @@ TInt CBuddycloudEditChannelList::SaveChannelDataL() {
 void CBuddycloudEditChannelList::DynInitMenuPaneL(TInt aResourceId, CEikMenuPane* aMenuPane) {
 	if(aResourceId == R_SETTINGS_OPTIONS_MENU) {
 		aMenuPane->SetItemDimmed(EMenuDeleteCommand, true);
-		aMenuPane->SetItemDimmed(EMenuEditItemCommand, false);
-		aMenuPane->SetItemDimmed(EAknSoftkeyDone, false);
+		aMenuPane->SetItemDimmed(EMenuEditItemCommand, true);
+		aMenuPane->SetItemDimmed(EAknSoftkeyDone, true);
 		
-		if(!iChannelSaveAllowed) {
-			aMenuPane->SetItemDimmed(EAknSoftkeyDone, true);
+		if(iChannelEditAllowed) {
+			aMenuPane->SetItemDimmed(EMenuEditItemCommand, false);
+		}
+		
+		if(iChannelSaveAllowed && iTitle.Length() > 0) {
+			aMenuPane->SetItemDimmed(EAknSoftkeyDone, false);
 		}
 	}
 }
@@ -181,60 +192,62 @@ void CBuddycloudEditChannelList::GetHelpContext(TCoeHelpContext& aContext) const
 }
 
 void CBuddycloudEditChannelList::EditItemL(TInt aIndex, TBool aCalledFromMenu) {
-	CAknSettingItemArray* aItemArray = SettingItemArray();
-	TInt aIdentifier = ((*aItemArray)[aIndex])->Identifier();
-
-	// Set title
-	switch(aIdentifier) {
-		case EEditChannelItemTitle:
-			SetTitleL(R_LOCALIZED_STRING_EDITCHANNEL_TITLE_TITLE);
-			break;
-		case EEditChannelItemId:
-			SetTitleL(R_LOCALIZED_STRING_EDITCHANNEL_ID_TITLE);
-			break;
-		case EEditChannelItemDescription:
-			SetTitleL(R_LOCALIZED_STRING_EDITCHANNEL_DESCRIPTION_TITLE);
-			break;
-		case EEditChannelItemAccess:
-			SetTitleL(R_LOCALIZED_STRING_EDITCHANNEL_ACCESS_TITLE);
-			break;
-		default:;
-	}
+	if(iChannelEditAllowed) {
+		CAknSettingItemArray* aItemArray = SettingItemArray();
+		TInt aIdentifier = ((*aItemArray)[aIndex])->Identifier();
 	
-	CAknSettingItemList::EditItemL(aIndex, aCalledFromMenu);
-
-	// Reset title
-	SetTitleL(iTitleResourceId);
-	
-	StoreSettingsL();
-	
-	if(iChannelItem->GetItemId() <= 0 && ((aIdentifier == EEditChannelItemTitle && iId.Length() == 0) || aIdentifier == EEditChannelItemId)) {
-		// Check for availablility
-		iChannelSaveAllowed = false;
-		
-		if(aIdentifier == EEditChannelItemTitle) {
-			iId.Copy(iTitle);
+		// Set title
+		switch(aIdentifier) {
+			case EEditChannelItemTitle:
+				SetTitleL(R_LOCALIZED_STRING_EDITCHANNEL_TITLE_TITLE);
+				break;
+			case EEditChannelItemId:
+				SetTitleL(R_LOCALIZED_STRING_EDITCHANNEL_ID_TITLE);
+				break;
+			case EEditChannelItemDescription:
+				SetTitleL(R_LOCALIZED_STRING_EDITCHANNEL_DESCRIPTION_TITLE);
+				break;
+			case EEditChannelItemAccess:
+				SetTitleL(R_LOCALIZED_STRING_EDITCHANNEL_ACCESS_TITLE);
+				break;
+			default:;
 		}
 		
-		ValidateChannelId();
+		CAknSettingItemList::EditItemL(aIndex, aCalledFromMenu);
+	
+		// Reset title
+		SetTitleL(iTitleResourceId);
 		
-		LoadSettingsL();
+		StoreSettingsL();
 		
-		if(iId.Length() > 0) {
-			_LIT(KRootNode, "/channel/");
-			HBufC* aNodeId = HBufC::NewLC(KRootNode().Length() + iId.Length());
-			TPtr pNodeId(aNodeId->Des());
-			pNodeId.Append(KRootNode);
-			pNodeId.Append(iId);
+		if(iChannelItem->GetItemId() <= 0 && ((aIdentifier == EEditChannelItemTitle && iId.Length() == 0) || aIdentifier == EEditChannelItemId)) {
+			// Check for availablility
+			iChannelSaveAllowed = false;
 			
-			CollectChannelMetadataL(pNodeId);
-			CleanupStack::PopAndDestroy(); // aNodeId
+			if(aIdentifier == EEditChannelItemTitle) {
+				iId.Copy(iTitle);
+			}
+			
+			ValidateChannelId();
+			
+			LoadSettingsL();
+			
+			if(iId.Length() > 0) {
+				_LIT(KRootNode, "/channel/");
+				HBufC* aNodeId = HBufC::NewLC(KRootNode().Length() + iId.Length());
+				TPtr pNodeId(aNodeId->Des());
+				pNodeId.Append(KRootNode);
+				pNodeId.Append(iId);
+				
+				CollectChannelMetadataL(pNodeId);
+				CleanupStack::PopAndDestroy(); // aNodeId
+			}
+			
+			ListBox()->SetCurrentItemIndexAndDraw(EEditChannelItemId - 1);
 		}
 		
-		ListBox()->SetCurrentItemIndexAndDraw(EEditChannelItemId - 1);
+		((*aItemArray)[aIndex])->UpdateListBoxTextL();	
 	}
-	
-	((*aItemArray)[aIndex])->UpdateListBoxTextL();	
 }
 
 CAknSettingItem* CBuddycloudEditChannelList::CreateSettingItemL (TInt aIdentifier) {
@@ -290,12 +303,17 @@ void CBuddycloudEditChannelList::XmppStanzaAcknowledgedL(const TDesC8& aStanza, 
 					}
 					else if(aAttributeVar.Compare(_L8("pubsub#description")) == 0) {
 						iDescription.Copy(iTextUtilities->Utf8ToUnicodeL(aXmlParser->GetStringData()).Left(iDescription.MaxLength()));
+						
+						iTextUtilities->FindAndReplace(iDescription, TChar(10), TChar(8233));
+					}
+					else if(aAttributeVar.Compare(_L8("pubsub#access_model")) == 0) {
+						iAccess = CXmppEnumerationConverter::PubsubAccessModel(aXmlParser->GetStringData());
 					}
 				}
 			}
 			
-			LoadSettingsL();
-			
+			iChannelEditAllowed = true;
+			LoadSettingsL();		
 			DrawDeferred();
 		}
 		else {

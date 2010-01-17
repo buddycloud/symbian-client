@@ -13,6 +13,8 @@
 CHARACTER_SET UTF8
 
 rls_string r_string_app_caption "buddycloud"
+rls_string r_string_menuseperator "──────────"
+
 // DO NOT TRANSLATE
 
 rls_string r_string_langcode "hu"
@@ -86,7 +88,7 @@ rls_string r_string_settings_usersettings "Beállítások"
 rls_string r_string_settings_communitysettings "Online megosztás"
 rls_string r_string_settings_clearconnection "Kapcsolat változtatása"
 
-rls_string r_string_note_followinglistempty "Nem követsz semmit.\n\nHasználd a Csatorna és Böngésző füleket követendő személyek és csatornák találásához."
+rls_string r_string_note_followinglistempty "You are not following anything.\n\nUse the Explorer tab to search for things to follow."
 
 // Menu: Messaging
 rls_string r_string_options_postrequest "Írási jog kérése"
@@ -124,29 +126,30 @@ rls_string r_string_note_placeslistempty "Nincsen rögzített helyed.\n\nHa ezt 
 // Menu: Nearby
 rls_string r_string_options_refresh "Frissítés"
 rls_string r_string_item_placeinfo "Hely leírása"
-rls_string r_string_item_personinfo "Személy adatai"
 rls_string r_string_item_setcurrent "Beállítás e helyként"
 rls_string r_string_item_subscribe "Hozzáadás a Helyeimhez"
 
 // Menu: Explorer
 rls_string r_string_options_explore "Böngészés"
 rls_string r_string_item_seefollowers "Követői"
-rls_string r_string_item_seeplaces "Helyek mutatása"
+rls_string r_string_item_seemoderators "See moderators"
 rls_string r_string_item_seefollowing "Követett csatornák"
+rls_string r_string_item_seemoderating "See moderating"
 rls_string r_string_item_seeproducing "Létrehozott csatornák"
 rls_string r_string_item_seenearby "Mi van a környékén?"
-rls_string r_string_item_seebeenhere "Ki volt itt?"
-rls_string r_string_item_seegoinghere "Ki jön ide"
 
-rls_string r_string_title_isfollowing "$USER követ"
 rls_string r_string_title_followedby "$OBJECT követői"
+rls_string r_string_title_moderatedby "$OBJECT's moderators"
+rls_string r_string_title_isfollowing "$USER követ"
+rls_string r_string_title_ismoderating "$USER is moderating"
 rls_string r_string_title_isproducing "$USER csatornái"
 rls_string r_string_title_nearbyto "$OBJECT közelében"
-rls_string r_string_title_whosbeento "Ki volt a $PLACE helyen"
-rls_string r_string_title_whosgoingto "Ki tart a $PLACE helyre"
 
 rls_string r_string_note_requesting "Kérés..."
 rls_string r_string_note_channelrank "Helyezés"
+rls_string r_string_note_channelsince "Days broadcasting"
+rls_string r_string_note_channelowner "Produced by"
+rls_string r_string_note_channellocation "Channel location"
 
 // Menu: Channels
 rls_string r_string_list_nearbytoyou "What's Nearby To Me"
@@ -161,22 +164,21 @@ rls_string r_string_item_follow "Kövesd..."
 rls_string r_string_item_unfollow "Követés megszüntetése"
 
 // Channel: Settings & Configuration
-rls_string r_string_note_personalchannelcreated "$USER, üdvözlünk a buddycloud csatornákban.\n\nEz a személyes csatornád a buddycloudon belül. Ez a csatorna csak a tiéd amelyen keresztül üzenhetsz követőidnek!"
 rls_string r_string_note_mediauploadready "Erre kattintva feltöltheted a médiát: $LINK"
 
 rls_string r_string_item_changerole "Jogok változtatása"
 rls_string r_string_changerole_itemlist_outcast "Tiltás a csatornából"
-rls_string r_string_changerole_itemlist_follower "Követőnek"
-rls_string r_string_changerole_itemlist_publisher "Hozzászólónak"
-rls_string r_string_changerole_itemlist_moderator "Moderátornak"
+rls_string r_string_changerole_itemlist_follower "Follower"
+rls_string r_string_changerole_itemlist_publisher "Follower + post"
+rls_string r_string_changerole_itemlist_moderator "Moderator"
 
 rls_string r_string_note_affiliationrequest_title "Hozzászólási felkérés"
 rls_string r_string_note_affiliationrequest_text "$USER engedélyt kért, hogy írhasson ebbe a csatornába. Engedélyzéshez az 'Elfogad' gombot, ellenkező esetben a 'Visszautasít' gombot kell nyomni."
 
 rls_string r_string_note_affiliationoutcast "Ki lettél tiltva a csatornából. Nem tudod olvasni a tartalmát  és nem is tudsz hozzászólni."
-rls_string r_string_note_affiliationmember "Mostantól követed ezt a csatornát. Ezentúl olvashatod a hozzászólásokat, de még nem írhatsz."
-rls_string r_string_note_affiliationpublisher "Hang lettél a csatornában. Ezentúl nemcsak olvashatod a hozzászólásokat, hanem írhatsz is."
-rls_string r_string_note_affiliationmoderator "Mostantól moderátora vagy ennek a csatornának. Ezentúl olvashatsz, írhatsz hozzászólásokat és moderálhatod a csatornát."
+rls_string r_string_note_affiliationmember "You can now read, but not post content in this channel."
+rls_string r_string_note_affiliationpublisher "You can now read and post content in this channel."
+rls_string r_string_note_affiliationmoderator "You can now read, post, and moderate content in this channel."
 
 rls_string r_string_note_subscriptionrequest_text "$USER engedélyt kért, hogy olvashassa a csatorna tartalmát. Engedélyzéshez az 'Elfogad' gombot, ellenkező esetben a 'Visszautasít' gombot kell nyomni."
 rls_string r_string_note_subscriptionpending "Követési felkérésed el lett küldve a csatorna tulajdonásához."

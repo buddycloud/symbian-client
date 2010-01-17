@@ -45,7 +45,7 @@ class CBuddycloudExplorerContainer : public CBuddycloudListComponent, public MAk
 		void ParseAndSendXmppStanzasL(const TDesC8& aStanza);
 		
 	private: // Level query/result management
-		void PushLevelL(const TDesC& aTitle, const TDesC8& aStanza, TBool aAutoRefresh = false);
+		void PushLevelL(const TDesC& aTitle, const TDesC8& aStanza);
 		void PopLevelL();
 		void RefreshLevelL();
 

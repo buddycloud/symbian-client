@@ -140,8 +140,7 @@ void CBuddycloudExplorerContainer::NotificationEvent(TBuddycloudLogicNotificatio
 	if(aEvent == ENotificationLocationUpdated) {
 		TInt aLevel = iExplorerLevels.Count() - 1;
 
-		if(iExplorerLevels.Count() > 0 && 
-				(iExplorerLevels[aLevel]->iResultItems.Count() == 0 || iExplorerLevels[aLevel]->AutoRefresh())) {
+		if(iExplorerLevels.Count() > 0 && iExplorerLevels[aLevel]->iResultItems.Count() == 0) {
 			
 			// Re-request explorer level results
 			RefreshLevelL();
@@ -182,7 +181,7 @@ void CBuddycloudExplorerContainer::ParseAndSendXmppStanzasL(const TDesC8& aStanz
 	}
 }
 
-void CBuddycloudExplorerContainer::PushLevelL(const TDesC& aTitle, const TDesC8& aStanza, TBool aAutoRefresh) {
+void CBuddycloudExplorerContainer::PushLevelL(const TDesC& aTitle, const TDesC8& aStanza) {
 	if(aStanza.Length() > 0) {
 		if(iExplorerLevels.Count() > 0) {
 			TInt aLevel = iExplorerLevels.Count() - 1;
@@ -198,7 +197,6 @@ void CBuddycloudExplorerContainer::PushLevelL(const TDesC& aTitle, const TDesC8&
 		CExplorerQueryLevel* aExplorerLevel = CExplorerQueryLevel::NewLC();
 		aExplorerLevel->SetQueryTitleL(aTitle);
 		aExplorerLevel->SetQueriedStanzaL(aStanza);
-		aExplorerLevel->SetAutoRefresh(aAutoRefresh);
 		
 		// Push onto stack
 		iExplorerLevels.Append(aExplorerLevel);
@@ -257,10 +255,10 @@ void CBuddycloudExplorerContainer::RefreshLevelL() {
 			// Send query
 			ParseAndSendXmppStanzasL(iExplorerLevels[aLevel]->GetQueriedStanza());
 			
-			// Update screen
-			RenderWrappedText(iSelectedItem);
-			RepositionItems(true);
-			RenderScreen();
+//			// Update screen
+//			RepositionItems(true);
+//			RenderWrappedText(iSelectedItem);
+//			RenderScreen();
 		}
 	}
 }
@@ -293,6 +291,13 @@ void CBuddycloudExplorerContainer::RenderWrappedText(TInt aIndex) {
 
 void CBuddycloudExplorerContainer::SizeChanged() {
 	CBuddycloudListComponent::SizeChanged();
+
+	if(!iLayoutMirrored) {
+		iLeftBarSpacer += (iItemIconSize / 8);
+	}
+	else {
+		iRightBarSpacer += (iItemIconSize / 8);
+	}
 
 	RenderWrappedText(iSelectedItem);
 	RepositionItems(iSnapToItem);
@@ -365,6 +370,37 @@ void CBuddycloudExplorerContainer::RenderListItems() {
 #ifdef __SERIES60_40__
 				iListItems.Append(TListItem(i, TRect(0, aItemDrawPos, (Rect().Width() - iRightBarSpacer), (aItemDrawPos + aItemSize))));
 #endif
+
+				// Affiliation
+				if(aResultItem->GetChannelAffiliation() >= EPubsubAffiliationPublisher) {
+					if(aResultItem->GetChannelAffiliation() == EPubsubAffiliationOwner) {
+						// Owner
+						iBufferGc->SetBrushColor(TRgb(237, 88, 47));
+						iBufferGc->SetPenColor(TRgb(237, 88, 47, 125));			
+					}
+					else if(aResultItem->GetChannelAffiliation() == EPubsubAffiliationModerator) {
+						// Moderator
+						iBufferGc->SetBrushColor(TRgb(246, 170, 44));
+						iBufferGc->SetPenColor(TRgb(246, 170, 44, 125));	
+					}
+					else {
+						// Publisher
+						iBufferGc->SetBrushColor(TRgb(175, 175, 175));
+						iBufferGc->SetPenColor(TRgb(175, 175, 175, 125));					
+					}
+					
+					TRect aAffiliationBox(TRect(2, aItemDrawPos, iLeftBarSpacer - 1, (aItemDrawPos + aItemSize + 1)));
+					
+					if(iLayoutMirrored) {
+						aAffiliationBox = TRect(iRightBarSpacer + 2, aItemDrawPos, iRect.Width() - 1, (aItemDrawPos + aItemSize + 1));
+					}				
+								
+					iBufferGc->SetPenStyle(CGraphicsContext::ENullPen);
+					iBufferGc->DrawRect(aAffiliationBox);
+					iBufferGc->SetPenStyle(CGraphicsContext::ESolidPen);
+					iBufferGc->DrawLine(TPoint(aAffiliationBox.iTl.iX - 1, aAffiliationBox.iTl.iY), TPoint(aAffiliationBox.iTl.iX - 1, aAffiliationBox.iBr.iY));
+					iBufferGc->DrawLine(TPoint(aAffiliationBox.iBr.iX, aAffiliationBox.iTl.iY), aAffiliationBox.iBr);
+				}
 				
 				if(i == iSelectedItem) {
 					RenderItemFrame(TRect(iLeftBarSpacer + 1, aItemDrawPos, (Rect().Width() - iRightBarSpacer), (aItemDrawPos + aItemSize)));
@@ -595,14 +631,14 @@ void CBuddycloudExplorerContainer::DynInitMenuPaneL(TInt aResourceId, CEikMenuPa
 		}
 	}
 	else if(aResourceId == R_EXPLORER_OPTIONS_ITEM_MENU) {
-		aMenuPane->SetItemDimmed(EMenuGetPlaceInfoCommand, true);
-		aMenuPane->SetItemDimmed(EMenuGetPersonInfoCommand, true);
 		aMenuPane->SetItemDimmed(EMenuSetAsPlaceCommand, true);
 		aMenuPane->SetItemDimmed(EMenuSetAsNextPlaceCommand, true);
 		aMenuPane->SetItemDimmed(EMenuBookmarkPlaceCommand, true);
+		aMenuPane->SetItemDimmed(EMenuChannelInfoCommand, true);
 		aMenuPane->SetItemDimmed(EMenuFollowCommand, true);
 		aMenuPane->SetItemDimmed(EMenuPrivateMessagesCommand, true);
 		aMenuPane->SetItemDimmed(EMenuChannelMessagesCommand, true);
+		aMenuPane->SetItemDimmed(EMenuChangePermissionCommand, true);
 		aMenuPane->SetItemDimmed(EMenuUnfollowCommand, true);
 		
 		if(iExplorerLevels[aLevel]->iResultItems.Count() > 0) {
@@ -625,23 +661,42 @@ void CBuddycloudExplorerContainer::DynInitMenuPaneL(TInt aResourceId, CEikMenuPa
 			else if(aResultItem->GetResultType() == EExplorerItemPerson || aResultItem->GetResultType() == EExplorerItemChannel) {
 				TInt aFollowerId = iBuddycloudLogic->IsSubscribedTo(aResultItem->GetId(), EItemRoster|EItemChannel);
 				
+				if(aResultItem->GetResultType() == EExplorerItemPerson) {
+					CFollowingChannelItem* aChannelItem = iExplorerLevels[aLevel]->GetQueriedChannel();
+					
+					if(aChannelItem != NULL && aChannelItem->GetPubsubAffiliation() >= EPubsubAffiliationModerator && 
+							aResultItem->GetChannelAffiliation() < aChannelItem->GetPubsubAffiliation()) {
+						
+						// Allow channel moderation
+						aMenuPane->SetItemDimmed(EMenuChangePermissionCommand, false);
+					}
+				}
+				
 				if(aFollowerId > 0) {
 					CBuddycloudFollowingStore* aItemStore = iBuddycloudLogic->GetFollowingStore();
 					CFollowingItem* aItem = static_cast <CFollowingItem*> (aItemStore->GetItemById(aFollowerId));
 					
 					if(aItem && aItem->GetItemType() >= EItemRoster) {
 						if(aItem->GetItemType() == EItemRoster) {
+							CFollowingRosterItem* aRosterItem = static_cast <CFollowingRosterItem*> (aItem);
+							
+							if(!aRosterItem->OwnItem()) {
+								aMenuPane->SetItemDimmed(EMenuUnfollowCommand, false);
+							}
+							
 							aMenuPane->SetItemDimmed(EMenuPrivateMessagesCommand, false);
+						}
+						else {
+							aMenuPane->SetItemDimmed(EMenuUnfollowCommand, false);
 						}
 						
 						if(aItem->GetId().Length() > 0) {
 							aMenuPane->SetItemDimmed(EMenuChannelMessagesCommand, false);
 						}
 					}
-					
-					aMenuPane->SetItemDimmed(EMenuUnfollowCommand, false);
 				}
 				else {
+					aMenuPane->SetItemDimmed(EMenuChannelInfoCommand, false);
 					aMenuPane->SetItemDimmed(EMenuFollowCommand, false);
 				}
 			}
@@ -649,30 +704,29 @@ void CBuddycloudExplorerContainer::DynInitMenuPaneL(TInt aResourceId, CEikMenuPa
 	}
 	else if(aResourceId == R_EXPLORER_OPTIONS_EXPLORE_MENU) {
 		aMenuPane->SetItemDimmed(EMenuSeeFollowersCommand, true);
-		aMenuPane->SetItemDimmed(EMenuSeePlacesCommand, true);
+		aMenuPane->SetItemDimmed(EMenuSeeModeratorsCommand, true);
+		aMenuPane->SetItemDimmed(EMenuSeperator, true);
 		aMenuPane->SetItemDimmed(EMenuSeeFollowingCommand, true);
+		aMenuPane->SetItemDimmed(EMenuSeeModeratingCommand, true);
 		aMenuPane->SetItemDimmed(EMenuSeeProducingCommand, true);
 		aMenuPane->SetItemDimmed(EMenuSeeNearbyCommand, true);
-		aMenuPane->SetItemDimmed(EMenuSeeBeenHereCommand, true);
-		aMenuPane->SetItemDimmed(EMenuSeeGoingHereCommand, true);
 		
 		if(iExplorerLevels[aLevel]->iResultItems.Count() > 0) {
 			CExplorerResultItem* aResultItem = iExplorerLevels[aLevel]->iResultItems[iSelectedItem];
 			
 			if(aResultItem->GetResultType() == EExplorerItemChannel) {
 				aMenuPane->SetItemDimmed(EMenuSeeFollowersCommand, false);
-				aMenuPane->SetItemDimmed(EMenuSeeNearbyCommand, false);
+				aMenuPane->SetItemDimmed(EMenuSeeModeratorsCommand, false);
 			}
 			else if(aResultItem->GetResultType() == EExplorerItemPerson) {
 				aMenuPane->SetItemDimmed(EMenuSeeFollowersCommand, false);
-				//aMenuPane->SetItemDimmed(EMenuSeePlacesCommand, false);
+				aMenuPane->SetItemDimmed(EMenuSeperator, false);
 				aMenuPane->SetItemDimmed(EMenuSeeFollowingCommand, false);
+				aMenuPane->SetItemDimmed(EMenuSeeModeratingCommand, false);
 				aMenuPane->SetItemDimmed(EMenuSeeProducingCommand, false);
 				aMenuPane->SetItemDimmed(EMenuSeeNearbyCommand, false);
 			}
 			else if(aResultItem->GetResultType() == EExplorerItemPlace) {
-				aMenuPane->SetItemDimmed(EMenuSeeBeenHereCommand, false);
-				aMenuPane->SetItemDimmed(EMenuSeeGoingHereCommand, false);
 				aMenuPane->SetItemDimmed(EMenuSeeNearbyCommand, false);
 			}			
 		}
@@ -697,33 +751,32 @@ void CBuddycloudExplorerContainer::HandleCommandL(TInt aCommand) {
 			
 			if(aResultItem->GetResultType() == EExplorerItemDirectory) {
 				TPtrC8 aEncUsername(iTextUtilities->UnicodeToUtf8L(iBuddycloudLogic->GetDescSetting(ESettingItemUsername)));
-				TBool aAllowAutoRefresh = false;
 				
 				TViewData aQuery;	
 
 				if(aResultItem->GetId().Compare(_L("nearbyobjects")) == 0) {
-					aQuery = CExplorerStanzaBuilder::BuildNearbyXmppStanza(EExplorerItemPerson, aEncUsername);
-					
-					aAllowAutoRefresh = true;
+					CExplorerStanzaBuilder::BuildButlerXmppStanza(aQuery.iData, iBuddycloudLogic->GetNewIdStamp(), aEncUsername);
 				}
 				else if(aResultItem->GetId().Compare(_L("nearbychannels")) == 0) {
-					aQuery = CExplorerStanzaBuilder::BuildNearbyXmppStanza(EExplorerItemPerson, aEncUsername, 30);
+					CExplorerStanzaBuilder::BuildButlerXmppStanza(aQuery.iData, iBuddycloudLogic->GetNewIdStamp(), aEncUsername, 30);
 					aQuery.iData.Insert((aQuery.iData.Length() - 15), _L8("<request var='channel'/>"));
-					
-					aAllowAutoRefresh = true;
 				}
 				else {
-					aQuery = CExplorerStanzaBuilder::BuildChannelsXmppStanza(iTextUtilities->UnicodeToUtf8L(aResultItem->GetId()), EChannelAll, 30);
+					CExplorerStanzaBuilder::BuildMaitredXmppStanza(aQuery.iData, iBuddycloudLogic->GetNewIdStamp(), iTextUtilities->UnicodeToUtf8L(aResultItem->GetId()), _L8("directory"));
 				}
 				
 				if(aQuery.iData.Length() > 0) {
 					// Add language code
-					TPtrC8 aLangCode = iTextUtilities->UnicodeToUtf8L(*iCoeEnv->AllocReadResourceLC(R_LOCALIZED_STRING_LANGCODE));
-					aQuery.iData.Insert(3, _L8(" xml:lang=''"));
-					aQuery.iData.Insert(14, aLangCode);
-					CleanupStack::PopAndDestroy(); // aLangCode
+					TInt aLocate = aQuery.iData.Locate('>');
 					
-					PushLevelL(aResultItem->GetTitle(), aQuery.iData, aAllowAutoRefresh);
+					if(aLocate != KErrNotFound) {
+						TPtrC8 aLangCode = iTextUtilities->UnicodeToUtf8L(*iCoeEnv->AllocReadResourceLC(R_LOCALIZED_STRING_LANGCODE));
+						aQuery.iData.Insert(aLocate, _L8(" xml:lang=''"));
+						aQuery.iData.Insert(aLocate + 11, aLangCode);
+						CleanupStack::PopAndDestroy(); // aLangCode
+					}
+					
+					PushLevelL(aResultItem->GetTitle(), aQuery.iData);
 				}
 			}
 			else if(aResultItem->GetResultType() == EExplorerItemLink) {
@@ -758,6 +811,39 @@ void CBuddycloudExplorerContainer::HandleCommandL(TInt aCommand) {
 			}
 		}
 	}
+	else if(aCommand == EMenuChannelInfoCommand) {
+		if(iExplorerLevels[aLevel]->iResultItems.Count() > 0) {
+			CExplorerResultItem* aResultItem = iExplorerLevels[aLevel]->iResultItems[iSelectedItem];
+			
+			if(aResultItem->GetResultType() == EExplorerItemPerson || aResultItem->GetResultType() == EExplorerItemChannel) {
+				TPtrC8 aEncId(iTextUtilities->UnicodeToUtf8L(aResultItem->GetId()));	
+				
+				TViewReferenceBuf aViewReference;	
+				aViewReference().iCallbackRequested = true;
+				aViewReference().iCallbackViewId = KExplorerViewId;
+				aViewReference().iOldViewData.iId = iSelectedItem;
+				aViewReference().iOldViewData.iTitle = iExplorerLevels[aLevel]->GetQueryTitle();
+				aViewReference().iOldViewData.iData = iExplorerLevels[aLevel]->GetQueriedStanza();
+				aViewReference().iNewViewData.iTitle.Copy(aResultItem->GetTitle());
+				aViewReference().iNewViewData.iData.Copy(aEncId);
+				
+				if(aResultItem->GetResultType() == EExplorerItemPerson) {
+					_LIT8(KUserNode, "/user//channel");
+					
+					HBufC8* aEncNodeId = HBufC8::NewLC(KUserNode().Length() + aEncId.Length());
+					TPtr8 pEncNodeId(aEncNodeId->Des());
+					pEncNodeId.Append(KUserNode);
+					pEncNodeId.Insert(6, aEncId);
+					
+					aViewReference().iNewViewData.iData.Copy(pEncNodeId);
+					
+					CleanupStack::PopAndDestroy(); // aEncNodeId
+				}
+	
+				iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KChannelInfoViewId), TUid::Uid(0), aViewReference);					
+			}
+		}
+	}
 	else if(aCommand == EMenuPrivateMessagesCommand || aCommand == EMenuChannelMessagesCommand || 
 			aCommand == EMenuFollowCommand || aCommand == EMenuUnfollowCommand) {
 		
@@ -770,15 +856,15 @@ void CBuddycloudExplorerContainer::HandleCommandL(TInt aCommand) {
 						iBuddycloudLogic->FollowContactL(aResultItem->GetId());
 					}
 					else if(aResultItem->GetResultType() == EExplorerItemChannel) {
-						// TODO: Follow explorer channel						
-//						TInt aFollowingId = iBuddycloudLogic->FollowChannelL(aResultItem->GetId());
-//								
-//						TViewReferenceBuf aViewReference;	
-//						aViewReference().iNewViewData.iId = aFollowingId;
-//						aViewReference().iNewViewData.iTitle.Copy(aResultItem->GetTitle());
-//						aViewReference().iNewViewData.iData.Copy(aResultItem->GetId());
-//
-//						iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KMessagingViewId), TUid::Uid(aFollowingId), aViewReference);					
+						// Follow channel						
+						TInt aFollowingId = iBuddycloudLogic->FollowChannelL(aResultItem->GetId());
+								
+						TViewReferenceBuf aViewReference;	
+						aViewReference().iNewViewData.iId = aFollowingId;
+						aViewReference().iNewViewData.iTitle.Copy(aResultItem->GetTitle());
+						aViewReference().iNewViewData.iData.Copy(aResultItem->GetId());
+
+						iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KMessagingViewId), TUid::Uid(aFollowingId), aViewReference);					
 					}
 				}
 				else {
@@ -817,74 +903,135 @@ void CBuddycloudExplorerContainer::HandleCommandL(TInt aCommand) {
 			}
 		}
 	}
-	else if(aCommand == EMenuSeeFollowingCommand || aCommand == EMenuSeeFollowersCommand || aCommand == EMenuSeeProducingCommand) {
+	else if(aCommand == EMenuChangePermissionCommand) {
+		CExplorerResultItem* aResultItem = iExplorerLevels[aLevel]->iResultItems[iSelectedItem];
+		CFollowingChannelItem* aChannelItem = iExplorerLevels[aLevel]->GetQueriedChannel();
+		
+		if(aChannelItem && aResultItem->GetResultType() == EExplorerItemPerson) {
+			TInt aSelectedIndex = 0;
+			
+			// Show list dialog
+			CAknListQueryDialog* aDialog = new (ELeave) CAknListQueryDialog(&aSelectedIndex);
+			aDialog->PrepareLC(R_LIST_CHANGEPERMISSION);
+			aDialog->ListBox()->SetCurrentItemIndex(1);
+
+			if(aDialog->RunLD()) {
+				TXmppPubsubAffiliation aAffiliation = EPubsubAffiliationNone;
+				
+				switch(aSelectedIndex) {
+					case 0: // Remove
+						aAffiliation = EPubsubAffiliationOutcast;
+						break;
+					case 2: // Publisher
+						aAffiliation = EPubsubAffiliationPublisher;
+						break;
+					case 3: // Moderator
+						aAffiliation = EPubsubAffiliationModerator;
+						break;
+					default: // Follower
+						aAffiliation = EPubsubAffiliationMember;
+						break;					
+				}
+				
+				iBuddycloudLogic->SetPubsubNodeAffiliationL(aResultItem->GetId(), aChannelItem->GetId(), aAffiliation);		
+			
+				// Refresh results
+				RefreshLevelL();
+			}
+		}
+	}
+	else if(aCommand == EMenuSeeFollowingCommand || aCommand == EMenuSeeModeratingCommand || aCommand == EMenuSeeProducingCommand) {
 		CExplorerResultItem* aResultItem = iExplorerLevels[aLevel]->iResultItems[iSelectedItem];
 		
-		if(aResultItem->GetResultType() == EExplorerItemPerson || aResultItem->GetResultType() == EExplorerItemChannel) {			
-			TPtrC8 aEncId = iTextUtilities->UnicodeToUtf8L(aResultItem->GetId());			
+		if(aResultItem->GetResultType() == EExplorerItemPerson) {
+			TPtrC8 aEncId(iTextUtilities->UnicodeToUtf8L(aResultItem->GetId()));			
+			TInt aResourceId = KErrNotFound;
 			TViewData aQuery;
-		
-			if(aCommand == EMenuSeeFollowersCommand) {
-				aQuery.iData.Append(_L8("<iq to='' type='get' id='exp_followers'><pubsub xmlns='http://jabber.org/protocol/pubsub#owner'><affiliations node=''/></pubsub></iq>"));
-				
-				if(aResultItem->GetResultType() == EExplorerItemChannel) {
-					aQuery.iData.Insert(116, aEncId);
-				}
-				else if(aResultItem->GetResultType() == EExplorerItemPerson) {
-					aQuery.iData.Insert(116, _L8("/user//channel"));
-					aQuery.iData.Insert(122, aEncId);
-				}
-				
-				aQuery.iData.Insert(8, KBuddycloudPubsubServer);
-				
-				iEikonEnv->ReadResourceL(aQuery.iTitle, R_LOCALIZED_STRING_TITLE_FOLLOWEDBY);
-				aQuery.iTitle.Replace(aQuery.iTitle.Find(_L("$OBJECT")), 7, aResultItem->GetTitle().Left((aQuery.iTitle.MaxLength() - aQuery.iTitle.Length() + 7)));	
+			
+			if(aCommand == EMenuSeeProducingCommand) {
+				CExplorerStanzaBuilder::BuildMaitredXmppStanza(aQuery.iData, iBuddycloudLogic->GetNewIdStamp(), aEncId, _L8("owner"));
+				aResourceId = R_LOCALIZED_STRING_TITLE_ISPRODUCING;
+			}
+			else if(aCommand == EMenuSeeModeratingCommand) {
+				CExplorerStanzaBuilder::BuildMaitredXmppStanza(aQuery.iData, iBuddycloudLogic->GetNewIdStamp(), aEncId, _L8("moderator"));
+				aResourceId = R_LOCALIZED_STRING_TITLE_ISMODERATING;
 			}
 			else {
-				if(aCommand == EMenuSeeProducingCommand) {
-					aQuery = CExplorerStanzaBuilder::BuildChannelsXmppStanza(aEncId, EChannelProducer);
-					iEikonEnv->ReadResourceL(aQuery.iTitle, R_LOCALIZED_STRING_TITLE_ISPRODUCING);
-				}
-				else {
-					aQuery = CExplorerStanzaBuilder::BuildChannelsXmppStanza(aEncId, EChannelAll);
-					iEikonEnv->ReadResourceL(aQuery.iTitle, R_LOCALIZED_STRING_TITLE_ISFOLLOWING);
-				}
-				
-				aQuery.iTitle.Replace(aQuery.iTitle.Find(_L("$USER")), 5, aResultItem->GetTitle().Left((aQuery.iTitle.MaxLength() - aQuery.iTitle.Length() + 5)));	
+				CExplorerStanzaBuilder::BuildMaitredXmppStanza(aQuery.iData, iBuddycloudLogic->GetNewIdStamp(), aEncId, _L8("publisher"));
+				CExplorerStanzaBuilder::BuildMaitredXmppStanza(aQuery.iData, iBuddycloudLogic->GetNewIdStamp(), aEncId, _L8("member"));
+				aResourceId = R_LOCALIZED_STRING_TITLE_ISFOLLOWING;
 			}
 			
 			if(aQuery.iData.Length() > 0) {
+				CExplorerStanzaBuilder::BuildTitleFromResource(aQuery.iTitle, aResourceId, _L("$USER"), aResultItem->GetTitle());
+				
 				PushLevelL(aQuery.iTitle, aQuery.iData);
 			}
 		}
 	}
-	else if(aCommand == EMenuSeeNearbyCommand) {
+	else if(aCommand == EMenuSeeFollowersCommand || aCommand == EMenuSeeModeratorsCommand) {		
 		CExplorerResultItem* aResultItem = iExplorerLevels[aLevel]->iResultItems[iSelectedItem];
+		TPtrC8 aEncId(iTextUtilities->UnicodeToUtf8L(aResultItem->GetId()));	
+		TInt aResourceId = KErrNotFound;
+		TViewData aQuery;
 		
-		// Build stanza
-		TViewData aQuery = CExplorerStanzaBuilder::BuildNearbyXmppStanza(aResultItem->GetResultType(), iTextUtilities->UnicodeToUtf8L(aResultItem->GetId()));
-
-		iEikonEnv->ReadResourceL(aQuery.iTitle, R_LOCALIZED_STRING_TITLE_NEARBYTO);
-		aQuery.iTitle.Replace(aQuery.iTitle.Find(_L("$OBJECT")), 7, aResultItem->GetTitle().Left((aQuery.iTitle.MaxLength() - aQuery.iTitle.Length() + 7)));	
+		if(aResultItem->GetResultType() == EExplorerItemPerson) {
+			_LIT8(KUserNode, "/user//channel");
+			
+			HBufC8* aEncNodeId = HBufC8::NewLC(KUserNode().Length() + aEncId.Length());
+			TPtr8 pEncNodeId(aEncNodeId->Des());
+			pEncNodeId.Append(KUserNode);
+			pEncNodeId.Insert(6, aEncId);
+			
+			if(aCommand == EMenuSeeModeratorsCommand) {
+				CExplorerStanzaBuilder::BuildMaitredXmppStanza(aQuery.iData, iBuddycloudLogic->GetNewIdStamp(), pEncNodeId, _L8("owner"));
+				CExplorerStanzaBuilder::BuildMaitredXmppStanza(aQuery.iData, iBuddycloudLogic->GetNewIdStamp(), pEncNodeId, _L8("moderator"));
+				aResourceId = R_LOCALIZED_STRING_TITLE_MODERATEDBY;
+			}
+			else {
+				CExplorerStanzaBuilder::BuildMaitredXmppStanza(aQuery.iData, iBuddycloudLogic->GetNewIdStamp(), pEncNodeId, _L8("publisher"));
+				CExplorerStanzaBuilder::BuildMaitredXmppStanza(aQuery.iData, iBuddycloudLogic->GetNewIdStamp(), pEncNodeId, _L8("member"));
+				aResourceId = R_LOCALIZED_STRING_TITLE_FOLLOWEDBY;
+			}	
+			
+			CleanupStack::PopAndDestroy(); // aEncNodeId
+		}
+		else if(aResultItem->GetResultType() == EExplorerItemChannel) {			
+			if(aCommand == EMenuSeeModeratorsCommand) {
+				CExplorerStanzaBuilder::BuildMaitredXmppStanza(aQuery.iData, iBuddycloudLogic->GetNewIdStamp(), aEncId, _L8("owner"));
+				CExplorerStanzaBuilder::BuildMaitredXmppStanza(aQuery.iData, iBuddycloudLogic->GetNewIdStamp(), aEncId, _L8("moderator"));
+				aResourceId = R_LOCALIZED_STRING_TITLE_MODERATEDBY;
+			}
+			else {
+				CExplorerStanzaBuilder::BuildMaitredXmppStanza(aQuery.iData, iBuddycloudLogic->GetNewIdStamp(), aEncId, _L8("publisher"));
+				CExplorerStanzaBuilder::BuildMaitredXmppStanza(aQuery.iData, iBuddycloudLogic->GetNewIdStamp(), aEncId, _L8("member"));
+				aResourceId = R_LOCALIZED_STRING_TITLE_FOLLOWEDBY;
+			}	
+		}
 		
-		PushLevelL(aQuery.iTitle, aQuery.iData);			
+		if(aQuery.iData.Length() > 0) {
+			CExplorerStanzaBuilder::BuildTitleFromResource(aQuery.iTitle, aResourceId, _L("$OBJECT"), aResultItem->GetTitle());
+			
+			PushLevelL(aQuery.iTitle, aQuery.iData);
+		}
 	}
-	else if(aCommand == EMenuSeeBeenHereCommand || aCommand == EMenuSeeGoingHereCommand) {
+	else if(aCommand == EMenuSeeNearbyCommand) {
 		CExplorerResultItem* aResultItem = iExplorerLevels[aLevel]->iResultItems[iSelectedItem];
 		TViewData aQuery;
 		
-		if(aCommand == EMenuSeeBeenHereCommand) {
-			aQuery = CExplorerStanzaBuilder::BuildPlaceVisitorsXmppStanza(_L8("past"), aResultItem->GetItemId());
-			iEikonEnv->ReadResourceL(aQuery.iTitle, R_LOCALIZED_STRING_TITLE_WHOSBEENTO);
+		// Build stanza
+		if(aResultItem->GetResultType() == EExplorerItemPerson) {
+			CExplorerStanzaBuilder::BuildButlerXmppStanza(aQuery.iData, iBuddycloudLogic->GetNewIdStamp(), iTextUtilities->UnicodeToUtf8L(aResultItem->GetId()));
 		}
-		else {
-			aQuery = CExplorerStanzaBuilder::BuildPlaceVisitorsXmppStanza(_L8("next"), aResultItem->GetItemId());
-			iEikonEnv->ReadResourceL(aQuery.iTitle, R_LOCALIZED_STRING_TITLE_WHOSGOINGTO);
+		else if(aResultItem->GetResultType() == EExplorerItemPlace) {
+			CExplorerStanzaBuilder::BuildButlerXmppStanza(aQuery.iData, iBuddycloudLogic->GetNewIdStamp(), aResultItem->GetGeoloc()->GetReal(EGeolocLongitude), aResultItem->GetGeoloc()->GetReal(EGeolocLatitude));
 		}
 		
-		aQuery.iTitle.Replace(aQuery.iTitle.Find(_L("$PLACE")), 6, aResultItem->GetTitle().Left((aQuery.iTitle.MaxLength() - aQuery.iTitle.Length() + 6)));	
-		
-		PushLevelL(aQuery.iTitle, aQuery.iData);			
+		if(aQuery.iData.Length() > 0) {
+			CExplorerStanzaBuilder::BuildTitleFromResource(aQuery.iTitle, R_LOCALIZED_STRING_TITLE_NEARBYTO, _L("$OBJECT"), aResultItem->GetTitle());
+			
+			PushLevelL(aQuery.iTitle, aQuery.iData);
+		}
 	}
 	else if(aCommand == EAknSoftkeyBack) {
 		if(aLevel > 0) {
@@ -957,166 +1104,216 @@ void CBuddycloudExplorerContainer::TabChangedL(TInt aIndex) {
 void CBuddycloudExplorerContainer::XmppStanzaAcknowledgedL(const TDesC8& aStanza, const TDesC8& aId) {
 	TInt aLevel = iExplorerLevels.Count() - 1;
 	
-	CXmlParser* aXmlParser = CXmlParser::NewLC(aStanza);
-	TPtrC8 aAttributeType = aXmlParser->GetStringAttribute(_L8("type"));
-	
-	if(aAttributeType.Compare(_L8("result")) == 0) {
-		if(aId.Compare(_L8("exp_nearby1")) == 0) {
-			// Handle new nearby result
-			while(aXmlParser->MoveToElement(_L8("item"))) {
-				TPtrC pAttributeId = iTextUtilities->Utf8ToUnicodeL(aXmlParser->GetStringAttribute(_L8("id")));
-				TPtrC8 pAttributeVar = aXmlParser->GetStringAttribute(_L8("var"));
+	if(aId.Locate(':') != KErrNotFound) {
+		TLex8 aIdLex(aId.Left(aId.Locate(':')));
+		TInt aIdEnum = KErrNotFound;
+		
+		if(aIdLex.Val(aIdEnum) != KErrNotFound) {
+			CXmlParser* aXmlParser = CXmlParser::NewLC(aStanza);
+			TPtrC8 aAttributeType = aXmlParser->GetStringAttribute(_L8("type"));
+			
+			if(aAttributeType.Compare(_L8("result")) == 0) {
+				CFollowingChannelItem* aChannelItem = NULL;
 				
-				CExplorerResultItem* aResultItem = CExplorerResultItem::NewLC();
-				aResultItem->SetIdL(pAttributeId);
-				
-				// Set result type & avatar id
-				if(pAttributeVar.Compare(_L8("person")) == 0) {
-					aResultItem->SetResultType(EExplorerItemPerson);
-					aResultItem->SetIconId(KIconPerson);
-					
-					HBufC* aJid = pAttributeId.AllocLC();
-					TPtr pJid(aJid->Des());
-					
-					if(!iBuddycloudLogic->IsSubscribedTo(pJid, EItemRoster)) {
-						// Sensor jid
-						for(TInt i = (pJid.Locate('@') - 1), x = (i - 2); i > 1 && i > x; i--) {
-							pJid[i] = 46;
-						}
-					}
-								
-					aResultItem->SetTitleL(pJid);
-					CleanupStack::PopAndDestroy(); // aJid
-				}
-				else if(pAttributeVar.Compare(_L8("channel")) == 0) {
-					aResultItem->SetResultType(EExplorerItemChannel);
-					aResultItem->SetIconId(KIconChannel);
-				}
-				else if(pAttributeVar.Compare(_L8("place")) == 0) {
-					aResultItem->SetResultType(EExplorerItemPlace);
-					aResultItem->SetIconId(KIconPlace);
-					
-					// Get place id
-					TInt aIntValue = pAttributeId.LocateReverse('/');
-					
-					if(aIntValue != KErrNotFound) {
-						// Convert place id
-						TLex aLexValue(pAttributeId.Mid(aIntValue + 1));
+				if(aIdEnum == EXmppIdGetNodeAffiliations) {
+					if(aXmlParser->MoveToElement(_L8("affiliations"))) {
+						// Set queried channel
+						TPtrC aEncNodeId = iTextUtilities->Utf8ToUnicodeL(aXmlParser->GetStringAttribute(_L8("node")));
+						TInt aFollowingId = iBuddycloudLogic->IsSubscribedTo(aEncNodeId, EItemChannel);
 						
-						if(aLexValue.Val(aIntValue) == KErrNone) {
-							aResultItem->SetItemId(aIntValue);
-						}
-					}
-				}
-				else if(pAttributeVar.Compare(_L8("link")) == 0 || 
-						pAttributeVar.Compare(_L8("wiki")) == 0 || 
-						pAttributeVar.Compare(_L8("advert")) == 0) {
-					
-					aResultItem->SetResultType(EExplorerItemLink);
-					aResultItem->SetIconId(KIconLink);
-				}
-				
-				CXmlParser* aItemXmlParser = CXmlParser::NewLC(aXmlParser->GetStringData());
-				
-				if(aResultItem->GetTitle().Length() == 0 && aItemXmlParser->MoveToElement(_L8("name"))) {
-					aResultItem->SetTitleL(iTextUtilities->Utf8ToUnicodeL(aItemXmlParser->GetStringData()));
-				}
-				
-				if(aItemXmlParser->MoveToElement(_L8("description"))) {
-					aResultItem->SetDescriptionL(iTextUtilities->Utf8ToUnicodeL(aItemXmlParser->GetStringData()));
-				}
-				
-				if(aItemXmlParser->MoveToElement(_L8("distance"))) {
-					aResultItem->SetDistance(aItemXmlParser->GetIntData());
-				}
-				
-				if(aItemXmlParser->MoveToElement(_L8("geoloc"))) {
-					CXmppGeolocParser* aGeolocParser = CXmppGeolocParser::NewLC();
-					
-					aResultItem->SetGeolocL(aGeolocParser->XmlToGeolocLC(aItemXmlParser->GetStringData()));
-					aResultItem->UpdateFromGeolocL();
-					CleanupStack::Pop(); // aGeoloc
-					
-					CleanupStack::PopAndDestroy(); // aGeolocParser
-				}
-				
-				CleanupStack::PopAndDestroy(); // aItemXmlParser
-				
-				// Append sorted item
-				iExplorerLevels[aLevel]->AppendSortedItem(aResultItem, ESortByDistance);
-				CleanupStack::Pop(); // aResultItem
-			}
-		}
-		else if(aId.Compare(_L8("exp_followers")) == 0) {
-			// Handle place/channel users result
-			while(aXmlParser->MoveToElement(_L8("affiliation"))) {
-				CExplorerResultItem* aResultItem = CExplorerResultItem::NewLC();
-				aResultItem->SetResultType(EExplorerItemPerson);
-				aResultItem->SetIconId(KIconPerson);
-				aResultItem->SetIdL(iTextUtilities->Utf8ToUnicodeL(aXmlParser->GetStringAttribute(_L8("jid"))));
-				
-				HBufC* aTitle = aResultItem->GetId().AllocLC();
-				TPtr pTitle(aTitle->Des());
-				
-				if(!iBuddycloudLogic->IsSubscribedTo(pTitle, EItemRoster)) {
-					// Sensor jid						
-					for(TInt i = (pTitle.Locate('@') - 1), x = (i - 2); i > 1 && i > x; i--) {
-						pTitle[i] = 46;
-					}
-				}
+						if(aFollowingId > 0) {
+							aChannelItem = static_cast <CFollowingChannelItem*> (iBuddycloudLogic->GetFollowingStore()->GetItemById(aFollowingId));
 							
-				aResultItem->SetTitleL(pTitle);
-				CleanupStack::PopAndDestroy(); // aTitle
-				
-				// Add item
-				iExplorerLevels[aLevel]->AppendSortedItem(aResultItem);
-				CleanupStack::Pop(); // aResultItem
-			}
-		}
-		else if(aId.Compare(_L8("exp_channels1")) == 0) {
-			// Handle channels result
-			while(aXmlParser->MoveToElement(_L8("channel"))) {
-				CExplorerResultItem* aResultItem = CExplorerResultItem::NewLC();
-				aResultItem->SetResultType(EExplorerItemChannel);
-				aResultItem->SetIconId(KIconChannel);
-				
-				CXmlParser* aChannelXmlParser = CXmlParser::NewLC(aXmlParser->GetStringData());
-				
-				do {
-					TPtrC8 aElementName = aChannelXmlParser->GetElementName();
-					TPtrC aElementData = iTextUtilities->Utf8ToUnicodeL(aChannelXmlParser->GetStringData());
+							iExplorerLevels[aLevel]->SetQueriedChannel(aChannelItem);	
+						}
 					
-					if(aElementName.Compare(_L8("jid")) == 0) {					
-						aResultItem->SetIdL(aElementData);
+						// Handle affiliation items
+						while(aXmlParser->MoveToElement(_L8("affiliation"))) {
+							TPtrC aEncAttributeJid(iTextUtilities->Utf8ToUnicodeL(aXmlParser->GetStringAttribute(_L8("jid"))));
+							
+							CExplorerResultItem* aResultItem = CExplorerResultItem::NewLC();
+							aResultItem->SetResultType(EExplorerItemPerson);
+							aResultItem->SetIconId(KIconPerson);
+							aResultItem->SetIdL(aEncAttributeJid);
+							aResultItem->SetTitleL(aEncAttributeJid);
+							
+							// Set items affiliation
+							TPtrC8 aAttributeAffiliation(aXmlParser->GetStringAttribute(_L8("affiliation")));
+							aResultItem->SetChannelAffiliation(CXmppEnumerationConverter::PubsubAffiliation(aAttributeAffiliation));
+							
+							if(aResultItem->GetChannelAffiliation() == EPubsubAffiliationOutcast) {
+								aResultItem->SetOverlayId(KOverlayLocked);
+							}
+							
+							// Sensor jid when not following or not a channel moderator
+							if(aChannelItem == NULL || aChannelItem->GetPubsubAffiliation() < EPubsubAffiliationModerator) {
+								HBufC* aSensoredTitle = aResultItem->GetId().AllocLC();
+								TPtr pSensoredTitle(aSensoredTitle->Des());
+								
+								if(!iBuddycloudLogic->IsSubscribedTo(pSensoredTitle, EItemRoster)) {
+									// Sensor jid						
+									for(TInt i = (pSensoredTitle.Locate('@') - 1), x = (i - 2); i > 1 && i > x; i--) {
+										pSensoredTitle[i] = 46;
+									}
+								}
+											
+								aResultItem->SetTitleL(pSensoredTitle);
+								CleanupStack::PopAndDestroy(); // aSensoredTitle
+							}
+							
+							// Add item
+							iExplorerLevels[aLevel]->AppendSortedItem(aResultItem);
+							CleanupStack::Pop(); // aResultItem
+						}
 					}
-					else if(aElementName.Compare(_L8("title")) == 0) {					
-						aResultItem->SetTitleL(aElementData);
-					}
-					else if(aElementName.Compare(_L8("description")) == 0) {					
-						aResultItem->SetDescriptionL(aElementData);
-					}
-					else if(aElementName.Compare(_L8("rank")) == 0) {	
-						HBufC* aLocalizedRank = iCoeEnv->AllocReadResourceLC(R_LOCALIZED_STRING_NOTE_CHANNELRANK);
-						HBufC* aRankStatistic = HBufC::NewLC(aLocalizedRank->Des().Length() + 32);
-						TPtr pRankStatistic(aRankStatistic->Des());
-						pRankStatistic.Append(*aLocalizedRank);
-						pRankStatistic.AppendFormat(_L(" : %d"), aChannelXmlParser->GetIntData(0));
-						
-						aResultItem->AddStatisticL(pRankStatistic);
-						CleanupStack::PopAndDestroy(2); // aRankStatistic, aLocalizedRank
-					}
-				} while(aChannelXmlParser->MoveToNextElement());
-				
-				CleanupStack::PopAndDestroy(); // aChannelXmlParser
-				
-				// Add item
-				iExplorerLevels[aLevel]->AppendSortedItem(aResultItem);
-				CleanupStack::Pop(); // aResultItem
-			}		
+				}
+				else if(aIdEnum == EXmppIdGetMaitredList || aIdEnum == EXmppIdGetNearbyObjects) {
+					if(aXmlParser->MoveToElement(_L8("items"))) {
+						// Set queried channel
+						if(aIdEnum == EXmppIdGetMaitredList) {
+							TPtrC aEncNodeId = iTextUtilities->Utf8ToUnicodeL(aXmlParser->GetStringAttribute(_L8("id")));
+							TInt aFollowingId = iBuddycloudLogic->IsSubscribedTo(aEncNodeId, EItemChannel);
+							
+							if(aFollowingId > 0) {
+								aChannelItem = static_cast <CFollowingChannelItem*> (iBuddycloudLogic->GetFollowingStore()->GetItemById(aFollowingId));
+								
+								iExplorerLevels[aLevel]->SetQueriedChannel(aChannelItem);	
+							}
+						}
+
+						// Handle items
+						while(aXmlParser->MoveToElement(_L8("item"))) {
+							CExplorerResultItem* aResultItem = CExplorerResultItem::NewLC();
+							TPtrC8 aAttributeVar = aXmlParser->GetStringAttribute(_L8("var"));
+							
+							// Get the item var
+							if(aIdEnum == EXmppIdGetNearbyObjects && aAttributeVar.Length() > 0) {
+								aResultItem->SetIdL(iTextUtilities->Utf8ToUnicodeL(aXmlParser->GetStringAttribute(_L8("id"))));
+								
+								// Set result type & icon id
+								if(aAttributeVar.Compare(_L8("channel")) == 0) {
+									aResultItem->SetResultType(EExplorerItemChannel);
+									aResultItem->SetIconId(KIconChannel);
+								}
+								else if(aAttributeVar.Compare(_L8("place")) == 0) {
+									aResultItem->SetResultType(EExplorerItemPlace);
+									aResultItem->SetIconId(KIconPlace);
+									
+									// Get place id
+									TPtrC aPlaceUri(aResultItem->GetId());
+									TInt aIntValue = aPlaceUri.LocateReverse('/');
+									
+									if(aIntValue != KErrNotFound) {
+										// Convert place id
+										TLex aLexValue(aPlaceUri.Mid(aIntValue + 1));
+										
+										if(aLexValue.Val(aIntValue) == KErrNone) {
+											aResultItem->SetItemId(aIntValue);
+										}
+									}
+								}
+								else if(aAttributeVar.Compare(_L8("link")) == 0 || 
+										aAttributeVar.Compare(_L8("wiki")) == 0 || 
+										aAttributeVar.Compare(_L8("advert")) == 0) {
+									
+									aResultItem->SetResultType(EExplorerItemLink);
+									aResultItem->SetIconId(KIconLink);
+								}
+							}
+							
+							// Parse the items data
+							CXmlParser* aItemXmlParser = CXmlParser::NewLC(aXmlParser->GetStringData());
+							
+							do {
+								TPtrC8 aElementName = aItemXmlParser->GetElementName();
+								TPtrC aElementData = iTextUtilities->Utf8ToUnicodeL(aItemXmlParser->GetStringData());
+								
+								if(aIdEnum == EXmppIdGetMaitredList && aElementName.Compare(_L8("id")) == 0) {					
+									aResultItem->SetIdL(aElementData);
+									
+									if(aResultItem->GetTitle().Length() == 0) {
+										// Set title if not already set
+										aResultItem->SetTitleL(aElementData);
+									}
+									
+									if(aElementData.Find(_L("/channel")) != KErrNotFound) {
+										// Set as a channel result type
+										aResultItem->SetResultType(EExplorerItemChannel);
+										aResultItem->SetIconId(KIconChannel);
+									}
+								}
+								else if((aIdEnum == EXmppIdGetMaitredList && aElementName.Compare(_L8("title")) == 0) || 
+										(aIdEnum == EXmppIdGetNearbyObjects && aElementName.Compare(_L8("name")) == 0)) {					
+									
+									aResultItem->SetTitleL(aElementData);
+								}
+								else if(aIdEnum == EXmppIdGetMaitredList && aElementName.Compare(_L8("affiliation")) == 0) {
+									aResultItem->SetChannelAffiliation(CXmppEnumerationConverter::PubsubAffiliation(aItemXmlParser->GetStringData()));
+								}				
+								else if(aElementName.Compare(_L8("description")) == 0) {					
+									aResultItem->SetDescriptionL(aElementData);
+								}
+								else if(aElementName.Compare(_L8("distance")) == 0) {
+									aResultItem->SetDistance(aItemXmlParser->GetIntData());
+								}				
+								else if(aElementName.Compare(_L8("rank")) == 0) {	
+									HBufC* aLocalizedRank = iCoeEnv->AllocReadResourceLC(R_LOCALIZED_STRING_NOTE_CHANNELRANK);
+									HBufC* aRankStatistic = HBufC::NewLC(aLocalizedRank->Des().Length() + 32);
+									TPtr pRankStatistic(aRankStatistic->Des());
+									pRankStatistic.Append(*aLocalizedRank);
+									pRankStatistic.AppendFormat(_L(" : %d"), aItemXmlParser->GetIntData(0));
+									
+									aResultItem->AddStatisticL(pRankStatistic);
+									CleanupStack::PopAndDestroy(2); // aRankStatistic, aLocalizedRank
+								}
+								else if(aItemXmlParser->MoveToElement(_L8("geoloc"))) {
+									CXmppGeolocParser* aGeolocParser = CXmppGeolocParser::NewLC();
+									
+									aResultItem->SetGeolocL(aGeolocParser->XmlToGeolocLC(aItemXmlParser->GetStringData()));
+									aResultItem->UpdateFromGeolocL();
+									CleanupStack::Pop(); // aGeoloc
+									
+									CleanupStack::PopAndDestroy(); // aGeolocParser
+								}
+							} while(aItemXmlParser->MoveToNextElement());
+							
+							CleanupStack::PopAndDestroy(); // aItemXmlParser
+							
+							// Sensor person jid when not following or not a channel moderator
+							if(aResultItem->GetResultType() == EExplorerItemPerson && 
+									(aChannelItem == NULL || aChannelItem->GetPubsubAffiliation() < EPubsubAffiliationModerator)) {
+								
+								HBufC* aJid = aResultItem->GetId().AllocLC();
+								TPtr pJid(aJid->Des());
+								
+								if(!iBuddycloudLogic->IsSubscribedTo(pJid, EItemRoster)) {
+									// Sensor jid
+									for(TInt i = (pJid.Locate('@') - 1), x = (i - 2); i > 1 && i > x; i--) {
+										pJid[i] = 46;
+									}
+								}
+											
+								aResultItem->SetTitleL(pJid);
+								CleanupStack::PopAndDestroy(); // aJid
+							}
+							
+							// Add item
+							if(aIdEnum == EXmppIdGetNearbyObjects) {
+								iExplorerLevels[aLevel]->AppendSortedItem(aResultItem, ESortByDistance);
+							}
+							else {
+								iExplorerLevels[aLevel]->AppendSortedItem(aResultItem);							
+							}
+							
+							CleanupStack::Pop(); // aResultItem
+						}
+					}					
+				}
+			}
+			
+			CleanupStack::PopAndDestroy(); // aXmlParser
 		}
 	}
-		
-	CleanupStack::PopAndDestroy(); // aXmlParser
 	
 	iQueryResultCount++;
 		
@@ -1124,8 +1321,9 @@ void CBuddycloudExplorerContainer::XmppStanzaAcknowledgedL(const TDesC8& aStanza
 		iExplorerState = EExplorerIdle;
 	}	
 	
+	// Update screen
+	RepositionItems(true);
 	RenderWrappedText(iSelectedItem);
-	RepositionItems(false);
 	RenderScreen();
 }
 

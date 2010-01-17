@@ -13,6 +13,8 @@
 CHARACTER_SET UTF8
 
 rls_string r_string_app_caption "buddycloud"
+rls_string r_string_menuseperator "──────────"
+
 // DO NOT TRANSLATE
 
 rls_string r_string_langcode "kr"
@@ -86,7 +88,7 @@ rls_string r_string_settings_usersettings "환경"
 rls_string r_string_settings_communitysettings "온라인 쉐어하기"
 rls_string r_string_settings_clearconnection "인터넷 연결 변경하기"
 
-rls_string r_string_note_followinglistempty "당신은 어떤 것도 따라다니고 있지 않습니다.\n\n따라다닐 것들을 찾기 위해 채널과 탐험탭을 사용하십시오."
+rls_string r_string_note_followinglistempty "You are not following anything.\n\nUse the Explorer tab to search for things to follow."
 
 // Menu: Messaging
 rls_string r_string_options_postrequest "Request post privilege"
@@ -124,29 +126,30 @@ rls_string r_string_note_placeslistempty "북마크된 장소들이 아직 없�
 // Menu: Nearby
 rls_string r_string_options_refresh "새로 고치기"
 rls_string r_string_item_placeinfo "장소 세부사항들"
-rls_string r_string_item_personinfo "개인정보"
 rls_string r_string_item_setcurrent "이장소로 설정하기"
 rls_string r_string_item_subscribe "나의 장소들에 추가하기"
 
 // Menu: Explorer
 rls_string r_string_options_explore "탐험하기"
 rls_string r_string_item_seefollowers "추종자들 보기"
-rls_string r_string_item_seeplaces "장소들 보기"
+rls_string r_string_item_seemoderators "See moderators"
 rls_string r_string_item_seefollowing "따라다니기 보기"
+rls_string r_string_item_seemoderating "See moderating"
 rls_string r_string_item_seeproducing "프로듀싱 보기"
 rls_string r_string_item_seenearby "근처 보기"
-rls_string r_string_item_seebeenhere "이 곳을 방문한 사람들 "
-rls_string r_string_item_seegoinghere "이 곳을 방문할 사람들 "
 
-rls_string r_string_title_isfollowing "$USER 님이 따라다니고 있습니다"
 rls_string r_string_title_followedby "$OBJECT 님의 추종자들"
+rls_string r_string_title_moderatedby "$OBJECT's moderators"
+rls_string r_string_title_isfollowing "$USER 님이 따라다니고 있습니다"
+rls_string r_string_title_ismoderating "$USER is moderating"
 rls_string r_string_title_isproducing "$USER 님이 프로듀싱하고 있습니다"
 rls_string r_string_title_nearbyto "$OBJECT 님의 근처"
-rls_string r_string_title_whosbeento "$PLACE 을 다녀간 사람들"
-rls_string r_string_title_whosgoingto "$PLACE 을 방문할 사람들"
 
 rls_string r_string_note_requesting "신청하는중..."
 rls_string r_string_note_channelrank "순위"
+rls_string r_string_note_channelsince "Days broadcasting"
+rls_string r_string_note_channelowner "Produced by"
+rls_string r_string_note_channellocation "Channel location"
 
 // Menu: Channels
 rls_string r_string_list_nearbytoyou "What's Nearby To Me"
@@ -161,22 +164,21 @@ rls_string r_string_item_follow "따라다니기"
 rls_string r_string_item_unfollow "따라다니지 않기"
 
 // Channel: Settings & Configuration
-rls_string r_string_note_personalchannelcreated "$USER 님 버디클라우드 채널에 오신걸 환영합니다!\n\n이곳은 여러분만의 개인 채널입니다. 이 채널은 여러분 소유이시고 여러분의 추종자들에게 여러분을 알리는 것을 도와드릴 것입니다!"
 rls_string r_string_note_mediauploadready "You can now upload your media file at $LINK"
 
 rls_string r_string_item_changerole "Change permission"
 rls_string r_string_changerole_itemlist_outcast "채널에서 금지시키기"
-rls_string r_string_changerole_itemlist_follower "To follower"
-rls_string r_string_changerole_itemlist_publisher "To publisher"
-rls_string r_string_changerole_itemlist_moderator "To moderator"
+rls_string r_string_changerole_itemlist_follower "추종자들"
+rls_string r_string_changerole_itemlist_publisher "Follower + post"
+rls_string r_string_changerole_itemlist_moderator "의장"
 
 rls_string r_string_note_affiliationrequest_title "Publish request"
 rls_string r_string_note_affiliationrequest_text "$USER has requested permission to post in this channel. To approve this request press 'Accept', else press 'Decline'."
 
 rls_string r_string_note_affiliationoutcast "You have been banned from the channel. You now cannot read or post content in this channel."
-rls_string r_string_note_affiliationmember "You have become a follower of the channel. You can now read, but not post content in this channel."
-rls_string r_string_note_affiliationpublisher "You have become a publisher of the channel. You can now read and post content in this channel."
-rls_string r_string_note_affiliationmoderator "You have become a moderator of the channel. You can now read, post, and manage content in this channel."
+rls_string r_string_note_affiliationmember "You can now read, but not post content in this channel."
+rls_string r_string_note_affiliationpublisher "You can now read and post content in this channel."
+rls_string r_string_note_affiliationmoderator "You can now read, post, and moderate content in this channel."
 
 rls_string r_string_note_subscriptionrequest_text "$USER has requested to follow this channel. To approve this request press 'Accept', else press 'Decline'."
 rls_string r_string_note_subscriptionpending "Your subscription request has been sent to the channel's producer."

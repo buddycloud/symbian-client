@@ -808,6 +808,11 @@ RESOURCE MENU_PANE r_messaging_options_channel_menu
 		},
 		MENU_ITEM
 		{ 
+			command = EMenuSeeModeratorsCommand; 
+			txt = r_string_item_seemoderators;
+		},
+		MENU_ITEM
+		{ 
 			command = EMenuEditChannelCommand; 
 			txt = r_string_item_showchanneldetails;
 		}
@@ -1018,16 +1023,6 @@ RESOURCE MENU_PANE r_explorer_options_item_menu
 	{
 		MENU_ITEM
 		{ 
-			command = EMenuGetPlaceInfoCommand; 
-			txt = r_string_item_placeinfo;
-		},
-		MENU_ITEM
-		{ 
-			command = EMenuGetPersonInfoCommand; 
-			txt = r_string_item_personinfo;
-		},
-		MENU_ITEM
-		{ 
 			command = EMenuSetAsPlaceCommand; 
 			txt = r_string_item_setcurrent;
 		},
@@ -1043,6 +1038,11 @@ RESOURCE MENU_PANE r_explorer_options_item_menu
 		},
 		MENU_ITEM
 		{ 
+			command = EMenuChannelInfoCommand; 
+			txt = r_string_item_showchanneldetails;
+		},
+		MENU_ITEM
+		{ 
 			command = EMenuFollowCommand; 
 			txt = r_string_item_follow;
 		},
@@ -1055,6 +1055,11 @@ RESOURCE MENU_PANE r_explorer_options_item_menu
 		{ 
 			command = EMenuPrivateMessagesCommand; 
 			txt = r_string_item_viewprivatemessages;
+		},
+		MENU_ITEM
+		{ 
+			command = EMenuChangePermissionCommand; 
+			txt = r_string_item_changerole;
 		},
 		MENU_ITEM
 		{ 
@@ -1075,13 +1080,23 @@ RESOURCE MENU_PANE r_explorer_options_explore_menu
 		},
 		MENU_ITEM
 		{ 
-			command = EMenuSeePlacesCommand; 
-			txt = r_string_item_seeplaces;
+			command = EMenuSeeModeratorsCommand; 
+			txt = r_string_item_seemoderators;
+		},
+		MENU_ITEM
+		{ 
+			command = EMenuSeperator; 
+			txt = r_string_menuseperator;
 		},
 		MENU_ITEM
 		{ 
 			command = EMenuSeeFollowingCommand; 
 			txt = r_string_item_seefollowing;
+		},
+		MENU_ITEM
+		{ 
+			command = EMenuSeeModeratingCommand; 
+			txt = r_string_item_seemoderating;
 		},
 		MENU_ITEM
 		{ 
@@ -1092,16 +1107,6 @@ RESOURCE MENU_PANE r_explorer_options_explore_menu
 		{ 
 			command = EMenuSeeNearbyCommand; 
 			txt = r_string_item_seenearby;
-		},
-		MENU_ITEM
-		{ 
-			command = EMenuSeeBeenHereCommand; 
-			txt = r_string_item_seebeenhere;
-		},
-		MENU_ITEM
-		{ 
-			command = EMenuSeeGoingHereCommand; 
-			txt = r_string_item_seegoinghere;
 		}
 	};
 }
@@ -2047,7 +2052,14 @@ RESOURCE TBUF r_localized_string_editchannel_description_title { buf = r_string_
 RESOURCE TBUF r_localized_string_editchannel_access_title { buf = r_string_editchannel_itemlist_access; }
 RESOURCE TBUF r_localized_string_note_channelexists { buf = r_string_note_channelexists; }
 
-// Channels
+// Channel info
+RESOURCE TBUF r_localized_string_channelaccess { buf = r_string_editchannel_itemlist_access; }
+RESOURCE TBUF r_localized_string_channelaccess_open { buf = r_string_editchannel_itemlist_access_open; }
+RESOURCE TBUF r_localized_string_channelaccess_whitelist { buf = r_string_editchannel_itemlist_access_whitelist; }
+RESOURCE TBUF r_localized_string_note_channelsince { buf = r_string_note_channelsince; }
+RESOURCE TBUF r_localized_string_note_channelrank { buf = r_string_note_channelrank; }
+
+// Explorer
 RESOURCE TBUF r_localized_string_options_explore { buf = r_string_options_explore; }
 RESOURCE TBUF r_localized_string_list_nearbytoyou { buf = r_string_list_nearbytoyou; }
 RESOURCE TBUF r_localized_string_list_featuredchannels { buf = r_string_list_featuredchannels; }
@@ -2055,17 +2067,16 @@ RESOURCE TBUF r_localized_string_list_channelsyoumightlike { buf = r_string_list
 RESOURCE TBUF r_localized_string_list_followersfavourites { buf = r_string_list_followersfavourites; }
 RESOURCE TBUF r_localized_string_list_mostpopularchannels { buf = r_string_list_mostpopularchannels; }
 RESOURCE TBUF r_localized_string_list_channelsneartoyou { buf = r_string_list_channelsneartoyou; }
-RESOURCE TBUF r_localized_string_title_isfollowing { buf = r_string_title_isfollowing; }
 RESOURCE TBUF r_localized_string_title_followedby { buf = r_string_title_followedby; }
+RESOURCE TBUF r_localized_string_title_moderatedby { buf = r_string_title_moderatedby; }
+RESOURCE TBUF r_localized_string_title_isfollowing { buf = r_string_title_isfollowing; }
+RESOURCE TBUF r_localized_string_title_ismoderating { buf = r_string_title_ismoderating; }
 RESOURCE TBUF r_localized_string_title_isproducing { buf = r_string_title_isproducing; }
 RESOURCE TBUF r_localized_string_title_nearbyto { buf = r_string_title_nearbyto; }
-RESOURCE TBUF r_localized_string_title_whosbeento { buf = r_string_title_whosbeento; }
-RESOURCE TBUF r_localized_string_title_whosgoingto { buf = r_string_title_whosgoingto; }
-RESOURCE TBUF r_localized_string_note_personalchannelcreated { buf = r_string_note_personalchannelcreated; }
 RESOURCE TBUF r_localized_string_note_mediauploadready { buf = r_string_note_mediauploadready; }
 RESOURCE TBUF r_localized_string_note_requesting { buf = r_string_note_requesting; }
-RESOURCE TBUF r_localized_string_note_channelrank { buf = r_string_note_channelrank; }
 
+// Pubsub
 RESOURCE TBUF r_localized_string_note_affiliationrequest_title { buf = r_string_note_affiliationrequest_title; }
 RESOURCE TBUF r_localized_string_note_affiliationrequest_text { buf = r_string_note_affiliationrequest_text; }
 RESOURCE TBUF r_localized_string_note_affiliationoutcast { buf = r_string_note_affiliationoutcast; }
