@@ -1,6 +1,29 @@
 Change Log
 ==========
 
+0.05.26
+
+- Use affiliations query for all 'See Followers' events
+- Change help to open a browser instead of contextual help on the client
+- Dynamically collect directory items for CBuddycloudExplorerContainer
+- Pre-add #beta_testers & #translators channels to debug clients
+- Rewrite collection of own subscriptions to use rsm to break packets up
+- Opimization of processing of own subscriptions
+- Rewrite collection of user channel affiliations to synchronize with roster to use rsm
+- Include xml:lang in directory query
+- Update from 99translations
+
+0.05.25
+
+- [bug] Stop kinetic scrolling when 'Jump to unread' is selected
+- Don't sensor jid's for channels moderating in CBuddycloudLogic
+- Add 'Report channel' menu and logic to CBuddycloudChannelInfoContainer
+- Add pubsub#default_affiliation to CBuddycloudEditChannelList
+- Change the roster-channel-sync to use pubsub affiliations instead of subscriptions (allows permanent ban)
+- Add Result Set Management processing into CBuddycloudExplorerContainer
+- [workaround] Change broadcaster address to pubsub-bridge@broadcaster.buddycloud.com (for google servers)
+- Update from 99translations
+
 0.05.24
 
 - [bug] Only call/open CBuddycloudEditChannelList for not found topic channels (not user channels)
@@ -248,7 +271,7 @@ Change Log
 - Cleanup & extension of TcpIpEngine to negotiate SSL/TLS connections
 - Cleanup of XmppEngine to handle jabber server address changing
 - Move connection statistic management to XmppEngine from CompressionEngine
-- [Workaround] Force server time query to buddycloud.com
+- [workaround] Force server time query to buddycloud.com
 - Negotiate TLS connection if stream requires it in XmppEngine
 - Handle TLS negotiation error cases in XmppEngine
 - Define MXmppWriteInterface to allow direct write access to the XmppEngine

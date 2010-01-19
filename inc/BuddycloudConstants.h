@@ -25,7 +25,10 @@ const TUid KChannelInfoViewId            = {12};
 const TUid KCommunitiesViewId            = {13};
 
 // String constants
-_LIT8(KBuddycloudPubsubServer, "broadcaster.buddycloud.com");
+_LIT8(KBuddycloudPubsubServer, "pubsub-bridge@broadcaster.buddycloud.com");
+
+// TODO: Remove redundant pubsub server
+_LIT8(KBuddycloudRedundantPubsubServer, "broadcaster.buddycloud.com");
 
 _LIT8(KIqTypeSet, "set");
 _LIT8(KIqTypeGet, "get");
@@ -55,11 +58,11 @@ enum TBuddycloudXmppIdEnumerations {
 	EXmppIdGetPlaceSubscriptions, EXmppIdAddPlaceSubscription, EXmppIdRemovePlaceSubscription, EXmppIdDeletePlace, 
 	EXmppIdSetCurrentPlace, EXmppIdCreatePlace, EXmppIdSearchForPlace, EXmppIdGetPlaceDetails, EXmppEditPlaceDetails, 
 	// Pubsub id's
-	EXmppIdGetPubsubSubscriptions, EXmppIdGetUsersPubsubNodeSubscribers, EXmppIdPublishMood, EXmppIdPublishFuturePlace, 
+	EXmppIdGetPubsubSubscriptions, EXmppIdGetUsersPubsubNodeAffiliations, EXmppIdPublishMood, EXmppIdPublishFuturePlace, 
 	EXmppIdCreateChannel, EXmppIdPublishChannelPost, EXmppIdAddChannelSubscription, EXmppIdGetChannelMetadata, 
 	EXmppIdRequestMediaPost,
 	// Explorer id's
-	EXmppIdGetNearbyObjects, EXmppIdGetNodeAffiliations, EXmppIdGetMaitredList
+	EXmppIdGetDirectories, EXmppIdGetNearbyObjects, EXmppIdGetNodeAffiliations, EXmppIdGetMaitredList
 };
 
 #endif

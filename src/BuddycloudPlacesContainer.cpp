@@ -258,15 +258,6 @@ void CBuddycloudPlacesContainer::RenderWrappedText(TInt aIndex) {
 	}
 }
 
-void CBuddycloudPlacesContainer::GetHelpContext(TCoeHelpContext& aContext) const {
-	aContext.iMajor = TUid::Uid(HLPUID);
-	aContext.iContext = KPlacesTab;
-	
-	if(iPlaceStore->Count() > 0) {
-		aContext.iContext = KPlaceManagement;
-	}
-}
-
 void CBuddycloudPlacesContainer::HandleResourceChange(TInt aType) {
 	CBuddycloudListComponent::HandleResourceChange(aType);
 	
@@ -947,7 +938,7 @@ void CBuddycloudPlacesContainer::HandleCommandL(TInt aCommand) {
 			aViewReference().iCallbackViewId = KPlacesViewId;
 			aViewReference().iOldViewData.iId = iSelectedItem;
 			
-			CExplorerStanzaBuilder::BuildButlerXmppStanza(aViewReference().iNewViewData.iData, iBuddycloudLogic->GetNewIdStamp(), aPlace->GetGeoloc()->GetReal(EGeolocLatitude), aPlace->GetGeoloc()->GetReal(EGeolocLongitude));
+			CExplorerStanzaBuilder::FormatButlerXmppStanza(aViewReference().iNewViewData.iData, iBuddycloudLogic->GetNewIdStamp(), aPlace->GetGeoloc()->GetReal(EGeolocLatitude), aPlace->GetGeoloc()->GetReal(EGeolocLongitude));
 			CExplorerStanzaBuilder::BuildTitleFromResource(aViewReference().iNewViewData.iTitle, R_LOCALIZED_STRING_TITLE_NEARBYTO, _L("$OBJECT"), aPlace->GetGeoloc()->GetString(EGeolocText));
 			
 			iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KExplorerViewId), TUid::Uid(0), aViewReference);		

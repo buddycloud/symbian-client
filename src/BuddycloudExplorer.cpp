@@ -23,29 +23,38 @@
 ----------------------------------------------------------------------------
 */
 		
-void CExplorerStanzaBuilder::BuildButlerXmppStanza(TDes8& aString, TInt aStampId, const TDesC8& aReferenceJid, TInt aOptionsLimit) {
+void CExplorerStanzaBuilder::FormatButlerXmppStanza(TDes8& aString, TInt aStampId, const TDesC8& aReferenceJid, TInt aOptionsLimit) {
 	_LIT8(KNearbyStanza, "<iq to='butler.buddycloud.com' type='get' id='%02d:%02d'><query xmlns='urn:oslo:nearbyobjects'><reference type='person' id='$JID'/><options limit='%d'/></query></iq>\r\n");
 	aString.Format(KNearbyStanza, EXmppIdGetNearbyObjects, aStampId, aOptionsLimit);	
 	aString.Replace(aString.Find(_L8("$JID")), 4, aReferenceJid);
 }
 		
-void CExplorerStanzaBuilder::BuildButlerXmppStanza(TDes8& aString, TInt aStampId, TReal aPointLatitude, TReal aPointLongitude, TInt aOptionsLimit) {
+void CExplorerStanzaBuilder::FormatButlerXmppStanza(TDes8& aString, TInt aStampId, TReal aPointLatitude, TReal aPointLongitude, TInt aOptionsLimit) {
 	_LIT8(KNearbyStanza, "<iq to='butler.buddycloud.com' type='get' id='%02d:%02d'><query xmlns='urn:oslo:nearbyobjects'><point lat='%.6f' lon='%.6f'/><options limit='%d'/></query></iq>\r\n");
 	aString.Format(KNearbyStanza, EXmppIdGetNearbyObjects, aStampId, aPointLatitude, aPointLongitude, aOptionsLimit);
 }
 
-void CExplorerStanzaBuilder::BuildBroadcasterXmppStanza(TDes8& aString, TInt aStampId, const TDesC8& aNodeId) {
-	_LIT8(KBroadcasterStanza, "<iq to='' type='get' id='%02d:%02d'><pubsub xmlns='http://jabber.org/protocol/pubsub#owner'><affiliations node=''/></pubsub></iq>\r\n");
-	aString.Format(KBroadcasterStanza, EXmppIdGetNodeAffiliations, aStampId);
-	aString.Insert(aString.Length() - 119, KBuddycloudPubsubServer);
-	aString.Insert(aString.Length() - 19, aNodeId);
+void CExplorerStanzaBuilder::FormatBroadcasterXmppStanza(TDes8& aString, TInt aStampId, const TDesC8& aNodeId, TInt aRsmMax) {
+	_LIT8(KBroadcasterStanza, "<iq to='' type='get' id='%02d:%02d'><pubsub xmlns='http://jabber.org/protocol/pubsub#owner'><affiliations node='$NODE'/><set xmlns='http://jabber.org/protocol/rsm'><max>%d</max></set></pubsub></iq>\r\n");
+	aString.Format(KBroadcasterStanza, EXmppIdGetNodeAffiliations, aStampId, aRsmMax);
+	aString.Replace(aString.Find(_L8("$NODE")), 5, aNodeId);
+	aString.Insert(8, KBuddycloudPubsubServer);
 }	
 
-void CExplorerStanzaBuilder::BuildMaitredXmppStanza(TDes8& aString, TInt aStampId, const TDesC8& aItemId,  const TDesC8& aItemVar) {
+void CExplorerStanzaBuilder::AppendMaitredXmppStanza(TDes8& aString, TInt aStampId, const TDesC8& aItemId,  const TDesC8& aItemVar) {
 	_LIT8(KMaitredStanza, "<iq to='maitred.buddycloud.com' type='get' id='%02d:%02d'><query xmlns='http://buddycloud.com/protocol/channels'><items id='' var=''/></query></iq>\r\n");
 	aString.AppendFormat(KMaitredStanza, EXmppIdGetMaitredList, aStampId);
 	aString.Insert(aString.Length() - 25, aItemId);
 	aString.Insert(aString.Length() - 18, aItemVar);
+}
+
+void CExplorerStanzaBuilder::AppendXmlLangToStanza(TDes8& aString, const TDesC8& aLang) {
+	TInt aLocate = aString.Locate('>');
+	
+	if(aLocate != KErrNotFound) {
+		aString.Insert(aLocate, _L8(" xml:lang=''"));
+		aString.Insert(aLocate + 11, aLang);
+	}
 }
 
 void CExplorerStanzaBuilder::BuildTitleFromResource(TDes& aString, TInt aResourceId, const TDesC& aReplaceData, const TDesC& aWithData) {
@@ -290,6 +299,14 @@ CFollowingChannelItem* CExplorerQueryLevel::GetQueriedChannel() {
 
 void CExplorerQueryLevel::SetQueriedChannel(CFollowingChannelItem* aChannelItem) {
 	iQueriedChannel = aChannelItem;
+}
+
+TBool CExplorerQueryLevel::RsmAllowed() {
+	return iRsmAllowed;
+}
+
+void CExplorerQueryLevel::SetRsmAllowed(TBool aRsmAllowed) {
+	iRsmAllowed = aRsmAllowed;
 }
 
 void CExplorerQueryLevel::ClearResultItems() {

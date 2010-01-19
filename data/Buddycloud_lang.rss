@@ -1238,6 +1238,11 @@ RESOURCE MENU_PANE r_channelinfo_options_menu
 		},
 		MENU_ITEM
 		{ 
+			command = EMenuReportChannelCommand; 
+			txt = r_string_options_reportchannel;
+		},
+		MENU_ITEM
+		{ 
 			command = EMenuDeleteCommand; 
 			txt = r_string_options_delete;
 		},
@@ -1843,6 +1848,13 @@ RESOURCE AVKON_SETTING_ITEM_LIST r_editchannel_item_list
 			setting_page_resource = r_editchannel_item_access_page;
 			associated_resource = r_editchannel_item_access_assoc;
 			name = r_string_editchannel_itemlist_access;
+		},
+		AVKON_SETTING_ITEM
+		{
+			identifier = EEditChannelItemAffiliation;
+			setting_page_resource = r_editchannel_item_affiliation_page;
+			associated_resource = r_editchannel_item_affiliation_assoc;
+			name = r_string_editchannel_itemlist_defaultaffiliation;
 		}
 	};
 }
@@ -1894,6 +1906,36 @@ RESOURCE ARRAY r_editchannel_item_access_texts
 		{
 			value = 1;
 			text = r_string_editchannel_itemlist_access_whitelist;
+		}
+	};
+}
+
+RESOURCE AVKON_SETTING_PAGE r_editchannel_item_affiliation_page
+{
+	label = r_string_editchannel_itemlist_defaultaffiliation;
+	type = EAknCtPopupSettingList;
+	editor_resource_id = r_binary_editor;
+}
+
+RESOURCE AVKON_POPUP_SETTING_TEXTS r_editchannel_item_affiliation_assoc
+{
+	flags = 0;
+	setting_texts_resource = r_editchannel_item_affiliation_texts;
+ }
+
+RESOURCE ARRAY r_editchannel_item_affiliation_texts
+{
+	items =
+        {
+		AVKON_ENUMERATED_TEXT
+		{
+			value = 0;
+			text = r_string_editchannel_itemlist_defaultaffiliation_member;
+		},
+		AVKON_ENUMERATED_TEXT
+		{
+			value = 1;
+			text = r_string_editchannel_itemlist_defaultaffiliation_publisher;
 		}
 	};
 }
@@ -2049,7 +2091,6 @@ RESOURCE TBUF r_localized_string_editchannel_title { buf = r_string_editchannel_
 RESOURCE TBUF r_localized_string_editchannel_title_title { buf = r_string_editchannel_itemlist_title; }
 RESOURCE TBUF r_localized_string_editchannel_id_title { buf = r_string_editchannel_itemlist_id; }
 RESOURCE TBUF r_localized_string_editchannel_description_title { buf = r_string_editchannel_itemlist_description; }
-RESOURCE TBUF r_localized_string_editchannel_access_title { buf = r_string_editchannel_itemlist_access; }
 RESOURCE TBUF r_localized_string_note_channelexists { buf = r_string_note_channelexists; }
 
 // Channel info
@@ -2066,7 +2107,6 @@ RESOURCE TBUF r_localized_string_list_featuredchannels { buf = r_string_list_fea
 RESOURCE TBUF r_localized_string_list_channelsyoumightlike { buf = r_string_list_channelsyoumightlike; }
 RESOURCE TBUF r_localized_string_list_followersfavourites { buf = r_string_list_followersfavourites; }
 RESOURCE TBUF r_localized_string_list_mostpopularchannels { buf = r_string_list_mostpopularchannels; }
-RESOURCE TBUF r_localized_string_list_channelsneartoyou { buf = r_string_list_channelsneartoyou; }
 RESOURCE TBUF r_localized_string_title_followedby { buf = r_string_title_followedby; }
 RESOURCE TBUF r_localized_string_title_moderatedby { buf = r_string_title_moderatedby; }
 RESOURCE TBUF r_localized_string_title_isfollowing { buf = r_string_title_isfollowing; }

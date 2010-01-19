@@ -56,11 +56,6 @@ void CBuddycloudAccountSettingsList::ActivateL(TInt aSelectItem) {
 	ListBox()->SetCurrentItemIndexAndDraw(aSelectItem);
 }
 
-void CBuddycloudAccountSettingsList::GetHelpContext(TCoeHelpContext& aContext) const {
-	aContext.iMajor = TUid::Uid(HLPUID);
-	aContext.iContext = KAccountSettings;
-}
-
 TKeyResponse CBuddycloudAccountSettingsList::OfferKeyEventL(const TKeyEvent& aKeyEvent, TEventCode aType) {
 	TKeyResponse aResult = EKeyWasNotConsumed;
 

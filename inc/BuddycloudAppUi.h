@@ -12,8 +12,6 @@
 
 // INCLUDES
 #include <aknviewappui.h>
-#include <apacmdln.h>
-#include <coehelp.h>
 #include "BuddycloudLogic.h"
 
 class CBuddycloudAppUi : public CAknViewAppUi, MTimeoutNotification, 
@@ -35,9 +33,6 @@ class CBuddycloudAppUi : public CAknViewAppUi, MTimeoutNotification,
 		
 	public: // From CAknViewAppUi 
 		TBool ProcessCommandParametersL(CApaCommandLine &aCommandLine);
-	    
-	private: // From CAknViewAppUi 
-		CArrayFix<TCoeHelpContext>* HelpContextL() const;
 		
 	protected: // From CAknViewAppUi
 		void HandleCommandL(TInt aCommand);

@@ -236,6 +236,7 @@ void CBuddycloudChannelInfoContainer::DynInitMenuPaneL(TInt aResourceId, CEikMen
 		aMenuPane->SetItemDimmed(EMenuFollowCommand, true);
 		aMenuPane->SetItemDimmed(EMenuEditChannelCommand, true);
 		aMenuPane->SetItemDimmed(EMenuOptionsExploreCommand, true);
+		aMenuPane->SetItemDimmed(EMenuReportChannelCommand, true);
 		aMenuPane->SetItemDimmed(EMenuDeleteCommand, true);
 		
 		if(iCollectionState == EChannelInfoCollected) {
@@ -245,7 +246,9 @@ void CBuddycloudChannelInfoContainer::DynInitMenuPaneL(TInt aResourceId, CEikMen
 					
 					aMenuPane->SetItemDimmed(EMenuEditChannelCommand, false);
 				}
-
+				
+				aMenuPane->SetItemDimmed(EMenuReportChannelCommand, false);
+				
 				if(iChannelItem->GetPubsubAffiliation() == EPubsubAffiliationOwner && 
 						iChannelItem->GetItemType() == EItemChannel) {
 					
@@ -299,6 +302,9 @@ void CBuddycloudChannelInfoContainer::HandleCommandL(TInt aCommand) {
 
 		iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KEditChannelViewId), TUid::Uid(0), aViewReference);					
 	}
+	else if(aCommand == EMenuReportChannelCommand) {
+		iBuddycloudLogic->FlagTagNodeL(KTaggerFlag, iChannelItem->GetId());
+	}
 	else if(aCommand == EMenuDeleteCommand) {
 		HBufC* aMessageText = iCoeEnv->AllocReadResourceLC(R_LOCALIZED_STRING_DELETECHANNEL_TEXT);		
 		
@@ -323,13 +329,12 @@ void CBuddycloudChannelInfoContainer::HandleCommandL(TInt aCommand) {
 		aViewReference().iOldViewData = iQueryReference.iNewViewData;
 		
 		if(aCommand == EMenuSeeModeratorsCommand) {
-			CExplorerStanzaBuilder::BuildMaitredXmppStanza(aViewReference().iNewViewData.iData, iBuddycloudLogic->GetNewIdStamp(), iQueryReference.iNewViewData.iData, _L8("owner"));
-			CExplorerStanzaBuilder::BuildMaitredXmppStanza(aViewReference().iNewViewData.iData, iBuddycloudLogic->GetNewIdStamp(), iQueryReference.iNewViewData.iData, _L8("moderator"));
+			CExplorerStanzaBuilder::AppendMaitredXmppStanza(aViewReference().iNewViewData.iData, iBuddycloudLogic->GetNewIdStamp(), iQueryReference.iNewViewData.iData, _L8("owner"));
+			CExplorerStanzaBuilder::AppendMaitredXmppStanza(aViewReference().iNewViewData.iData, iBuddycloudLogic->GetNewIdStamp(), iQueryReference.iNewViewData.iData, _L8("moderator"));
 			aResourceId = R_LOCALIZED_STRING_TITLE_MODERATEDBY;
 		}
 		else {
-			CExplorerStanzaBuilder::BuildMaitredXmppStanza(aViewReference().iNewViewData.iData, iBuddycloudLogic->GetNewIdStamp(), iQueryReference.iNewViewData.iData, _L8("publisher"));
-			CExplorerStanzaBuilder::BuildMaitredXmppStanza(aViewReference().iNewViewData.iData, iBuddycloudLogic->GetNewIdStamp(), iQueryReference.iNewViewData.iData, _L8("member"));
+			CExplorerStanzaBuilder::FormatBroadcasterXmppStanza(aViewReference().iNewViewData.iData, iBuddycloudLogic->GetNewIdStamp(), iQueryReference.iNewViewData.iData);
 			aResourceId = R_LOCALIZED_STRING_TITLE_FOLLOWEDBY;
 		}
 		
@@ -337,11 +342,6 @@ void CBuddycloudChannelInfoContainer::HandleCommandL(TInt aCommand) {
 		
 		iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KExplorerViewId), TUid::Uid(0), aViewReference);					
 	}
-}
-
-void CBuddycloudChannelInfoContainer::GetHelpContext(TCoeHelpContext& aContext) const {
-	aContext.iMajor = TUid::Uid(HLPUID);
-	aContext.iContext = KChannelEditing;
 }
 
 void CBuddycloudChannelInfoContainer::SizeChanged() {

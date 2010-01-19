@@ -46,16 +46,11 @@ END
 START RESOURCE    2000C4A4.rss
 END
 
-SOURCEPATH        ..\help
-DOCUMENT          Buddycloud.cshlp
-DOCUMENT          Buddycloud.rtf
-DOCUMENT          custom.xml
-
 USERINCLUDE       ..\inc
 SYSTEMINCLUDE     \epoc32\include
 SYSTEMINCLUDE     \epoc32\include\mmf\plugin
 
-LIBRARY           hlplch.lib euser.lib apparc.lib cone.lib eikcoctl.lib eikcore.lib eikdlg.lib avkon.lib
+LIBRARY           euser.lib apparc.lib cone.lib eikcoctl.lib eikcore.lib eikdlg.lib avkon.lib
 LIBRARY           eikctl.lib commonengine.lib efsrv.lib estor.lib gdi.lib cntmodel.lib pbkeng.lib ws32.lib
 LIBRARY           bafl.lib fbscli.lib imut.lib etel3rdparty.lib bluetooth.lib connmon.lib lbs.lib ecom.lib
 LIBRARY           apgrfx.lib commdb.lib bitgdi.lib imageconversion.lib aknskins.lib aknicon.lib etext.lib
@@ -88,11 +83,11 @@ SOURCE            CellTowerDataSimulation.cpp BuddycloudListComponent.cpp Buddyc
 SOURCE            CompressionEngine.cpp EZStreamCompressor.cpp EZStreamDecompressor.cpp TimeUtilities.cpp
 SOURCE            BuddycloudSetupView.cpp BuddycloudSetupContainer.cpp BuddycloudBeaconSettingsView.cpp BuddycloudBeaconSettingsList.cpp 
 SOURCE            SearchResultMessageQueryDialog.cpp TextUtilities.cpp PhoneUtilities.cpp FontUtilities.cpp FileUtilities.cpp 
-SOURCE            BuddycloudExplorer.cpp 
+SOURCE            BuddycloudExplorer.cpp BuddycloudFollowingContainer.cpp BuddycloudFollowingView.cpp
 SOURCE            BuddycloudPreferencesSettingsView.cpp BuddycloudPreferencesSettingsList.cpp 
 SOURCE            BuddycloudCommunitiesView.cpp BuddycloudCommunitiesContainer.cpp BuddycloudFollowing.cpp 
-SOURCE            BuddycloudFollowingContainer.cpp BuddycloudFollowingView.cpp
 SOURCE            XmppOutbox.cpp BuddycloudNotificationsSettingsView.cpp BuddycloudNotificationsSettingsList.cpp 
-SOURCE            XmppUtilities.cpp GeolocData.cpp BuddycloudList.cpp DiscussionManager.cpp AtomEntryData.cpp BuddycloudChannelInfoView.cpp BuddycloudChannelInfoContainer.cpp
+SOURCE            XmppUtilities.cpp GeolocData.cpp BuddycloudList.cpp DiscussionManager.cpp AtomEntryData.cpp 
+SOURCE            BuddycloudChannelInfoView.cpp BuddycloudChannelInfoContainer.cpp
 
 // End of File

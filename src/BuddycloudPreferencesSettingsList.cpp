@@ -54,11 +54,6 @@ void CBuddycloudPreferencesSettingsList::SaveL() {
 	}
 }
 
-void CBuddycloudPreferencesSettingsList::GetHelpContext(TCoeHelpContext& aContext) const {
-	aContext.iMajor = TUid::Uid(HLPUID);
-	aContext.iContext = KPreferencesSettings;
-}
-
 TKeyResponse CBuddycloudPreferencesSettingsList::OfferKeyEventL(const TKeyEvent& aKeyEvent, TEventCode aType) {
 	TKeyResponse aResult = EKeyWasNotConsumed;
 

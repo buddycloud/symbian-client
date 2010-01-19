@@ -106,6 +106,7 @@ rls_string r_string_item_removepost "Delete post"
 
 rls_string r_string_options_itemchannel "Channel"
 rls_string r_string_channel_markread "Mark channel read"
+rls_string r_string_options_reportchannel "Report channel"
 
 // Menu: Places
 rls_string r_string_options_setcurrent "Bewaar nieuwe lokatie"
@@ -270,6 +271,9 @@ rls_string r_string_editchannel_itemlist_description_hint "Channel's description
 rls_string r_string_editchannel_itemlist_access "Access"
 rls_string r_string_editchannel_itemlist_access_open "Open channel"
 rls_string r_string_editchannel_itemlist_access_whitelist "Members only"
+rls_string r_string_editchannel_itemlist_defaultaffiliation "New followers can"
+rls_string r_string_editchannel_itemlist_defaultaffiliation_member "Read only"
+rls_string r_string_editchannel_itemlist_defaultaffiliation_publisher "Read and post"
 
 rls_string r_string_note_channelexists "This #channel_id already exists. Please enter a unique one."
 

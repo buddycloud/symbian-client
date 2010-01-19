@@ -133,6 +133,9 @@ TInt CBuddycloudEditChannelList::SaveChannelDataL() {
 		iChannelItem->SetIdL(iId);
 		iChannelItem->SetAccessModel((TXmppPubsubAccessModel)iAccess);
 		
+		// Convert affiliation
+		iAffiliation = (iAffiliation == 0 ? EPubsubAffiliationMember : EPubsubAffiliationPublisher);
+		
 		iTextUtilities->FindAndReplace(iDescription, TChar(8233), TChar(10));
 		
 		if(iChannelItem->GetItemType() == EItemChannel) {
@@ -148,16 +151,18 @@ TInt CBuddycloudEditChannelList::SaveChannelDataL() {
 			// Publish channel metadata
 			HBufC8* aEncTitle = iTextUtilities->UnicodeToUtf8L(iTitle).AllocLC();
 			HBufC8* aEncDescription = iTextUtilities->UnicodeToUtf8L(iDescription).AllocLC();
-			TPtrC8 aAccess = CXmppEnumerationConverter::PubsubAccessModel(iChannelItem->GetAccessModel());
+			TPtrC8 aAccess = CXmppEnumerationConverter::PubsubAccessModel((TXmppPubsubAccessModel)iAccess);
+			TPtrC8 aAffiliation = CXmppEnumerationConverter::PubsubAffiliation((TXmppPubsubAffiliation)iAffiliation);
 			TPtrC8 aEncId(iTextUtilities->UnicodeToUtf8L(iChannelItem->GetId()));
 		
 			// Send stanza
-			_LIT8(KEditStanza, "<iq to='' type='set' id='editchannel'><pubsub xmlns='http://jabber.org/protocol/pubsub#owner'><configure node=''><x xmlns='jabber:x:data' type='submit'><field var='FORM_TYPE' type='hidden'><value>http://jabber.org/protocol/pubsub#node_config</value></field><field var='pubsub#access_model'><value></value></field><field var='pubsub#title'><value></value></field><field var='pubsub#description'><value></value></field></x></configure></pubsub></iq>\r\n");
-			HBufC8* aEditStanza = HBufC8::NewLC(KEditStanza().Length() + KBuddycloudPubsubServer().Length() + aEncId.Length() + aAccess.Length() + aEncTitle->Des().Length() + aEncDescription->Des().Length());
+			_LIT8(KEditStanza, "<iq to='' type='set' id='editchannel'><pubsub xmlns='http://jabber.org/protocol/pubsub#owner'><configure node=''><x xmlns='jabber:x:data' type='submit'><field var='FORM_TYPE' type='hidden'><value>http://jabber.org/protocol/pubsub#node_config</value></field><field var='pubsub#access_model'><value></value></field><field var='pubsub#default_affiliation'><value></value></field><field var='pubsub#title'><value></value></field><field var='pubsub#description'><value></value></field></x></configure></pubsub></iq>\r\n");
+			HBufC8* aEditStanza = HBufC8::NewLC(KEditStanza().Length() + KBuddycloudPubsubServer().Length() + aEncId.Length() + aAccess.Length() + aAffiliation.Length() + aEncTitle->Des().Length() + aEncDescription->Des().Length());
 			TPtr8 pEditStanza(aEditStanza->Des());
 			pEditStanza.Append(KEditStanza);
-			pEditStanza.Insert(401, *aEncDescription);
-			pEditStanza.Insert(346, *aEncTitle);
+			pEditStanza.Insert(464, *aEncDescription);
+			pEditStanza.Insert(409, *aEncTitle);
+			pEditStanza.Insert(360, aAffiliation);
 			pEditStanza.Insert(297, aAccess);
 			pEditStanza.Insert(111, aEncId);
 			pEditStanza.Insert(8, KBuddycloudPubsubServer);
@@ -186,11 +191,6 @@ void CBuddycloudEditChannelList::DynInitMenuPaneL(TInt aResourceId, CEikMenuPane
 	}
 }
 
-void CBuddycloudEditChannelList::GetHelpContext(TCoeHelpContext& aContext) const {
-	aContext.iMajor = TUid::Uid(HLPUID);
-	aContext.iContext = KChannelEditing;
-}
-
 void CBuddycloudEditChannelList::EditItemL(TInt aIndex, TBool aCalledFromMenu) {
 	if(iChannelEditAllowed) {
 		CAknSettingItemArray* aItemArray = SettingItemArray();
@@ -206,9 +206,6 @@ void CBuddycloudEditChannelList::EditItemL(TInt aIndex, TBool aCalledFromMenu) {
 				break;
 			case EEditChannelItemDescription:
 				SetTitleL(R_LOCALIZED_STRING_EDITCHANNEL_DESCRIPTION_TITLE);
-				break;
-			case EEditChannelItemAccess:
-				SetTitleL(R_LOCALIZED_STRING_EDITCHANNEL_ACCESS_TITLE);
 				break;
 			default:;
 		}
@@ -277,6 +274,12 @@ CAknSettingItem* CBuddycloudEditChannelList::CreateSettingItemL (TInt aIdentifie
 				aSettingItem->SetHidden(true);
 			}
 			break;
+		case EEditChannelItemAffiliation:
+			aSettingItem = new (ELeave) CAknBinaryPopupSettingItem(aIdentifier, iAffiliation);
+			
+			if(iChannelItem->GetItemId() <= 0) {
+				aSettingItem->SetHidden(true);
+			}
 		default:
 			break;
     }
@@ -308,6 +311,12 @@ void CBuddycloudEditChannelList::XmppStanzaAcknowledgedL(const TDesC8& aStanza, 
 					}
 					else if(aAttributeVar.Compare(_L8("pubsub#access_model")) == 0) {
 						iAccess = CXmppEnumerationConverter::PubsubAccessModel(aXmlParser->GetStringData());
+					}
+					else if(aAttributeVar.Compare(_L8("pubsub#default_affiliation")) == 0) {
+						iAffiliation = CXmppEnumerationConverter::PubsubAffiliation(aXmlParser->GetStringData());
+						
+						// Convert affiliation
+						iAffiliation = (iAffiliation == EPubsubAffiliationMember ? 0 : 1);
 					}
 				}
 			}

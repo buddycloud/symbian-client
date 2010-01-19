@@ -294,14 +294,16 @@ void CBuddycloudMessagingContainer::EntryDeleted(CAtomEntryData* aAtomEntry) {
 void CBuddycloudMessagingContainer::TimerExpired(TInt aExpiryId) {
 	if(aExpiryId == KDragTimerId) {
 #ifdef __SERIES60_40__		
-		iDragVelocity = iDragVelocity * 0.95;		
-		iScrollbarHandlePosition += TInt(iDragVelocity);		
-		
-		CBuddycloudListComponent::RepositionItems(false);
-		RenderScreen();
-		
-		if(Abs(iDragVelocity) > 0.05) {
-			iDragTimer->After(50000);
+		if(iDraggingAllowed) {
+			iDragVelocity = iDragVelocity * 0.95;		
+			iScrollbarHandlePosition += TInt(iDragVelocity);		
+			
+			CBuddycloudListComponent::RepositionItems(false);
+			RenderScreen();
+			
+			if(Abs(iDragVelocity) > 0.05) {
+				iDragTimer->After(50000);
+			}
 		}
 #endif
 	}
@@ -450,22 +452,6 @@ void CBuddycloudMessagingContainer::TextWrapEntry(TInt aIndex) {
 		
 		// Wrap
 		iTextUtilities->WrapToArrayL(aFormattedEntry->iLines, aUsedFont, aEntry->GetContent(), aWrapWidth);
-	}
-}
-
-void CBuddycloudMessagingContainer::GetHelpContext(TCoeHelpContext& aContext) const {	
-	CAtomEntryData* aEntry = iEntries[iSelectedItem]->GetEntry();
-
-	aContext.iMajor = TUid::Uid(HLPUID);
-		
-	if(aEntry && aEntry->GetLinkCount() > 0) {
-		aContext.iContext = KLinkedMessages;
-	}
-	else if(iIsChannel) {
-		aContext.iContext = KChannelMessaging;
-	}
-	else {
-		aContext.iContext = KPrivateMessaging;
 	}
 }
 
@@ -1059,6 +1045,9 @@ void CBuddycloudMessagingContainer::HandleItemSelection(TInt aItemId) {
 		iSelectedItem = aItemId;
 		iSelectedLink = 0;
 		iJumpToUnreadPost = false;
+#ifdef __SERIES60_40__
+		iDraggingAllowed = false;
+#endif
 		
 		RenderWrappedText(iSelectedItem);
 		RepositionItems(true);	
@@ -1441,12 +1430,12 @@ void CBuddycloudMessagingContainer::HandleCommandL(TInt aCommand) {
 		aViewReference().iOldViewData.iId = iItem->GetItemId();
 		
 		if(aCommand == EMenuSeeModeratorsCommand) {
-			CExplorerStanzaBuilder::BuildMaitredXmppStanza(aViewReference().iNewViewData.iData, iBuddycloudLogic->GetNewIdStamp(), aEncId, _L8("owner"));
-			CExplorerStanzaBuilder::BuildMaitredXmppStanza(aViewReference().iNewViewData.iData, iBuddycloudLogic->GetNewIdStamp(), aEncId, _L8("moderator"));
+			CExplorerStanzaBuilder::AppendMaitredXmppStanza(aViewReference().iNewViewData.iData, iBuddycloudLogic->GetNewIdStamp(), aEncId, _L8("owner"));
+			CExplorerStanzaBuilder::AppendMaitredXmppStanza(aViewReference().iNewViewData.iData, iBuddycloudLogic->GetNewIdStamp(), aEncId, _L8("moderator"));
 			aResourceId = R_LOCALIZED_STRING_TITLE_MODERATEDBY;
 		}
 		else {
-			CExplorerStanzaBuilder::BuildBroadcasterXmppStanza(aViewReference().iNewViewData.iData, iBuddycloudLogic->GetNewIdStamp(), aEncId);
+			CExplorerStanzaBuilder::FormatBroadcasterXmppStanza(aViewReference().iNewViewData.iData, iBuddycloudLogic->GetNewIdStamp(), aEncId);
 			aResourceId = R_LOCALIZED_STRING_TITLE_FOLLOWEDBY;
 		}
 		

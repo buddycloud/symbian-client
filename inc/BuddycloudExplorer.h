@@ -47,15 +47,19 @@ enum TExplorerState {
 class CExplorerStanzaBuilder {
 	public:
 		// Nearby stanzas
-		static void BuildButlerXmppStanza(TDes8& aString, TInt aStampId, const TDesC8& aReferenceJid, TInt aOptionsLimit = 10);
-		static void BuildButlerXmppStanza(TDes8& aString, TInt aStampId, TReal aPointLatitude, TReal aPointLongitude, TInt aOptionsLimit = 10);
+		static void FormatButlerXmppStanza(TDes8& aString, TInt aStampId, const TDesC8& aReferenceJid, TInt aOptionsLimit = 10);
+		static void FormatButlerXmppStanza(TDes8& aString, TInt aStampId, TReal aPointLatitude, TReal aPointLongitude, TInt aOptionsLimit = 10);
 			
 		// Broadcaster stanza
-		static void BuildBroadcasterXmppStanza(TDes8& aString, TInt aStampId, const TDesC8& aNodeId);
+		static void FormatBroadcasterXmppStanza(TDes8& aString, TInt aStampId, const TDesC8& aNodeId, TInt aRsmMax = 30);
 		
 		// Maitred stanza
-		static void BuildMaitredXmppStanza(TDes8& aString, TInt aStampId, const TDesC8& aId,  const TDesC8& aVar);
+		static void AppendMaitredXmppStanza(TDes8& aString, TInt aStampId, const TDesC8& aId,  const TDesC8& aVar);
+	
+	public:
+		static void AppendXmlLangToStanza(TDes8& aString, const TDesC8& aLang);
 		
+	public:	
 		// Title editor
 		static void BuildTitleFromResource(TDes& aString, TInt aResourceId, const TDesC& aReplaceData, const TDesC& aWithData);
 };
@@ -135,19 +139,23 @@ class CExplorerQueryLevel : public CBase {
 	private:
 		void ConstructL();
 		
-	public:
+	public: // Title data
 		TDesC& GetQueryTitle();
 		void SetQueryTitleL(const TDesC& aTitle);
 		
-	public:
+	public: // Stanza data
 		TDesC8& GetQueriedStanza();
 		void SetQueriedStanzaL(const TDesC8& aStanza);
 		
-	public:
+	public: // Channel reference
 		CFollowingChannelItem* GetQueriedChannel();
 		void SetQueriedChannel(CFollowingChannelItem* aChannelItem);
 		
-	public:
+	public: // Result set management
+		TBool RsmAllowed();
+		void SetRsmAllowed(TBool aRsmAllowed);
+		
+	public: // Result data
 		void ClearResultItems();
 		void AppendSortedItem(CExplorerResultItem* aResultItem, TSortByType aSort = ESortByUnsorted);
 	
@@ -156,6 +164,8 @@ class CExplorerQueryLevel : public CBase {
 		HBufC8* iQueriedStanza;
 		
 		CFollowingChannelItem* iQueriedChannel;
+		
+		TBool iRsmAllowed;
 				
 	public:
 		TInt iSelectedResultItem;

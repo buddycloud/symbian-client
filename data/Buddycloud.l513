@@ -22,7 +22,7 @@ rls_string r_string_translatedby "Translated by: gulli"
 
 rls_string r_string_followingtab_hint "Foigt"
 rls_string r_string_placestab_hint "Platzl"
-rls_string r_string_explorertab_hint "Explorer"
+rls_string r_string_explorertab_hint "Tschännl suaha"
 
 // CBA
 rls_string r_string_options_menu "Optionen"
@@ -39,7 +39,7 @@ rls_string r_string_item_newplace "Neis Platzl..."
 rls_string r_string_options_edititem "Ummodl'n"
 rls_string r_string_options_searchplace "Suach Details"
 rls_string r_string_options_remove "Weg damit"
-rls_string r_string_options_delete "Delete"
+rls_string r_string_options_delete "Weg damit"
 
 rls_string r_string_note_noresultsfound "Hamma ned"
 rls_string r_string_note_requestsent "Anfrage g'schickt"
@@ -75,8 +75,8 @@ rls_string r_string_options_settings "'Rumschoit'n"
 rls_string r_string_item_viewmessages "Nachrichten oschaug'n"
 rls_string r_string_item_viewchannelmessages "In Tschännl neischaug'n"
 rls_string r_string_item_viewprivatemessages "PeäM oschaug'n"
-rls_string r_string_item_showplacedetails "See place details"
-rls_string r_string_item_showchanneldetails "See channel details"
+rls_string r_string_item_showplacedetails "Platzl Deteils  "
+rls_string r_string_item_showchanneldetails "Tschännl Deteils"
 rls_string r_string_item_sendplacebysms "Schick mei Platzl ois SMS"
 rls_string r_string_item_sendinvite "Eilod'n fia buddycloud"
 rls_string r_string_item_noticeaccept "Freili"
@@ -88,7 +88,7 @@ rls_string r_string_settings_usersettings "So hob I's am liabst'n"
 rls_string r_string_settings_communitysettings "Uuii! Schaug!"
 rls_string r_string_settings_clearconnection "Vabindung wäxln"
 
-rls_string r_string_note_followinglistempty "You are not following anything.\n\nUse the Explorer tab to search for things to follow."
+rls_string r_string_note_followinglistempty "Foigst jo no gar nixn ned. Schau amoi auf's Tschännl Suachn Menü."
 
 // Menu: Messaging
 rls_string r_string_options_postrequest "Mehat a mein Batz dazuagebn"
@@ -106,6 +106,7 @@ rls_string r_string_item_removepost "Leschn"
 
 rls_string r_string_options_itemchannel "Tschännl"
 rls_string r_string_channel_markread "ois ois glesn"
+rls_string r_string_options_reportchannel "Report channel"
 
 // Menu: Places
 rls_string r_string_options_setcurrent "Neis Platzl speichan"
@@ -132,32 +133,32 @@ rls_string r_string_item_subscribe "Des is aa mei Platzl"
 // Menu: Explorer
 rls_string r_string_options_explore "'rumschniffe'n"
 rls_string r_string_item_seefollowers "Ohänga"
-rls_string r_string_item_seemoderators "See moderators"
+rls_string r_string_item_seemoderators "Platzhiarschn"
 rls_string r_string_item_seefollowing "Foigt"
-rls_string r_string_item_seemoderating "See moderating"
+rls_string r_string_item_seemoderating "gschafftlt rum"
 rls_string r_string_item_seeproducing "Eing'richtete Tschännl"
 rls_string r_string_item_seenearby "Ned weid weg ned"
 
 rls_string r_string_title_followedby "$OBJECT's Ohänga"
-rls_string r_string_title_moderatedby "$OBJECT's moderators"
+rls_string r_string_title_moderatedby "$OBJECT's Platzhiarsch'n"
 rls_string r_string_title_isfollowing "$USER foigt"
-rls_string r_string_title_ismoderating "$USER is moderating"
+rls_string r_string_title_ismoderating "$USER gschafftlt"
 rls_string r_string_title_isproducing "$USER hot eig'richt"
 rls_string r_string_title_nearbyto "Ned weid weg vo $OBJECT"
 
 rls_string r_string_note_requesting "Wart a biß'l..."
 rls_string r_string_note_channelrank "Rang"
-rls_string r_string_note_channelsince "Days broadcasting"
-rls_string r_string_note_channelowner "Produced by"
-rls_string r_string_note_channellocation "Channel location"
+rls_string r_string_note_channelsince "Dog im Gschäfft"
+rls_string r_string_note_channelowner "Herr im Haus"
+rls_string r_string_note_channellocation "Tschännl Platzal"
 
 // Menu: Channels
-rls_string r_string_list_nearbytoyou "What's Nearby To Me"
+rls_string r_string_list_nearbytoyou "Ned weid weg ned vo mia"
 rls_string r_string_list_featuredchannels "B'sondanne Tschännl"
 rls_string r_string_list_channelsyoumightlike "Tschännl di Da g'foin kannten"
 rls_string r_string_list_followersfavourites "Ohänga's Favorit'n"
 rls_string r_string_list_mostpopularchannels "Vui meg'n di Tschännl"
-rls_string r_string_list_channelsneartoyou "Channels Near To Me"
+rls_string r_string_list_channelsneartoyou "Tschännl ned weid weg ned"
 
 rls_string r_string_item_open "Aufmacha"
 rls_string r_string_item_follow "Foig"
@@ -168,17 +169,17 @@ rls_string r_string_note_mediauploadready "Schick fei koan Schmarrn ned $LINK"
 
 rls_string r_string_item_changerole "Wo's derfa maha?"
 rls_string r_string_changerole_itemlist_outcast "Vabanna vom Tschännl"
-rls_string r_string_changerole_itemlist_follower "Follower"
-rls_string r_string_changerole_itemlist_publisher "Follower + post"
-rls_string r_string_changerole_itemlist_moderator "Moderator"
+rls_string r_string_changerole_itemlist_follower "Ohänga"
+rls_string r_string_changerole_itemlist_publisher "Ohänga und Schreibaling"
+rls_string r_string_changerole_itemlist_moderator "Platzhiarsch"
 
 rls_string r_string_note_affiliationrequest_title "Ofrage zum Batzdazuagebn"
 rls_string r_string_note_affiliationrequest_text "$USER mehat a sein Senft dazua gebn. Wenn's Da recht is druckst 'Freili', ansonsten 'Oba scho glei wirkli ned'"
 
 rls_string r_string_note_affiliationoutcast "So. Jetz hostas oba g'nau beinannt g'habt. Servus, machs guat."
-rls_string r_string_note_affiliationmember "You can now read, but not post content in this channel."
-rls_string r_string_note_affiliationpublisher "You can now read and post content in this channel."
-rls_string r_string_note_affiliationmoderator "You can now read, post, and moderate content in this channel."
+rls_string r_string_note_affiliationmember "So. Jetzt hot si's ausg'schriem do harin."
+rls_string r_string_note_affiliationpublisher "So. Kost jetzad Lesn und Schreibn do harin."
+rls_string r_string_note_affiliationmoderator "So. Kost jetzad gscheid rumgschafftln do harin."
 
 rls_string r_string_note_subscriptionrequest_text "$USER mehat dem Tschännl foign. Wenn's Da recht is druckst 'Freili', ansonsten 'Oba scho glei wirkli ned'"
 rls_string r_string_note_subscriptionpending "Dei Ofrage is an Platzhiarschn g'schickt worn."
@@ -270,6 +271,9 @@ rls_string r_string_editchannel_itemlist_description_hint "Tschännl Beschreibun
 rls_string r_string_editchannel_itemlist_access "Zuagang"
 rls_string r_string_editchannel_itemlist_access_open "Fia olle"
 rls_string r_string_editchannel_itemlist_access_whitelist "Nua fia Memba"
+rls_string r_string_editchannel_itemlist_defaultaffiliation "New followers can"
+rls_string r_string_editchannel_itemlist_defaultaffiliation_member "Read only"
+rls_string r_string_editchannel_itemlist_defaultaffiliation_publisher "Read and post"
 
 rls_string r_string_note_channelexists "De #channel_id hamma scho. Loß Da wos bessas eifoin na."
 
@@ -282,17 +286,17 @@ rls_string r_string_exit_title "Bestätigung"
 rls_string r_string_exit_text "Mogst wirkli 'naus? Werst fei ausg'loggt vo buddycloud, woaßt scho?"
 
 // Authorization Error
-rls_string r_string_authorizationerror_title "Authorization failed"
-rls_string r_string_authorizationerror_text "Username already exists or password is incorrect. Please check your Account settings and try again."
+rls_string r_string_authorizationerror_title "So geht's na neda"
+rls_string r_string_authorizationerror_text "Den Usanama hamma scho oda s'Passwort stimmt ned. Dua no amoi a weng rumschoitn."
 
 // Resolve Error
-rls_string r_string_serverresolveerror_title "Connection error"
-rls_string r_string_serverresolveerror_text "XMPP server could not be resolved. Please enter your XMPP server and try again."
+rls_string r_string_serverresolveerror_title "Vabindung's Fehla"
+rls_string r_string_serverresolveerror_text "Do passt wos ned mit'm XMPP Sörva. Geh dua no amoi rumschoitn."
 
 // Delete Item Message
 rls_string r_string_deleteitem_title "Bestätigung"
 rls_string r_string_deleteitem_text "Mogs'D des wirkli ausmerz'n?"
-rls_string r_string_deletechannel_text "Deleting this channel will also delete all content.\n\nAre you sure?"
+rls_string r_string_deletechannel_text "Wennst den Tschännl lescht, is fei aa ois andane furt. Bist Da na sicha?"
 
 // Sms/Email Messages
 rls_string r_string_invitemessage_title "Do sitz' Di zuawa bei buddycloud!"
@@ -326,17 +330,17 @@ rls_string r_string_note_offline "Offline"
 rls_string r_string_step2_title "Werd bekannt wiara bunta Hund!"
 rls_string r_string_step2_text "Loß' nua olle wiss'n wos fiara Hund daß'D bist. buddycloud Tschännls macht's meglich. Organisier' Da a Ohängaschaft de si seig'n loß'n ko und dann zoag earna wo da Bartl an Most hoilt.   "
 
-rls_string r_string_step3_title "How do you want to log in?"
-rls_string r_string_step3_text "Recommended: Instantly sign-in using your Google account (or any Jabber account).\n\nAlternatively: Register for a buddycloud account."
-rls_string r_string_step3_label1 "Use existing account"
-rls_string r_string_step3_label2 "Register new account"
+rls_string r_string_step3_title "Wia mogst Di na omeidn?"
+rls_string r_string_step3_text "Empfeilln dat ma a sofortiges Omeidn mit am Google account (oda an andan Jabber account) ohne weitere Sperenzien. Kost oba aa an buddycloud account olegn."
+rls_string r_string_step3_label1 "Oida existierenda Account"
+rls_string r_string_step3_label2 "Nei'n Account olegn"
 
-rls_string r_string_step4_title "Who are you?"
-rls_string r_string_step4_text1 "Enter your existing account details.\n\nThis looks like 'name@gmail.com' or 'name@googlemail.com'."
-rls_string r_string_step4_text2 "Choose a new username and password to start using buddycloud.  If you have already registered for buddycloud on another phone, enter those details here."
+rls_string r_string_step4_title "Wer bist na Du?"
+rls_string r_string_step4_text1 "Gibst na Dei existierende Address ei. Z.B. 'Zipfe@gmail.com' oda 'Klatscha@googlemail.com'"
+rls_string r_string_step4_text2 "Suach Da an Nama und a Passwort fia buddycloud aus. Soitst Di scho amoi auf am andan Händy og'meidt hobm, gibst Dein oidn Usanama ei, woaßt scho."
 
 rls_string r_string_step5_title "Gratuliere nachat!"
-rls_string r_string_step5_text "You are setup and ready to use buddycloud channels."
+rls_string r_string_step5_text "Ois klar zum Start. Auf los geht's los."
 rls_string r_string_step5_question "Mogst, daß buddycloud automatisch start, wennst Dei Händy o'schoitst?"
 
 // End of File

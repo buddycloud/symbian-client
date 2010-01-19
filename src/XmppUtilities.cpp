@@ -163,18 +163,16 @@ CXmppPubsubNodeParser::~CXmppPubsubNodeParser() {
 
 void CXmppPubsubNodeParser::ConstructL(const TDesC8& aNode) {	
 	iNodeData = aNode.AllocL();	
-	TPtrC8 pNodeData(iNodeData->Des());
-	
+	TPtrC8 pNodeData(iNodeData->Des());	
 	TInt aLocate = KErrNotFound;
-	TPtrC8 pNode(aNode);
 	
-	while((aLocate = pNode.LocateReverse('/')) != KErrNotFound) {
-		iNodes.Insert(pNodeData.Mid(aLocate + 1, pNode.Length() - (aLocate + 1)), 0);
-		pNode.Set(pNode.Left(aLocate));
+	while((aLocate = pNodeData.LocateReverse('/')) != KErrNotFound) {
+		iNodes.Insert(pNodeData.Mid(aLocate + 1), 0);
+		pNodeData.Set(pNodeData.Left(aLocate));
 	}
 	
-	if(pNode.Length() > 0) {
-		iNodes.Insert(pNodeData.Left(pNode.Length()), 0);
+	if(pNodeData.Length() > 0) {
+		iNodes.Insert(pNodeData, 0);
 	}
 }
 

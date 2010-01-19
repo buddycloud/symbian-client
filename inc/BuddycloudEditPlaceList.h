@@ -37,9 +37,6 @@ class CBuddycloudEditPlaceList : public CAknSettingItemList, MBuddycloudLogicNot
 
 	public: // From MBuddycloudLogicNotificationObserver
 		void NotificationEvent(TBuddycloudLogicNotificationType aEvent, TInt aId = KErrNotFound);
-		
-	public: // From CCoeControl
-		void GetHelpContext(TCoeHelpContext& aContext) const;
 
 	public: // From CAknSettingItemList
 		void EditItemL(TInt aIndex, TBool aCalledFromMenu);

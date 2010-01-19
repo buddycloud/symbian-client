@@ -47,11 +47,6 @@ void CBuddycloudBeaconSettingsList::EditCurrentItemL() {
 	EditItemL(ListBox()->CurrentItemIndex(), false);
 }
 
-void CBuddycloudBeaconSettingsList::GetHelpContext(TCoeHelpContext& aContext) const {
-	aContext.iMajor = TUid::Uid(HLPUID);
-	aContext.iContext = KPositioningSettings;
-}
-
 TKeyResponse CBuddycloudBeaconSettingsList::OfferKeyEventL(const TKeyEvent& aKeyEvent, TEventCode aType) {
 	TKeyResponse aResult = EKeyWasNotConsumed;
 

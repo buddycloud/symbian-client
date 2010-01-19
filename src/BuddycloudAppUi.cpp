@@ -16,12 +16,10 @@
 #include <avkon.hrh>
 #include <bacline.h>
 #include <bautils.h>
-#include <hlplch.h>
 #include "BrowserLauncher.h"
 #include <Buddycloud.rsg>
 #include <Buddycloud_lang.rsg>
 #include "Buddycloud.hrh"
-#include "Buddycloud.hlp.hrh"
 #include "Buddycloud.pan"
 #include "BuddycloudAccountSettingsView.h"
 #include "BuddycloudAppUi.h"
@@ -268,15 +266,6 @@ TBool CBuddycloudAppUi::ProcessCommandParametersL(CApaCommandLine &aCommandLine)
 	return false;
 }
 
-CArrayFix <TCoeHelpContext>* CBuddycloudAppUi::HelpContextL() const {
-	CArrayFixFlat <TCoeHelpContext>* array = new (ELeave) CArrayFixFlat <TCoeHelpContext>(1);
-	CleanupStack::PushL(array);
-
-	array->AppendL(TCoeHelpContext(TUid::Uid(HLPUID), KIntroduction));
-	CleanupStack::Pop(array);
-	return array;
-}
-
 TInt AboutDialogCallback(TAny* /*aAny*/) {
 	CBrowserLauncher* aLauncher = CBrowserLauncher::NewLC();
 	aLauncher->LaunchBrowserWithLinkL(_L("http://www.buddycloud.com"));
@@ -322,8 +311,9 @@ void CBuddycloudAppUi::HandleCommandL(TInt aCommand) {
 		iBuddycloudLogic->ResetConnectionSettings();
 	}
 	else if(aCommand == EMenuHelpCommand) {
-	    CArrayFix <TCoeHelpContext>* aHelpContext = CCoeAppUi::AppHelpContextL();
-	    HlpLauncher::LaunchHelpApplicationL(iEikonEnv->WsSession(), aHelpContext);
+		CBrowserLauncher* aLauncher = CBrowserLauncher::NewLC();
+		aLauncher->LaunchBrowserWithLinkL(_L("http://buddycloud.com/help"));
+		CleanupStack::PopAndDestroy(); // aLauncher
 	}
 	else if(aCommand == EMenuUpdateCommand) {
 		HBufC* aVersion = iEikonEnv->AllocReadResourceLC(R_STRING_APPVERSION);

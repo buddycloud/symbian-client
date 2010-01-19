@@ -83,7 +83,7 @@ enum TXmppPubsubAffiliation {
 };
 
 enum TXmppPubsubSubscription {
-	EPubsubSubscriptionNone, EPubsubSubscriptionPending, 
+	EPubsubSubscriptionUnknown, EPubsubSubscriptionNone, EPubsubSubscriptionPending, 
 	EPubsubSubscriptionUnconfigured, EPubsubSubscriptionSubscribed
 };
 

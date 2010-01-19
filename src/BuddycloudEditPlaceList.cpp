@@ -116,11 +116,6 @@ void CBuddycloudEditPlaceList::NotificationEvent(TBuddycloudLogicNotificationTyp
 	}
 }
 
-void CBuddycloudEditPlaceList::GetHelpContext(TCoeHelpContext& aContext) const {
-	aContext.iMajor = TUid::Uid(HLPUID);
-	aContext.iContext = KPlaceEditing;
-}
-
 void CBuddycloudEditPlaceList::EditItemL(TInt aIndex, TBool aCalledFromMenu) {
 	CAknSettingItemArray* aItemArray = SettingItemArray();
 	TInt aIdentifier = ((*aItemArray)[aIndex])->Identifier();

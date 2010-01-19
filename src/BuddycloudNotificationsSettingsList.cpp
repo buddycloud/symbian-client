@@ -50,11 +50,6 @@ void CBuddycloudNotificationsSettingsList::EditCurrentItemL() {
 	EditItemL(ListBox()->CurrentItemIndex(), false);
 }
 
-void CBuddycloudNotificationsSettingsList::GetHelpContext(TCoeHelpContext& aContext) const {
-	aContext.iMajor = TUid::Uid(HLPUID);
-	aContext.iContext = KNotificationSettings;
-}
-
 TKeyResponse CBuddycloudNotificationsSettingsList::OfferKeyEventL(const TKeyEvent& aKeyEvent, TEventCode aType) {
 	TKeyResponse aResult = EKeyWasNotConsumed;
 

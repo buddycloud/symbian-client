@@ -27,9 +27,6 @@ class CBuddycloudNotificationsSettingsList : public CAknSettingItemList {
 	public:
 		void EditCurrentItemL();
 		
-	public: // From CCoeControl
-		void GetHelpContext(TCoeHelpContext& aContext) const;
-
 	private: // From CCoeControl
 		TKeyResponse OfferKeyEventL(const TKeyEvent& aKeyEvent, TEventCode aType);
 

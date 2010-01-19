@@ -123,15 +123,6 @@ void CBuddycloudCommunitiesContainer::HandleItemSelectionL(TInt aIndex) {
 	}
 }
 
-void CBuddycloudCommunitiesContainer::GetHelpContext(TCoeHelpContext& aContext) const {
-	aContext.iMajor = TUid::Uid(HLPUID);
-	aContext.iContext = KShareOnline;
-
-	if(iList->CurrentItemIndex() == ECommunityTwitter) {
-		aContext.iContext = KCommunitiesTwitter;
-	}
-}
-
 CCoeControl* CBuddycloudCommunitiesContainer::ComponentControl(TInt /*aIndex*/) const {
 	return iList;
 }

@@ -23,7 +23,6 @@
 #include <Buddycloud.rsg>
 #include <Buddycloud_lang.rsg>
 #include "ArrowIconIds.h"
-#include "Buddycloud.hlp.hrh"
 #include "BuddycloudExplorer.h"
 #include "BuddycloudFollowingContainer.h"
 #include "ViewReference.h"
@@ -248,60 +247,6 @@ void CBuddycloudFollowingContainer::JumpToItem(TInt aItemId) {
 	RenderWrappedText(iSelectedItem);
 	RepositionItems(true);
 	RenderScreen();
-}
-
-void CBuddycloudFollowingContainer::GetHelpContext(TCoeHelpContext& aContext) const {
-	aContext.iMajor = TUid::Uid(HLPUID);
-	aContext.iContext = KFollowingTab;
-	
-	if(iItemStore->Count() > 0) {
-		CFollowingItem* aItem = static_cast <CFollowingItem*> (iItemStore->GetItemById(iSelectedItem));
-
-		if(aItem->GetItemType() == EItemNotice) {
-			if(aItem->GetIdType() == EIdRoster) {
-				aContext.iContext = KFollowingRequests;	
-			}
-			else {
-				aContext.iContext = KChannelInvites;
-			}
-		}
-		else if(aItem->GetItemType() == EItemRoster) {
-			CFollowingRosterItem* aRosterItem = static_cast <CFollowingRosterItem*> (aItem);
-			
-			if(iBuddycloudLogic->GetMyMotionState() == EMotionStationary && iBuddycloudLogic->GetMyPlaceId() <= 0) {
-				aContext.iContext = KNamingPlaces;
-			}
-			else {
-				if(aRosterItem->OwnItem()) {				
-					aContext.iContext = KMyBuddycloud;
-				}
-				else {
-					if(aRosterItem->GetReplies() > 0) {
-						aContext.iContext = KDirectReplies;
-					}
-					else if(aRosterItem->GetUnread(EIdChannel) > 0) {
-						aContext.iContext = KViewingChannels;
-					}
-					else {
-						aContext.iContext = KBuddycloudFollowing;
-					}
-				}
-			}
-		}
-		else if(aItem->GetItemType() == EItemChannel) {
-			CFollowingChannelItem* aChannelItem = static_cast <CFollowingChannelItem*> (aItem);			
-			
-			if(aChannelItem->GetReplies() > 0) {
-				aContext.iContext = KDirectReplies;
-			}
-			else if(aChannelItem->GetUnread() > 0) {
-				aContext.iContext = KViewingChannels;
-			}
-			else {
-				aContext.iContext = KBuddycloudChannels;
-			}
-		}
-	}
 }
 
 void CBuddycloudFollowingContainer::HandleResourceChange(TInt aType) {
@@ -1164,13 +1109,12 @@ void CBuddycloudFollowingContainer::HandleCommandL(TInt aCommand) {
 			
 			if(aCommand == EMenuSeeFollowersCommand || aCommand == EMenuSeeModeratorsCommand) {
 				if(aCommand == EMenuSeeModeratorsCommand) {
-					CExplorerStanzaBuilder::BuildMaitredXmppStanza(aViewReference().iNewViewData.iData, iBuddycloudLogic->GetNewIdStamp(), aEncId, _L8("owner"));
-					CExplorerStanzaBuilder::BuildMaitredXmppStanza(aViewReference().iNewViewData.iData, iBuddycloudLogic->GetNewIdStamp(), aEncId, _L8("moderator"));
+					CExplorerStanzaBuilder::AppendMaitredXmppStanza(aViewReference().iNewViewData.iData, iBuddycloudLogic->GetNewIdStamp(), aEncId, _L8("owner"));
+					CExplorerStanzaBuilder::AppendMaitredXmppStanza(aViewReference().iNewViewData.iData, iBuddycloudLogic->GetNewIdStamp(), aEncId, _L8("moderator"));
 					aResourceId = R_LOCALIZED_STRING_TITLE_MODERATEDBY;
 				}
 				else {
-					CExplorerStanzaBuilder::BuildMaitredXmppStanza(aViewReference().iNewViewData.iData, iBuddycloudLogic->GetNewIdStamp(), aEncId, _L8("publisher"));
-					CExplorerStanzaBuilder::BuildMaitredXmppStanza(aViewReference().iNewViewData.iData, iBuddycloudLogic->GetNewIdStamp(), aEncId, _L8("member"));
+					CExplorerStanzaBuilder::FormatBroadcasterXmppStanza(aViewReference().iNewViewData.iData, iBuddycloudLogic->GetNewIdStamp(), aEncId);
 					aResourceId = R_LOCALIZED_STRING_TITLE_FOLLOWEDBY;
 				}
 				
@@ -1181,16 +1125,16 @@ void CBuddycloudFollowingContainer::HandleCommandL(TInt aCommand) {
 				aEncId.Set(iTextUtilities->UnicodeToUtf8L(aRosterItem->GetId()));	
 				
 				if(aCommand == EMenuSeeProducingCommand) {
-					CExplorerStanzaBuilder::BuildMaitredXmppStanza(aViewReference().iNewViewData.iData, iBuddycloudLogic->GetNewIdStamp(), aEncId, _L8("owner"));
+					CExplorerStanzaBuilder::AppendMaitredXmppStanza(aViewReference().iNewViewData.iData, iBuddycloudLogic->GetNewIdStamp(), aEncId, _L8("owner"));
 					aResourceId = R_LOCALIZED_STRING_TITLE_ISPRODUCING;
 				}
 				else if(aCommand == EMenuSeeModeratingCommand) {
-					CExplorerStanzaBuilder::BuildMaitredXmppStanza(aViewReference().iNewViewData.iData, iBuddycloudLogic->GetNewIdStamp(), aEncId, _L8("moderator"));
+					CExplorerStanzaBuilder::AppendMaitredXmppStanza(aViewReference().iNewViewData.iData, iBuddycloudLogic->GetNewIdStamp(), aEncId, _L8("moderator"));
 					aResourceId = R_LOCALIZED_STRING_TITLE_ISMODERATING;
 				}
 				else {
-					CExplorerStanzaBuilder::BuildMaitredXmppStanza(aViewReference().iNewViewData.iData, iBuddycloudLogic->GetNewIdStamp(), aEncId, _L8("publisher"));
-					CExplorerStanzaBuilder::BuildMaitredXmppStanza(aViewReference().iNewViewData.iData, iBuddycloudLogic->GetNewIdStamp(), aEncId, _L8("member"));
+					CExplorerStanzaBuilder::AppendMaitredXmppStanza(aViewReference().iNewViewData.iData, iBuddycloudLogic->GetNewIdStamp(), aEncId, _L8("publisher"));
+					CExplorerStanzaBuilder::AppendMaitredXmppStanza(aViewReference().iNewViewData.iData, iBuddycloudLogic->GetNewIdStamp(), aEncId, _L8("member"));
 					aResourceId = R_LOCALIZED_STRING_TITLE_ISFOLLOWING;
 				}
 				
@@ -1213,7 +1157,7 @@ void CBuddycloudFollowingContainer::HandleCommandL(TInt aCommand) {
 			aViewReference().iCallbackViewId = KFollowingViewId;
 			aViewReference().iOldViewData.iId = iSelectedItem;
 			
-			CExplorerStanzaBuilder::BuildButlerXmppStanza(aViewReference().iNewViewData.iData, iBuddycloudLogic->GetNewIdStamp(), iTextUtilities->UnicodeToUtf8L(aRosterItem->GetId()));
+			CExplorerStanzaBuilder::FormatButlerXmppStanza(aViewReference().iNewViewData.iData, iBuddycloudLogic->GetNewIdStamp(), iTextUtilities->UnicodeToUtf8L(aRosterItem->GetId()));
 			CExplorerStanzaBuilder::BuildTitleFromResource(aViewReference().iNewViewData.iTitle, R_LOCALIZED_STRING_TITLE_NEARBYTO, _L("$OBJECT"), aRosterItem->GetTitle());
 			
 			iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KExplorerViewId), TUid::Uid(0), aViewReference);		

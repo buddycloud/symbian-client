@@ -206,11 +206,11 @@ class CBuddycloudLogic : public CBase, MLocationEngineNotification, MTimeInterfa
 		void SendPresenceToPubsubL();
 		void SetLastNodeIdReceived(const TDesC8& aNodeItemId);
 		
-		void CollectPubsubSubscriptionsL();
-		void ProcessPubsubSubscriptionsL(const TDesC8& aStanza);
+		void CollectPubsubSubscriptionsL(const TDesC8& aAfter = KNullDesC8);
+		void ProcessPubsubSubscriptionsL();
 		
-		void CollectUsersPubsubNodeSubscribersL();
-		void ProcessUsersPubsubNodeSubscribersL(const TDesC8& aStanza);
+		void CollectUsersPubsubNodeAffiliationsL(const TDesC8& aAfter = KNullDesC8);
+		void ProcessUsersPubsubNodeAffiliationsL();
 		
 		void CollectLastPubsubNodeItemsL(const TDesC& aNode, const TDesC8& aHistoryAfterItem);		
 		void CollectUserPubsubNodeL(const TDesC& aJid, const TDesC& aNodeLeaf, const TDesC8& aHistoryAfterItem = KNullDesC8);
@@ -231,6 +231,7 @@ class CBuddycloudLogic : public CBase, MLocationEngineNotification, MTimeInterfa
 		void HandlePubsubRequestL(const TDesC8& aStanza);
 		
     public: // Flag/Tag
+    	void FlagTagNodeL(const TDesC8& aType, const TDesC& aNode);
     	void FlagTagNodeItemL(const TDesC8& aType, const TDesC& aNode, const TDesC8& aNodeItemId);
 	
 	public: // Channels
@@ -392,6 +393,8 @@ class CBuddycloudLogic : public CBase, MLocationEngineNotification, MTimeInterfa
 		TBool iRosterSynchronized;
 		TBool iPubsubSubscribedTo;
 		TBool iMyChannelMembersRequested;
+		
+        CBuddycloudListStore* iGenericList;
 
 		// Xmpp engine
 		CXmppEngine* iXmppEngine;

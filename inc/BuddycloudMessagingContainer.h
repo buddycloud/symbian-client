@@ -116,9 +116,6 @@ class CBuddycloudMessagingContainer : public CBuddycloudListComponent, MDiscussi
 		void DynInitMenuPaneL(TInt aResourceId, CEikMenuPane* aMenuPane);
 		void HandleCommandL(TInt aCommand);
 		
-	public: // From CCoeControl
-		void GetHelpContext(TCoeHelpContext& aContext) const;
-		
 	private: // From CCoeControl
 		void SizeChanged();
  		TKeyResponse OfferKeyEventL(const TKeyEvent& aKeyEvent, TEventCode aType);

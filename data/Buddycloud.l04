@@ -18,17 +18,17 @@ rls_string r_string_menuseperator "──────────"
 // DO NOT TRANSLATE
 
 rls_string r_string_langcode "es"
-rls_string r_string_translatedby "Translated by: super Khalimero"
+rls_string r_string_translatedby "Translated by: Guillamon and super Khalimero "
 
-rls_string r_string_followingtab_hint "Siguiente"
+rls_string r_string_followingtab_hint "Siguiendo"
 rls_string r_string_placestab_hint "Lugares"
-rls_string r_string_explorertab_hint "Explorer"
+rls_string r_string_explorertab_hint "Explorador"
 
 // CBA
 rls_string r_string_options_menu "Opciones"
 rls_string r_string_say_menu "Decir"
 rls_string r_string_cancel_menu "Cancelar"
-rls_string r_string_next_menu "Continuar"
+rls_string r_string_next_menu "Siguiente"
 rls_string r_string_hide_menu "Oculto"
 
 // Item
@@ -39,12 +39,12 @@ rls_string r_string_item_newplace "Nuevo lugar...."
 rls_string r_string_options_edititem "Cambiar"
 rls_string r_string_options_searchplace "Buscar detalles"
 rls_string r_string_options_remove "Eliminar"
-rls_string r_string_options_delete "Delete"
+rls_string r_string_options_delete "Eliminar"
 
 rls_string r_string_note_noresultsfound "No se encontraron resultados"
 rls_string r_string_note_requestsent "Petición enviada"
 rls_string r_string_note_messagequeued "Se enviará un mensaje cuando te conectes"
-rls_string r_string_note_offlinerequired "Tienes que estar desconectado para hacer esto"
+rls_string r_string_note_offlinerequired "Necesitas estar desconectado para hacer esto"
 
 // Positioning methods
 rls_string r_string_positioning_stationary "Ahora puedes marcar este lugar"
@@ -52,7 +52,7 @@ rls_string r_string_positioning_moving "Te estás trasladando ahora. Si marcas e
 rls_string r_string_positioning_cell "El análisis del esquema celular puede durar varios minutos"
 rls_string r_string_positioning_wifigps "Aún puedes marcar este lugar, ya que hay señal WiFi"
 rls_string r_string_positioning_bt "Si otros usuarios de buddycloud están cerca, te enseñaremos dónde"
-rls_string r_string_positioning_none "No es posible ahora posicionarse. Por favor, verifica los parámetros de posicionamiento"
+rls_string r_string_positioning_none "Ahora no es posible posicionarse. Por favor, verifica los parámetros de posicionamiento"
 
 // Menu: Search
 rls_string r_string_options_select "Seleccionar"
@@ -75,12 +75,12 @@ rls_string r_string_options_settings "Parámetros"
 rls_string r_string_item_viewmessages "Ver mensajes"
 rls_string r_string_item_viewchannelmessages "Ver canal"
 rls_string r_string_item_viewprivatemessages "Ver mensajes privados"
-rls_string r_string_item_showplacedetails "See place details"
-rls_string r_string_item_showchanneldetails "See channel details"
+rls_string r_string_item_showplacedetails "Ver detalles lugar"
+rls_string r_string_item_showchanneldetails "Ver detalles canal"
 rls_string r_string_item_sendplacebysms "Enviar lugar por SMS"
 rls_string r_string_item_sendinvite "Invitar a buddycloud"
 rls_string r_string_item_noticeaccept "Aceptar"
-rls_string r_string_item_noticeacceptandfollow "Acepta y Sigue"
+rls_string r_string_item_noticeacceptandfollow "Aceptar y Seguir"
 rls_string r_string_item_noticedecline "Rechazar la invitación"
 rls_string r_string_update_setstatus "Actualizar estado"
 rls_string r_string_options_invite "Seguir..."
@@ -88,24 +88,25 @@ rls_string r_string_settings_usersettings "Preferencias"
 rls_string r_string_settings_communitysettings "Compartir línea"
 rls_string r_string_settings_clearconnection "Cambiar conexión"
 
-rls_string r_string_note_followinglistempty "You are not following anything.\n\nUse the Explorer tab to search for things to follow."
+rls_string r_string_note_followinglistempty "No estas siguiendo nada. Usa el Explorador para buscar cosas a seguir."
 
 // Menu: Messaging
 rls_string r_string_options_postrequest "Solicitar privilegios para postear"
 rls_string r_string_options_postmessage "Escribir nuevo mensaje"
 rls_string r_string_options_postmedia "Subir multimedia"
 rls_string r_string_options_jumptounread "Ir a no leídos"
-rls_string r_string_options_notificationon "Ponger zumbido"
+rls_string r_string_options_notificationon "Poner zumbido"
 rls_string r_string_options_notificationoff "Quitar zumbido"
 
 rls_string r_string_item_addcomment "Escribir comentario"
 rls_string r_string_item_likepost "♥ mensaje"
 rls_string r_string_item_copypost "Copiar mensaje"
-rls_string r_string_item_reportpost "Informe de mensaje"
+rls_string r_string_item_reportpost "Informar mensaje ofensivo"
 rls_string r_string_item_removepost "Borrar mensaje"
 
 rls_string r_string_options_itemchannel "Canal"
 rls_string r_string_channel_markread "Marque el canal solo lectura"
+rls_string r_string_options_reportchannel "Informar canal ofensivo"
 
 // Menu: Places
 rls_string r_string_options_setcurrent "Marcar lugar nuevo"
@@ -121,7 +122,7 @@ rls_string r_string_note_placevisits "Visitas"
 rls_string r_string_note_placepopulation "Población"
 rls_string r_string_note_learningplace "Sitio de aprendizaje"
 rls_string r_string_note_updatingplace "Actualizando lugar..."
-rls_string r_string_note_placeslistempty "No tienes lugares marcados.\n\nPara conocer este lugar, activa\n'Opciones > Marcar nuevo lugar'"
+rls_string r_string_note_placeslistempty "No tienes lugares marcados. Para guardar este lugar pulsa 'Opciones > Marcar nuevo lugar'"
 
 // Menu: Nearby
 rls_string r_string_options_refresh "Actualizar"
@@ -132,32 +133,32 @@ rls_string r_string_item_subscribe "Añadir a mis lugares"
 // Menu: Explorer
 rls_string r_string_options_explore "Explorar"
 rls_string r_string_item_seefollowers "Ver seguidores"
-rls_string r_string_item_seemoderators "See moderators"
-rls_string r_string_item_seefollowing "Ver siguiente"
-rls_string r_string_item_seemoderating "See moderating"
+rls_string r_string_item_seemoderators "Ver moderadores"
+rls_string r_string_item_seefollowing "Ver siguiendo"
+rls_string r_string_item_seemoderating "Ver moderando"
 rls_string r_string_item_seeproducing "Ver produciendo"
 rls_string r_string_item_seenearby "Ver cercanía"
 
 rls_string r_string_title_followedby "Seguidores de $OBJECT"
-rls_string r_string_title_moderatedby "$OBJECT's moderators"
+rls_string r_string_title_moderatedby "Moderadores de $OBJECT"
 rls_string r_string_title_isfollowing "$USER está siguiendo"
-rls_string r_string_title_ismoderating "$USER is moderating"
+rls_string r_string_title_ismoderating "$USER está moderando"
 rls_string r_string_title_isproducing "$USER está produciendo"
 rls_string r_string_title_nearbyto "Cerca de $OBJECT"
 
 rls_string r_string_note_requesting "Solicitando..."
 rls_string r_string_note_channelrank "Rango"
-rls_string r_string_note_channelsince "Days broadcasting"
-rls_string r_string_note_channelowner "Produced by"
-rls_string r_string_note_channellocation "Channel location"
+rls_string r_string_note_channelsince "Dias transcurridos desde creación"
+rls_string r_string_note_channelowner "Producido por"
+rls_string r_string_note_channellocation "Localización del canal"
 
 // Menu: Channels
-rls_string r_string_list_nearbytoyou "What's Nearby To Me"
+rls_string r_string_list_nearbytoyou "¿Que está cerca mia?"
 rls_string r_string_list_featuredchannels "Canales destacados"
 rls_string r_string_list_channelsyoumightlike "Canales que podrían gustarte"
 rls_string r_string_list_followersfavourites "Favoritos de tus seguidores"
 rls_string r_string_list_mostpopularchannels "Los canales más populares"
-rls_string r_string_list_channelsneartoyou "Channels Near To Me"
+rls_string r_string_list_channelsneartoyou "Canales cerca mia"
 
 rls_string r_string_item_open "Abrir"
 rls_string r_string_item_follow "Seguir"
@@ -168,17 +169,17 @@ rls_string r_string_note_mediauploadready "Ahora puedes subir tus archivos a $LI
 
 rls_string r_string_item_changerole "Cambiar permiso"
 rls_string r_string_changerole_itemlist_outcast "Excluir del canal"
-rls_string r_string_changerole_itemlist_follower "Follower"
-rls_string r_string_changerole_itemlist_publisher "Follower + post"
-rls_string r_string_changerole_itemlist_moderator "Moderator"
+rls_string r_string_changerole_itemlist_follower "Seguidor"
+rls_string r_string_changerole_itemlist_publisher "Seguidor con dº a postear"
+rls_string r_string_changerole_itemlist_moderator "Moderador"
 
-rls_string r_string_note_affiliationrequest_title "Publicar peticion"
-rls_string r_string_note_affiliationrequest_text "$USER ha solicitado permiso para postear en este canal. Para aceptar la solicitud pulse 'Acceptar', si no  pulse 'Denegar'."
+rls_string r_string_note_affiliationrequest_title "Petición de publicación"
+rls_string r_string_note_affiliationrequest_text "$USER ha solicitado permiso para postear en este canal. Para aceptar la solicitud pulse 'Aceptar', si no  pulse 'Denegar'."
 
-rls_string r_string_note_affiliationoutcast "Has sido excluido del canal. Ahora no puedes leer o postear en el contenido de este canal."
-rls_string r_string_note_affiliationmember "You can now read, but not post content in this channel."
-rls_string r_string_note_affiliationpublisher "You can now read and post content in this channel."
-rls_string r_string_note_affiliationmoderator "You can now read, post, and moderate content in this channel."
+rls_string r_string_note_affiliationoutcast "Has sido excluido del canal. Ahora no puedes leer o escribir contenido en este canal."
+rls_string r_string_note_affiliationmember "Ahora puedes leer, pero no escribir contenido en este canal."
+rls_string r_string_note_affiliationpublisher "Ahora puedes leer y escribir contenido en este canal."
+rls_string r_string_note_affiliationmoderator "Ahora puedes leer, escribir, y moderar contenido en este canal."
 
 rls_string r_string_note_subscriptionrequest_text "$USER ha solicitado seguir este canal. Para permitirlo pulse 'Aceptar', si no pulse 'Denegar'."
 rls_string r_string_note_subscriptionpending "Tu solicitud de suscripcion ha sido enviada al dueño del canal."
@@ -208,16 +209,16 @@ rls_string r_string_settings_itemlist_autostart "Iniciar al encender teléfono"
 // Notification settings
 rls_string r_string_settings_notifications_title "Avisos"
 rls_string r_string_settings_itemlist_notifyfollowing "Canales que sigo"
-rls_string r_string_settings_itemlist_notifymoderating "CAnales que modero"
-rls_string r_string_settings_itemlist_notifyreply "Replicas a mi mensaje"
+rls_string r_string_settings_itemlist_notifymoderating "Canales que modero"
+rls_string r_string_settings_itemlist_notifyreply "Respuestas a mi mensaje"
 
 rls_string r_string_settings_itemlist_groupnever "No notificar nunca"
-rls_string r_string_settings_itemlist_groupfirstonly "Primer mensaje sólo"
+rls_string r_string_settings_itemlist_groupfirstonly "Sólo en el primer mensaje "
 rls_string r_string_settings_itemlist_groupallmessages "Todos los mensajes"
 
 rls_string r_string_settings_itemlist_privatemessagetone "Señal mensaje privado"
 rls_string r_string_settings_itemlist_channelposttone "Señal mensaje canal"
-rls_string r_string_settings_itemlist_directreplytone "Tono del comentario de replica"
+rls_string r_string_settings_itemlist_directreplytone "Señal de comentario respuesta"
 rls_string r_string_settings_itemlist_tonenone "En silencio"
 rls_string r_string_settings_itemlist_tonedefault "Tono por defecto"
 
@@ -244,7 +245,7 @@ rls_string r_string_editplace_itemlist_name "Nombre"
 rls_string r_string_editplace_itemlist_name_hint "p.ej. 'Casa' o 'Starbucks'"
 rls_string r_string_editplace_itemlist_street "Calle"
 rls_string r_string_editplace_itemlist_street_hint "p.ej. 'Castellana 12'"
-rls_string r_string_editplace_itemlist_area "Cercanía"
+rls_string r_string_editplace_itemlist_area "Barrio"
 rls_string r_string_editplace_itemlist_area_hint "p.ej. 'Puerta del Sol'"
 rls_string r_string_editplace_itemlist_city "Ciudad"
 rls_string r_string_editplace_itemlist_city_hint "p.ej. 'Madrid'"
@@ -254,7 +255,7 @@ rls_string r_string_editplace_itemlist_region "Región"
 rls_string r_string_editplace_itemlist_region_hint "p.ej. 'Comunidad de Madrid'"
 rls_string r_string_editplace_itemlist_country "País"
 rls_string r_string_editplace_itemlist_country_hint "p.ej. 'España'"
-rls_string r_string_editplace_itemlist_visibility "¿Se puede colocar a otros aquí?"
+rls_string r_string_editplace_itemlist_visibility "¿Se puede situar a otros aquí?"
 rls_string r_string_editplace_itemlist_visibility_public "Compartido"
 rls_string r_string_editplace_itemlist_visibility_private "Personal"
 
@@ -266,15 +267,18 @@ rls_string r_string_editchannel_itemlist_title_hint "Titulo del canal"
 rls_string r_string_editchannel_itemlist_id "#Canal Id"
 rls_string r_string_editchannel_itemlist_id_hint "Id unico del canal "
 rls_string r_string_editchannel_itemlist_description "Descripcion"
-rls_string r_string_editchannel_itemlist_description_hint "Descripcion del canal"
+rls_string r_string_editchannel_itemlist_description_hint "Descripción del canal"
 rls_string r_string_editchannel_itemlist_access "Acceso"
 rls_string r_string_editchannel_itemlist_access_open "Abrir canal"
 rls_string r_string_editchannel_itemlist_access_whitelist "Solo miembros"
+rls_string r_string_editchannel_itemlist_defaultaffiliation "Los nuevos seguidores pueden"
+rls_string r_string_editchannel_itemlist_defaultaffiliation_member "Solo leer"
+rls_string r_string_editchannel_itemlist_defaultaffiliation_publisher "Leer y escribir"
 
 rls_string r_string_note_channelexists "Este #channel_id ya existe. Por favor entre uno distinto"
 
 // Following & Invitations
-rls_string r_string_followingrequest_title "Siguiente petición"
+rls_string r_string_followingrequest_title "Petición de seguimiento"
 rls_string r_string_followerrequest_text "$USER quiere seguirte en buddycloud.\n* Mostrar tu presencia & estado\n* Mostrar tu canal personal\n* Mostrar tus lugares"
 
 // Exit Confirmation
@@ -282,17 +286,17 @@ rls_string r_string_exit_title "Confirmar salida"
 rls_string r_string_exit_text "¿Estás segur@ de querer salir de Buddycloud?"
 
 // Authorization Error
-rls_string r_string_authorizationerror_title "Authorization failed"
-rls_string r_string_authorizationerror_text "Username already exists or password is incorrect. Please check your Account settings and try again."
+rls_string r_string_authorizationerror_title "Autorización denegada"
+rls_string r_string_authorizationerror_text "El usuario ya existe o la contraseña es incorrecta. Por favor, comprueba las opciones de tu cuenta e intenalo otra vez."
 
 // Resolve Error
-rls_string r_string_serverresolveerror_title "Connection error"
-rls_string r_string_serverresolveerror_text "XMPP server could not be resolved. Please enter your XMPP server and try again."
+rls_string r_string_serverresolveerror_title "Error de conexión"
+rls_string r_string_serverresolveerror_text "El servidor XMPP no pudo ser resuelto. Por favor introduce tu servidor XMPP e intentalo otra vez. "
 
 // Delete Item Message
 rls_string r_string_deleteitem_title "Confirmar eliminación"
 rls_string r_string_deleteitem_text "¿Estás segur@ de querer eliminar esto?"
-rls_string r_string_deletechannel_text "Deleting this channel will also delete all content.\n\nAre you sure?"
+rls_string r_string_deletechannel_text "Eliminando este canal también eliminarás todo el contenido. ¿Estas seguro?"
 
 // Sms/Email Messages
 rls_string r_string_invitemessage_title "¡Únete a nosotros en buddycloud!"
@@ -326,17 +330,17 @@ rls_string r_string_note_offline "Desconectado"
 rls_string r_string_step2_title "¡Sé famos@!"
 rls_string r_string_step2_text "canales buddycloud te proporciona un medio nuevo para emitir tu grandiosidad a tus seguidores.\n\ncanales buddycloud te permite hacerte famos@ por tus conocimientos únicos sobre un lugar o tema y acumular una comunidad de seguidores."
 
-rls_string r_string_step3_title "How do you want to log in?"
-rls_string r_string_step3_text "Recommended: Instantly sign-in using your Google account (or any Jabber account).\n\nAlternatively: Register for a buddycloud account."
-rls_string r_string_step3_label1 "Use existing account"
-rls_string r_string_step3_label2 "Register new account"
+rls_string r_string_step3_title "¿Como quieres iniciar la sesión?"
+rls_string r_string_step3_text "Recomendado: Registrate al instante con tu cuenta Google (o cualquier cuenta Jabber). O bien: Registrate desde una cuenta buddycloud."
+rls_string r_string_step3_label1 "Utiliza cuenta existente"
+rls_string r_string_step3_label2 "Registrar nueva cuenta"
 
-rls_string r_string_step4_title "Who are you?"
-rls_string r_string_step4_text1 "Enter your existing account details.\n\nThis looks like 'name@gmail.com' or 'name@googlemail.com'."
-rls_string r_string_step4_text2 "Choose a new username and password to start using buddycloud.  If you have already registered for buddycloud on another phone, enter those details here."
+rls_string r_string_step4_title "¿Quién eres?"
+rls_string r_string_step4_text1 "Introduce los detalles de tu cuenta. Estos aparecen como 'nombre@gmail.com' o 'nombre@googlemail.com'"
+rls_string r_string_step4_text2 "Elige un nombre de usuario nuevo y una contraseña para empezar a utilizar buddycloud. Si te has registrado en buddycloud en otro teléfono, introduce esos detalles aqui."
 
 rls_string r_string_step5_title "¡Enhorabuena!"
-rls_string r_string_step5_text "You are setup and ready to use buddycloud channels."
+rls_string r_string_step5_text "Estas preparado y listo para utilizar los canales de Buddycloud"
 rls_string r_string_step5_question "¿Te gustaría a partir de ahora iniciar buddycloud cuando enciendas tu móvil?"
 
 // End of File

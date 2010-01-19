@@ -31,7 +31,6 @@ class CBuddycloudCommunitiesContainer : public CCoeControl {
 		void HandleItemSelectionL(TInt aIndex);
 		
 	public: // From CCoeControl
-		void GetHelpContext(TCoeHelpContext& aContext) const;
 		CCoeControl* ComponentControl(TInt aIndex) const;
 		TInt CountComponentControls() const;
 		

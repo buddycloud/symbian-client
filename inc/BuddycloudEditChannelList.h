@@ -39,9 +39,6 @@ class CBuddycloudEditChannelList : public CAknSettingItemList, MXmppStanzaObserv
 
 	public:
 		void DynInitMenuPaneL(TInt aResourceId, CEikMenuPane* aMenuPane);
-		
-	public: // From CCoeControl
-		void GetHelpContext(TCoeHelpContext& aContext) const;
 
 	public: // From CAknSettingItemList
 		void EditItemL(TInt aIndex, TBool aCalledFromMenu);
@@ -70,6 +67,7 @@ class CBuddycloudEditChannelList : public CAknSettingItemList, MXmppStanzaObserv
 		TBuf<64> iId;
 		TBuf<256> iDescription;
 		TInt iAccess;
+		TInt iAffiliation;
 };
 
 #endif

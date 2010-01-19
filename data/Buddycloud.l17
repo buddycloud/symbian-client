@@ -106,6 +106,7 @@ rls_string r_string_item_removepost "Hozzászólás törlése"
 
 rls_string r_string_options_itemchannel "Csatorna"
 rls_string r_string_channel_markread "Csatorna megjelölése olvasottként"
+rls_string r_string_options_reportchannel "Report channel"
 
 // Menu: Places
 rls_string r_string_options_setcurrent "Új hely rögzítése"
@@ -270,6 +271,9 @@ rls_string r_string_editchannel_itemlist_description_hint "Csatorna leírása"
 rls_string r_string_editchannel_itemlist_access "Hozzáférés"
 rls_string r_string_editchannel_itemlist_access_open "Csatorna megnyitása"
 rls_string r_string_editchannel_itemlist_access_whitelist "Csak tagok"
+rls_string r_string_editchannel_itemlist_defaultaffiliation "New followers can"
+rls_string r_string_editchannel_itemlist_defaultaffiliation_member "Read only"
+rls_string r_string_editchannel_itemlist_defaultaffiliation_publisher "Read and post"
 
 rls_string r_string_note_channelexists "Ez a #csatorna_azonosító már létezik. Kérlek használj egy másikat."
 

@@ -33,10 +33,6 @@ class CBuddycloudExplorerContainer : public CBuddycloudListComponent, public MAk
 		CBuddycloudExplorerContainer(MViewAccessorObserver* aViewAccessor, CBuddycloudLogic* aBuddycloudLogic);
 		void ConstructL(const TRect& aRect, TViewReference aQueryReference);
         ~CBuddycloudExplorerContainer();
-        
-	private: // Directory
-		void CreateRootExplorerDirectoryL();
-		void CreateDirectoryItemL(const TDesC& aId, TInt aTitleResource);
 
 	public: // From MBuddycloudLogicNotificationObserver
 		void NotificationEvent(TBuddycloudLogicNotificationType aEvent, TInt aId = KErrNotFound);
@@ -48,6 +44,9 @@ class CBuddycloudExplorerContainer : public CBuddycloudListComponent, public MAk
 		void PushLevelL(const TDesC& aTitle, const TDesC8& aStanza);
 		void PopLevelL();
 		void RefreshLevelL();
+		
+	private: // Request next result set management results
+		void RequestMoreResultsL();
 
 	private: // From CBuddycloudListComponent
 		void RenderWrappedText(TInt aIndex);
@@ -59,9 +58,6 @@ class CBuddycloudExplorerContainer : public CBuddycloudListComponent, public MAk
 	public:
 		void DynInitMenuPaneL(TInt aResourceId, CEikMenuPane* aMenuPane);
 		void HandleCommandL(TInt aCommand);
-		
-	public: // From CCoeControl
-		void GetHelpContext(TCoeHelpContext& aContext) const;		
 
 	protected: // From CCoeControl
 		void SizeChanged();
