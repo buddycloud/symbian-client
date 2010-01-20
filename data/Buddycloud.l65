@@ -43,6 +43,7 @@ rls_string r_string_options_delete "Delete"
 
 rls_string r_string_note_noresultsfound "결과 없음"
 rls_string r_string_note_requestsent "신청하기 전송됨"
+rls_string r_string_note_feedbacksent "Feedback sent"
 rls_string r_string_note_messagequeued "온라인할때 메세지가 자동으로 보내집니다"
 rls_string r_string_note_offlinerequired "이 작업을 하기위해서는 오프라인 하는 것이 필요합니다"
 
@@ -150,15 +151,15 @@ rls_string r_string_note_requesting "신청하는중..."
 rls_string r_string_note_channelrank "순위"
 rls_string r_string_note_channelsince "Days broadcasting"
 rls_string r_string_note_channelowner "Produced by"
-rls_string r_string_note_channellocation "Channel location"
+rls_string r_string_note_channellocation "Location"
+rls_string r_string_note_channelfollowers "Followers"
 
 // Menu: Channels
-rls_string r_string_list_nearbytoyou "What's Nearby To Me"
+rls_string r_string_list_nearbytoyou "Explore Nearby"
 rls_string r_string_list_featuredchannels "특집채널들"
 rls_string r_string_list_channelsyoumightlike "좋아할 만한 채널들"
 rls_string r_string_list_followersfavourites "추종자들의 좋아하는 것들"
 rls_string r_string_list_mostpopularchannels "가장 인기있는 채널들"
-rls_string r_string_list_channelsneartoyou "Channels Near To Me"
 
 rls_string r_string_item_open "열기"
 rls_string r_string_item_follow "따라다니기"

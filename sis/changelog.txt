@@ -1,6 +1,22 @@
 Change Log
 ==========
 
+0.05.27
+
+- Show red error feedback on bad text input in CBuddycloudSetupContainer
+- [workaround] Add limiter to not allow user channels without following user
+- Rework of setting item change notification management
+- Implement MLocationEngineDataInterface for direct access to LocationEngine data
+- Implement MLocationEngineDataInterface use in CBuddycloudPlacesContainer
+- [bug] Fix not setting subscription & affiliation when binding user to channel
+- Add owner, channel_location & channel_followers statistics to CBuddycloudChannelInfoContainer
+- Add 'See nearby' menu item when a valid geoloc element is returned in channel_location
+- Add 'Feedback sent' confirmation to 'Report post' & 'Report channel'
+- Rearrange position of 'Write comment' to be in the main menu of CBuddycloudMessagingContainer
+- Rewrite of menu dimming logic in CBuddycloudMessagingContainer
+- Remove redundant server check from 'broadcaster.buddycloud.com'
+- Update from 99translations
+
 0.05.26
 
 - Use affiliations query for all 'See Followers' events

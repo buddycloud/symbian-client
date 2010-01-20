@@ -88,6 +88,7 @@ class CBuddycloudSetupContainer : public CCoeControl, MTimeoutNotification {
 		TSetupStep iSetupStep;
 		TRgb iColorFade;
 		TBool iNewRegistration;
+		TBool iEditingError;
 		
 		// Screen Buffer
 		CFbsBitmap* iBufferBitmap;

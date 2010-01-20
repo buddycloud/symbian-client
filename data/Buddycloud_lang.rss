@@ -702,14 +702,19 @@ RESOURCE MENU_PANE r_messaging_options_menu
 		},
 		MENU_ITEM
 		{ 
-			command = EMenuWritePostCommand; 
-			txt = r_string_options_postmessage;
+			command = EMenuAddCommentCommand; 
+			txt = r_string_item_addcomment;
 		},
 		MENU_ITEM
 		{ 
 			command = EMenuOptionsItemCommand; 
 			cascade = r_messaging_options_item_menu; 
 			txt = "";
+		},
+		MENU_ITEM
+		{ 
+			command = EMenuWritePostCommand; 
+			txt = r_string_options_postmessage;
 		},
 		MENU_ITEM
 		{ 
@@ -746,18 +751,13 @@ RESOURCE MENU_PANE r_messaging_options_item_menu
 	{
 		MENU_ITEM
 		{ 
-			command = EMenuAddCommentCommand; 
-			txt = r_string_item_addcomment;
+			command = EMenuFollowCommand; 
+			txt = r_string_item_follow;
 		},
 		MENU_ITEM
 		{ 
 			command = EMenuLikePostCommand; 
 			txt = r_string_item_likepost;
-		},
-		MENU_ITEM
-		{ 
-			command = EMenuFollowCommand; 
-			txt = r_string_item_follow;
 		},
 		MENU_ITEM
 		{ 
@@ -2080,6 +2080,7 @@ RESOURCE TBUF r_localized_string_editplace_region { buf = r_string_editplace_ite
 RESOURCE TBUF r_localized_string_editplace_country { buf = r_string_editplace_itemlist_country; }
 RESOURCE TBUF r_localized_string_note_noresultsfound { buf = r_string_note_noresultsfound; }
 RESOURCE TBUF r_localized_string_note_requestsent { buf = r_string_note_requestsent; }
+RESOURCE TBUF r_localized_string_note_feedbacksent { buf = r_string_note_feedbacksent; }
 RESOURCE TBUF r_localized_string_note_messagequeued { buf = r_string_note_messagequeued; }
 RESOURCE TBUF r_localized_string_note_offlinerequired { buf = r_string_note_offlinerequired; }
 RESOURCE TBUF r_localized_string_note_credentials_success { buf = r_string_settings_credentials_success; }
@@ -2097,8 +2098,11 @@ RESOURCE TBUF r_localized_string_note_channelexists { buf = r_string_note_channe
 RESOURCE TBUF r_localized_string_channelaccess { buf = r_string_editchannel_itemlist_access; }
 RESOURCE TBUF r_localized_string_channelaccess_open { buf = r_string_editchannel_itemlist_access_open; }
 RESOURCE TBUF r_localized_string_channelaccess_whitelist { buf = r_string_editchannel_itemlist_access_whitelist; }
+RESOURCE TBUF r_localized_string_note_channelowner { buf = r_string_note_channelowner; }
 RESOURCE TBUF r_localized_string_note_channelsince { buf = r_string_note_channelsince; }
 RESOURCE TBUF r_localized_string_note_channelrank { buf = r_string_note_channelrank; }
+RESOURCE TBUF r_localized_string_note_channellocation { buf = r_string_note_channellocation; }
+RESOURCE TBUF r_localized_string_note_channelfollowers { buf = r_string_note_channelfollowers; }
 
 // Explorer
 RESOURCE TBUF r_localized_string_options_explore { buf = r_string_options_explore; }

@@ -61,6 +61,10 @@ CBuddycloudChannelInfoContainer::~CBuddycloudChannelInfoContainer() {
 		iXmppInterface->CancelXmppStanzaAcknowledge(this);
 	}
 	
+	if(iGeoloc) {
+		delete iGeoloc;
+	}
+	
 	if(iChannelTitle) {
 		delete iChannelTitle;
 	}
@@ -274,6 +278,10 @@ void CBuddycloudChannelInfoContainer::DynInitMenuPaneL(TInt aResourceId, CEikMen
 		if(iCollectionState == EChannelInfoCollected) {
 			aMenuPane->SetItemDimmed(EMenuSeeFollowersCommand, false);
 			aMenuPane->SetItemDimmed(EMenuSeeModeratorsCommand, false);
+			
+			if(iGeoloc && (iGeoloc->GetReal(EGeolocLatitude) != 0.0 || iGeoloc->GetReal(EGeolocLongitude) != 0.0)) {				
+				aMenuPane->SetItemDimmed(EMenuSeeNearbyCommand, false);
+			}
 		}
 	}
 }
@@ -341,6 +349,17 @@ void CBuddycloudChannelInfoContainer::HandleCommandL(TInt aCommand) {
 		CExplorerStanzaBuilder::BuildTitleFromResource(aViewReference().iNewViewData.iTitle, aResourceId, _L("$OBJECT"), iQueryReference.iNewViewData.iTitle);
 		
 		iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KExplorerViewId), TUid::Uid(0), aViewReference);					
+	}
+	else if(aCommand == EMenuSeeNearbyCommand) {
+		TViewReferenceBuf aViewReference;
+		aViewReference().iCallbackRequested = true;
+		aViewReference().iCallbackViewId = KChannelInfoViewId;
+		aViewReference().iOldViewData = iQueryReference.iNewViewData;
+			
+		CExplorerStanzaBuilder::FormatButlerXmppStanza(aViewReference().iNewViewData.iData, iBuddycloudLogic->GetNewIdStamp(), iGeoloc->GetReal(EGeolocLatitude), iGeoloc->GetReal(EGeolocLongitude));
+		CExplorerStanzaBuilder::BuildTitleFromResource(aViewReference().iNewViewData.iTitle, R_LOCALIZED_STRING_TITLE_NEARBYTO, _L("$OBJECT"), iQueryReference.iNewViewData.iTitle);
+			
+		iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KExplorerViewId), TUid::Uid(0), aViewReference);		
 	}
 }
 
@@ -425,6 +444,23 @@ void CBuddycloudChannelInfoContainer::XmppStanzaAcknowledgedL(const TDesC8& aSta
 					}
 					else if(aAttributeVar.Compare(_L8("pubsub#channel_rank")) == 0) {
 						AddStatisticL(R_LOCALIZED_STRING_NOTE_CHANNELRANK, aEncDataValue);
+					}
+					else if(aAttributeVar.Compare(_L8("pubsub#channel_location")) == 0) {
+						CXmppGeolocParser* aGeolocParser = CXmppGeolocParser::NewLC();			
+						iGeoloc = aGeolocParser->XmlToGeolocLC(aXmlParser->GetStringData());
+						
+						CleanupStack::Pop(); // iGeoloc
+						CleanupStack::PopAndDestroy(); // aGeolocParser
+						
+						if(iGeoloc->GetString(EGeolocText).Length() > 0) {
+							AddStatisticL(R_LOCALIZED_STRING_NOTE_CHANNELFOLLOWERS, iGeoloc->GetString(EGeolocText));
+						}		
+					}
+					else if(aAttributeVar.Compare(_L8("pubsub#channel_followers")) == 0) {
+						AddStatisticL(R_LOCALIZED_STRING_NOTE_CHANNELFOLLOWERS, aEncDataValue);
+					}
+					else if(aAttributeVar.Compare(_L8("pubsub#owner")) == 0) {
+						AddStatisticL(R_LOCALIZED_STRING_NOTE_CHANNELOWNER, aEncDataValue);
 					}
 				}
 			}

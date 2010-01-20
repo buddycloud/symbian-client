@@ -43,6 +43,7 @@ rls_string r_string_options_delete "Delete"
 
 rls_string r_string_note_noresultsfound "Žádné výsledky"
 rls_string r_string_note_requestsent "Žádost odeslána"
+rls_string r_string_note_feedbacksent "Feedback sent"
 rls_string r_string_note_messagequeued "Zpráva bude odeslána jakmile budeš online"
 rls_string r_string_note_offlinerequired "Pro provedení této operace musíš být offline"
 
@@ -150,15 +151,15 @@ rls_string r_string_note_requesting "Odesílám žádost..."
 rls_string r_string_note_channelrank "Žebříček"
 rls_string r_string_note_channelsince "Days broadcasting"
 rls_string r_string_note_channelowner "Produced by"
-rls_string r_string_note_channellocation "Channel location"
+rls_string r_string_note_channellocation "Location"
+rls_string r_string_note_channelfollowers "Followers"
 
 // Menu: Channels
-rls_string r_string_list_nearbytoyou "What's Nearby To Me"
+rls_string r_string_list_nearbytoyou "Explore Nearby"
 rls_string r_string_list_featuredchannels "Doporučené kanály"
 rls_string r_string_list_channelsyoumightlike "Kanály které se Ti mohou líbit"
 rls_string r_string_list_followersfavourites "Oblíbené kanály odběratelů"
 rls_string r_string_list_mostpopularchannels "Nejpopulárnější kanály"
-rls_string r_string_list_channelsneartoyou "Channels Near To Me"
 
 rls_string r_string_item_open "Otevřít"
 rls_string r_string_item_follow "Odebírat"

@@ -45,24 +45,19 @@ enum TDescSettingItems {
 };
 
 enum TIntSettingItems {
-	ESettingItemNotifyChannelsFollowing, ESettingItemNotifyChannelsModerating, 
-	ESettingItemPrivateMessageTone, ESettingItemChannelPostTone, ESettingItemDirectReplyTone,
-	ESettingItemLanguage
+	ESettingItemNotifyChannelsFollowing = ESettingItemTwitterPassword + 1, ESettingItemNotifyChannelsModerating, 
+	ESettingItemPrivateMessageTone, ESettingItemChannelPostTone, ESettingItemDirectReplyTone, ESettingItemLanguage
 };
 
 enum TBoolSettingItems {
-	ESettingItemCellOn, ESettingItemWifiOn, ESettingItemBtOn, ESettingItemGpsOn, 
+	ESettingItemCellOn = ESettingItemLanguage + 1, ESettingItemWifiOn, ESettingItemBtOn, ESettingItemGpsOn, 
 	ESettingItemCellAvailable, ESettingItemWifiAvailable, ESettingItemBtAvailable, ESettingItemGpsAvailable, 
-	ESettingItemNewInstall, ESettingItemNotifyReplyTo, ESettingItemAutoStart, ESettingItemShowName, 
-	ESettingItemAccessPoint, ESettingItemMessageBlocking
+	ESettingItemNewInstall, ESettingItemNotifyReplyTo, ESettingItemAutoStart, ESettingItemAccessPoint, 
+	ESettingItemMessageBlocking
 };
 
 enum TBuddycloudLogicState {
 	ELogicShutdown, ELogicOffline, ELogicConnecting, ELogicOnline
-};
-
-enum TBuddycloudLocationResource {
-	EResourceCell, EResourceWlan, EResourceBt, EResourceGps
 };
 
 enum TBuddycloudLogicNotificationType {
@@ -77,14 +72,6 @@ enum TBuddycloudLogicNotificationType {
 
 enum TBuddycloudLogicTimeoutState {
 	ETimeoutNone, ETimeoutStartConnection, ETimeoutConnected, ETimeoutSaveSettings, ETimeoutSavePlaces
-};
-
-enum TBuddycloudContactNameOrder {
-	ENameOrderFirstLast, ENameOrderLastFirst
-};
-
-enum TBuddycloudLocationRequestType {
-	ELocationRequestNone, ELocationRequestSubscribed, ELocationRequestNearby, ELocationRequestSearch
 };
 
 enum TBuddycloudToneType {
@@ -167,27 +154,25 @@ class CBuddycloudLogic : public CBase, MLocationEngineNotification, MTimeInterfa
 		void SendPresenceSubscriptionL(const TDesC8& aTo, const TDesC8& aType, const TDesC8& aOptionalData = KNullDesC8);
 		
 	public: // Settings
-		void ResetStoredDataL();
 		void ResetConnectionSettings();
-		
-		void SetLocationResource(TBuddycloudLocationResource aResource, TBool aEnable);
-		TBool GetLocationResourceDataAvailable(TBuddycloudLocationResource aResource);
-		
 		void ValidateUsername(TBool aCheckServer = true);
-		
-		void LanguageSettingChanged();
-		void NotificationSettingChanged(TIntSettingItems aItem);
 		
 		TDes& GetDescSetting(TDescSettingItems aItem);
 		TInt& GetIntSetting(TIntSettingItems aItem);
 		TBool& GetBoolSetting(TBoolSettingItems aItem);
 		
-	public: 
+		void SettingsItemChanged(TInt aSettingsItemId);
+		
+	private:
+		void ResetStoredDataL();
+		
+	public: // Activity status
 		TDesC& GetActivityStatus();
 		void SetActivityStatus(const TDesC& aText);
 	
 	private: 
-		void SetActivityStatus(TInt aResource);
+		void SetActivityStatus(TInt aResourceId);
+		void ShowInformationDialogL(TInt aResourceId);
 
 	private:
 		TInt DisplaySingleLinePopupMenuL(RPointerArray<HBufC>& aMenuItems);
@@ -301,10 +286,8 @@ class CBuddycloudLogic : public CBase, MLocationEngineNotification, MTimeInterfa
 	public: // Avatar
 		CAvatarRepository* GetImageRepository();
 
-	public: // Places
-		TInt GetMyPlaceId();
-		TLocationMotionState GetMyMotionState();
-		TInt GetMyPatternQuality();
+	public: // Location engine
+		MLocationEngineDataInterface* GetLocationInterface();
 		
 	public:
 		CBuddycloudPlaceStore* GetPlaceStore();
@@ -392,7 +375,6 @@ class CBuddycloudLogic : public CBase, MLocationEngineNotification, MTimeInterfa
 		TBool iOffsetReceived;
 		TBool iRosterSynchronized;
 		TBool iPubsubSubscribedTo;
-		TBool iMyChannelMembersRequested;
 		
         CBuddycloudListStore* iGenericList;
 
@@ -426,7 +408,6 @@ class CBuddycloudLogic : public CBase, MLocationEngineNotification, MTimeInterfa
         TInt iSettingPreferredLanguage;
         TBool iSettingMessageBlocking;
         TBool iSettingAccessPoint;
-        TBool iSettingShowName;
         TBool iSettingAutoStart;
        
         // Account settings

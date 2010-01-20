@@ -43,6 +43,7 @@ rls_string r_string_options_delete "Hapus"
 
 rls_string r_string_note_noresultsfound "Tidak ada hasil ditemukan"
 rls_string r_string_note_requestsent "Permintaan terkirim"
+rls_string r_string_note_feedbacksent "Feedback terkirim"
 rls_string r_string_note_messagequeued "Pesan akan terkirim ketika anda online"
 rls_string r_string_note_offlinerequired "Anda harus offline untuk melakukan ini"
 
@@ -150,15 +151,15 @@ rls_string r_string_note_requesting "Permintaan..."
 rls_string r_string_note_channelrank "Ranking"
 rls_string r_string_note_channelsince "Jumlah hari penyiaran"
 rls_string r_string_note_channelowner "Dibuat oleh"
-rls_string r_string_note_channellocation "Lokasi channel"
+rls_string r_string_note_channellocation "Lokasi"
+rls_string r_string_note_channelfollowers "Pengikut"
 
 // Menu: Channels
-rls_string r_string_list_nearbytoyou "Apa Yg Ada Di Sekitar Saya"
+rls_string r_string_list_nearbytoyou "Jelajahi Sekitar"
 rls_string r_string_list_featuredchannels "Channel Channel Utama"
 rls_string r_string_list_channelsyoumightlike "Channel Yg Mungkin Anda Suka"
 rls_string r_string_list_followersfavourites "Favorit Pengikut"
 rls_string r_string_list_mostpopularchannels "Channel Channel Paling Populer"
-rls_string r_string_list_channelsneartoyou "Channel2 Didekat Saya"
 
 rls_string r_string_item_open "Buka"
 rls_string r_string_item_follow "Ikuti"

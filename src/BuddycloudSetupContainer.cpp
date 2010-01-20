@@ -213,6 +213,8 @@ void CBuddycloudSetupContainer::ReleaseFonts() {
 void CBuddycloudSetupContainer::ConstructNextStepL() {
 	iTimer->Stop();
 	
+	iEditingError = false;
+	
 	if(iSetupStep == EStep1) {
 		iSetupStep = EStep2;		
 		ConstructTextL();
@@ -250,11 +252,15 @@ void CBuddycloudSetupContainer::ConstructNextStepL() {
 			iUsernameEdwin->SetFocus(true);
 			iPasswordEdwin->SetFocus(false);
 			
+			iEditingError = true;
+			
 			RepositionEdwins();
 		}
 		else if(iBuddycloudLogic->GetDescSetting(ESettingItemPassword).Length() == 0) {		
 			iPasswordEdwin->SetFocus(true);
 			iUsernameEdwin->SetFocus(false);
+			
+			iEditingError = true;
 			
 			RepositionEdwins();
 		}
@@ -455,8 +461,14 @@ void CBuddycloudSetupContainer::RenderScreen() {
 					iBufferGc->SetPenColor(KRgbBlack);
 					iBufferGc->DrawText(*iLabelText1, TPoint(aFieldRect.iTl.iX + 10, aFieldRect.iTl.iY - 5));
 					
-					iBufferGc->SetBrushColor(KRgbGreen);
-					iBufferGc->SetPenColor(KRgbGreen);
+					if(iEditingError) {
+						iBufferGc->SetBrushColor(KRgbRed);
+						iBufferGc->SetPenColor(KRgbRed);
+					}
+					else {
+						iBufferGc->SetBrushColor(KRgbGreen);
+						iBufferGc->SetPenColor(KRgbGreen);
+					}
 				}
 				else {
 					iBufferGc->SetBrushColor(KRgbGray);
@@ -478,8 +490,14 @@ void CBuddycloudSetupContainer::RenderScreen() {
 					iBufferGc->SetPenColor(KRgbBlack);
 					iBufferGc->DrawText(*iLabelText2, TPoint(aFieldRect.iTl.iX + 10, aFieldRect.iTl.iY - 5));
 					
-					iBufferGc->SetBrushColor(KRgbGreen);
-					iBufferGc->SetPenColor(KRgbGreen);
+					if(iEditingError) {
+						iBufferGc->SetBrushColor(KRgbRed);
+						iBufferGc->SetPenColor(KRgbRed);
+					}
+					else {
+						iBufferGc->SetBrushColor(KRgbGreen);
+						iBufferGc->SetPenColor(KRgbGreen);
+					}
 				}
 				else {
 					iBufferGc->SetBrushColor(KRgbGray);
@@ -646,9 +664,10 @@ TKeyResponse CBuddycloudSetupContainer::OfferKeyEventL(const TKeyEvent& aKeyEven
 				iPasswordEdwin->SetFocus(false);
 				iUsernameEdwin->SetFocus(true);
 			}
-			
+						
 			RepositionEdwins();
 			
+			iEditingError = false;
 			aResult = EKeyWasConsumed;
 		}
 		else if(aKeyEvent.iCode >= 63554 && aKeyEvent.iCode <= 63557) {
@@ -724,6 +743,7 @@ void CBuddycloudSetupContainer::HandlePointerEventL(const TPointerEvent &aPointe
 				
 				RepositionEdwins();
 				
+				iEditingError = false;
 				aFeedback = true;
 			}
 			else if(iNextButton.Contains(aPointerEvent.iPosition)) {

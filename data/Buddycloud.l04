@@ -43,6 +43,7 @@ rls_string r_string_options_delete "Eliminar"
 
 rls_string r_string_note_noresultsfound "No se encontraron resultados"
 rls_string r_string_note_requestsent "Petición enviada"
+rls_string r_string_note_feedbacksent "Feedback sent"
 rls_string r_string_note_messagequeued "Se enviará un mensaje cuando te conectes"
 rls_string r_string_note_offlinerequired "Necesitas estar desconectado para hacer esto"
 
@@ -150,15 +151,15 @@ rls_string r_string_note_requesting "Solicitando..."
 rls_string r_string_note_channelrank "Rango"
 rls_string r_string_note_channelsince "Dias transcurridos desde creación"
 rls_string r_string_note_channelowner "Producido por"
-rls_string r_string_note_channellocation "Localización del canal"
+rls_string r_string_note_channellocation "Localización"
+rls_string r_string_note_channelfollowers "Seguidores"
 
 // Menu: Channels
-rls_string r_string_list_nearbytoyou "¿Que está cerca mia?"
+rls_string r_string_list_nearbytoyou "Explore Nearby"
 rls_string r_string_list_featuredchannels "Canales destacados"
 rls_string r_string_list_channelsyoumightlike "Canales que podrían gustarte"
 rls_string r_string_list_followersfavourites "Favoritos de tus seguidores"
 rls_string r_string_list_mostpopularchannels "Los canales más populares"
-rls_string r_string_list_channelsneartoyou "Canales cerca mia"
 
 rls_string r_string_item_open "Abrir"
 rls_string r_string_item_follow "Seguir"

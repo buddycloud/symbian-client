@@ -43,6 +43,7 @@ rls_string r_string_options_delete "Delete"
 
 rls_string r_string_note_noresultsfound "没有找到结果"
 rls_string r_string_note_requestsent "请求送出"
+rls_string r_string_note_feedbacksent "Feedback sent"
 rls_string r_string_note_messagequeued "信息将在你上线后发送"
 rls_string r_string_note_offlinerequired "你必须在离线时操作"
 
@@ -150,15 +151,15 @@ rls_string r_string_note_requesting "正在请求..."
 rls_string r_string_note_channelrank "等级"
 rls_string r_string_note_channelsince "Days broadcasting"
 rls_string r_string_note_channelowner "Produced by"
-rls_string r_string_note_channellocation "Channel location"
+rls_string r_string_note_channellocation "Location"
+rls_string r_string_note_channelfollowers "Followers"
 
 // Menu: Channels
-rls_string r_string_list_nearbytoyou "What's Nearby To Me"
+rls_string r_string_list_nearbytoyou "Explore Nearby"
 rls_string r_string_list_featuredchannels "精选频道"
 rls_string r_string_list_channelsyoumightlike "你可能喜欢的频道"
 rls_string r_string_list_followersfavourites "追随者的最爱"
 rls_string r_string_list_mostpopularchannels "最受欢迎的频道"
-rls_string r_string_list_channelsneartoyou "Channels Near To Me"
 
 rls_string r_string_item_open "打开"
 rls_string r_string_item_follow "加入"

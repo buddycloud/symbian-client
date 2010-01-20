@@ -83,6 +83,8 @@ void CBuddycloudPlacesContainer::ConstructL(const TRect& aRect, TInt aPlaceId) {
 	ConfigureEdwinL();
 
 	iPlaceStore = iBuddycloudLogic->GetPlaceStore();
+	
+	iLocationInterface = iBuddycloudLogic->GetLocationInterface();
 
 	SetRect(iRect);
 	RenderScreen();
@@ -192,11 +194,11 @@ void CBuddycloudPlacesContainer::RenderWrappedText(TInt aIndex) {
 		if(aPlace) {
 			// Wrap
 			if(aPlace->GetItemId() <= 0) {
-				if(iBuddycloudLogic->GetMyMotionState() == EMotionMoving) {
+				if(iLocationInterface->GetLastMotionState() == EMotionMoving) {
 					aPlace->SetDescriptionL(*iCoeEnv->AllocReadResourceLC(R_LOCALIZED_STRING_POSITIONING_MOVING));
 					CleanupStack::PopAndDestroy(); // R_LOCALIZED_STRING_POSITIONING_MOVING
 				}
-				else if(iBuddycloudLogic->GetMyMotionState() == EMotionStationary) {
+				else if(iLocationInterface->GetLastMotionState() == EMotionStationary) {
 					aPlace->SetDescriptionL(*iCoeEnv->AllocReadResourceLC(R_LOCALIZED_STRING_POSITIONING_STATIONARY));
 					CleanupStack::PopAndDestroy(); // R_LOCALIZED_STRING_POSITIONING_STATIONARY
 				}
@@ -210,22 +212,22 @@ void CBuddycloudPlacesContainer::RenderWrappedText(TInt aIndex) {
 					HBufC* aTextToWrap = HBufC::NewLC(aCellText->Des().Length() + aWifiGpsText->Des().Length() + aBtText->Des().Length() + (KNewSentance().Length() * 2));
 					TPtr pTextToWrap(aTextToWrap->Des());
 					
-					if(iBuddycloudLogic->GetLocationResourceDataAvailable(EResourceCell)) {
+					if(iLocationInterface->CellDataAvailable()) {
 						pTextToWrap.Append(*aCellText);
 						
-						if(iBuddycloudLogic->GetLocationResourceDataAvailable(EResourceWlan) || iBuddycloudLogic->GetLocationResourceDataAvailable(EResourceGps)) {
+						if(iLocationInterface->WlanDataAvailable() || iLocationInterface->GpsDataAvailable()) {
 							pTextToWrap.Append(KNewSentance);
 							pTextToWrap.Append(*aWifiGpsText);
 						}
 					}
-					else if(iBuddycloudLogic->GetLocationResourceDataAvailable(EResourceWlan) || iBuddycloudLogic->GetLocationResourceDataAvailable(EResourceGps)) {
+					else if(iLocationInterface->WlanDataAvailable() || iLocationInterface->GpsDataAvailable()) {
 						HBufC* aStationaryText = iCoeEnv->AllocReadResourceLC(R_LOCALIZED_STRING_POSITIONING_STATIONARY);
 						
 						pTextToWrap.Append(*aStationaryText);
 						CleanupStack::PopAndDestroy(); // aStationaryText
 					}
 					
-					if(iBuddycloudLogic->GetLocationResourceDataAvailable(EResourceBt)) {
+					if(iLocationInterface->BtDataAvailable()) {
 						if(pTextToWrap.Length() > 0) {
 							pTextToWrap.Append(KNewSentance);
 						}
@@ -321,7 +323,7 @@ TInt CBuddycloudPlacesContainer::CalculateItemSize(TInt aIndex) {
 			}
 
 			if(aPlace->GetItemId() <= 0) {				
-				if(iBuddycloudLogic->GetMyMotionState() > EMotionStationary) {
+				if(iLocationInterface->GetLastMotionState() > EMotionStationary) {
 					aItemSize += i10NormalFont->HeightInPixels();
 				}
 			}
@@ -403,7 +405,7 @@ void CBuddycloudPlacesContainer::RenderListItems() {
 	
 						if(i == 0) {						
 							// Cell
-							if(iBuddycloudLogic->GetLocationResourceDataAvailable(EResourceCell)) {
+							if(iLocationInterface->CellDataAvailable()) {
 								iBufferGc->BitBltMasked(TPoint(iLeftBarSpacer + 6, (aItemDrawPos + 2)), iAvatarRepository->GetImage(KIconPositioning, false, iIconMidmapSize), TRect(0, 0, (iItemIconSize / 2), (iItemIconSize / 2)), iAvatarRepository->GetImage(KIconPositioning, true, iIconMidmapSize), true);
 							}
 							else {
@@ -411,7 +413,7 @@ void CBuddycloudPlacesContainer::RenderListItems() {
 							}
 							
 							// Wifi
-							if(iBuddycloudLogic->GetLocationResourceDataAvailable(EResourceWlan)) {
+							if(iLocationInterface->WlanDataAvailable()) {
 								iBufferGc->BitBltMasked(TPoint((iLeftBarSpacer + 6 + (iItemIconSize / 2)), (aItemDrawPos + 2)), iAvatarRepository->GetImage(KIconPositioning, false, iIconMidmapSize), TRect((iItemIconSize / 2), 0, iItemIconSize, (iItemIconSize / 2)), iAvatarRepository->GetImage(KIconPositioning, true, iIconMidmapSize), true);
 							}
 							else {
@@ -419,7 +421,7 @@ void CBuddycloudPlacesContainer::RenderListItems() {
 							}
 							
 							// Gps
-							if(iBuddycloudLogic->GetLocationResourceDataAvailable(EResourceGps)) {
+							if(iLocationInterface->GpsDataAvailable()) {
 								iBufferGc->BitBltMasked(TPoint(iLeftBarSpacer + 6, (aItemDrawPos + 2 + (iItemIconSize / 2))), iAvatarRepository->GetImage(KIconPositioning, false, iIconMidmapSize), TRect(0, (iItemIconSize / 2), (iItemIconSize / 2), iItemIconSize), iAvatarRepository->GetImage(KIconPositioning, true, iIconMidmapSize), true);
 							}
 							else {
@@ -427,7 +429,7 @@ void CBuddycloudPlacesContainer::RenderListItems() {
 							}
 							
 							// Bluetooth
-							if(iBuddycloudLogic->GetLocationResourceDataAvailable(EResourceBt)) {
+							if(iLocationInterface->BtDataAvailable()) {
 								iBufferGc->BitBltMasked(TPoint((iLeftBarSpacer + 6 + (iItemIconSize / 2)), (aItemDrawPos + 2 + (iItemIconSize / 2))), iAvatarRepository->GetImage(KIconPositioning, false, iIconMidmapSize), TRect((iItemIconSize / 2), (iItemIconSize / 2), iItemIconSize, iItemIconSize), iAvatarRepository->GetImage(KIconPositioning, true, iIconMidmapSize), true);
 							}
 							else {
@@ -467,7 +469,7 @@ void CBuddycloudPlacesContainer::RenderListItems() {
 					}
 					
 					if(i == 0) {
-						if(aPlace->GetItemId() <= 0 || aPlace->GetItemId() == iBuddycloudLogic->GetMyPlaceId()) {
+						if(aPlace->GetItemId() <= 0 || aPlace->GetItemId() == iLocationInterface->GetLastPlaceId()) {
 							// This is top place item (On the road..., Near... etc)
 							CFollowingRosterItem* aOwnItem = iBuddycloudLogic->GetOwnItem();
 							
@@ -515,7 +517,7 @@ void CBuddycloudPlacesContainer::RenderListItems() {
 				
 					if(aPlace->GetItemId() == iSelectedItem) {					
 						if(aPlace->GetDescription().Length() > 0) {
-							if(aPlace->GetItemId() <= 0 && iBuddycloudLogic->GetMyMotionState() == EMotionStationary) {
+							if(aPlace->GetItemId() <= 0 && iLocationInterface->GetLastMotionState() == EMotionStationary) {
 								iBufferGc->SetUnderlineStyle(EUnderlineOn);					
 							}
 							
@@ -534,10 +536,10 @@ void CBuddycloudPlacesContainer::RenderListItems() {
 							iBufferGc->SetUnderlineStyle(EUnderlineOff);
 							
 							// Pattern quality
-							if(iBuddycloudLogic->GetMyMotionState() > EMotionStationary) {
+							if(iLocationInterface->GetLastMotionState() > EMotionStationary) {
 								iBufferGc->UseFont(i10NormalFont);
 								aBuf.Copy(iTextUtilities->BidiLogicalToVisualL(*iLocalizedLearningPlace));
-								aBuf.AppendFormat(_L(" : %d%%"), iBuddycloudLogic->GetMyPatternQuality());
+								aBuf.AppendFormat(_L(" : %d%%"), iLocationInterface->GetLastPatternQuality());
 								aItemDrawPos += i10NormalFont->HeightInPixels();
 								iBufferGc->DrawText(aBuf, TPoint(iLeftBarSpacer + 5, aItemDrawPos));
 								iBufferGc->DiscardFont();
@@ -789,7 +791,7 @@ void CBuddycloudPlacesContainer::DynInitMenuPaneL(TInt aResourceId, CEikMenuPane
 				TPtrC aPlaceName(aPlace->GetGeoloc()->GetString(EGeolocText));
 				
 				if(aPlaceIndex == 0) {
-					if(aPlace->GetItemId() <= 0 || aPlace->GetItemId() == iBuddycloudLogic->GetMyPlaceId()) {
+					if(aPlace->GetItemId() <= 0 || aPlace->GetItemId() == iLocationInterface->GetLastPlaceId()) {
 						CFollowingRosterItem* aOwnItem = iBuddycloudLogic->GetOwnItem();
 						
 						if(aOwnItem) {

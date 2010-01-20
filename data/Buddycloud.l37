@@ -43,6 +43,7 @@ rls_string r_string_options_delete "Delete"
 
 rls_string r_string_note_noresultsfound "لا توجد نتائج"
 rls_string r_string_note_requestsent "طلب إرسال"
+rls_string r_string_note_feedbacksent "Feedback sent"
 rls_string r_string_note_messagequeued "سيتم إرسال الرسالة عندما تذهب الانترنت"
 rls_string r_string_note_offlinerequired "تحتاج إلى أن يكون حاليا للقيام بذلك"
 
@@ -150,15 +151,15 @@ rls_string r_string_note_requesting "الطالبة"
 rls_string r_string_note_channelrank "رتبة"
 rls_string r_string_note_channelsince "Days broadcasting"
 rls_string r_string_note_channelowner "Produced by"
-rls_string r_string_note_channellocation "Channel location"
+rls_string r_string_note_channellocation "Location"
+rls_string r_string_note_channelfollowers "Followers"
 
 // Menu: Channels
-rls_string r_string_list_nearbytoyou "What's Nearby To Me"
+rls_string r_string_list_nearbytoyou "Explore Nearby"
 rls_string r_string_list_featuredchannels "قنوات المميز"
 rls_string r_string_list_channelsyoumightlike "القنوات قد ترغب في"
 rls_string r_string_list_followersfavourites "أتباع 'المفضلة"
 rls_string r_string_list_mostpopularchannels "الأكثر شعبية قنوات"
-rls_string r_string_list_channelsneartoyou "Channels Near To Me"
 
 rls_string r_string_item_open "يفتح"
 rls_string r_string_item_follow "يتبع"

@@ -27,9 +27,6 @@ const TUid KCommunitiesViewId            = {13};
 // String constants
 _LIT8(KBuddycloudPubsubServer, "pubsub-bridge@broadcaster.buddycloud.com");
 
-// TODO: Remove redundant pubsub server
-_LIT8(KBuddycloudRedundantPubsubServer, "broadcaster.buddycloud.com");
-
 _LIT8(KIqTypeSet, "set");
 _LIT8(KIqTypeGet, "get");
 

@@ -43,6 +43,7 @@ rls_string r_string_options_delete "Delete"
 
 rls_string r_string_note_noresultsfound "Не найдено"
 rls_string r_string_note_requestsent "Запрос отправлен"
+rls_string r_string_note_feedbacksent "Feedback sent"
 rls_string r_string_note_messagequeued "Сообщение будет отправлено, как только Вы подключитесь к сети"
 rls_string r_string_note_offlinerequired "Для изменения, отключитесь от сети"
 
@@ -150,15 +151,15 @@ rls_string r_string_note_requesting "Передача запроса..."
 rls_string r_string_note_channelrank "Рейтинг"
 rls_string r_string_note_channelsince "Days broadcasting"
 rls_string r_string_note_channelowner "Produced by"
-rls_string r_string_note_channellocation "Channel location"
+rls_string r_string_note_channellocation "Location"
+rls_string r_string_note_channelfollowers "Followers"
 
 // Menu: Channels
-rls_string r_string_list_nearbytoyou "What's Nearby To Me"
+rls_string r_string_list_nearbytoyou "Explore Nearby"
 rls_string r_string_list_featuredchannels "Схожие каналы"
 rls_string r_string_list_channelsyoumightlike "Каналы, возможно интересные Вам"
 rls_string r_string_list_followersfavourites "Followers' Favourites"
 rls_string r_string_list_mostpopularchannels "Популярные каналы"
-rls_string r_string_list_channelsneartoyou "Channels Near To Me"
 
 rls_string r_string_item_open "Открыть"
 rls_string r_string_item_follow "Подписаться"

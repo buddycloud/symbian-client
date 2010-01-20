@@ -15,13 +15,14 @@
 #define LOCATIONENGINE_H_
 
 #include <e32base.h>
-#include "Timer.h"
+#include "BtDataHandler.h"
 #include "CellTowerDataHandler.h"
 #include "GpsDataHandler.h"
-#include "WlanDataHandler.h"
-#include "BtDataHandler.h"
+#include "LocationInterfaces.h"
 #include "SignalStrengthDataHandler.h"
+#include "Timer.h"
 #include "TimeUtilities.h"
+#include "WlanDataHandler.h"
 #include "XmppInterfaces.h"
 #include "XmlParser.h"
 
@@ -45,25 +46,6 @@ enum TLocationError {
 	ELocationErrorNone, ELocationErrorNoXmppInterface, ELocationErrorBadQueryResult
 };
 
-enum TLocationMotionState {
-	EMotionStationary, EMotionRestless, EMotionMoving, EMotionUnknown
-};
-
-/*
-----------------------------------------------------------------------------
---
--- Interfaces
---
-----------------------------------------------------------------------------
-*/
-
-class MLocationEngineNotification {
-	public:
-		virtual void HandleLocationServerResult(TLocationMotionState aMotionState, TInt aPatternQuality, TInt aPlaceId) = 0;
-
-		virtual void LocationShutdownComplete() = 0;
-};
-
 /*
 ----------------------------------------------------------------------------
 --
@@ -72,9 +54,9 @@ class MLocationEngineNotification {
 ----------------------------------------------------------------------------
 */
 
-class CLocationEngine : public CBase, MXmppStanzaObserver, MTimeoutNotification, 
-							MGpsNotification, MCellTowerNotification, MWlanNotification,
-							MBtNotification, MSignalStrengthNotification {
+class CLocationEngine : public CBase, MLocationEngineDataInterface, MXmppStanzaObserver, MTimeoutNotification, 
+							MGpsNotification, MCellTowerNotification, MWlanNotification, MBtNotification, 
+							MSignalStrengthNotification {
 	public:
 		static CLocationEngine* NewL(MLocationEngineNotification* aEngineObserver);
 		static CLocationEngine* NewLC(MLocationEngineNotification* aEngineObserver);
@@ -93,16 +75,10 @@ class CLocationEngine : public CBase, MXmppStanzaObserver, MTimeoutNotification,
 		void SetLanguageCodeL(TDesC8& aLangCode);
 		
 		void SetCellActive(TBool aActive);
-		TBool CellDataAvailable();
-		
 		void SetGpsActive(TBool aActive);
-		TBool GpsDataAvailable();
-	
 		void SetWlanActive(TBool aActive);
-		TBool WlanDataAvailable();
-		
 		void SetBtActive(TBool aActive);
-		TBool BtDataAvailable();
+		
 		void SetBtLaunch(TInt aSeconds);
 
 		void TriggerEngine();
@@ -112,10 +88,16 @@ class CLocationEngine : public CBase, MXmppStanzaObserver, MTimeoutNotification,
 		
 		void PrepareShutdown();
 		
-	public: // Access to GPS position
+	public: // From MLocationEngineDataInterface
+		TBool CellDataAvailable();
+		TBool GpsDataAvailable();
+		TBool WlanDataAvailable();
+		TBool BtDataAvailable();
+		
+	public: // From MLocationEngineDataInterface
 		void GetGpsPosition(TReal& aLatitude, TReal& aLongitude);
 		
-	public: // Access to location results
+	public: // From MLocationEngineDataInterface
 		TLocationMotionState GetLastMotionState();
 		TInt GetLastPatternQuality();
 		TInt GetLastPlaceId();

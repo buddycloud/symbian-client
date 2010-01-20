@@ -43,6 +43,7 @@ rls_string r_string_options_delete "Delete"
 
 rls_string r_string_note_noresultsfound "Haku ei tuottanut tulosta"
 rls_string r_string_note_requestsent "Pyyntö lähetetty"
+rls_string r_string_note_feedbacksent "Feedback sent"
 rls_string r_string_note_messagequeued "Viesti lähetetään kun siirryt online-tilaan"
 rls_string r_string_note_offlinerequired "Sinun täytyy olla katkaista yhteys tehdäksesi tämän"
 
@@ -150,15 +151,15 @@ rls_string r_string_note_requesting "Haetaan..."
 rls_string r_string_note_channelrank "Sijoitus"
 rls_string r_string_note_channelsince "Days broadcasting"
 rls_string r_string_note_channelowner "Produced by"
-rls_string r_string_note_channellocation "Channel location"
+rls_string r_string_note_channellocation "Location"
+rls_string r_string_note_channelfollowers "Followers"
 
 // Menu: Channels
-rls_string r_string_list_nearbytoyou "What's Nearby To Me"
+rls_string r_string_list_nearbytoyou "Explore Nearby"
 rls_string r_string_list_featuredchannels "Poimitut kanavat"
 rls_string r_string_list_channelsyoumightlike "Kanavia joista saatat pitää"
 rls_string r_string_list_followersfavourites "Seuraajien suosikit"
 rls_string r_string_list_mostpopularchannels "Suosituimmat kanavat"
-rls_string r_string_list_channelsneartoyou "Channels Near To Me"
 
 rls_string r_string_item_open "Avaa"
 rls_string r_string_item_follow "Seuraa"

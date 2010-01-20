@@ -117,12 +117,14 @@ CBuddycloudLogic::~CBuddycloudLogic() {
 	
 	iNearbyPlaces.Close();
 
+#ifdef _DEBUG
 	// Log
 	if(iLog.Handle()) {
 		iLog.CloseLog();
 	}
 
 	iLog.Close();
+#endif
 	
 	NotifyNotificationObservers(ENotificationLogicEngineDestroyed);
 	iNotificationObservers.Close();
@@ -201,9 +203,9 @@ void CBuddycloudLogic::ConstructL() {
  		iOwnerObserver->LanguageChanged(iSettingPreferredLanguage);
  	}
  	
-	NotificationSettingChanged(ESettingItemPrivateMessageTone);
-	NotificationSettingChanged(ESettingItemChannelPostTone);
-	NotificationSettingChanged(ESettingItemDirectReplyTone);
+ 	SettingsItemChanged(ESettingItemPrivateMessageTone);
+ 	SettingsItemChanged(ESettingItemChannelPostTone);
+ 	SettingsItemChanged(ESettingItemDirectReplyTone);
 }
 
 void CBuddycloudLogic::Startup() {	
@@ -219,7 +221,7 @@ void CBuddycloudLogic::Startup() {
 	iLocationEngine->SetXmppWriteInterface((MXmppWriteInterface*)iXmppEngine);
 	iLocationEngine->SetTimeInterface(this);
 	
-	HBufC* aLangCode = CEikonEnv::Static()->AllocReadResourceLC(R_LOCALIZED_STRING_LANGCODE);
+	HBufC* aLangCode = CCoeEnv::Static()->AllocReadResourceLC(R_LOCALIZED_STRING_LANGCODE);
 	iLocationEngine->SetLanguageCodeL(iTextUtilities->UnicodeToUtf8L(*aLangCode));
 	CleanupStack::PopAndDestroy(); // aLangCode
 	
@@ -285,12 +287,11 @@ void CBuddycloudLogic::ConnectL() {
 #endif
 
 	if(iSettingUsername.Length() == 0 || iSettingPassword.Length() == 0) {
-		// Get login details
-		CAknMultiLineDataQueryDialog* dlg = CAknMultiLineDataQueryDialog::NewL(iSettingUsername, iSettingPassword);
-
-		if(dlg->ExecuteLD(R_CREDENTIALS_DIALOG) != 0) {
-			ConnectToXmppServerL();
-		}
+		// No account details
+		CAknMessageQueryDialog* dlg = new (ELeave) CAknMessageQueryDialog();
+		dlg->ExecuteLD(R_AUTHERROR_DIALOG);
+		
+		NotifyNotificationObservers(ENotificationAuthenticationFailed);
 	}
 	else {
 		ConnectToXmppServerL();
@@ -340,27 +341,18 @@ void CBuddycloudLogic::SendPresenceL() {
 	WriteToLog(_L8("BL    CBuddycloudLogic::SendPresenceL"));
 #endif
 	
-	// Nick
-	TPtrC8 aEncText(iTextUtilities->UnicodeToUtf8L(iSettingFullName));
-	_LIT8(KNickContainer, "<nick xmlns='http://jabber.org/protocol/nick'></nick>");
-	
-	HBufC8* aEncNick = HBufC8::NewLC(KNickContainer().Length() + aEncText.Length());
-	TPtr8 pEncNick(aEncNick->Des());
-	
-	if(aEncText.Length() > 0) {
-		pEncNick.Append(KNickContainer);
-		pEncNick.Insert(46, aEncText);
-	}
+	// Nickname
+	HBufC8* aEncNick = iTextUtilities->UnicodeToUtf8L(iSettingFullName).AllocLC();
 	
 	// Broad location
-	aEncText.Set(iTextUtilities->UnicodeToUtf8L(*iBroadLocationText));
+	TPtrC8 aEncLocation(iTextUtilities->UnicodeToUtf8L(*iBroadLocationText));
 	
-	_LIT8(KPresenceStanza, "<presence><priority>10</priority><status></status><c xmlns='http://jabber.org/protocol/caps' node='http://buddycloud.com/caps' ver='s60-0.5.04'/></presence>\r\n");
-	HBufC8* aPresenceStanza = HBufC8::NewLC(KPresenceStanza().Length() + aEncText.Length() + pEncNick.Length());
+	_LIT8(KPresenceStanza, "<presence><priority>10</priority><status></status><c xmlns='http://jabber.org/protocol/caps' node='http://buddycloud.com/caps' ver='s60-0.5.04'/><nick xmlns='http://jabber.org/protocol/nick'></nick></presence>\r\n");
+	HBufC8* aPresenceStanza = HBufC8::NewLC(KPresenceStanza().Length() + aEncLocation.Length() + aEncNick->Des().Length());
 	TPtr8 pPresenceStanza(aPresenceStanza->Des());
 	pPresenceStanza.Copy(KPresenceStanza);
-	pPresenceStanza.Insert(145, pEncNick);
-	pPresenceStanza.Insert(41, aEncText);
+	pPresenceStanza.Insert(191, *aEncNick);
+	pPresenceStanza.Insert(41, aEncLocation);
 	
 	iXmppEngine->SendAndForgetXmppStanza(pPresenceStanza, false, EXmppPriorityHigh);
 	CleanupStack::PopAndDestroy(2); // aPresenceStanza, aEncNick
@@ -416,47 +408,6 @@ void CBuddycloudLogic::SendPresenceSubscriptionL(const TDesC8& aJid, const TDesC
 ----------------------------------------------------------------------------
 */
 
-void CBuddycloudLogic::ResetStoredDataL() {
-#ifdef _DEBUG
-	WriteToLog(_L8("BL    CBuddycloudLogic::ResetStoredDataL"));
-#endif
-
-	iOwnItem = NULL;
-	
-	// Reset broad location & last node id received
-	iBroadLocationText->Des().Zero();
-	iLastNodeIdReceived->Des().Copy(_L8("1"));
-		
-	// Remove following items
-	for(TInt i = iFollowingList->Count() - 1; i >= 0; i--) {
-		CFollowingItem* aItem = static_cast <CFollowingItem*> (iFollowingList->GetItemByIndex(i));
-		
-		if(aItem->GetItemType() >= EItemRoster) {
-			if(aItem->GetItemType() == EItemRoster) {
-				CFollowingRosterItem* aRosterItem = static_cast <CFollowingRosterItem*> (aItem);
-				
-				iDiscussionManager->DeleteDiscussionL(aRosterItem->GetId(EIdRoster));				
-			}
-
-			iDiscussionManager->DeleteDiscussionL(aItem->GetId());
-		}
-			
-		iFollowingList->DeleteItemByIndex(i);
-	}	
-	
-	// Remove Place items
-	while(iPlaceList->Count() > 0) {
-		iPlaceList->DeleteItemByIndex(0);
-	}
-	
-	// Remove Nearby items
-	for(TInt i = 0; i < iNearbyPlaces.Count(); i++) {
-		delete iNearbyPlaces[i];
-	}
-	
-	iNearbyPlaces.Reset();
-}
-
 void CBuddycloudLogic::ResetConnectionSettings() {
 #ifdef _DEBUG
 	WriteToLog(_L8("BL    CBuddycloudLogic::ResetConnectionSettings"));
@@ -477,44 +428,6 @@ void CBuddycloudLogic::ResetConnectionSettings() {
 	}
 }
 
-void CBuddycloudLogic::SetLocationResource(TBuddycloudLocationResource aResource, TBool aEnable) {
-#ifdef _DEBUG
-	WriteToLog(_L8("BL    CBuddycloudLogic::SetLocationResource"));
-#endif
-	
-	iSettingsSaveNeeded = true;
-	
-	switch(aResource) {
-		case EResourceCell:
-			iLocationEngine->SetCellActive(aEnable);
-			break;
-		case EResourceWlan:
-			iLocationEngine->SetWlanActive(aEnable);
-			break;
-		case EResourceBt:
-			iLocationEngine->SetBtActive(aEnable);
-			break;
-		case EResourceGps:
-			iLocationEngine->SetGpsActive(aEnable);
-			break;
-	}
-}
-
-TBool CBuddycloudLogic::GetLocationResourceDataAvailable(TBuddycloudLocationResource aResource) {
-	switch(aResource) {
-		case EResourceCell:
-			return iLocationEngine->CellDataAvailable();
-		case EResourceWlan:
-			return iLocationEngine->WlanDataAvailable();
-		case EResourceBt:
-			return iLocationEngine->BtDataAvailable();
-		case EResourceGps:
-			return iLocationEngine->GpsDataAvailable();
-	}
-	
-	return false;
-}
-
 void CBuddycloudLogic::ValidateUsername(TBool aCheckServer) {
 	iSettingUsername.LowerCase();
 	iSettingXmppServer.Zero();
@@ -530,51 +443,6 @@ void CBuddycloudLogic::ValidateUsername(TBool aCheckServer) {
 	if(aCheckServer && iSettingUsername.Length() > 0 && iSettingUsername.Locate('@') == KErrNotFound) {
 		iSettingUsername.Append(_L("@buddycloud.com"));
 		iSettingXmppServer.Append(_L("jabber.buddycloud.com"));
-	}
-}
-
-void CBuddycloudLogic::LanguageSettingChanged() {
-	if(iOwnerObserver) {
-		iOwnerObserver->LanguageChanged(iSettingPreferredLanguage);
-	}
-}
-
-void CBuddycloudLogic::NotificationSettingChanged(TIntSettingItems aItem) {
-	if(aItem == ESettingItemPrivateMessageTone) {
-		if(iSettingPrivateMessageTone == EToneNone) {
-			iSettingPrivateMessageToneFile.Zero();
-		}
-		else if(iSettingPrivateMessageTone == EToneDefault) {
-			iSettingPrivateMessageToneFile.Copy(_L("pm.wav"));
-
-			CFileUtilities::CompleteWithApplicationPath(CCoeEnv::Static()->FsSession(), iSettingPrivateMessageToneFile);
-		}
-		
-		iNotificationEngine->AddAudioItemL(ESettingItemPrivateMessageTone, iSettingPrivateMessageToneFile);
-	}
-	else if(aItem == ESettingItemChannelPostTone) {
-		if(iSettingChannelPostTone == EToneNone) {
-			iSettingChannelPostToneFile.Zero();
-		}
-		else if(iSettingChannelPostTone == EToneDefault) {
-			iSettingChannelPostToneFile.Copy(_L("cp.wav"));
-
-			CFileUtilities::CompleteWithApplicationPath(CCoeEnv::Static()->FsSession(), iSettingChannelPostToneFile);
-		}
-		
-		iNotificationEngine->AddAudioItemL(ESettingItemChannelPostTone, iSettingChannelPostToneFile);
-	}
-	else if(aItem == ESettingItemDirectReplyTone) {
-		if(iSettingDirectReplyTone == EToneNone) {
-			iSettingDirectReplyToneFile.Zero();
-		}
-		else if(iSettingDirectReplyTone == EToneDefault) {
-			iSettingDirectReplyToneFile.Copy(_L("dr.wav"));
-
-			CFileUtilities::CompleteWithApplicationPath(CCoeEnv::Static()->FsSession(), iSettingDirectReplyToneFile);
-		}
-		
-		iNotificationEngine->AddAudioItemL(ESettingItemDirectReplyTone, iSettingDirectReplyToneFile);
 	}
 }
 
@@ -632,8 +500,6 @@ TBool& CBuddycloudLogic::GetBoolSetting(TBoolSettingItems aItem) {
 			return iSettingGpsOn;
 		case ESettingItemNotifyReplyTo:
 			return iSettingNotifyReplyTo;
-		case ESettingItemShowName:
-			return iSettingShowName;
 		case ESettingItemAutoStart:
 			return iSettingAutoStart;
 		case ESettingItemAccessPoint:
@@ -643,6 +509,125 @@ TBool& CBuddycloudLogic::GetBoolSetting(TBoolSettingItems aItem) {
 		default:
 			return iSettingNewInstall;
 	}
+}
+
+void CBuddycloudLogic::SettingsItemChanged(TInt aSettingsItemId) {
+	if(aSettingsItemId == ESettingItemFullName) {
+		if(iState == ELogicOnline) {
+			// Resend presence with new full name
+			SendPresenceL();
+		}
+	}
+	else if(aSettingsItemId == ESettingItemUsername) {
+		// Username changed
+		ValidateUsername();
+		
+		ResetStoredDataL();
+	}
+	else if(aSettingsItemId == ESettingItemLanguage) {
+		// Language changed
+		if(iOwnerObserver) {
+			iOwnerObserver->LanguageChanged(iSettingPreferredLanguage);
+		}
+	}
+	else if(aSettingsItemId == ESettingItemPrivateMessageTone) {
+		// Private mesage tone
+		if(iSettingPrivateMessageTone == EToneNone) {
+			iSettingPrivateMessageToneFile.Zero();
+		}
+		else if(iSettingPrivateMessageTone == EToneDefault) {
+			iSettingPrivateMessageToneFile.Copy(_L("pm.wav"));
+
+			CFileUtilities::CompleteWithApplicationPath(CCoeEnv::Static()->FsSession(), iSettingPrivateMessageToneFile);
+		}
+		
+		iNotificationEngine->AddAudioItemL(ESettingItemPrivateMessageTone, iSettingPrivateMessageToneFile);
+	}
+	else if(aSettingsItemId == ESettingItemChannelPostTone) {
+		// Channel post tone
+		if(iSettingChannelPostTone == EToneNone) {
+			iSettingChannelPostToneFile.Zero();
+		}
+		else if(iSettingChannelPostTone == EToneDefault) {
+			iSettingChannelPostToneFile.Copy(_L("cp.wav"));
+
+			CFileUtilities::CompleteWithApplicationPath(CCoeEnv::Static()->FsSession(), iSettingChannelPostToneFile);
+		}
+		
+		iNotificationEngine->AddAudioItemL(ESettingItemChannelPostTone, iSettingChannelPostToneFile);
+	}
+	else if(aSettingsItemId == ESettingItemDirectReplyTone) {
+		// Direct reply tone
+		if(iSettingDirectReplyTone == EToneNone) {
+			iSettingDirectReplyToneFile.Zero();
+		}
+		else if(iSettingDirectReplyTone == EToneDefault) {
+			iSettingDirectReplyToneFile.Copy(_L("dr.wav"));
+
+			CFileUtilities::CompleteWithApplicationPath(CCoeEnv::Static()->FsSession(), iSettingDirectReplyToneFile);
+		}
+		
+		iNotificationEngine->AddAudioItemL(ESettingItemDirectReplyTone, iSettingDirectReplyToneFile);
+	}
+	else if(aSettingsItemId == ESettingItemCellOn) {
+		iLocationEngine->SetCellActive(iSettingCellOn);
+	}
+	else if(aSettingsItemId == ESettingItemWifiOn) {
+		iLocationEngine->SetWlanActive(iSettingWlanOn);
+	}
+	else if(aSettingsItemId == ESettingItemGpsOn) {
+		iLocationEngine->SetGpsActive(iSettingGpsOn);
+	}
+	else if(aSettingsItemId == ESettingItemBtOn) {
+		iLocationEngine->SetBtActive(iSettingBtOn);
+	}
+
+	iSettingsSaveNeeded = true;
+}
+
+void CBuddycloudLogic::ResetStoredDataL() {
+#ifdef _DEBUG
+	WriteToLog(_L8("BL    CBuddycloudLogic::ResetStoredDataL"));
+#endif
+
+	iOwnItem = NULL;
+	
+	// Reset broad location & last node id received
+	iBroadLocationText->Des().Zero();
+	iLastNodeIdReceived->Des().Copy(_L8("1"));
+		
+	// Remove following items
+	for(TInt i = iFollowingList->Count() - 1; i >= 0; i--) {
+		CFollowingItem* aItem = static_cast <CFollowingItem*> (iFollowingList->GetItemByIndex(i));
+		
+		if(aItem->GetItemType() >= EItemRoster) {
+			if(aItem->GetItemType() == EItemRoster) {
+				CFollowingRosterItem* aRosterItem = static_cast <CFollowingRosterItem*> (aItem);
+				
+				iDiscussionManager->DeleteDiscussionL(aRosterItem->GetId(EIdRoster));				
+			}
+
+			iDiscussionManager->DeleteDiscussionL(aItem->GetId());
+		}
+			
+		iFollowingList->DeleteItemByIndex(i);
+	}
+	
+	iSettingsSaveNeeded = true;
+	
+	// Remove Place items
+	while(iPlaceList->Count() > 0) {
+		iPlaceList->DeleteItemByIndex(0);
+	}
+	
+	iPlacesSaveNeeded = true;
+	
+	// Remove Nearby items
+	for(TInt i = 0; i < iNearbyPlaces.Count(); i++) {
+		delete iNearbyPlaces[i];
+	}
+	
+	iNearbyPlaces.Reset();
 }
 
 TDesC& CBuddycloudLogic::GetActivityStatus() {
@@ -662,16 +647,16 @@ void CBuddycloudLogic::SetActivityStatus(const TDesC& aText) {
 	NotifyNotificationObservers(ENotificationActivityChanged);
 }
 
-void CBuddycloudLogic::SetActivityStatus(TInt aResource) {
+void CBuddycloudLogic::SetActivityStatus(TInt aResourceId) {
 #ifdef _DEBUG
-	WriteToLog(_L8("BL    CBuddycloudLogic::SetActivityStatus(TInt aResource)"));
+	WriteToLog(_L8("BL    CBuddycloudLogic::SetActivityStatus(TInt aResourceId)"));
 #endif
 	
-	if(aResource == R_LOCALIZED_STRING_NOTE_CONNECTING) {
+	if(aResourceId == R_LOCALIZED_STRING_NOTE_CONNECTING) {
 		TPtrC pConnectionName = iXmppEngine->GetConnectionName();
 		
 		if(pConnectionName.Length() > 0) {		
-			HBufC* aNoteText = CEikonEnv::Static()->AllocReadResourceLC(R_LOCALIZED_STRING_NOTE_CONNECTINGWITH);
+			HBufC* aNoteText = CCoeEnv::Static()->AllocReadResourceLC(R_LOCALIZED_STRING_NOTE_CONNECTINGWITH);
 			TPtr pNoteText(aNoteText->Des());
 			
 			HBufC* aConnectText = HBufC::NewLC(pNoteText.Length() + pConnectionName.Length());
@@ -683,16 +668,23 @@ void CBuddycloudLogic::SetActivityStatus(TInt aResource) {
 			CleanupStack::PopAndDestroy(2); // aConnectText, aNoteText
 		}
 		else {
-			HBufC* aNoteText = CEikonEnv::Static()->AllocReadResourceLC(R_LOCALIZED_STRING_NOTE_CONNECTING);
+			HBufC* aNoteText = CCoeEnv::Static()->AllocReadResourceLC(R_LOCALIZED_STRING_NOTE_CONNECTING);
 			SetActivityStatus(*aNoteText);
 			CleanupStack::PopAndDestroy(); // aNoteText
 		}	
 	}
 	else {
-		HBufC* aNoteText = CEikonEnv::Static()->AllocReadResourceLC(aResource);
+		HBufC* aNoteText = CCoeEnv::Static()->AllocReadResourceLC(aResourceId);
 		SetActivityStatus(*aNoteText);
 		CleanupStack::PopAndDestroy(); // aNoteText
 	}
+}
+
+void CBuddycloudLogic::ShowInformationDialogL(TInt aResourceId) {
+	HBufC* aMessage = CCoeEnv::Static()->AllocReadResourceLC(aResourceId);
+	CAknInformationNote* aDialog = new (ELeave) CAknInformationNote();		
+	aDialog->ExecuteLD(*aMessage);
+	CleanupStack::PopAndDestroy(); // aMessage
 }
 
 TInt CBuddycloudLogic::DisplaySingleLinePopupMenuL(RPointerArray<HBufC>& aMenuItems) {
@@ -1053,10 +1045,7 @@ void CBuddycloudLogic::FollowContactL(const TDesC& aContact) {
 			CleanupStack::PopAndDestroy(4); // aOptionalData, aEncLocation, aEncFullName, aEncJid
 					
 			// Acknowledge request sent
-			HBufC* aMessage = CEikonEnv::Static()->AllocReadResourceLC(R_LOCALIZED_STRING_NOTE_REQUESTSENT);
-			CAknInformationNote* aDialog = new (ELeave) CAknInformationNote();		
-			aDialog->ExecuteLD(*aMessage);
-			CleanupStack::PopAndDestroy(); // aMessage
+			ShowInformationDialogL(R_LOCALIZED_STRING_NOTE_REQUESTSENT);		
 		}
 	}
 }
@@ -1176,13 +1165,19 @@ void CBuddycloudLogic::ProcessPubsubSubscriptionsL() {
 					// User is followed, add bind channel to user
 					CFollowingChannelItem* aChannelItem = static_cast <CFollowingChannelItem*> (iFollowingList->GetItemById(aItemId));
 					aChannelItem->SetIdL(aSubscribedItem->GetId());
+					aChannelItem->SetPubsubSubscription(aSubscribedItem->GetPubsubSubscription());
+					aChannelItem->SetPubsubAffiliation(aSubscribedItem->GetPubsubAffiliation());
 					aChannelItem->SetUnreadData(aDiscussion);
 	
 					aDiscussion->SetDiscussionReadObserver(this, aChannelItem->GetItemId());
 					
-					iGenericList->DeleteItemByIndex(0);
-					aItemFound = true;
+//					iGenericList->DeleteItemByIndex(0);
+//					aItemFound = true;
 				}
+				
+				// TODO: remove user channel limited
+				iGenericList->DeleteItemByIndex(0);
+				aItemFound = true;
 			}
 			
 			if(!aItemFound) {
@@ -1954,7 +1949,7 @@ void CBuddycloudLogic::HandlePubsubEventL(const TDesC8& aStanza, TBool aNewEvent
 							
 							// Add notification to channel
 							if(aResourceNotificationId != KErrNotFound) {
-								HBufC* aResourceText = CEikonEnv::Static()->AllocReadResourceLC(aResourceNotificationId);
+								HBufC* aResourceText = CCoeEnv::Static()->AllocReadResourceLC(aResourceNotificationId);
 								
 								CAtomEntryData* aAtomEntry = CAtomEntryData::NewLC();
 								aAtomEntry->SetPublishTime(TimeStamp());
@@ -2031,12 +2026,12 @@ void CBuddycloudLogic::HandlePubsubRequestL(const TDesC8& aStanza) {
 				}
 				
 				// Set title & form type
-				HBufC* aTitle = CEikonEnv::Static()->AllocReadResourceLC(aTitleResourceId);
+				HBufC* aTitle = CCoeEnv::Static()->AllocReadResourceLC(aTitleResourceId);
 				aAtomEntry->SetAuthorNameL(*aTitle);
 				aAtomEntry->SetAuthorJidL(iTextUtilities->Utf8ToUnicodeL(aDataValue));
 				
 				// Set text
-				HBufC* aText = CEikonEnv::Static()->AllocReadResourceLC(aTextResourceId);
+				HBufC* aText = CCoeEnv::Static()->AllocReadResourceLC(aTextResourceId);
 				aAtomEntry->SetContentL(*aText, EEntryContentNotice);				
 				CleanupStack::PopAndDestroy(2); // aText, aTitle
 			}
@@ -2126,6 +2121,9 @@ void CBuddycloudLogic::FlagTagNodeL(const TDesC8& aType, const TDesC& aNode) {
 
 	iXmppEngine->SendAndForgetXmppStanza(pFlagTagNodeStanza, true);
 	CleanupStack::PopAndDestroy(); // aFlagTagNodeStanza
+	
+	// Feedback set dialog
+	ShowInformationDialogL(R_LOCALIZED_STRING_NOTE_FEEDBACKSENT);
 }
 
 void CBuddycloudLogic::FlagTagNodeItemL(const TDesC8& aType, const TDesC& aNode, const TDesC8& aNodeItemId) {
@@ -2145,6 +2143,9 @@ void CBuddycloudLogic::FlagTagNodeItemL(const TDesC8& aType, const TDesC& aNode,
 
 	iXmppEngine->SendAndForgetXmppStanza(pFlagTagPostStanza, true);
 	CleanupStack::PopAndDestroy(); // aFlagTagPostStanza
+	
+	// Feedback set dialog
+	ShowInformationDialogL(R_LOCALIZED_STRING_NOTE_FEEDBACKSENT);
 }
 
 TInt CBuddycloudLogic::FollowChannelL(const TDesC& aNode) {
@@ -2352,7 +2353,7 @@ void CBuddycloudLogic::SetCurrentPlaceL() {
 	iLocationEngine->TriggerEngine();
 		
 	// New place
-	HBufC* aNewPlace = CEikonEnv::Static()->AllocReadResourceLC(R_LOCALIZED_STRING_ITEM_NEWPLACE);
+	HBufC* aNewPlace = CCoeEnv::Static()->AllocReadResourceLC(R_LOCALIZED_STRING_ITEM_NEWPLACE);
 	TPtr pNewPlace(aNewPlace->Des());
 	
 	HBufC* aItem = HBufC::NewLC(4 + pNewPlace.Length());
@@ -2619,7 +2620,7 @@ void CBuddycloudLogic::LoadSettingsAndItemsL() {
 
 		if(aXmlParser->MoveToElement(_L8("logicstate"))) {
 			// App version
-			HBufC* aAppVersion = CEikonEnv::Static()->AllocReadResourceLC(R_STRING_APPVERSION);
+			HBufC* aAppVersion = CCoeEnv::Static()->AllocReadResourceLC(R_STRING_APPVERSION);
 			TPtrC aEncVersion(iTextUtilities->Utf8ToUnicodeL(aXmlParser->GetStringAttribute(_L8("version"))));
 			
 			if(aEncVersion.Compare(*aAppVersion) != 0) {
@@ -2644,7 +2645,7 @@ void CBuddycloudLogic::LoadSettingsAndItemsL() {
 					iSettingPassword.Copy(iTextUtilities->Utf8ToUnicodeL(aXmlParser->GetStringAttribute(_L8("password"))));										
 					iSettingXmppServer.Copy(iTextUtilities->Utf8ToUnicodeL(aXmlParser->GetStringAttribute(_L8("server"))));										
 					
-					if(iSettingUsername.Locate('@') == KErrNotFound) {
+					if(iSettingUsername.Length() > 0 && iSettingUsername.Locate('@') == KErrNotFound) {
 						iSettingUsername.Append(_L("@buddycloud.com"));
 						iSettingXmppServer.Copy(_L("jabber.buddycloud.com"));
 					}
@@ -2689,7 +2690,6 @@ void CBuddycloudLogic::LoadSettingsAndItemsL() {
 					iSettingNotifyChannelsFollowing = aXmlParser->GetIntAttribute(_L8("notifyfollowing"));
 					iSettingNotifyChannelsModerating = aXmlParser->GetIntAttribute(_L8("notifymoderating"), 1);
 					iSettingNotifyReplyTo = aXmlParser->GetBoolAttribute(_L8("replyto"));
-					iSettingShowName = aXmlParser->GetBoolAttribute(_L8("showname"));
 					iSettingMessageBlocking = aXmlParser->GetBoolAttribute(_L8("messageblocking"));
 					iSettingAccessPoint = aXmlParser->GetBoolAttribute(_L8("accesspoint"));
 					
@@ -2874,7 +2874,7 @@ void CBuddycloudLogic::SaveSettingsAndItemsL() {
 		aFile.WriteL(_L8("<?xml version='1.0' encoding='UTF-8'?>\r\n"));
 		aFile.WriteL(_L8("\t<logicstate version='"));
 		
-		HBufC* aVersion = CEikonEnv::Static()->AllocReadResourceLC(R_STRING_APPVERSION);
+		HBufC* aVersion = CCoeEnv::Static()->AllocReadResourceLC(R_STRING_APPVERSION);
 		aFile.WriteL(iTextUtilities->UnicodeToUtf8L(*aVersion));
 		CleanupStack::PopAndDestroy(); // aVersion
 		
@@ -2913,7 +2913,7 @@ void CBuddycloudLogic::SaveSettingsAndItemsL() {
 		}
 		
 		// Preferences
-		aBuf.Format(_L8("/>\r\n\t\t\t<preferences language='%d' autostart='%d' notifyfollowing='%d' notifymoderating='%d' accesspoint='%d' replyto='%d' showname='%d' messageblocking='%d'/>\r\n"), iSettingPreferredLanguage, iSettingAutoStart, iSettingNotifyChannelsFollowing, iSettingNotifyChannelsModerating, iSettingAccessPoint, iSettingNotifyReplyTo, iSettingShowName, iSettingMessageBlocking);
+		aBuf.Format(_L8("/>\r\n\t\t\t<preferences language='%d' autostart='%d' notifyfollowing='%d' notifymoderating='%d' accesspoint='%d' replyto='%d' messageblocking='%d'/>\r\n"), iSettingPreferredLanguage, iSettingAutoStart, iSettingNotifyChannelsFollowing, iSettingNotifyChannelsModerating, iSettingAccessPoint, iSettingNotifyReplyTo, iSettingMessageBlocking);
 		aFile.WriteL(aBuf);
 		
 		// Notifications
@@ -3671,22 +3671,22 @@ CAvatarRepository* CBuddycloudLogic::GetImageRepository() {
 /*
 ----------------------------------------------------------------------------
 --
--- Places
+-- Location engine
 --
 ----------------------------------------------------------------------------
 */
 
-TInt CBuddycloudLogic::GetMyPlaceId() {
-	return iLocationEngine->GetLastPlaceId();
+MLocationEngineDataInterface* CBuddycloudLogic::GetLocationInterface() {
+	return (MLocationEngineDataInterface*)iLocationEngine;
 }
 
-TLocationMotionState CBuddycloudLogic::GetMyMotionState() {
-	return iLocationEngine->GetLastMotionState();
-}
-
-TInt CBuddycloudLogic::GetMyPatternQuality() {
-	return iLocationEngine->GetLastPatternQuality();
-}
+/*
+----------------------------------------------------------------------------
+--
+-- Places
+--
+----------------------------------------------------------------------------
+*/
 
 CBuddycloudPlaceStore* CBuddycloudLogic::GetPlaceStore() {
 	return iPlaceList;
@@ -4138,10 +4138,7 @@ void CBuddycloudLogic::ProcessPlaceSearchL(CBuddycloudPlaceStore* aPlaceStore) {
 		}
 		else {
 			// No results
-			HBufC* aMessage = CEikonEnv::Static()->AllocReadResourceLC(R_LOCALIZED_STRING_NOTE_NORESULTSFOUND);
-			CAknInformationNote* aDialog = new (ELeave) CAknInformationNote();		
-			aDialog->ExecuteLD(*aMessage);
-			CleanupStack::PopAndDestroy(); // aMessage
+			ShowInformationDialogL(R_LOCALIZED_STRING_NOTE_NORESULTSFOUND);
 		}
 	}
 }
@@ -4613,8 +4610,7 @@ void CBuddycloudLogic::XmppUnhandledStanza(const TDesC8& aStanza) {
 	else if(aXmlParser->MoveToElement(_L8("message"))) {
 		if(aAttributeType.Compare(_L8("error")) != 0 && aAttributeType.Compare(_L8("groupchat")) != 0) {
 			// Pass new message to correct handler
-			// TODO: Remove redundant pubsub server
-			if(aAttributeFrom.Compare(KBuddycloudRedundantPubsubServer) == 0 || aAttributeFrom.Compare(KBuddycloudPubsubServer) == 0) {				
+			if(aAttributeFrom.Compare(KBuddycloudPubsubServer) == 0) {				
 				if(aXmlParser->MoveToElement(_L8("event"))) {
 					TPtrC8 aAttributeXmlns = aXmlParser->GetStringAttribute(_L8("xmlns"));
 					
@@ -4635,8 +4631,7 @@ void CBuddycloudLogic::XmppUnhandledStanza(const TDesC8& aStanza) {
 	}
 	else if(aXmlParser->MoveToElement(_L8("presence"))) {
 		if(aAttributeType.Compare(_L8("subscribe")) == 0) {
-			// TODO: Remove redundant pubsub server
-			if(aAttributeFrom.Compare(KBuddycloudRedundantPubsubServer) == 0 || aAttributeFrom.Compare(KBuddycloudPubsubServer) == 0) {				
+			if(aAttributeFrom.Compare(KBuddycloudPubsubServer) == 0) {				
 				// Accept pubsub subscription
 				SendPresenceSubscriptionL(KBuddycloudPubsubServer, _L8("subscribed"));
 			}
@@ -4703,8 +4698,8 @@ void CBuddycloudLogic::XmppError(TXmppEngineError aError) {
 	}
 	else if(aError == EXmppServerUnresolved) {	
 		// Server could not be resolved
-		HBufC* aMessageTitle = CEikonEnv::Static()->AllocReadResourceLC(R_LOCALIZED_STRING_SERVERRESOLVEERROR_TITLE);
-		HBufC* aMessageText = CEikonEnv::Static()->AllocReadResourceLC(R_LOCALIZED_STRING_SERVERRESOLVEERROR_TEXT);		
+		HBufC* aMessageTitle = CCoeEnv::Static()->AllocReadResourceLC(R_LOCALIZED_STRING_SERVERRESOLVEERROR_TITLE);
+		HBufC* aMessageText = CCoeEnv::Static()->AllocReadResourceLC(R_LOCALIZED_STRING_SERVERRESOLVEERROR_TEXT);		
 		
 		CAknMessageQueryDialog* aDialog = new (ELeave) CAknMessageQueryDialog();
 		aDialog->PrepareLC(R_AUTHERROR_DIALOG);
@@ -5020,10 +5015,7 @@ void CBuddycloudLogic::XmppStanzaAcknowledgedL(const TDesC8& aStanza, const TDes
 				}
 				else if(aIdEnum == EXmppIdSetCredentials) {
 					// Communities update success
-					HBufC* aMessage = CEikonEnv::Static()->AllocReadResourceLC(R_LOCALIZED_STRING_NOTE_CREDENTIALS_SUCCESS);
-					CAknConfirmationNote* aDialog = new (ELeave) CAknConfirmationNote();		
-					aDialog->ExecuteLD(*aMessage);
-					CleanupStack::PopAndDestroy(); // aMessage				
+					ShowInformationDialogL(R_LOCALIZED_STRING_NOTE_CREDENTIALS_SUCCESS);
 				}
 				else if(aIdEnum == EXmppIdGetNearbyPlaces) {
 					// Delete old nearby places
@@ -5101,41 +5093,35 @@ void CBuddycloudLogic::XmppStanzaAcknowledgedL(const TDesC8& aStanza, const TDes
 					}
 					
 					// Process result set management data
-					if(aXmlParser->MoveToElement(_L8("set"))) {
-						TInt aTotalCount = 0;
-						
-						if(aXmlParser->MoveToElement(_L8("count"))) {
-							// Get total count
-							aTotalCount = aXmlParser->GetIntData();
-						}
-						
-						if(aIdEnum == EXmppIdGetPubsubSubscriptions) {
-							// Handle pubsub subscriptions
-							if(aListSize < iGenericList->Count() && iGenericList->Count() < aTotalCount) {	
-								// Request more items	
-								CollectPubsubSubscriptionsL(aLastItem);
-							}
-							else {
-								// Begin processing pubsub subscriptions
-								ProcessPubsubSubscriptionsL();
-							}
+					TInt aTotalCount = iGenericList->Count();
+					
+					if(aXmlParser->MoveToElement(_L8("set")) && aXmlParser->MoveToElement(_L8("count"))) {
+						// Get total count
+						aTotalCount = aXmlParser->GetIntData();
+					}
+					
+					if(aIdEnum == EXmppIdGetPubsubSubscriptions) {
+						// Handle pubsub subscriptions
+						if(aListSize < iGenericList->Count() && iGenericList->Count() < aTotalCount) {	
+							// Request more items	
+							CollectPubsubSubscriptionsL(aLastItem);
 						}
 						else {
-							// Handle users pubsub node affiliations
-							if(aListSize < iGenericList->Count() && iGenericList->Count() < aTotalCount) {	
-								// Request more items	
-								CollectUsersPubsubNodeAffiliationsL(aLastItem);
-							}
-							else {
-								// Begin processing node affiliation data
-								ProcessUsersPubsubNodeAffiliationsL();
-							}
+							// Begin processing pubsub subscriptions
+							ProcessPubsubSubscriptionsL();
 						}
 					}
-					else if(aIdEnum == EXmppIdGetPubsubSubscriptions) {
-						// TODO: Remove workaround
-						ProcessPubsubSubscriptionsL();
-					}	
+					else {
+						// Handle users pubsub node affiliations
+						if(aListSize < iGenericList->Count() && iGenericList->Count() < aTotalCount) {	
+							// Request more items	
+							CollectUsersPubsubNodeAffiliationsL(aLastItem);
+						}
+						else {
+							// Begin processing node affiliation data
+							ProcessUsersPubsubNodeAffiliationsL();
+						}
+					}
 				}
 				else if(aIdEnum == EXmppIdPublishMood || aIdEnum == EXmppIdPublishFuturePlace) {
 					// Publish mood or future place result
@@ -5165,7 +5151,7 @@ void CBuddycloudLogic::XmppStanzaAcknowledgedL(const TDesC8& aStanza, const TDes
 								aAtomEntry->SetPublishTime(TimeStamp());	
 								aAtomEntry->SetAuthorNameL(_L("Media Uploader"));
 									
-								HBufC* aResourceText = CEikonEnv::Static()->AllocReadResourceLC(R_LOCALIZED_STRING_NOTE_MEDIAUPLOADREADY);					
+								HBufC* aResourceText = CCoeEnv::Static()->AllocReadResourceLC(R_LOCALIZED_STRING_NOTE_MEDIAUPLOADREADY);					
 								TPtrC aEncUploaduri(iTextUtilities->Utf8ToUnicodeL(aDataUploaduri));
 								
 								HBufC* aMessageText = HBufC::NewLC(aResourceText->Des().Length() + aEncUploaduri.Length());
@@ -5199,7 +5185,7 @@ void CBuddycloudLogic::XmppStanzaAcknowledgedL(const TDesC8& aStanza, const TDes
 				}
 				else if(aIdEnum == EXmppIdSetCredentials) {
 					// Communities update failed
-					HBufC* aMessage = CEikonEnv::Static()->AllocReadResourceLC(R_LOCALIZED_STRING_NOTE_CREDENTIALS_FAIL);
+					HBufC* aMessage = CCoeEnv::Static()->AllocReadResourceLC(R_LOCALIZED_STRING_NOTE_CREDENTIALS_FAIL);
 					CAknErrorNote* aDialog = new (ELeave) CAknErrorNote();	
 					aDialog->SetTimeout(CAknNoteDialog::ENoTimeout);
 					aDialog->ExecuteLD(*aMessage);
@@ -5210,7 +5196,7 @@ void CBuddycloudLogic::XmppStanzaAcknowledgedL(const TDesC8& aStanza, const TDes
 					SetActivityStatus(_L(""));
 					
 					if(aXmlParser->MoveToElement(_L8("text"))) {
-						HBufC* aMessageTitle = CEikonEnv::Static()->AllocReadResourceLC(R_LOCALIZED_STRING_UPDATEFAILED_TITLE);
+						HBufC* aMessageTitle = CCoeEnv::Static()->AllocReadResourceLC(R_LOCALIZED_STRING_UPDATEFAILED_TITLE);
 						
 						CAknMessageQueryDialog* aDialog = new (ELeave) CAknMessageQueryDialog();
 						aDialog->PrepareLC(R_AUTHERROR_DIALOG);
@@ -5223,10 +5209,7 @@ void CBuddycloudLogic::XmppStanzaAcknowledgedL(const TDesC8& aStanza, const TDes
 				}
 				else if(aIdEnum == EXmppIdSearchForPlace) {
 					// Handle place search error
-					HBufC* aMessage = CEikonEnv::Static()->AllocReadResourceLC(R_LOCALIZED_STRING_NOTE_NORESULTSFOUND);
-					CAknInformationNote* aDialog = new (ELeave) CAknInformationNote();		
-					aDialog->ExecuteLD(*aMessage);
-					CleanupStack::PopAndDestroy(); // aMessage
+					ShowInformationDialogL(R_LOCALIZED_STRING_NOTE_NORESULTSFOUND);
 				}
 				else if(aIdEnum == EXmppIdGetPlaceDetails) {
 					// Handle place details error
@@ -5398,8 +5381,8 @@ void CBuddycloudLogic::ProcessPresenceSubscriptionL(const TDesC8& aStanza) {
 		}		
 		
 		// Prepare message
-		HBufC* aTitle = CEikonEnv::Static()->AllocReadResourceLC(R_LOCALIZED_STRING_FOLLOWINGREQUEST_TITLE);
-		HBufC* aDescriptionResource = CEikonEnv::Static()->AllocReadResourceLC(R_LOCALIZED_STRING_FOLLOWINGREQUEST_TEXT);
+		HBufC* aTitle = CCoeEnv::Static()->AllocReadResourceLC(R_LOCALIZED_STRING_FOLLOWINGREQUEST_TITLE);
+		HBufC* aDescriptionResource = CCoeEnv::Static()->AllocReadResourceLC(R_LOCALIZED_STRING_FOLLOWINGREQUEST_TEXT);
 		TPtrC pDescriptionResource(aDescriptionResource->Des());
 		
 		HBufC* aDescription = HBufC::NewLC(pDescriptionResource.Length() + pUserInfo.Length());

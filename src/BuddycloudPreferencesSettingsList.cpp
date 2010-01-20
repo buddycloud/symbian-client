@@ -50,7 +50,7 @@ void CBuddycloudPreferencesSettingsList::EditCurrentItemL() {
 
 void CBuddycloudPreferencesSettingsList::SaveL() {
 	if(iLanguageUsed != iBuddycloudLogic->GetIntSetting(ESettingItemLanguage)) {
-		iBuddycloudLogic->LanguageSettingChanged();
+		iBuddycloudLogic->SettingsItemChanged(ESettingItemLanguage);
 	}
 }
 

@@ -43,6 +43,7 @@ rls_string r_string_options_delete "Delete"
 
 rls_string r_string_note_noresultsfound "ไม่พบข้อมูล"
 rls_string r_string_note_requestsent "คำขอถูกส่งแล้ว"
+rls_string r_string_note_feedbacksent "Feedback sent"
 rls_string r_string_note_messagequeued "ข้อความจะถูกส่งเมื่อคุณออนไลน์"
 rls_string r_string_note_offlinerequired "คุณต้องออกจากระบบก่อนจึงจะทำได้"
 
@@ -150,15 +151,15 @@ rls_string r_string_note_requesting "กำลังส่งคำร้อง�
 rls_string r_string_note_channelrank "ลำดับ"
 rls_string r_string_note_channelsince "Days broadcasting"
 rls_string r_string_note_channelowner "Produced by"
-rls_string r_string_note_channellocation "Channel location"
+rls_string r_string_note_channellocation "Location"
+rls_string r_string_note_channelfollowers "Followers"
 
 // Menu: Channels
-rls_string r_string_list_nearbytoyou "What's Nearby To Me"
+rls_string r_string_list_nearbytoyou "Explore Nearby"
 rls_string r_string_list_featuredchannels "สถานีที่โดดเด่น"
 rls_string r_string_list_channelsyoumightlike "สถานีที่คุณอาจจะชอบ"
 rls_string r_string_list_followersfavourites "ผู้ติดตามที่ฮอตที่สุด"
 rls_string r_string_list_mostpopularchannels "สถานีที่ฮอตที่สุด"
-rls_string r_string_list_channelsneartoyou "Channels Near To Me"
 
 rls_string r_string_item_open "เปิด"
 rls_string r_string_item_follow "ติดตาม"

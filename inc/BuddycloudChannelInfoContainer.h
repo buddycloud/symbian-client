@@ -63,6 +63,7 @@ class CBuddycloudChannelInfoContainer : public CBuddycloudListComponent, MXmppSt
 		TChannelInfoState iCollectionState;
 		
 		CFollowingChannelItem* iChannelItem;
+		CGeolocData* iGeoloc;
 		
 		HBufC* iChannelTitle;
 		

@@ -43,6 +43,7 @@ rls_string r_string_options_delete "Delete"
 
 rls_string r_string_note_noresultsfound "Nincsen keresési eredmény"
 rls_string r_string_note_requestsent "Kérés elküldve"
+rls_string r_string_note_feedbacksent "Feedback sent"
 rls_string r_string_note_messagequeued "Üzenet következős kapcsolódáskor lesz elküldve"
 rls_string r_string_note_offlinerequired "Ezt csak offline módban csinálhatod"
 
@@ -150,15 +151,15 @@ rls_string r_string_note_requesting "Kérés..."
 rls_string r_string_note_channelrank "Helyezés"
 rls_string r_string_note_channelsince "Days broadcasting"
 rls_string r_string_note_channelowner "Produced by"
-rls_string r_string_note_channellocation "Channel location"
+rls_string r_string_note_channellocation "Location"
+rls_string r_string_note_channelfollowers "Followers"
 
 // Menu: Channels
-rls_string r_string_list_nearbytoyou "What's Nearby To Me"
+rls_string r_string_list_nearbytoyou "Explore Nearby"
 rls_string r_string_list_featuredchannels "Kiemelt csatornák"
 rls_string r_string_list_channelsyoumightlike "Számodra érdekes csatornák"
 rls_string r_string_list_followersfavourites "Követők kedvencei"
 rls_string r_string_list_mostpopularchannels "Legnépszerűbb csatornák"
-rls_string r_string_list_channelsneartoyou "Channels Near To Me"
 
 rls_string r_string_item_open "Megnyit"
 rls_string r_string_item_follow "Kövesd..."

@@ -43,6 +43,7 @@ rls_string r_string_options_delete "Delete"
 
 rls_string r_string_note_noresultsfound "Avast! Chest be empty"
 rls_string r_string_note_requestsent "Yer request be sent"
+rls_string r_string_note_feedbacksent "Feedback sent"
 rls_string r_string_note_messagequeued "Yer message will send whe' ye set sail "
 rls_string r_string_note_offlinerequired "Avast! Ye need be anchored to do this"
 
@@ -150,15 +151,15 @@ rls_string r_string_note_requesting "On th' lookou'..."
 rls_string r_string_note_channelrank "Rank"
 rls_string r_string_note_channelsince "Days broadcasting"
 rls_string r_string_note_channelowner "Produced by"
-rls_string r_string_note_channellocation "Channel location"
+rls_string r_string_note_channellocation "Location"
+rls_string r_string_note_channelfollowers "Followers"
 
 // Menu: Channels
-rls_string r_string_list_nearbytoyou "What's Nearby To Me"
+rls_string r_string_list_nearbytoyou "Explore Nearby"
 rls_string r_string_list_featuredchannels "Chaannels tha' be featur'd"
 rls_string r_string_list_channelsyoumightlike "Chaannels yer might lyke"
 rls_string r_string_list_followersfavourites "Me matey's bes' chaannels"
 rls_string r_string_list_mostpopularchannels "Th' mos' popu'ar chaannels"
-rls_string r_string_list_channelsneartoyou "Channels Near To Me"
 
 rls_string r_string_item_open "Open chest"
 rls_string r_string_item_follow "Add t' lookin' at"

@@ -43,6 +43,7 @@ rls_string r_string_options_delete "Delete"
 
 rls_string r_string_note_noresultsfound "Geen resultaten gevonden"
 rls_string r_string_note_requestsent "Verzoek verstuurd"
+rls_string r_string_note_feedbacksent "Feedback sent"
 rls_string r_string_note_messagequeued "Bericht wordt verstuurd zodra u online bent"
 rls_string r_string_note_offlinerequired "U dient offline te zijn om dit actie uit te voeren"
 
@@ -150,15 +151,15 @@ rls_string r_string_note_requesting "Aanvragen..."
 rls_string r_string_note_channelrank "Rang"
 rls_string r_string_note_channelsince "Days broadcasting"
 rls_string r_string_note_channelowner "Produced by"
-rls_string r_string_note_channellocation "Channel location"
+rls_string r_string_note_channellocation "Location"
+rls_string r_string_note_channelfollowers "Followers"
 
 // Menu: Channels
-rls_string r_string_list_nearbytoyou "What's Nearby To Me"
+rls_string r_string_list_nearbytoyou "Explore Nearby"
 rls_string r_string_list_featuredchannels "Featured Channels"
 rls_string r_string_list_channelsyoumightlike "Channels die je misschien leuk vindt"
 rls_string r_string_list_followersfavourites "Aanhangers' Favorieten "
 rls_string r_string_list_mostpopularchannels "Meest populair channels"
-rls_string r_string_list_channelsneartoyou "Channels Near To Me"
 
 rls_string r_string_item_open "Openen"
 rls_string r_string_item_follow "Volgen"

@@ -43,6 +43,7 @@ rls_string r_string_options_delete "Delete"
 
 rls_string r_string_note_noresultsfound "Δεν βρέθηκαν αποτελέσματα"
 rls_string r_string_note_requestsent "Αίτηση εστάλθη"
+rls_string r_string_note_feedbacksent "Feedback sent"
 rls_string r_string_note_messagequeued "Το μήνυμα θα σταλεί όταν είσαι online"
 rls_string r_string_note_offlinerequired "Θα πρέπει να είσαι offline για να γίνει αυτό"
 
@@ -150,15 +151,15 @@ rls_string r_string_note_requesting "Αίτηση..."
 rls_string r_string_note_channelrank "Βαθμός"
 rls_string r_string_note_channelsince "Days broadcasting"
 rls_string r_string_note_channelowner "Produced by"
-rls_string r_string_note_channellocation "Channel location"
+rls_string r_string_note_channellocation "Location"
+rls_string r_string_note_channelfollowers "Followers"
 
 // Menu: Channels
-rls_string r_string_list_nearbytoyou "What's Nearby To Me"
+rls_string r_string_list_nearbytoyou "Explore Nearby"
 rls_string r_string_list_featuredchannels "Προτεινόμενα κανάλια"
 rls_string r_string_list_channelsyoumightlike "Κανάλια που μπορεί να σου αρέσουν"
 rls_string r_string_list_followersfavourites "Οπαδοί' Αγαπημένα"
 rls_string r_string_list_mostpopularchannels "Πιο δημοφιλή κανάλια"
-rls_string r_string_list_channelsneartoyou "Channels Near To Me"
 
 rls_string r_string_item_open "Ανοιξε"
 rls_string r_string_item_follow "Ακολούθα"

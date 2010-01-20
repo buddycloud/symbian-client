@@ -43,6 +43,7 @@ rls_string r_string_options_delete "Weg damit"
 
 rls_string r_string_note_noresultsfound "Hamma ned"
 rls_string r_string_note_requestsent "Anfrage g'schickt"
+rls_string r_string_note_feedbacksent "Feedback sent"
 rls_string r_string_note_messagequeued "Werd g'schickt, wenns'D wieda online bist"
 rls_string r_string_note_offlinerequired "Muaßt dafia offline geh'n"
 
@@ -106,7 +107,7 @@ rls_string r_string_item_removepost "Leschn"
 
 rls_string r_string_options_itemchannel "Tschännl"
 rls_string r_string_channel_markread "ois ois glesn"
-rls_string r_string_options_reportchannel "Report channel"
+rls_string r_string_options_reportchannel "Tschännl vapfeifn"
 
 // Menu: Places
 rls_string r_string_options_setcurrent "Neis Platzl speichan"
@@ -150,15 +151,15 @@ rls_string r_string_note_requesting "Wart a biß'l..."
 rls_string r_string_note_channelrank "Rang"
 rls_string r_string_note_channelsince "Dog im Gschäfft"
 rls_string r_string_note_channelowner "Herr im Haus"
-rls_string r_string_note_channellocation "Tschännl Platzal"
+rls_string r_string_note_channellocation "Platzal"
+rls_string r_string_note_channelfollowers "Ohänga"
 
 // Menu: Channels
-rls_string r_string_list_nearbytoyou "Ned weid weg ned vo mia"
+rls_string r_string_list_nearbytoyou "Explore Nearby"
 rls_string r_string_list_featuredchannels "B'sondanne Tschännl"
 rls_string r_string_list_channelsyoumightlike "Tschännl di Da g'foin kannten"
 rls_string r_string_list_followersfavourites "Ohänga's Favorit'n"
 rls_string r_string_list_mostpopularchannels "Vui meg'n di Tschännl"
-rls_string r_string_list_channelsneartoyou "Tschännl ned weid weg ned"
 
 rls_string r_string_item_open "Aufmacha"
 rls_string r_string_item_follow "Foig"
@@ -271,9 +272,9 @@ rls_string r_string_editchannel_itemlist_description_hint "Tschännl Beschreibun
 rls_string r_string_editchannel_itemlist_access "Zuagang"
 rls_string r_string_editchannel_itemlist_access_open "Fia olle"
 rls_string r_string_editchannel_itemlist_access_whitelist "Nua fia Memba"
-rls_string r_string_editchannel_itemlist_defaultaffiliation "New followers can"
-rls_string r_string_editchannel_itemlist_defaultaffiliation_member "Read only"
-rls_string r_string_editchannel_itemlist_defaultaffiliation_publisher "Read and post"
+rls_string r_string_editchannel_itemlist_defaultaffiliation "Neie Ohänga derfan"
+rls_string r_string_editchannel_itemlist_defaultaffiliation_member "nua schaug'n"
+rls_string r_string_editchannel_itemlist_defaultaffiliation_publisher "schaug'n und an Batz dazuagebn"
 
 rls_string r_string_note_channelexists "De #channel_id hamma scho. Loß Da wos bessas eifoin na."
 

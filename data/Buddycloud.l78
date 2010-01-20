@@ -43,6 +43,7 @@ rls_string r_string_options_delete "Delete"
 
 rls_string r_string_note_noresultsfound "Nu sa găsit niciun rezultat"
 rls_string r_string_note_requestsent "Cerere de trimis"
+rls_string r_string_note_feedbacksent "Feedback sent"
 rls_string r_string_note_messagequeued "Mesajul va fi trimis cand ve-ti fi online"
 rls_string r_string_note_offlinerequired "Ai nevoie de a fi off-line pentru a face acest lucru"
 
@@ -150,15 +151,15 @@ rls_string r_string_note_requesting "Cer..."
 rls_string r_string_note_channelrank "Gradul"
 rls_string r_string_note_channelsince "Days broadcasting"
 rls_string r_string_note_channelowner "Produced by"
-rls_string r_string_note_channellocation "Channel location"
+rls_string r_string_note_channellocation "Location"
+rls_string r_string_note_channelfollowers "Followers"
 
 // Menu: Channels
-rls_string r_string_list_nearbytoyou "What's Nearby To Me"
+rls_string r_string_list_nearbytoyou "Explore Nearby"
 rls_string r_string_list_featuredchannels "Canalele Populare"
 rls_string r_string_list_channelsyoumightlike "Canale care ar putea sa-ti placa"
 rls_string r_string_list_followersfavourites "Adepţii 'Favoriti'"
 rls_string r_string_list_mostpopularchannels "Cele mai populare canale"
-rls_string r_string_list_channelsneartoyou "Channels Near To Me"
 
 rls_string r_string_item_open "Deschide"
 rls_string r_string_item_follow "Urmareste"

@@ -16,6 +16,7 @@
 #include <akntabobserver.h>
 #include "BuddycloudListComponent.h"
 #include "BuddycloudPlaces.h"
+#include "LocationInterfaces.h"
 
 /*
 ----------------------------------------------------------------------------
@@ -65,6 +66,9 @@ class CBuddycloudPlacesContainer : public CBuddycloudListComponent, MAknTabObser
 		CAknNavigationDecorator* iNaviDecorator;
 		CAknTabGroup* iTabGroup;
 		
+		CBuddycloudPlaceStore* iPlaceStore;
+		MLocationEngineDataInterface* iLocationInterface;
+		
 		// Strings
 		HBufC* iLocalizedPlaceLastSeen;
 		HBufC* iLocalizedPlaceVisits;
@@ -76,8 +80,6 @@ class CBuddycloudPlacesContainer : public CBuddycloudListComponent, MAknTabObser
 		CEikEdwin* iEdwin;
 		TBool iEdwinVisible;
 		TInt iEdwinLength;
-
-		CBuddycloudPlaceStore* iPlaceStore;
 };
 
 #endif /*BUDDYCLOUDPLACESCONTAINER_H_*/

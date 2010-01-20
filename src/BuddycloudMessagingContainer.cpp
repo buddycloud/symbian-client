@@ -1118,42 +1118,56 @@ void CBuddycloudMessagingContainer::DynInitToolbarL(TInt aResourceId, CAknToolba
 
 void CBuddycloudMessagingContainer::DynInitMenuPaneL(TInt aResourceId, CEikMenuPane* aMenuPane) {
 	if(aResourceId == R_MESSAGING_OPTIONS_MENU) {
+		aMenuPane->SetItemDimmed(EMenuJumpToUnreadCommand, true);
 		aMenuPane->SetItemDimmed(EMenuRequestToPostCommand, true);				
+		aMenuPane->SetItemDimmed(EMenuAddCommentCommand, true);
+		aMenuPane->SetItemDimmed(EMenuOptionsItemCommand, true);
 		aMenuPane->SetItemDimmed(EMenuWritePostCommand, true);				
 		aMenuPane->SetItemDimmed(EMenuPostMediaCommand, true);
-		aMenuPane->SetItemDimmed(EMenuJumpToUnreadCommand, true);
-		aMenuPane->SetItemDimmed(EMenuOptionsItemCommand, true);
 		aMenuPane->SetItemDimmed(EMenuOptionsChannelCommand, true);
 		aMenuPane->SetItemDimmed(EMenuNotificationOnCommand, true);
 		aMenuPane->SetItemDimmed(EMenuNotificationOffCommand, true);
+
+		// Jump to unread
+		if(iDiscussion->GetUnreadEntries() > 0) {
+			aMenuPane->SetItemDimmed(EMenuJumpToUnreadCommand, false);
+		}
 		
-		if(iIsChannel) {
-			CFollowingChannelItem* aChannelItem = static_cast <CFollowingChannelItem*> (iItem);	
+		CFollowingChannelItem* aChannelItem = static_cast <CFollowingChannelItem*> (iItem);	
+		
+		if(!iIsChannel || aChannelItem->GetPubsubSubscription() == EPubsubSubscriptionSubscribed) {			
+			// Write comment & Item menu
+			if(iEntries.Count() > 0 && iSelectedItem < iEntries.Count()) {
+				CAtomEntryData* aEntry = iEntries[iSelectedItem]->GetEntry();
+				
+				if(aEntry) {
+					// Add comment
+					if(aChannelItem->GetPubsubAffiliation() > EPubsubAffiliationMember) {
+						if(aEntry->GetId().Length() > 0) {
+							aMenuPane->SetItemDimmed(EMenuAddCommentCommand, false);
+						}
+					}
+		
+					if(aEntry->GetAuthorName().Length() > 0) {
+						aMenuPane->SetItemTextL(EMenuOptionsItemCommand, aEntry->GetAuthorName().Left(32));
+						aMenuPane->SetItemDimmed(EMenuOptionsItemCommand, false);
+					}
+				}
+			}
 			
-			if(aChannelItem->GetPubsubSubscription() == EPubsubSubscriptionSubscribed) {
+			// Write post
+			if(!iIsChannel || aChannelItem->GetPubsubAffiliation() > EPubsubAffiliationMember) {
+				aMenuPane->SetItemDimmed(EMenuWritePostCommand, false);								
+			}
+			
+			// Post media & Request to post
+			if(iIsChannel) {
 				if(aChannelItem->GetPubsubAffiliation() > EPubsubAffiliationMember) {
-					aMenuPane->SetItemDimmed(EMenuWritePostCommand, false);				
 					aMenuPane->SetItemDimmed(EMenuPostMediaCommand, false);
 				}
 				else if(aChannelItem->GetPubsubAffiliation() == EPubsubAffiliationMember) {
 					aMenuPane->SetItemDimmed(EMenuRequestToPostCommand, false);				
 				}
-			}
-		}
-		else {
-			aMenuPane->SetItemDimmed(EMenuWritePostCommand, false);				
-		}
-
-		if(iDiscussion->GetUnreadEntries() > 0) {
-			aMenuPane->SetItemDimmed(EMenuJumpToUnreadCommand, false);
-		}
-
-		if(iEntries.Count() > 0 && iSelectedItem < iEntries.Count()) {
-			CAtomEntryData* aEntry = iEntries[iSelectedItem]->GetEntry();
-
-			if(aEntry && aEntry->GetAuthorName().Length() > 0) {
-				aMenuPane->SetItemTextL(EMenuOptionsItemCommand, aEntry->GetAuthorName().Left(32));
-				aMenuPane->SetItemDimmed(EMenuOptionsItemCommand, false);
 			}
 		}
 
@@ -1169,7 +1183,6 @@ void CBuddycloudMessagingContainer::DynInitMenuPaneL(TInt aResourceId, CEikMenuP
 		}
 	}
 	else if(aResourceId == R_MESSAGING_OPTIONS_ITEM_MENU) {
-		aMenuPane->SetItemDimmed(EMenuAddCommentCommand, true);
 		aMenuPane->SetItemDimmed(EMenuFollowCommand, true);
 		aMenuPane->SetItemDimmed(EMenuCopyPostCommand, true);
 		aMenuPane->SetItemDimmed(EMenuLikePostCommand, true);
@@ -1189,49 +1202,39 @@ void CBuddycloudMessagingContainer::DynInitMenuPaneL(TInt aResourceId, CEikMenuP
 					aMenuPane->SetItemDimmed(EMenuDeclineCommand, false);		
 				}
 				else {
-					// Content post or action
+					// Content item or action
 					CFollowingChannelItem* aChannelItem = static_cast <CFollowingChannelItem*> (iItem);	
 					
 					aMenuPane->SetItemDimmed(EMenuCopyPostCommand, false);
 					
-					// Add comment
-					if(!iIsChannel || (aChannelItem->GetPubsubSubscription() == EPubsubSubscriptionSubscribed && 
-							aChannelItem->GetPubsubAffiliation() > EPubsubAffiliationMember)) {
+					// Channel only options
+					if(iIsChannel && aChannelItem->GetPubsubSubscription() == EPubsubSubscriptionSubscribed && 
+							aChannelItem->GetPubsubAffiliation() > EPubsubAffiliationMember) {
 						
-						// Add comment
-						if(aEntry->GetId().Length() > 0) {
-							aMenuPane->SetItemDimmed(EMenuAddCommentCommand, false);
+						// Delete post
+						if(aEntry->Private() || (aChannelItem->GetPubsubAffiliation() >= EPubsubAffiliationModerator && 
+								aEntry->GetAuthorAffiliation() <= aChannelItem->GetPubsubAffiliation())) {
+							
+							aMenuPane->SetItemDimmed(EMenuDeletePostCommand, false);
 						}
 						
-						// Channel management
-						if(iIsChannel) {
-							// Delete post
-							if(aEntry->Private() || 
-									(aChannelItem->GetPubsubAffiliation() >= EPubsubAffiliationModerator && 
-											aEntry->GetAuthorAffiliation() <= aChannelItem->GetPubsubAffiliation())) {
-								
-								aMenuPane->SetItemDimmed(EMenuDeletePostCommand, false);
+						if(aEntry->GetAuthorJid().Length() > 0) {
+							// Like post
+							if(aChannelItem->GetPubsubAffiliation() >= EPubsubAffiliationModerator) {
+								aMenuPane->SetItemDimmed(EMenuLikePostCommand, false);
 							}
-							
-							// When not own post
-							if(aEntry->GetAuthorJid().Length() > 0) {
-								// Like post
-								if(aChannelItem->GetPubsubAffiliation() >= EPubsubAffiliationModerator) {
-									aMenuPane->SetItemDimmed(EMenuLikePostCommand, false);
-								}
-							
-								if(aEntry->GetAuthorJid().Compare(iBuddycloudLogic->GetOwnItem()->GetId()) != 0) {
-									// Change user permissions
-									if(aChannelItem->GetPubsubAffiliation() >= EPubsubAffiliationModerator && 
-											aEntry->GetAuthorAffiliation() < aChannelItem->GetPubsubAffiliation()) {
-										
-										aMenuPane->SetItemDimmed(EMenuChangePermissionCommand, false);
-									}
+						
+							if(aEntry->GetAuthorJid().Compare(iBuddycloudLogic->GetOwnItem()->GetId()) != 0) {
+								// Change user permissions
+								if(aChannelItem->GetPubsubAffiliation() >= EPubsubAffiliationModerator && 
+										aEntry->GetAuthorAffiliation() < aChannelItem->GetPubsubAffiliation()) {
 									
-									// Report post
-									if(aChannelItem->GetPubsubAffiliation() >= EPubsubAffiliationPublisher) {
-										aMenuPane->SetItemDimmed(EMenuReportPostCommand, false);
-									}
+									aMenuPane->SetItemDimmed(EMenuChangePermissionCommand, false);
+								}
+								
+								// Report post
+								if(aChannelItem->GetPubsubAffiliation() >= EPubsubAffiliationPublisher) {
+									aMenuPane->SetItemDimmed(EMenuReportPostCommand, false);
 								}
 							}
 						}

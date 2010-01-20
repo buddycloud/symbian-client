@@ -43,6 +43,7 @@ rls_string r_string_options_delete "Delete"
 
 rls_string r_string_note_noresultsfound "Hiç sonuç bulunamadı"
 rls_string r_string_note_requestsent "İstek gönderildi"
+rls_string r_string_note_feedbacksent "Feedback sent"
 rls_string r_string_note_messagequeued "Mesaj, çevrimiçi olduğunuzda gönderilecek"
 rls_string r_string_note_offlinerequired "Bu işlemi yapabilmek için çevrimdışı olmalısınız"
 
@@ -150,15 +151,15 @@ rls_string r_string_note_requesting "İstek gönderiliyor..."
 rls_string r_string_note_channelrank "Sıralama"
 rls_string r_string_note_channelsince "Days broadcasting"
 rls_string r_string_note_channelowner "Produced by"
-rls_string r_string_note_channellocation "Channel location"
+rls_string r_string_note_channellocation "Location"
+rls_string r_string_note_channelfollowers "Followers"
 
 // Menu: Channels
-rls_string r_string_list_nearbytoyou "What's Nearby To Me"
+rls_string r_string_list_nearbytoyou "Explore Nearby"
 rls_string r_string_list_featuredchannels "İlgili kanallar"
 rls_string r_string_list_channelsyoumightlike "Sevebileceğiniz kanallar"
 rls_string r_string_list_followersfavourites "Takipçilerin Favorileri"
 rls_string r_string_list_mostpopularchannels "En Popüler Kanallar"
-rls_string r_string_list_channelsneartoyou "Channels Near To Me"
 
 rls_string r_string_item_open "Aç"
 rls_string r_string_item_follow "Takip et"

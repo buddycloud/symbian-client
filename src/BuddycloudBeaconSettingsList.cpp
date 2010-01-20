@@ -79,16 +79,16 @@ void CBuddycloudBeaconSettingsList::EditItemL(TInt aIndex, TBool aCalledFromMenu
 	
 	switch(((*aItemArray)[aIndex])->Identifier()) {
 		case ESettingPositioningCellOn:
-			iBuddycloudLogic->SetLocationResource(EResourceCell, iBuddycloudLogic->GetBoolSetting(ESettingItemCellOn));
+			iBuddycloudLogic->SettingsItemChanged(ESettingItemCellOn);
 			break;
 		case ESettingPositioningWifiOn:
-			iBuddycloudLogic->SetLocationResource(EResourceWlan, iBuddycloudLogic->GetBoolSetting(ESettingItemWifiOn));
+			iBuddycloudLogic->SettingsItemChanged(ESettingItemWifiOn);
 			break;
 		case ESettingPositioningBtOn:
-			iBuddycloudLogic->SetLocationResource(EResourceBt, iBuddycloudLogic->GetBoolSetting(ESettingItemBtOn));
+			iBuddycloudLogic->SettingsItemChanged(ESettingItemBtOn);
 			break;
 		case ESettingPositioningGpsOn:
-			iBuddycloudLogic->SetLocationResource(EResourceGps, iBuddycloudLogic->GetBoolSetting(ESettingItemGpsOn));
+			iBuddycloudLogic->SettingsItemChanged(ESettingItemGpsOn);
 			break;
 		default:;
 	}

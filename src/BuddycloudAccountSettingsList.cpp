@@ -117,14 +117,15 @@ void CBuddycloudAccountSettingsList::EditItemL(TInt aIndex, TBool aCalledFromMen
 		
 		if(iCurrentItemData.Compare(aItemArray->MdcaPoint(aIndex).Left(64)) != 0) {
 			// Data changed
-			if(aIdentifier == ESettingAccountUsername) {
-				iBuddycloudLogic->ValidateUsername();
-				
-				LoadSettingsL();
-				
+			if(aIdentifier == ESettingAccountFullName) {
+				iBuddycloudLogic->SettingsItemChanged(ESettingItemFullName);
+			}
+			else if(aIdentifier == ESettingAccountUsername) {
 				if(iCurrentItemData.Compare(iBuddycloudLogic->GetDescSetting(ESettingItemUsername)) != 0) {
 					// Username is changed
-					iBuddycloudLogic->ResetStoredDataL();
+					iBuddycloudLogic->SettingsItemChanged(ESettingItemUsername);
+					
+					LoadSettingsL();
 					
 					ListBox()->SetCurrentItemIndexAndDraw(ESettingItemServer - 1);
 				}

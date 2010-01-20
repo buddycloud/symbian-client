@@ -138,10 +138,6 @@ void CLocationEngine::SetCellActive(TBool aActive) {
 	}
 }
 
-TBool CLocationEngine::CellDataAvailable() {
-	return (iLastCellTower.CellId != 0 && iLastCellTower.LocationAreaCode != 0);
-}
-
 void CLocationEngine::SetGpsActive(TBool aActive) {
 	if(iGpsEnabled != aActive) {
 		iGpsEnabled = aActive;
@@ -162,10 +158,6 @@ void CLocationEngine::SetGpsActive(TBool aActive) {
 	}
 }
 
-TBool CLocationEngine::GpsDataAvailable() {
-	return (iGpsLatitude != 0.0 || iGpsLatitude != 0.0);
-}
-
 void CLocationEngine::SetWlanActive(TBool aActive) {
 	if(iWlanEnabled != aActive) {
 		iWlanEnabled = aActive;
@@ -182,10 +174,6 @@ void CLocationEngine::SetWlanActive(TBool aActive) {
 	}
 }
 
-TBool CLocationEngine::WlanDataAvailable() {
-	return iWlanDataHandler->AvailableWlanNetworks();
-}
-
 void CLocationEngine::SetBtActive(TBool aActive) {
 	if(iBtEnabled != aActive) {
 		iBtEnabled = aActive;
@@ -200,10 +188,6 @@ void CLocationEngine::SetBtActive(TBool aActive) {
 			}
 		}
 	}
-}
-
-TBool CLocationEngine::BtDataAvailable() {
-	return iBtDataHandler->AvailableBtDevices();
 }
 
 void CLocationEngine::SetBtLaunch(TInt aSeconds) {
@@ -260,6 +244,22 @@ void CLocationEngine::PrepareShutdown() {
 	else {
 		iEngineObserver->LocationShutdownComplete();
 	}
+}
+
+TBool CLocationEngine::CellDataAvailable() {
+	return (iLastCellTower.CellId != 0 && iLastCellTower.LocationAreaCode != 0);
+}
+
+TBool CLocationEngine::GpsDataAvailable() {
+	return (iGpsLatitude != 0.0 || iGpsLatitude != 0.0);
+}
+
+TBool CLocationEngine::WlanDataAvailable() {
+	return iWlanDataHandler->AvailableWlanNetworks();
+}
+
+TBool CLocationEngine::BtDataAvailable() {
+	return iBtDataHandler->AvailableBtDevices();
 }
 
 void CLocationEngine::GetGpsPosition(TReal& aLatitude, TReal& aLongitude) {

@@ -43,6 +43,7 @@ rls_string r_string_options_delete "Delete"
 
 rls_string r_string_note_noresultsfound "Tulemuseta"
 rls_string r_string_note_requestsent "Kutse saadetud"
+rls_string r_string_note_feedbacksent "Feedback sent"
 rls_string r_string_note_messagequeued "Sõnum saadetakse, kui oled onlines"
 rls_string r_string_note_offlinerequired "Sa pead olema offlines seda tehes"
 
@@ -150,15 +151,15 @@ rls_string r_string_note_requesting "Taotlen..."
 rls_string r_string_note_channelrank "Arv"
 rls_string r_string_note_channelsince "Days broadcasting"
 rls_string r_string_note_channelowner "Produced by"
-rls_string r_string_note_channellocation "Channel location"
+rls_string r_string_note_channellocation "Location"
+rls_string r_string_note_channelfollowers "Followers"
 
 // Menu: Channels
-rls_string r_string_list_nearbytoyou "What's Nearby To Me"
+rls_string r_string_list_nearbytoyou "Explore Nearby"
 rls_string r_string_list_featuredchannels "Soositumad kanalid"
 rls_string r_string_list_channelsyoumightlike "Kanalid, mis sulle võiksid meeldida"
 rls_string r_string_list_followersfavourites "Järgnejate Lemmikud"
 rls_string r_string_list_mostpopularchannels "Populaarsemad kanalid"
-rls_string r_string_list_channelsneartoyou "Channels Near To Me"
 
 rls_string r_string_item_open "Ava"
 rls_string r_string_item_follow "Järgne"
