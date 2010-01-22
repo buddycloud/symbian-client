@@ -61,8 +61,12 @@ class CBuddycloudListItem : public CBase {
 		TInt GetIconId();
 		void SetIconId(TInt aIconId);
 
+	public:
 		TDesC& GetTitle();
 		void SetTitleL(const TDesC& aTitle);
+
+		TDesC& GetSubTitle();
+		void SetSubTitleL(const TDesC& aSubTitle);
 		
 		TDesC& GetDescription();
 		void SetDescriptionL(const TDesC& aDescription);
@@ -77,6 +81,7 @@ class CBuddycloudListItem : public CBase {
 		
 		TInt iIconId;	
 		HBufC* iTitle;
+		HBufC* iSubTitle;
 		HBufC* iDescription;
 };
 

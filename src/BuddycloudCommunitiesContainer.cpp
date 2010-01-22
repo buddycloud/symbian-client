@@ -15,7 +15,6 @@
 #include <barsread.h>
 #include <eikclbd.h>
 #include "BrowserLauncher.h"
-#include "Buddycloud.hlp.hrh"
 #include "BuddycloudCommunitiesContainer.h"
 
 

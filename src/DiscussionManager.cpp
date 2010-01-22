@@ -639,7 +639,7 @@ void CDiscussion::WriteDiscussionToFileL() {
 				CAtomEntryData* aEntry = aThread->GetEntry();	
 				
 				aFile.WriteL(_L8("\t\t"));						
-				aFile.WriteL(aAtomEntryParser->AtomEntryToXmlL(aEntry, _L8(""), true));
+				aFile.WriteL(aAtomEntryParser->AtomEntryToXmlL(aEntry, KNullDesC8, true));
 				aFile.WriteL(_L8("\r\n"));						
 				
 				if(aThread->CommentCount() > 0) {

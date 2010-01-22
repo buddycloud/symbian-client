@@ -408,12 +408,12 @@ void CBuddycloudAppUi::NotificationEvent(TBuddycloudLogicNotificationType aEvent
 		User::ResetInactivityTime();
 	}
 	else if(aEvent == ENotificationEditPlaceRequested) {
-		ActivateLocalViewL(KEditPlaceViewId, TUid::Uid(aId), _L8(""));
+		ActivateLocalViewL(KEditPlaceViewId, TUid::Uid(aId), KNullDesC8);
 	}
 	else if(aEvent == ENotificationAuthenticationFailed) {
-		ActivateLocalViewL(KAccountSettingsViewId, TUid::Uid(1), _L8(""));
+		ActivateLocalViewL(KAccountSettingsViewId, TUid::Uid(1), KNullDesC8);
 	}
 	else if(aEvent == ENotificationServerResolveFailed) {
-		ActivateLocalViewL(KAccountSettingsViewId, TUid::Uid(3), _L8(""));
+		ActivateLocalViewL(KAccountSettingsViewId, TUid::Uid(3), KNullDesC8);
 	}
 }

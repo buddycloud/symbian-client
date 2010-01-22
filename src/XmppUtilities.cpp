@@ -393,7 +393,7 @@ CAtomEntryData* CXmppAtomEntryParser::XmlToAtomEntryLC(const TDesC8& aStanza, TD
 			if(aGeoloc->GetString(EGeolocText).Length() == 0) {
 				HBufC* aLocation = HBufC::NewLC(aGeoloc->GetString(EGeolocLocality).Length() + 2 + aGeoloc->GetString(EGeolocCountry).Length());
 				TPtr pLocation(aLocation->Des());
-				aTextUtilities->AppendToString(pLocation, aGeoloc->GetString(EGeolocLocality), _L(""));
+				aTextUtilities->AppendToString(pLocation, aGeoloc->GetString(EGeolocLocality), KNullDesC);
 				aTextUtilities->AppendToString(pLocation, aGeoloc->GetString(EGeolocCountry), _L(", "));
 				
 				aAtomEntry->GetLocation()->SetStringL(EGeolocText, pLocation);

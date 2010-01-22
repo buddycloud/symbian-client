@@ -140,16 +140,14 @@ void CBuddycloudFollowingContainer::PrecacheImagesL() {
 }
 
 void CBuddycloudFollowingContainer::ResizeCachedImagesL() {
-	TSize aSvgSize;	
+	TInt aIconWidth = (iUnselectedItemIconTextOffset / 4) * 3;
 
 	// Calculate dimensions
-	AknIconUtils::GetContentDimensions(iArrow1Bitmap, aSvgSize);
-	iArrow1Size.SetSize(15, (i10NormalFont->HeightInPixels() + i10BoldFont->HeightInPixels()));
+	iArrow1Size.SetSize(aIconWidth, (iSecondaryFont->HeightInPixels() + iSecondaryBoldFont->HeightInPixels()));
 	AknIconUtils::SetSize(iArrow1Bitmap, iArrow1Size, EAspectRatioNotPreserved);
 	iArrow1Size = iArrow1Bitmap->SizeInPixels();
 	
-	AknIconUtils::GetContentDimensions(iArrow2Bitmap, aSvgSize);
-	iArrow2Size.SetSize(15, ((i10NormalFont->HeightInPixels() * 2) + i10BoldFont->HeightInPixels()));
+	iArrow2Size.SetSize(aIconWidth, ((iSecondaryFont->HeightInPixels() * 2) + iSecondaryBoldFont->HeightInPixels()));
 	AknIconUtils::SetSize(iArrow2Bitmap, iArrow2Size, EAspectRatioNotPreserved);
 	iArrow2Size = iArrow2Bitmap->SizeInPixels();
 }
@@ -176,7 +174,7 @@ void CBuddycloudFollowingContainer::DisplayEdwin(TBool aShowEdwin) {
 		
 		if(aShowEdwin) {
 			// Show edwin
-			aFieldRect = TRect(i10NormalFont->FontMaxHeight(), (iRect.Height() - i10NormalFont->FontMaxHeight() - 2), (iRect.Width() - i10NormalFont->FontMaxHeight()), (iRect.Height() - 2));
+			aFieldRect = TRect(iSecondaryFont->FontMaxHeight(), (iRect.Height() - iSecondaryFont->FontMaxHeight() - 2), (iRect.Width() - iSecondaryFont->FontMaxHeight()), (iRect.Height() - 2));
 #ifdef __SERIES60_40__
 			aFieldRect.iTl.iY = aFieldRect.iTl.iY - (aFieldRect.Height() / 2);
 #endif
@@ -189,7 +187,7 @@ void CBuddycloudFollowingContainer::DisplayEdwin(TBool aShowEdwin) {
 		}
 		else {
 			// Dont show edwin
-			aFieldRect = TRect(i10NormalFont->FontMaxHeight(), (iRect.Height() + 2), (iRect.Width() - i10NormalFont->FontMaxHeight()), (iRect.Height() + aFieldRect.Height() + 2));
+			aFieldRect = TRect(iSecondaryFont->FontMaxHeight(), (iRect.Height() + 2), (iRect.Width() - iSecondaryFont->FontMaxHeight()), (iRect.Height() + aFieldRect.Height() + 2));
 			iEdwin->SetFocus(false);
 			iEdwin->SetRect(aFieldRect);
 			iEdwin->SetFocus(true);
@@ -293,51 +291,23 @@ CCoeControl* CBuddycloudFollowingContainer::ComponentControl(TInt aIndex) const 
 }
 
 void CBuddycloudFollowingContainer::RenderWrappedText(TInt aIndex) {
+	TInt aWidth = (iRect.Width() - iLeftBarSpacer - iRightBarSpacer - 10);
+	
 	// Clear
 	ClearWrappedText();
-	
-	iNewMessagesOffset = 0;
 
 	if(iItemStore->Count() > 0) {
 		CFollowingItem* aItem = static_cast <CFollowingItem*> (iItemStore->GetItemById(aIndex));
-		TInt aWidth = (iRect.Width() - iSelectedItemIconTextOffset - 2 - iLeftBarSpacer - iRightBarSpacer);
 		
-		if(aItem) {	
-			if(aItem->GetItemType() >= EItemRoster) {
-				CFollowingChannelItem* aChannelItem = static_cast <CFollowingChannelItem*> (aItem);
-				TBuf<32> aBuf;
-	
-				if(aChannelItem->GetUnread() > 0) {
-					aBuf.Format(_L("%d"), aChannelItem->GetUnread());
-					
-					iNewMessagesOffset = (i10NormalFont->TextWidthInPixels(aBuf) + (iItemIconSize / 2) + 6);
-				}
-				
-				if(aItem->GetItemType() == EItemRoster) {
-					CFollowingRosterItem* aRosterItem = static_cast <CFollowingRosterItem*> (aItem);
-		
-					if(aRosterItem->GetUnread() > 0) {
-						aBuf.Format(_L("%d"), aRosterItem->GetUnread());
-						
-						if((i10NormalFont->TextWidthInPixels(aBuf) + (iItemIconSize / 2) + 6) > iNewMessagesOffset) {
-							iNewMessagesOffset = (i10NormalFont->TextWidthInPixels(aBuf) + (iItemIconSize / 2) + 6);
-						}
-					}
-				}
-			}
-			
-			aWidth -= iNewMessagesOffset;
-	
+		if(aItem) {		
 			// Wrap
-			iTextUtilities->WrapToArrayL(iWrappedTextArray, i10ItalicFont, aItem->GetDescription(), aWidth);
+			iTextUtilities->WrapToArrayL(iWrappedTextArray, iSecondaryItalicFont, aItem->GetDescription(), aWidth);
 		}
 	}
 	else {
 		// No following items
-		TInt aWidth = (iRect.Width() - 2 - iLeftBarSpacer - iRightBarSpacer);
-
 		HBufC* aNoItems = iEikonEnv->AllocReadResourceLC(R_LOCALIZED_STRING_NOTE_FOLLOWINGLISTEMPTY);		
-		iTextUtilities->WrapToArrayL(iWrappedTextArray, i10BoldFont, *aNoItems, aWidth);		
+		iTextUtilities->WrapToArrayL(iWrappedTextArray, iSecondaryBoldFont, *aNoItems, aWidth);		
 		CleanupStack::PopAndDestroy();	// aNoItems
 	}
 }
@@ -352,12 +322,22 @@ TInt CBuddycloudFollowingContainer::CalculateItemSize(TInt aIndex) {
 			aMinimumSize = iItemIconSize + 4;
 			
 			// Title
-			aItemSize += i13BoldFont->HeightInPixels();
+			aItemSize += iPrimaryBoldFont->HeightInPixels();
+			aItemSize += iPrimarySmallFont->DescentInPixels();
+			
+			// Sub-title
+			if(aItem->GetSubTitle().Length() > 0) {
+				aItemSize += iPrimarySmallFont->HeightInPixels();
+				aItemSize += iPrimarySmallFont->DescentInPixels();
+			}
 			
 			// Description
 			if(aItem->GetDescription().Length() > 0) {
-				aItemSize += i13BoldFont->FontMaxDescent();
-				aItemSize += (iWrappedTextArray.Count() * i10ItalicFont->HeightInPixels());
+				if(aItemSize < (iItemIconSize + 2)) {
+					aItemSize = (iItemIconSize + 2);
+				}
+				
+				aItemSize += (iWrappedTextArray.Count() * iSecondaryItalicFont->HeightInPixels());
 			}
 			
 			if(aItem->GetItemType() == EItemRoster) {
@@ -372,11 +352,12 @@ TInt CBuddycloudFollowingContainer::CalculateItemSize(TInt aIndex) {
 						aItemSize = (iItemIconSize + 2);
 					}
 					
-					aItemSize += i10NormalFont->HeightInPixels();
-					aItemSize += i10BoldFont->HeightInPixels();
+					aItemSize += iSecondaryItalicFont->FontMaxDescent();
+					aItemSize += iSecondaryFont->HeightInPixels();
+					aItemSize += iSecondaryBoldFont->HeightInPixels();
 					
 					if(aRosterItem->GetGeolocItem(EGeolocItemFuture)->GetString(EGeolocText).Length() > 0) {
-						aItemSize += i10NormalFont->HeightInPixels();
+						aItemSize += iSecondaryFont->HeightInPixels();
 					}
 				}
 			}
@@ -384,23 +365,23 @@ TInt CBuddycloudFollowingContainer::CalculateItemSize(TInt aIndex) {
 		else {
 			aMinimumSize = (iItemIconSize / 2) + 2;
 #ifdef __SERIES60_40__
-			aMinimumSize += (i10BoldFont->DescentInPixels() * 2);
-			aItemSize += (i10BoldFont->DescentInPixels() * 2);
+			aMinimumSize += (iSecondaryBoldFont->DescentInPixels() * 2);
+			aItemSize += (iSecondaryBoldFont->DescentInPixels() * 2);
 #endif
 			
-			aItemSize += i10BoldFont->HeightInPixels();
+			aItemSize += iSecondaryBoldFont->HeightInPixels();
 
 			if(aItem->GetItemType() == EItemRoster) {
 				CFollowingRosterItem* aRosterItem = static_cast <CFollowingRosterItem*> (aItem);
 				
 				if(aRosterItem->GetGeolocItem(EGeolocItemCurrent)->GetString(EGeolocText).Length() > 0) {
-					aItemSize += i10BoldFont->FontMaxDescent();
-					aItemSize += i10NormalFont->HeightInPixels();
+					aItemSize += iSecondaryBoldFont->FontMaxDescent();
+					aItemSize += iSecondaryFont->HeightInPixels();
 				}
 			}
 		}
 		
-		aItemSize += i10NormalFont->FontMaxDescent() + 2;
+		aItemSize += iSecondaryFont->FontMaxDescent() + 2;
 	}
 	
 	return (aItemSize < aMinimumSize) ? aMinimumSize : aItemSize;
@@ -430,6 +411,7 @@ void CBuddycloudFollowingContainer::RenderListItems() {
 					// Test to start the page drawing
 					if(aDrawPos + aItemSize > 0) {
 						TInt aItemDrawPos = aDrawPos;
+						TInt aMessageIconOffset = 0;
 						
 #ifdef __SERIES60_40__
 						iListItems.Append(TListItem(aItem->GetItemId(), TRect(0, aItemDrawPos, (Rect().Width() - iRightBarSpacer), (aItemDrawPos + aItemSize))));
@@ -439,8 +421,7 @@ void CBuddycloudFollowingContainer::RenderListItems() {
 						
 						if(iSelectedItem == aItem->GetItemId()) {
 							// Currently selected item
-							TRect aRect = TRect(iLeftBarSpacer + 1, aItemDrawPos, (iRect.Width() - iRightBarSpacer), (aItemDrawPos + aItemSize));
-							RenderItemFrame(aRect);
+							RenderItemFrame(TRect(iLeftBarSpacer + 1, aItemDrawPos, (iRect.Width() - iRightBarSpacer), (aItemDrawPos + aItemSize)));
 							
 							iBufferGc->SetPenColor(iColourTextSelected);
 							
@@ -449,11 +430,12 @@ void CBuddycloudFollowingContainer::RenderListItems() {
 								TInt aUnreadPos = aItemDrawPos + 2;
 								CFollowingChannelItem* aChannelItem = static_cast <CFollowingChannelItem*> (aItem);
 								
-								iBufferGc->UseFont(i10NormalFont);
+								iBufferGc->UseFont(iSecondaryFont);
 							
 								if(aChannelItem->GetUnread() > 0) {
 									// Draw channel messages
 									aBuf.Format(_L("%d"), aChannelItem->GetUnread());
+									aMessageIconOffset = (iItemIconSize / 2) + iSecondaryFont->TextWidthInPixels(aBuf);
 									
 									// Message Icon
 									iBufferGc->SetBrushStyle(CGraphicsContext::ENullBrush);
@@ -467,7 +449,7 @@ void CBuddycloudFollowingContainer::RenderListItems() {
 									iBufferGc->SetBrushStyle(CGraphicsContext::ESolidBrush);
 									
 									// Unread number
-									iBufferGc->DrawText(aBuf, TPoint((iRect.Width() - iRightBarSpacer - 3 - (iItemIconSize / 2) - i10NormalFont->TextWidthInPixels(aBuf)), aUnreadPos + (i10NormalFont->HeightInPixels() / 2) + (iItemIconSize / 4)));
+									iBufferGc->DrawText(aBuf, TPoint((iRect.Width() - iRightBarSpacer - 3 - aMessageIconOffset), aUnreadPos + (iSecondaryFont->HeightInPixels() / 2) + (iItemIconSize / 4)));
 									aUnreadPos += (iItemIconSize / 2);									
 								}
 								
@@ -478,47 +460,65 @@ void CBuddycloudFollowingContainer::RenderListItems() {
 										// Draw private messages
 										aBuf.Format(_L("%d"), aRosterItem->GetUnread());
 										
+										if(aRosterItem->GetUnread() > aChannelItem->GetUnread()) {
+											aMessageIconOffset = (iItemIconSize / 2) + iSecondaryFont->TextWidthInPixels(aBuf);
+										}
+										
 										// Message Icon
 										iBufferGc->SetBrushStyle(CGraphicsContext::ENullBrush);
 										iBufferGc->BitBltMasked(TPoint((iRect.Width() - iRightBarSpacer - 3 - (iItemIconSize / 2)), aUnreadPos), iAvatarRepository->GetImage(KIconMessage1, false, iIconMidmapSize), TRect(0, 0, (iItemIconSize / 2), (iItemIconSize / 2)), iAvatarRepository->GetImage(KIconMessage1, true, iIconMidmapSize), true);
 										iBufferGc->SetBrushStyle(CGraphicsContext::ESolidBrush);
 										
 										// Unread number
-										iBufferGc->DrawText(aBuf, TPoint((iRect.Width() - iRightBarSpacer - 3 - (iItemIconSize / 2) - i10NormalFont->TextWidthInPixels(aBuf)), aUnreadPos + (i10NormalFont->HeightInPixels() / 2) + (iItemIconSize / 4)));
+										iBufferGc->DrawText(aBuf, TPoint((iRect.Width() - iRightBarSpacer - 3 - (iItemIconSize / 2) - iSecondaryFont->TextWidthInPixels(aBuf)), aUnreadPos + (iSecondaryFont->HeightInPixels() / 2) + (iItemIconSize / 4)));
 									}
 								}
 								
 								iBufferGc->DiscardFont();	
 							}
 							
-							// Draw avatar
+							// Draw icon
 							iBufferGc->SetBrushStyle(CGraphicsContext::ENullBrush);
 							iBufferGc->BitBltMasked(TPoint(iLeftBarSpacer + 6, aItemDrawPos + 2), iAvatarRepository->GetImage(aItem->GetIconId(), false, iIconMidmapSize), TRect(0, 0, iItemIconSize, iItemIconSize), iAvatarRepository->GetImage(aItem->GetIconId(), true, iIconMidmapSize), true);
 							iBufferGc->SetBrushStyle(CGraphicsContext::ESolidBrush);
 							
-							aRect = TRect(iLeftBarSpacer + 3, aItemDrawPos, (iRect.Width() - iRightBarSpacer - iNewMessagesOffset - 3), iRect.Height());
-							iBufferGc->SetClippingRect(aRect);
+							iBufferGc->SetClippingRect(TRect(iLeftBarSpacer + 3, aItemDrawPos, (iRect.Width() - iRightBarSpacer - aMessageIconOffset - 6), iRect.Height()));
 
-							// Name
-							if(i13BoldFont->TextCount(aDirectionalText, (iRect.Width() - iLeftBarSpacer - iRightBarSpacer - iNewMessagesOffset - 3 - iSelectedItemIconTextOffset)) < aDirectionalText.Length()) {
-								iBufferGc->UseFont(i10BoldFont);
+							// Title
+							if(iPrimaryBoldFont->TextCount(aDirectionalText, (iRect.Width() - iLeftBarSpacer - iRightBarSpacer - aMessageIconOffset - 6 - iSelectedItemIconTextOffset)) < aDirectionalText.Length()) {
+								iBufferGc->UseFont(iSecondaryBoldFont);
 							}
 							else {
-								iBufferGc->UseFont(i13BoldFont);
+								iBufferGc->UseFont(iPrimaryBoldFont);
 							}
 
-							aItemDrawPos += i13BoldFont->HeightInPixels();
+							aItemDrawPos += iPrimaryBoldFont->HeightInPixels();
 							iBufferGc->DrawText(aDirectionalText, TPoint(iLeftBarSpacer + iSelectedItemIconTextOffset, aItemDrawPos));
-							aItemDrawPos += i13BoldFont->FontMaxDescent();
+							aItemDrawPos += iPrimarySmallFont->DescentInPixels();
 							iBufferGc->DiscardFont();
+							
+							if(aItem->GetSubTitle().Length() > 0) {
+								iBufferGc->UseFont(iSecondaryFont);
+								aItemDrawPos += iPrimarySmallFont->HeightInPixels();
+								iBufferGc->DrawText(iTextUtilities->BidiLogicalToVisualL(aItem->GetSubTitle()), TPoint(iLeftBarSpacer + iSelectedItemIconTextOffset, aItemDrawPos));
+								aItemDrawPos += iPrimarySmallFont->DescentInPixels();
+								iBufferGc->DiscardFont();
+							}
+						
+							// Move to under icon
+							if(aItemDrawPos - aDrawPos < (iItemIconSize + 2)) {
+								aItemDrawPos = (aDrawPos + iItemIconSize + 2);
+							}
+							
+							iBufferGc->SetClippingRect(TRect(iLeftBarSpacer + 3, aItemDrawPos, (iRect.Width() - iRightBarSpacer - 3), iRect.Height()));
 
-							// Description
+							// Description						
 							if(aItem->GetDescription().Length() > 0) {
-								iBufferGc->UseFont(i10ItalicFont);
+								iBufferGc->UseFont(iSecondaryItalicFont);
 								
 								for(TInt i = 0; i < iWrappedTextArray.Count(); i++) {
-									aItemDrawPos += i10ItalicFont->HeightInPixels();
-									iBufferGc->DrawText(*iWrappedTextArray[i], TPoint(iLeftBarSpacer + iSelectedItemIconTextOffset, aItemDrawPos));
+									aItemDrawPos += iSecondaryItalicFont->HeightInPixels();
+									iBufferGc->DrawText(*iWrappedTextArray[i], TPoint(iLeftBarSpacer + 5, aItemDrawPos));
 								}
 								
 								iBufferGc->DiscardFont();
@@ -532,43 +532,51 @@ void CBuddycloudFollowingContainer::RenderListItems() {
 										aRosterItem->GetGeolocItem(EGeolocItemCurrent)->GetString(EGeolocText).Length() > 0 ||
 										aRosterItem->GetGeolocItem(EGeolocItemFuture)->GetString(EGeolocText).Length() > 0) {
 									
-									if(aItemDrawPos - aDrawPos < (iItemIconSize + 2)) {
-										aItemDrawPos = (aDrawPos + iItemIconSize + 2);
+									aItemDrawPos += iSecondaryItalicFont->FontMaxDescent();
+									
+									if(aItem->GetDescription().Length() > 0) {
+										iBufferGc->SetPenColor(iColourTextSelectedTrans);
+										iBufferGc->SetPenStyle(CGraphicsContext::EDashedPen);
+										
+										iBufferGc->DrawLine(TPoint(iLeftBarSpacer + 5, aItemDrawPos), TPoint((iRect.Width() - iRightBarSpacer - 5), aItemDrawPos));		
+										
+										iBufferGc->SetPenStyle(CGraphicsContext::ESolidPen);
+										iBufferGc->SetPenColor(iColourTextSelected);
 									}
 									
 									iBufferGc->SetBrushStyle(CGraphicsContext::ENullBrush);
 									
 									if(aRosterItem->GetGeolocItem(EGeolocItemFuture)->GetString(EGeolocText).Length() > 0) {
-										iBufferGc->BitBltMasked(TPoint(iLeftBarSpacer + 9, aItemDrawPos), iArrow2Bitmap, TRect(0, 0, iArrow2Size.iWidth, iArrow2Size.iHeight), iArrow2Mask, true);
+										iBufferGc->BitBltMasked(TPoint(iLeftBarSpacer + ((iUnselectedItemIconTextOffset / 2) - (iArrow2Size.iWidth / 2)), aItemDrawPos), iArrow2Bitmap, TRect(0, 0, iArrow2Size.iWidth, iArrow2Size.iHeight), iArrow2Mask, true);
 									}
 									else {
-										iBufferGc->BitBltMasked(TPoint(iLeftBarSpacer + 9, aItemDrawPos), iArrow1Bitmap, TRect(0, 0, iArrow1Size.iWidth, iArrow1Size.iHeight), iArrow1Mask, true);
+										iBufferGc->BitBltMasked(TPoint(iLeftBarSpacer + ((iUnselectedItemIconTextOffset / 2) - (iArrow2Size.iWidth / 2)), aItemDrawPos), iArrow1Bitmap, TRect(0, 0, iArrow1Size.iWidth, iArrow1Size.iHeight), iArrow1Mask, true);
 									}
 									
 									iBufferGc->SetBrushStyle(CGraphicsContext::ESolidBrush);
 									
 									// Previous place
-									iBufferGc->UseFont(i10NormalFont);
+									iBufferGc->UseFont(iSecondaryFont);
 									iBufferGc->SetStrikethroughStyle(EStrikethroughOn);
-									aItemDrawPos += i10NormalFont->HeightInPixels();
+									aItemDrawPos += iSecondaryFont->HeightInPixels();
 									aDirectionalText.Set(iTextUtilities->BidiLogicalToVisualL(aRosterItem->GetGeolocItem(EGeolocItemPrevious)->GetString(EGeolocText)));
-									iBufferGc->DrawText(aDirectionalText, TPoint(iLeftBarSpacer + 30, aItemDrawPos));
+									iBufferGc->DrawText(aDirectionalText, TPoint(iLeftBarSpacer + iUnselectedItemIconTextOffset, aItemDrawPos));
 									iBufferGc->SetStrikethroughStyle(EStrikethroughOff);
 									iBufferGc->DiscardFont();
 
 									// Current place
-									iBufferGc->UseFont(i10BoldFont);
-									aItemDrawPos += i10BoldFont->HeightInPixels();
+									iBufferGc->UseFont(iSecondaryBoldFont);
+									aItemDrawPos += iSecondaryBoldFont->HeightInPixels();
 									aDirectionalText.Set(iTextUtilities->BidiLogicalToVisualL(aRosterItem->GetGeolocItem(EGeolocItemCurrent)->GetString(EGeolocText)));
-									iBufferGc->DrawText(aDirectionalText, TPoint(iLeftBarSpacer + 30, aItemDrawPos));
+									iBufferGc->DrawText(aDirectionalText, TPoint(iLeftBarSpacer + iUnselectedItemIconTextOffset, aItemDrawPos));
 									iBufferGc->DiscardFont();
 
-									// Next place
+									// Future place
 									if(aRosterItem->GetGeolocItem(EGeolocItemFuture)->GetString(EGeolocText).Length() > 0) {
-										iBufferGc->UseFont(i10NormalFont);
-										aItemDrawPos += i10NormalFont->HeightInPixels();
+										iBufferGc->UseFont(iSecondaryFont);
+										aItemDrawPos += iSecondaryFont->HeightInPixels();
 										aDirectionalText.Set(iTextUtilities->BidiLogicalToVisualL(aRosterItem->GetGeolocItem(EGeolocItemFuture)->GetString(EGeolocText)));
-										iBufferGc->DrawText(aDirectionalText, TPoint(iLeftBarSpacer + 30, aItemDrawPos));
+										iBufferGc->DrawText(aDirectionalText, TPoint(iLeftBarSpacer + iUnselectedItemIconTextOffset, aItemDrawPos));
 										iBufferGc->DiscardFont();
 									}
 								}
@@ -578,14 +586,14 @@ void CBuddycloudFollowingContainer::RenderListItems() {
 							// Non selected items
 							TRect aRect = TRect(0, aItemDrawPos, iRect.Width(), iRect.Height());
 #ifdef __SERIES60_40__
-							aItemDrawPos += i10BoldFont->DescentInPixels();
+							aItemDrawPos += iSecondaryBoldFont->DescentInPixels();
 #endif					
 							iBufferGc->SetPenColor(iColourText);
 							
 							iBufferGc->SetBrushStyle(CGraphicsContext::ENullBrush);
 							
 							if(aItem->GetItemType() == EItemRoster || aItem->GetItemType() == EItemChannel) {
-								TInt aMessageIconOffset = (iRightBarSpacer + 3);
+								aMessageIconOffset = (iRightBarSpacer + 3);
 							
 								// Private messages
 								if(aItem->GetItemType() == EItemRoster) {
@@ -622,8 +630,8 @@ void CBuddycloudFollowingContainer::RenderListItems() {
 							iBufferGc->SetClippingRect(aRect);
 
 							// Title
-							iBufferGc->UseFont(i10BoldFont);
-							aItemDrawPos += i10BoldFont->HeightInPixels();
+							iBufferGc->UseFont(iSecondaryBoldFont);
+							aItemDrawPos += iSecondaryBoldFont->HeightInPixels();
 							iBufferGc->DrawText(aDirectionalText, TPoint(iLeftBarSpacer + iUnselectedItemIconTextOffset, aItemDrawPos));
 							iBufferGc->DiscardFont();
 							
@@ -632,9 +640,9 @@ void CBuddycloudFollowingContainer::RenderListItems() {
 								
 								// Current place
 								if(aRosterItem->GetGeolocItem(EGeolocItemCurrent)->GetString(EGeolocText).Length() > 0) {
-									iBufferGc->UseFont(i10NormalFont);
-									aItemDrawPos += i10BoldFont->FontMaxDescent();
-									aItemDrawPos += i10NormalFont->HeightInPixels();
+									iBufferGc->UseFont(iSecondaryFont);
+									aItemDrawPos += iSecondaryBoldFont->FontMaxDescent();
+									aItemDrawPos += iSecondaryFont->HeightInPixels();
 									aDirectionalText.Set(iTextUtilities->BidiLogicalToVisualL(aRosterItem->GetGeolocItem(EGeolocItemCurrent)->GetString(EGeolocText)));
 									iBufferGc->DrawText(aDirectionalText, TPoint(iLeftBarSpacer + iUnselectedItemIconTextOffset, aItemDrawPos));
 									iBufferGc->DiscardFont();
@@ -658,24 +666,24 @@ void CBuddycloudFollowingContainer::RenderListItems() {
 		iBufferGc->CancelClippingRect();
 	}
 	else {
-		iBufferGc->UseFont(i10BoldFont);
+		iBufferGc->UseFont(iSecondaryBoldFont);
 		iBufferGc->SetPenColor(iColourText);
 
 		if(iItemStore->Count() > 0) {
 			// No results
-			aDrawPos = ((iRect.Height() / 2) - (i10BoldFont->HeightInPixels() / 2));
+			aDrawPos = ((iRect.Height() / 2) - (iSecondaryBoldFont->HeightInPixels() / 2));
 			
 			HBufC* aNoResults = iEikonEnv->AllocReadResourceLC(R_LOCALIZED_STRING_NOTE_NORESULTSFOUND);		
-			iBufferGc->DrawText(*aNoResults, TPoint(((iLeftBarSpacer + ((iRect.Width() - iLeftBarSpacer - iRightBarSpacer) / 2)) - (i10BoldFont->TextWidthInPixels(*aNoResults) / 2)), aDrawPos));
+			iBufferGc->DrawText(*aNoResults, TPoint(((iLeftBarSpacer + ((iRect.Width() - iLeftBarSpacer - iRightBarSpacer) / 2)) - (iSecondaryBoldFont->TextWidthInPixels(*aNoResults) / 2)), aDrawPos));
 			CleanupStack::PopAndDestroy();// aNoResults	
 		}
 		else {
 			// No items
-			aDrawPos = ((iRect.Height() / 2) - ((iWrappedTextArray.Count() * i10BoldFont->HeightInPixels()) / 2));
+			aDrawPos = ((iRect.Height() / 2) - ((iWrappedTextArray.Count() * iSecondaryBoldFont->HeightInPixels()) / 2));
 						
 			for(TInt i = 0; i < iWrappedTextArray.Count(); i++) {
-				aDrawPos += i10ItalicFont->HeightInPixels();
-				iBufferGc->DrawText(iWrappedTextArray[i]->Des(), TPoint(((iLeftBarSpacer + ((iRect.Width() - iLeftBarSpacer - iRightBarSpacer) / 2)) - (i10BoldFont->TextWidthInPixels(iWrappedTextArray[i]->Des()) / 2)), aDrawPos));
+				aDrawPos += iSecondaryItalicFont->HeightInPixels();
+				iBufferGc->DrawText(iWrappedTextArray[i]->Des(), TPoint(((iLeftBarSpacer + ((iRect.Width() - iLeftBarSpacer - iRightBarSpacer) / 2)) - (iSecondaryBoldFont->TextWidthInPixels(iWrappedTextArray[i]->Des()) / 2)), aDrawPos));
 			}
 		}
 		
@@ -1064,7 +1072,7 @@ void CBuddycloudFollowingContainer::HandleCommandL(TInt aCommand) {
 			TPtr pMessage(aMessage->Des());
 			
 			CTextUtilities* aTextUtilities = CTextUtilities::NewLC();
-			aTextUtilities->AppendToString(pMessage, aGeoloc->GetString(EGeolocText), _L(""));
+			aTextUtilities->AppendToString(pMessage, aGeoloc->GetString(EGeolocText), KNullDesC);
 			aTextUtilities->AppendToString(pMessage, aGeoloc->GetString(EGeolocStreet), _L(",\n"));
 			aTextUtilities->AppendToString(pMessage, aGeoloc->GetString(EGeolocArea), _L(",\n"));
 			aTextUtilities->AppendToString(pMessage, aGeoloc->GetString(EGeolocLocality), _L(",\n"));
@@ -1172,7 +1180,7 @@ void CBuddycloudFollowingContainer::HandleCommandL(TInt aCommand) {
 		}
 		else {	
 			// Reset filter
-			iItemStore->SetFilterTextL(_L(""));
+			iItemStore->SetFilterTextL(KNullDesC);
 			iEdwin->SetTextL(&iItemStore->GetFilterText());
 			iEdwin->HandleTextChangedL();
 			
@@ -1241,7 +1249,7 @@ TKeyResponse CBuddycloudFollowingContainer::OfferKeyEventL(const TKeyEvent& aKey
 	}
 	else if(aType == EEventKeyDown) {
 		if(iEdwin->TextLength() == 0 && aKeyEvent.iScanCode == EStdKeyRightArrow) {
-			iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KPlacesViewId), TUid::Uid(0), _L8(""));
+			iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KPlacesViewId), TUid::Uid(0), KNullDesC8);
 			aResult = EKeyWasConsumed;
 		}
 	}
@@ -1276,7 +1284,7 @@ TKeyResponse CBuddycloudFollowingContainer::OfferKeyEventL(const TKeyEvent& aKey
 }
 
 void CBuddycloudFollowingContainer::TabChangedL(TInt aIndex) {
-	iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), TUid::Uid(iTabGroup->TabIdFromIndex(aIndex))), TUid::Uid(0), _L8(""));
+	iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), TUid::Uid(iTabGroup->TabIdFromIndex(aIndex))), TUid::Uid(0), KNullDesC8);
 }
 
 // End of File

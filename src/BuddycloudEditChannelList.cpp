@@ -13,7 +13,6 @@
 #include <eikspane.h>
 #include <Buddycloud_lang.rsg>
 #include "Buddycloud.hrh"
-#include "Buddycloud.hlp.hrh"
 #include "BuddycloudConstants.h"
 #include "BuddycloudEditChannelList.h"
 #include "XmlParser.h"
@@ -36,21 +35,14 @@ void CBuddycloudEditChannelList::ConstructL(const TRect& aRect, TViewData aQuery
 	if(iChannelItem == NULL) {		
 		TPtrC aEncData(iTextUtilities->Utf8ToUnicodeL(iQueryData.iData));
 		
-		iChannelItem = CFollowingChannelItem::NewL();
-		iChannelItem->SetTitleL(aEncData);
-		iChannelItem->SetIdL(aEncData);
+		iTitle.Copy(aEncData.Left(iTitle.MaxLength()));
+		iId.Copy(aEncData.Left(iId.MaxLength()));
 		
-		iChannelEditAllowed = true;
-	}	
+		ValidateChannelId();
 	
-	if(iChannelItem->GetId().Length() > 0) {
-		iChannelSaveAllowed = true;
+		iChannelEditAllowed = true;
 	}
-
-	if(iChannelItem->GetItemId() > 0) {		
-		iTitleResourceId = R_LOCALIZED_STRING_EDITCHANNEL_TITLE;
-	}
-
+	
 	LoadChannelDataL();
 	SetTitleL(iTitleResourceId);
 	SetRect(aRect);
@@ -109,19 +101,9 @@ void CBuddycloudEditChannelList::EditCurrentItemL() {
 }
 
 void CBuddycloudEditChannelList::LoadChannelDataL() {
-	iAccess = iChannelItem->GetAccessModel();
-	iId.Copy(iChannelItem->GetId().Left(iId.MaxLength()));
-	
-	if(iChannelItem->GetItemType() == EItemChannel) {
-		// Copy channel data
-		iTitle.Copy(iChannelItem->GetTitle().Left(iTitle.MaxLength()));
-		iDescription.Copy(iChannelItem->GetDescription().Left(iDescription.MaxLength()));
+	if(iChannelItem) {
+		iTitleResourceId = R_LOCALIZED_STRING_EDITCHANNEL_TITLE;	
 		
-		iTextUtilities->FindAndReplace(iDescription, TChar(10), TChar(8233));
-	}
-	
-	if(iChannelSaveAllowed) {
-		// Recollect latest metadata
 		CollectChannelMetadataL(iChannelItem->GetId());
 	}
 }
@@ -130,25 +112,24 @@ TInt CBuddycloudEditChannelList::SaveChannelDataL() {
 	StoreSettingsL();
 	
 	if(iChannelSaveAllowed) {
-		iChannelItem->SetIdL(iId);
-		iChannelItem->SetAccessModel((TXmppPubsubAccessModel)iAccess);
-		
 		// Convert affiliation
 		iAffiliation = (iAffiliation == 0 ? EPubsubAffiliationMember : EPubsubAffiliationPublisher);
 		
 		iTextUtilities->FindAndReplace(iDescription, TChar(8233), TChar(10));
 		
-		if(iChannelItem->GetItemType() == EItemChannel) {
+		if(iChannelItem && iChannelItem->GetItemType() == EItemChannel) {
 			iChannelItem->SetTitleL(iTitle);
 			iChannelItem->SetDescriptionL(iDescription);
 		}
 		
-		if(iChannelItem->GetItemId() <= 0) {
-			// Create new channel			
-			return iBuddycloudLogic->CreateChannelL(iChannelItem);
-		}
-		else {
-			// Publish channel metadata
+		if(iChannelItem) {
+			// Store edited data
+			if(iChannelItem->GetItemType() == EItemChannel) {
+				iChannelItem->SetTitleL(iTitle);
+				iChannelItem->SetDescriptionL(iDescription);
+			}
+			
+			// Republish channel metadata
 			HBufC8* aEncTitle = iTextUtilities->UnicodeToUtf8L(iTitle).AllocLC();
 			HBufC8* aEncDescription = iTextUtilities->UnicodeToUtf8L(iDescription).AllocLC();
 			TPtrC8 aAccess = CXmppEnumerationConverter::PubsubAccessModel((TXmppPubsubAccessModel)iAccess);
@@ -169,6 +150,10 @@ TInt CBuddycloudEditChannelList::SaveChannelDataL() {
 		
 			iXmppInterface->SendAndForgetXmppStanza(pEditStanza, true);
 			CleanupStack::PopAndDestroy(3); // aEditStanza, aEncDescription, aEncTitle
+		}
+		else {
+			// Create new channel
+			return iBuddycloudLogic->CreateChannelL(iId, iTitle, iDescription, TXmppPubsubAccessModel(iAccess));
 		}
 	}
 	
@@ -217,7 +202,7 @@ void CBuddycloudEditChannelList::EditItemL(TInt aIndex, TBool aCalledFromMenu) {
 		
 		StoreSettingsL();
 		
-		if(iChannelItem->GetItemId() <= 0 && ((aIdentifier == EEditChannelItemTitle && iId.Length() == 0) || aIdentifier == EEditChannelItemId)) {
+		if(!iChannelItem && ((aIdentifier == EEditChannelItemTitle && iId.Length() == 0) || aIdentifier == EEditChannelItemId)) {
 			// Check for availablility
 			iChannelSaveAllowed = false;
 			
@@ -243,7 +228,7 @@ void CBuddycloudEditChannelList::EditItemL(TInt aIndex, TBool aCalledFromMenu) {
 			ListBox()->SetCurrentItemIndexAndDraw(EEditChannelItemId - 1);
 		}
 		
-		((*aItemArray)[aIndex])->UpdateListBoxTextL();	
+		DrawDeferred();
 	}
 }
 
@@ -259,7 +244,7 @@ CAknSettingItem* CBuddycloudEditChannelList::CreateSettingItemL (TInt aIdentifie
 			aSettingItem = new (ELeave) CAknTextSettingItem(aIdentifier, iId);
 			aSettingItem->SetSettingPageFlags(CAknTextSettingPage::EPredictiveTextEntryPermitted);
 			
-			if(iChannelItem->GetItemId() > 0) {
+			if(iChannelItem) {
 				aSettingItem->SetHidden(true);
 			}
 			break;
@@ -270,14 +255,14 @@ CAknSettingItem* CBuddycloudEditChannelList::CreateSettingItemL (TInt aIdentifie
 		case EEditChannelItemAccess:
 			aSettingItem = new (ELeave) CAknBinaryPopupSettingItem(aIdentifier, iAccess);
 			
-			if(iChannelItem->GetItemType() != EItemChannel) {
+			if(!iChannelItem || iChannelItem->GetItemType() != EItemChannel) {
 				aSettingItem->SetHidden(true);
 			}
 			break;
 		case EEditChannelItemAffiliation:
 			aSettingItem = new (ELeave) CAknBinaryPopupSettingItem(aIdentifier, iAffiliation);
 			
-			if(iChannelItem->GetItemId() <= 0) {
+			if(!iChannelItem) {
 				aSettingItem->SetHidden(true);
 			}
 		default:
@@ -291,10 +276,12 @@ void CBuddycloudEditChannelList::XmppStanzaAcknowledgedL(const TDesC8& aStanza, 
 	CXmlParser* aXmlParser = CXmlParser::NewLC(aStanza);
 	
 	if(aXmlParser->MoveToElement(_L8("item-not-found"))) {
+		// Channel id not found
 		iChannelSaveAllowed = true;		
 	}
 	else {
-		if(iChannelSaveAllowed) {
+		if(iChannelItem) {
+			// Process metadata of channel
 			while(aXmlParser->MoveToElement(_L8("field"))) {
 				TPtrC8 aAttributeVar(aXmlParser->GetStringAttribute(_L8("var")));
 				
@@ -321,11 +308,14 @@ void CBuddycloudEditChannelList::XmppStanzaAcknowledgedL(const TDesC8& aStanza, 
 				}
 			}
 			
+			iChannelSaveAllowed = true;
 			iChannelEditAllowed = true;
+			
 			LoadSettingsL();		
 			DrawDeferred();
 		}
 		else {
+			// Existing channel found
 			HBufC* aMessage = CEikonEnv::Static()->AllocReadResourceLC(R_LOCALIZED_STRING_NOTE_CHANNELEXISTS);
 			CAknErrorNote* aDialog = new (ELeave) CAknErrorNote(true);		
 			aDialog->ExecuteLD(*aMessage);

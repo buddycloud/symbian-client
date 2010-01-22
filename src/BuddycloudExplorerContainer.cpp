@@ -15,7 +15,6 @@
 #include <Buddycloud.rsg>
 #include <Buddycloud_lang.rsg>
 #include "BrowserLauncher.h"
-#include "Buddycloud.hlp.hrh"
 #include "BuddycloudExplorerContainer.h"
 #include "XmlParser.h"
 #include "XmppUtilities.h"
@@ -224,11 +223,6 @@ void CBuddycloudExplorerContainer::RefreshLevelL() {
 			
 			// Send query
 			ParseAndSendXmppStanzasL(iExplorerLevels[aLevel]->GetQueriedStanza());
-			
-//			// Update screen
-//			RepositionItems(true);
-//			RenderWrappedText(iSelectedItem);
-//			RenderScreen();
 		}
 	}
 }
@@ -275,7 +269,7 @@ void CBuddycloudExplorerContainer::RenderWrappedText(TInt aIndex) {
 			aIndex >= 0 && aIndex < iExplorerLevels[aLevel]->iResultItems.Count()) {
 			
 		// Wrap
-		iTextUtilities->WrapToArrayL(iWrappedTextArray, i10ItalicFont, iExplorerLevels[aLevel]->iResultItems[aIndex]->GetDescription(), (iRect.Width() - iSelectedItemIconTextOffset - 5 - iLeftBarSpacer - iRightBarSpacer));
+		iTextUtilities->WrapToArrayL(iWrappedTextArray, iSecondaryItalicFont, iExplorerLevels[aLevel]->iResultItems[aIndex]->GetDescription(), (iRect.Width() - iLeftBarSpacer - iRightBarSpacer - 10));
 	}
 	else {
 		// Empty list
@@ -286,7 +280,7 @@ void CBuddycloudExplorerContainer::RenderWrappedText(TInt aIndex) {
 		}		
 
 		HBufC* aEmptyList = iEikonEnv->AllocReadResourceLC(aResourceId);		
-		iTextUtilities->WrapToArrayL(iWrappedTextArray, i10BoldFont, *aEmptyList, (iRect.Width() - 2 - iLeftBarSpacer - iRightBarSpacer));		
+		iTextUtilities->WrapToArrayL(iWrappedTextArray, iSecondaryBoldFont, *aEmptyList, (iRect.Width() - 2 - iLeftBarSpacer - iRightBarSpacer));		
 		CleanupStack::PopAndDestroy(); // aEmptyList		
 	}
 }
@@ -315,32 +309,46 @@ TInt CBuddycloudExplorerContainer::CalculateItemSize(TInt aIndex) {
 	if(aIndex == iSelectedItem) {
 		aMinimumSize = iItemIconSize + 4;
 		
-		aItemSize += i13BoldFont->HeightInPixels();
-		aItemSize += i13BoldFont->FontMaxDescent();
+		// Title
+		aItemSize += iPrimaryBoldFont->HeightInPixels();
+		aItemSize += iPrimarySmallFont->DescentInPixels();
 		
-		if(aResultItem->GetDescription().Length() > 0) {
-			aItemSize += (iWrappedTextArray.Count() * i10ItalicFont->HeightInPixels());
+		// Sub-title
+		if(aResultItem->GetSubTitle().Length() > 0) {
+			aItemSize += iPrimarySmallFont->HeightInPixels();
+			aItemSize += iPrimarySmallFont->DescentInPixels();
 		}
 		
+		// Description
+		if(aResultItem->GetDescription().Length() > 0) {
+			if(aItemSize < (iItemIconSize + 2)) {
+				aItemSize = (iItemIconSize + 2);
+			}
+			
+			aItemSize += (iWrappedTextArray.Count() * iSecondaryItalicFont->HeightInPixels());
+		}
+		
+		// Statistics
 		if(aResultItem->StatisticCount() > 0) {
 			if(aItemSize < (iItemIconSize + 2)) {
 				aItemSize = (iItemIconSize + 2);
 			}
 
-			aItemSize += (aResultItem->StatisticCount() * i10NormalFont->HeightInPixels());
+			aItemSize += iSecondaryItalicFont->FontMaxDescent();
+			aItemSize += (aResultItem->StatisticCount() * iSecondaryFont->HeightInPixels());
 		}
 	}
 	else {
 		aMinimumSize = (iItemIconSize / 2) + 2;
 #ifdef __SERIES60_40__
-		aMinimumSize += (i10BoldFont->DescentInPixels() * 2);
-		aItemSize += (i10BoldFont->DescentInPixels() * 2);
+		aMinimumSize += (iSecondaryBoldFont->DescentInPixels() * 2);
+		aItemSize += (iSecondaryBoldFont->DescentInPixels() * 2);
 #endif
 
-		aItemSize += i10BoldFont->HeightInPixels();
+		aItemSize += iSecondaryBoldFont->HeightInPixels();
 	}
 
-	aItemSize += i10NormalFont->FontMaxDescent() + 2;
+	aItemSize += iSecondaryFont->FontMaxDescent() + 2;
 
 	return (aItemSize < aMinimumSize) ? aMinimumSize : aItemSize;
 }
@@ -422,40 +430,61 @@ void CBuddycloudExplorerContainer::RenderListItems() {
 					iBufferGc->SetBrushStyle(CGraphicsContext::ESolidBrush);
 
 					// Title
-					if(i13BoldFont->TextCount(aDirectionalText, (iRect.Width() - iSelectedItemIconTextOffset - 2 - iLeftBarSpacer - iRightBarSpacer)) < aDirectionalText.Length()) {
-						iBufferGc->UseFont(i10BoldFont);
+					if(iPrimaryBoldFont->TextCount(aDirectionalText, (iRect.Width() - iSelectedItemIconTextOffset - 2 - iLeftBarSpacer - iRightBarSpacer)) < aDirectionalText.Length()) {
+						iBufferGc->UseFont(iSecondaryBoldFont);
 					}
 					else {
-						iBufferGc->UseFont(i13BoldFont);
+						iBufferGc->UseFont(iPrimaryBoldFont);
 					}
 
-					aItemDrawPos += i13BoldFont->HeightInPixels();
+					aItemDrawPos += iPrimaryBoldFont->HeightInPixels();
 					iBufferGc->DrawText(aDirectionalText, TPoint(iLeftBarSpacer + iSelectedItemIconTextOffset, aItemDrawPos));
-					aItemDrawPos += i13BoldFont->FontMaxDescent();
+					aItemDrawPos += iPrimarySmallFont->DescentInPixels();
 					iBufferGc->DiscardFont();
+					
+					if(aResultItem->GetSubTitle().Length() > 0) {
+						iBufferGc->UseFont(iSecondaryFont);
+						aItemDrawPos += iPrimarySmallFont->HeightInPixels();
+						iBufferGc->DrawText(iTextUtilities->BidiLogicalToVisualL(aResultItem->GetSubTitle()), TPoint(iLeftBarSpacer + iSelectedItemIconTextOffset, aItemDrawPos));
+						aItemDrawPos += iPrimarySmallFont->DescentInPixels();
+						iBufferGc->DiscardFont();
+					}
+				
+					// Move to under icon
+					if(aItemDrawPos - aDrawPos < (iItemIconSize + 2)) {
+						aItemDrawPos = (aDrawPos + iItemIconSize + 2);
+					}
 
 					// Description
 					if(aResultItem->GetDescription().Length() > 0) {
-						iBufferGc->UseFont(i10ItalicFont);
+						iBufferGc->UseFont(iSecondaryItalicFont);
 						
 						for(TInt i = 0; i < iWrappedTextArray.Count(); i++) {
-							aItemDrawPos += i10ItalicFont->HeightInPixels();
-							iBufferGc->DrawText(*iWrappedTextArray[i], TPoint(iLeftBarSpacer + iSelectedItemIconTextOffset, aItemDrawPos));
+							aItemDrawPos += iSecondaryItalicFont->HeightInPixels();
+							iBufferGc->DrawText(*iWrappedTextArray[i], TPoint(iLeftBarSpacer + 5, aItemDrawPos));
 						}
 						
 						iBufferGc->DiscardFont();
 					}
 					
 					// Statistics
-					if(aResultItem->StatisticCount() > 0) {
-						if(aItemDrawPos - aDrawPos < (iItemIconSize + 2)) {
-							aItemDrawPos = (aDrawPos + iItemIconSize + 2);
-						}						
+					if(aResultItem->StatisticCount() > 0) {		
+						aItemDrawPos += iSecondaryItalicFont->FontMaxDescent();
 
-						iBufferGc->UseFont(i10NormalFont);
+						if(aResultItem->GetDescription().Length() > 0) {
+							iBufferGc->SetPenColor(iColourTextSelectedTrans);
+							iBufferGc->SetPenStyle(CGraphicsContext::EDashedPen);
+							
+							iBufferGc->DrawLine(TPoint(iLeftBarSpacer + 5, aItemDrawPos), TPoint((iRect.Width() - iRightBarSpacer - 5), aItemDrawPos));		
+							
+							iBufferGc->SetPenStyle(CGraphicsContext::ESolidPen);
+							iBufferGc->SetPenColor(iColourTextSelected);
+						}
+						
+						iBufferGc->UseFont(iSecondaryFont);
 
 						for(TInt i = 0; i < aResultItem->StatisticCount(); i++) {
-							aItemDrawPos += i10NormalFont->HeightInPixels();
+							aItemDrawPos += iSecondaryFont->HeightInPixels();
 							iBufferGc->DrawText(iTextUtilities->BidiLogicalToVisualL(aResultItem->GetStatistic(i)), TPoint(iLeftBarSpacer + 5, aItemDrawPos));							
 						}
 						
@@ -466,7 +495,7 @@ void CBuddycloudExplorerContainer::RenderListItems() {
 					iBufferGc->SetClippingRect(TRect(iLeftBarSpacer + 0, aItemDrawPos, (iRect.Width() - iRightBarSpacer - 1), iRect.Height()));
 					iBufferGc->SetPenColor(iColourText);
 #ifdef __SERIES60_40__
-					aItemDrawPos += i10BoldFont->DescentInPixels();
+					aItemDrawPos += iSecondaryBoldFont->DescentInPixels();
 #endif									
 					// Avatar
 					iBufferGc->SetBrushStyle(CGraphicsContext::ENullBrush);				
@@ -480,8 +509,8 @@ void CBuddycloudExplorerContainer::RenderListItems() {
 					iBufferGc->SetBrushStyle(CGraphicsContext::ESolidBrush);
 
 					// Name
-					iBufferGc->UseFont(i10BoldFont);
-					aItemDrawPos += i10BoldFont->HeightInPixels();
+					iBufferGc->UseFont(iSecondaryBoldFont);
+					aItemDrawPos += iSecondaryBoldFont->HeightInPixels();
 					iBufferGc->DrawText(aDirectionalText, TPoint(iLeftBarSpacer + iUnselectedItemIconTextOffset, aItemDrawPos));
 					iBufferGc->DiscardFont();
 				}
@@ -489,7 +518,7 @@ void CBuddycloudExplorerContainer::RenderListItems() {
 				iBufferGc->CancelClippingRect();
 			}
 			
-			aDrawPos += aItemSize + 1;
+			aDrawPos += (aItemSize + 1);
 
 			// Finish page drawing
 			if(aDrawPos > iRect.Height()) {
@@ -507,14 +536,14 @@ void CBuddycloudExplorerContainer::RenderListItems() {
 	}
 	else {
 		// Empty results
-		aDrawPos = ((iRect.Height() / 2) - ((iWrappedTextArray.Count() * i10BoldFont->HeightInPixels()) / 2));
+		aDrawPos = ((iRect.Height() / 2) - ((iWrappedTextArray.Count() * iSecondaryBoldFont->HeightInPixels()) / 2));
 		
-		iBufferGc->UseFont(i10BoldFont);
+		iBufferGc->UseFont(iSecondaryBoldFont);
 		iBufferGc->SetPenColor(iColourText);
 		
 		for(TInt i = 0; i < iWrappedTextArray.Count(); i++) {
-			aDrawPos += i10ItalicFont->HeightInPixels();
-			iBufferGc->DrawText(iWrappedTextArray[i]->Des(), TPoint(((iLeftBarSpacer + ((iRect.Width() - iLeftBarSpacer - iRightBarSpacer) / 2) - (i10BoldFont->TextWidthInPixels(iWrappedTextArray[i]->Des()) / 2))), aDrawPos));
+			aDrawPos += iSecondaryItalicFont->HeightInPixels();
+			iBufferGc->DrawText(iWrappedTextArray[i]->Des(), TPoint(((iLeftBarSpacer + ((iRect.Width() - iLeftBarSpacer - iRightBarSpacer) / 2) - (iSecondaryBoldFont->TextWidthInPixels(iWrappedTextArray[i]->Des()) / 2))), aDrawPos));
 		}
 		
 		iBufferGc->DiscardFont();
@@ -1085,7 +1114,7 @@ TKeyResponse CBuddycloudExplorerContainer::OfferKeyEventL(const TKeyEvent& aKeyE
 	else if(aType == EEventKeyDown) {
 		if(aKeyEvent.iScanCode == EStdKeyLeftArrow) {
 			iXmppInterface->CancelXmppStanzaAcknowledge(this);
-			iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KPlacesViewId), TUid::Uid(0), _L8(""));
+			iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KPlacesViewId), TUid::Uid(0), KNullDesC8);
 			aResult = EKeyWasConsumed;
 		}
 	}
@@ -1095,7 +1124,7 @@ TKeyResponse CBuddycloudExplorerContainer::OfferKeyEventL(const TKeyEvent& aKeyE
 
 void CBuddycloudExplorerContainer::TabChangedL(TInt aIndex) {
 	iXmppInterface->CancelXmppStanzaAcknowledge(this);
-	iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), TUid::Uid(iTabGroup->TabIdFromIndex(aIndex))), TUid::Uid(0), _L8(""));
+	iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), TUid::Uid(iTabGroup->TabIdFromIndex(aIndex))), TUid::Uid(0), KNullDesC8);
 }
 
 void CBuddycloudExplorerContainer::XmppStanzaAcknowledgedL(const TDesC8& aStanza, const TDesC8& aId) {
@@ -1163,9 +1192,17 @@ void CBuddycloudExplorerContainer::XmppStanzaAcknowledgedL(const TDesC8& aStanza
 									aResultItem->SetTitleL(*aTitle);	
 									CleanupStack::PopAndDestroy(); // aTitle
 								}
+								else {
+									aResultItem->SetTitleL(aElementData);
+								}
 							}
-							else if(aResultItem->GetTitle().Length() == 0 && aElementName.Compare(_L8("title")) == 0) {		
-								aResultItem->SetTitleL(aElementData);
+							else if(aElementName.Compare(_L8("title")) == 0) {		
+								if(aResultItem->GetId().Compare(aResultItem->GetTitle()) == 0) {
+									aResultItem->SetTitleL(aElementData);
+								}
+							}
+							else if(aElementName.Compare(_L8("description")) == 0) {		
+								aResultItem->SetDescriptionL(aElementData);
 							}
 						} while(aItemXmlParser->MoveToNextElement());
 						
@@ -1356,6 +1393,20 @@ void CBuddycloudExplorerContainer::XmppStanzaAcknowledgedL(const TDesC8& aStanza
 											
 								aResultItem->SetTitleL(pJid);
 								CleanupStack::PopAndDestroy(); // aJid
+							}
+							else if(aResultItem->GetResultType() == EExplorerItemChannel) {
+								// Set sub title
+								TInt aLocate = aResultItem->GetId().LocateReverse('/');
+								
+								if(aLocate != KErrNotFound) {
+									HBufC* aIdText = HBufC::NewLC(aResultItem->GetId().Length() - aLocate);
+									TPtr pIdText(aIdText->Des());
+									pIdText.Append('#');
+									pIdText.Append(aResultItem->GetId().Mid(aLocate + 1));
+									
+									aResultItem->SetSubTitleL(pIdText);
+									CleanupStack::PopAndDestroy(); // aIdText	
+								}
 							}
 							
 							// Add item

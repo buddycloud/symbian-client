@@ -65,7 +65,7 @@ void CBuddycloudEditPlaceView::HandleCommandL(TInt aCommand) {
 		
 		iBuddycloudLogic->SendEditedPlaceDetailsL(false);
 		
-		AppUi()->ActivateViewL(iPrevViewId, iPrevViewMessageId, _L8(""));
+		AppUi()->ActivateViewL(iPrevViewId, iPrevViewMessageId, KNullDesC8);
 	}
 	else if(aCommand == EAknSoftkeyCancel) {		
 		CBuddycloudExtendedPlace* aPlace = static_cast <CBuddycloudExtendedPlace*> (iBuddycloudLogic->GetPlaceStore()->GetEditedPlace());
@@ -83,12 +83,12 @@ void CBuddycloudEditPlaceView::HandleCommandL(TInt aCommand) {
 		
 		iBuddycloudLogic->GetPlaceStore()->SetEditedPlace(KErrNotFound);
 		
-		AppUi()->ActivateViewL(iPrevViewId, iPrevViewMessageId, _L8(""));
+		AppUi()->ActivateViewL(iPrevViewId, iPrevViewMessageId, KNullDesC8);
 	}
 }
 
 void CBuddycloudEditPlaceView::HandleControlEventL(CCoeControl* /*aControl*/, TCoeEvent /*aEventType*/) {
-	AppUi()->ActivateViewL(iPrevViewId, iPrevViewMessageId, _L8(""));
+	AppUi()->ActivateViewL(iPrevViewId, iPrevViewMessageId, KNullDesC8);
 }
 
 void CBuddycloudEditPlaceView::DoActivateL(const TVwsViewId& aPrevViewId, TUid aCustomMessageId, const TDesC8& /*aCustomMessage*/) {

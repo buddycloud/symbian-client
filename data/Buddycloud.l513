@@ -106,6 +106,7 @@ rls_string r_string_item_reportpost "Vapfeifn"
 rls_string r_string_item_removepost "Leschn"
 
 rls_string r_string_options_itemchannel "Tschännl"
+rls_string r_string_channel_copychannelid "Copy #Id"
 rls_string r_string_channel_markread "ois ois glesn"
 rls_string r_string_options_reportchannel "Tschännl vapfeifn"
 
@@ -189,10 +190,9 @@ rls_string r_string_note_subscriptionrejected "Na moga. Schleich Di."
 
 // Account settings
 rls_string r_string_settings_account_title "Konto"
-rls_string r_string_settings_itemlist_fullname "Volla Name"
-rls_string r_string_settings_itemlist_fullname_hint "Voller Name"
-rls_string r_string_settings_itemlist_username "Usanama"
-rls_string r_string_settings_itemlist_username_hint "XMPP sörva usanama"
+rls_string r_string_settings_itemlist_fullname "Name"
+rls_string r_string_settings_itemlist_username "Id"
+rls_string r_string_settings_itemlist_username_hint "e.g. 'name@gmail.com'"
 rls_string r_string_settings_itemlist_password "Passwort"
 rls_string r_string_settings_itemlist_password_hint "XMPP sörva passwort"
 rls_string r_string_settings_itemlist_server "XMPP sörva"
@@ -332,12 +332,12 @@ rls_string r_string_step2_title "Werd bekannt wiara bunta Hund!"
 rls_string r_string_step2_text "Loß' nua olle wiss'n wos fiara Hund daß'D bist. buddycloud Tschännls macht's meglich. Organisier' Da a Ohängaschaft de si seig'n loß'n ko und dann zoag earna wo da Bartl an Most hoilt.   "
 
 rls_string r_string_step3_title "Wia mogst Di na omeidn?"
-rls_string r_string_step3_text "Empfeilln dat ma a sofortiges Omeidn mit am Google account (oda an andan Jabber account) ohne weitere Sperenzien. Kost oba aa an buddycloud account olegn."
+rls_string r_string_step3_text "Empfeilln dat ma a sofortiges Omeidn mit am Google/OVI account (oda an andan Jabber account) ohne weitere Sperenzien. Kost oba aa an buddycloud account olegn."
 rls_string r_string_step3_label1 "Oida existierenda Account"
 rls_string r_string_step3_label2 "Nei'n Account olegn"
 
 rls_string r_string_step4_title "Wer bist na Du?"
-rls_string r_string_step4_text1 "Gibst na Dei existierende Address ei. Z.B. 'Zipfe@gmail.com' oda 'Klatscha@googlemail.com'"
+rls_string r_string_step4_text1 "Gibst na Dei existierende Address ei. Z.B. 'zipfe@gmail.com' oda 'klatscha@ovi.com'"
 rls_string r_string_step4_text2 "Suach Da an Nama und a Passwort fia buddycloud aus. Soitst Di scho amoi auf am andan Händy og'meidt hobm, gibst Dein oidn Usanama ei, woaßt scho."
 
 rls_string r_string_step5_title "Gratuliere nachat!"

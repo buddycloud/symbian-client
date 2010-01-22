@@ -83,8 +83,6 @@ class CBuddycloudFollowingContainer : public CBuddycloudListComponent, MBuddyclo
 		CAknNavigationDecorator* iNaviDecorator;
 		CAknTabGroup* iTabGroup;
 		
-		TInt iNewMessagesOffset;
-		
 		// Edwin
 		CEikEdwin* iEdwin;
 		TBool iEdwinVisible;

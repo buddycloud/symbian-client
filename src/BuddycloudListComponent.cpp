@@ -132,17 +132,19 @@ void CBuddycloudListComponent::SetTitleL(const TDesC& aTitle) {
 }
 
 void CBuddycloudListComponent::ConfigureFonts() {
-	i13BoldFont = CFontUtilities::GetCustomSystemFont(EAknLogicalFontPrimaryFont, true, false);
-	i10ItalicFont = CFontUtilities::GetCustomSystemFont(EAknLogicalFontSecondaryFont, false, true);
-	i10NormalFont = CFontUtilities::GetCustomSystemFont(EAknLogicalFontSecondaryFont, false, false);
-	i10BoldFont = CFontUtilities::GetCustomSystemFont(EAknLogicalFontSecondaryFont, true, false);	
+	iPrimaryBoldFont = CFontUtilities::GetCustomSystemFont(EAknLogicalFontPrimaryFont, true, false);
+	iPrimarySmallFont = CFontUtilities::GetCustomSystemFont(EAknLogicalFontPrimarySmallFont, false, false);
+	iSecondaryItalicFont = CFontUtilities::GetCustomSystemFont(EAknLogicalFontSecondaryFont, false, true);
+	iSecondaryBoldFont = CFontUtilities::GetCustomSystemFont(EAknLogicalFontSecondaryFont, true, false);	
+	iSecondaryFont = CFontUtilities::GetCustomSystemFont(EAknLogicalFontSecondaryFont, false, false);
 }
 
 void CBuddycloudListComponent::ReleaseFonts() {
-	CFontUtilities::ReleaseFont(i13BoldFont);
-	CFontUtilities::ReleaseFont(i10ItalicFont);
-	CFontUtilities::ReleaseFont(i10NormalFont);
-	CFontUtilities::ReleaseFont(i10BoldFont);
+	CFontUtilities::ReleaseFont(iPrimaryBoldFont);
+	CFontUtilities::ReleaseFont(iPrimarySmallFont);
+	CFontUtilities::ReleaseFont(iSecondaryItalicFont);
+	CFontUtilities::ReleaseFont(iSecondaryBoldFont);
+	CFontUtilities::ReleaseFont(iSecondaryFont);
 }
 
 void CBuddycloudListComponent::ConfigureSkin() {
@@ -162,7 +164,7 @@ void CBuddycloudListComponent::ConfigureSkin() {
 	iColourTextLink = TRgb((iColourTextLink.Red() + iColourTextSelected.Red()) / 2, (iColourTextLink.Green() + iColourTextSelected.Green()) / 2, (iColourTextLink.Blue() + iColourTextSelected.Blue()) / 2);
 	
 	iColourTextSelectedTrans = iColourTextSelected;
-	iColourTextSelectedTrans.SetAlpha(125);
+	iColourTextSelectedTrans.SetAlpha(85);
 	
 	iColourTextTrans = iColourText;
 	iColourTextTrans.SetAlpha(125);
@@ -328,26 +330,26 @@ void CBuddycloudListComponent::RenderScreen() {
 				aMialogLine2.Delete(0, (aSearch + 1));
 				
 				// Redraw frame background & frame
-				TInt aMialogHeight = (i10ItalicFont->FontMaxHeight() * 2) + 4;
-				TInt aLongestLine = (i10ItalicFont->TextWidthInPixels(aMialogLine1) > i10ItalicFont->TextWidthInPixels(aMialogLine2) ? i10ItalicFont->TextWidthInPixels(aMialogLine1) : i10ItalicFont->TextWidthInPixels(aMialogLine2));			
+				TInt aMialogHeight = (iSecondaryItalicFont->FontMaxHeight() * 2) + 4;
+				TInt aLongestLine = (iSecondaryItalicFont->TextWidthInPixels(aMialogLine1) > iSecondaryItalicFont->TextWidthInPixels(aMialogLine2) ? iSecondaryItalicFont->TextWidthInPixels(aMialogLine1) : iSecondaryItalicFont->TextWidthInPixels(aMialogLine2));			
 				TRect aFrame = TRect((iRect.Width() - aLongestLine - 35), (iRect.Height() - aMialogHeight), (iRect.Width() - 25), (iRect.Height() + 5));
 				AknsDrawUtils::DrawBackground(AknsUtils::SkinInstance(), iBgContext, this, *iBufferGc, aFrame.iTl, aFrame, KAknsDrawParamDefault);
 				RenderItemFrame(aFrame);
 				
 				iBufferGc->SetPenColor(iColourTextSelected);		
-				iBufferGc->UseFont(i10ItalicFont);
-				iBufferGc->DrawText(iTextUtilities->BidiLogicalToVisualL(aMialogLine1), TPoint((iRect.Width() - aLongestLine - 31), (iRect.Height() - i10ItalicFont->FontMaxHeight() - i10ItalicFont->FontMaxDescent() - 2)));
-				iBufferGc->DrawText(iTextUtilities->BidiLogicalToVisualL(aMialogLine2), TPoint((iRect.Width() - aLongestLine - 31), (iRect.Height() - i10ItalicFont->FontMaxDescent() - 2)));
+				iBufferGc->UseFont(iSecondaryItalicFont);
+				iBufferGc->DrawText(iTextUtilities->BidiLogicalToVisualL(aMialogLine1), TPoint((iRect.Width() - aLongestLine - 31), (iRect.Height() - iSecondaryItalicFont->FontMaxHeight() - iSecondaryItalicFont->FontMaxDescent() - 2)));
+				iBufferGc->DrawText(iTextUtilities->BidiLogicalToVisualL(aMialogLine2), TPoint((iRect.Width() - aLongestLine - 31), (iRect.Height() - iSecondaryItalicFont->FontMaxDescent() - 2)));
 				iBufferGc->DiscardFont();
 			}
 			else {
-				TRect aFrame = TRect((iRect.Width() - i10ItalicFont->TextWidthInPixels(aMialogLine1) - 35), (iRect.Height() - i10ItalicFont->FontMaxHeight() - 4), (iRect.Width() - 25), (iRect.Height() + 5));
+				TRect aFrame = TRect((iRect.Width() - iSecondaryItalicFont->TextWidthInPixels(aMialogLine1) - 35), (iRect.Height() - iSecondaryItalicFont->FontMaxHeight() - 4), (iRect.Width() - 25), (iRect.Height() + 5));
 				AknsDrawUtils::DrawBackground(AknsUtils::SkinInstance(), iBgContext, this, *iBufferGc, aFrame.iTl, aFrame, KAknsDrawParamDefault);
 				RenderItemFrame(aFrame);
 				
 				iBufferGc->SetPenColor(iColourTextSelected);
-				iBufferGc->UseFont(i10ItalicFont);
-				iBufferGc->DrawText(iTextUtilities->BidiLogicalToVisualL(aMialogLine1), TPoint((iRect.Width() - i10ItalicFont->TextWidthInPixels(aMialogLine1) - 30), (iRect.Height() - i10ItalicFont->FontMaxDescent() - 2)));
+				iBufferGc->UseFont(iSecondaryItalicFont);
+				iBufferGc->DrawText(iTextUtilities->BidiLogicalToVisualL(aMialogLine1), TPoint((iRect.Width() - iSecondaryItalicFont->TextWidthInPixels(aMialogLine1) - 30), (iRect.Height() - iSecondaryItalicFont->FontMaxDescent() - 2)));
 				iBufferGc->DiscardFont();
 			}		
 		}

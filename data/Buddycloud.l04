@@ -43,7 +43,7 @@ rls_string r_string_options_delete "Eliminar"
 
 rls_string r_string_note_noresultsfound "No se encontraron resultados"
 rls_string r_string_note_requestsent "Petición enviada"
-rls_string r_string_note_feedbacksent "Feedback sent"
+rls_string r_string_note_feedbacksent "Nombre completo"
 rls_string r_string_note_messagequeued "Se enviará un mensaje cuando te conectes"
 rls_string r_string_note_offlinerequired "Necesitas estar desconectado para hacer esto"
 
@@ -106,6 +106,7 @@ rls_string r_string_item_reportpost "Informar mensaje ofensivo"
 rls_string r_string_item_removepost "Borrar mensaje"
 
 rls_string r_string_options_itemchannel "Canal"
+rls_string r_string_channel_copychannelid "Copiar #Id"
 rls_string r_string_channel_markread "Marque el canal solo lectura"
 rls_string r_string_options_reportchannel "Informar canal ofensivo"
 
@@ -189,10 +190,9 @@ rls_string r_string_note_subscriptionrejected "Tu suscripcion a este canal ha si
 
 // Account settings
 rls_string r_string_settings_account_title "Cuenta"
-rls_string r_string_settings_itemlist_fullname "Nombre completo"
-rls_string r_string_settings_itemlist_fullname_hint "Nombre completo"
-rls_string r_string_settings_itemlist_username "Nombre de usuario"
-rls_string r_string_settings_itemlist_username_hint "usuario del servidor XMPP "
+rls_string r_string_settings_itemlist_fullname "Display name"
+rls_string r_string_settings_itemlist_username "Id"
+rls_string r_string_settings_itemlist_username_hint "e.g. 'name@gmail.com'"
 rls_string r_string_settings_itemlist_password "Contraseña"
 rls_string r_string_settings_itemlist_password_hint "Clave del Servidor XMPP"
 rls_string r_string_settings_itemlist_server "Servidor XMPP"
@@ -332,12 +332,12 @@ rls_string r_string_step2_title "¡Sé famos@!"
 rls_string r_string_step2_text "canales buddycloud te proporciona un medio nuevo para emitir tu grandiosidad a tus seguidores.\n\ncanales buddycloud te permite hacerte famos@ por tus conocimientos únicos sobre un lugar o tema y acumular una comunidad de seguidores."
 
 rls_string r_string_step3_title "¿Como quieres iniciar la sesión?"
-rls_string r_string_step3_text "Recomendado: Registrate al instante con tu cuenta Google (o cualquier cuenta Jabber). O bien: Registrate desde una cuenta buddycloud."
+rls_string r_string_step3_text "Recomendado: Registrate al instante con tu cuenta Google/OVI (o cualquier cuenta Jabber). O bien: Registrate desde una cuenta buddycloud."
 rls_string r_string_step3_label1 "Utiliza cuenta existente"
 rls_string r_string_step3_label2 "Registrar nueva cuenta"
 
 rls_string r_string_step4_title "¿Quién eres?"
-rls_string r_string_step4_text1 "Introduce los detalles de tu cuenta. Estos aparecen como 'nombre@gmail.com' o 'nombre@googlemail.com'"
+rls_string r_string_step4_text1 "Introduce los detalles de tu cuenta. Estos aparecen como 'nombre@gmail.com' o 'nombre@ovi.com'"
 rls_string r_string_step4_text2 "Elige un nombre de usuario nuevo y una contraseña para empezar a utilizar buddycloud. Si te has registrado en buddycloud en otro teléfono, introduce esos detalles aqui."
 
 rls_string r_string_step5_title "¡Enhorabuena!"

@@ -103,9 +103,6 @@ class CFollowingChannelItem : public CFollowingItem {
 
 // New		
 	public:
-		TXmppPubsubAccessModel GetAccessModel();
-		void SetAccessModel(TXmppPubsubAccessModel aAccessModel);
-		
 		TXmppPubsubSubscription GetPubsubSubscription();
 		void SetPubsubSubscription(TXmppPubsubSubscription aPubsubSubscription);
 		
@@ -122,7 +119,6 @@ class CFollowingChannelItem : public CFollowingItem {
 	protected:
 		MDiscussionUnreadData* iChannelUnreadData;
 		
-		TXmppPubsubAccessModel iAccessModel;
 		TXmppPubsubSubscription iPubsubSubscription;
 		TXmppPubsubAffiliation iPubsubAffiliation;
 };

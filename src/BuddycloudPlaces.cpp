@@ -103,7 +103,7 @@ void CBuddycloudPlace::UpdateFromGeolocL() {
 			iGeoloc->GetString(EGeolocRegion).Length() + iGeoloc->GetString(EGeolocCountry).Length() + 9);
 	TPtr pDescription(aDescription->Des());
 	
-	aTextUtilities->AppendToString(pDescription, iGeoloc->GetString(EGeolocStreet), _L(""));
+	aTextUtilities->AppendToString(pDescription, iGeoloc->GetString(EGeolocStreet), KNullDesC);
 	aTextUtilities->AppendToString(pDescription, iGeoloc->GetString(EGeolocArea), _L(", "));
 	aTextUtilities->AppendToString(pDescription, iGeoloc->GetString(EGeolocLocality), _L(", "));
 	aTextUtilities->AppendToString(pDescription, iGeoloc->GetString(EGeolocPostalcode), _L(" "));

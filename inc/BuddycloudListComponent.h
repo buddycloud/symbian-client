@@ -109,10 +109,11 @@ class CBuddycloudListComponent : public CCoeControl, MBuddycloudLogicNotificatio
 		CFbsBitGc* iBufferGc;
 
 		// Fonts
- 		CFont* i13BoldFont;
- 		CFont* i10ItalicFont;
- 		CFont* i10NormalFont;
- 		CFont* i10BoldFont;
+		CFont* iPrimaryBoldFont;
+		CFont* iPrimarySmallFont;
+ 		CFont* iSecondaryItalicFont;
+ 		CFont* iSecondaryBoldFont;
+ 		CFont* iSecondaryFont;
 		
  		// Wrapped text
 		RPointerArray<HBufC> iWrappedTextArray;

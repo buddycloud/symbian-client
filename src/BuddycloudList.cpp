@@ -35,6 +35,9 @@ CBuddycloudListItem::~CBuddycloudListItem() {
 	if(iTitle)
 		delete iTitle;
 	
+	if(iSubTitle)
+		delete iSubTitle;
+	
 	if(iDescription)
 		delete iDescription;
 }
@@ -46,6 +49,7 @@ CBuddycloudListItem::CBuddycloudListItem() {
 
 void CBuddycloudListItem::ConstructL() {
 	iTitle = HBufC::NewL(0);
+	iSubTitle = HBufC::NewL(0);
 	iDescription = HBufC::NewL(0);
 }
 
@@ -98,6 +102,17 @@ void CBuddycloudListItem::SetTitleL(const TDesC& aTitle) {
 		delete iTitle;
 
 	iTitle = aTitle.AllocL();
+}
+
+TDesC& CBuddycloudListItem::GetSubTitle() {
+	return *iSubTitle;
+}
+
+void CBuddycloudListItem::SetSubTitleL(const TDesC& aSubTitle) {
+	if(iSubTitle)
+		delete iSubTitle;
+
+	iSubTitle = aSubTitle.AllocL();
 }
 
 TDesC& CBuddycloudListItem::GetDescription() {

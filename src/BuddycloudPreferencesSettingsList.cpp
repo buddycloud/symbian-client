@@ -14,7 +14,6 @@
 #include <eikspane.h>
 #include <Buddycloud.rsg>
 #include "Buddycloud.hrh"
-#include "Buddycloud.hlp.hrh"
 #include "BuddycloudPreferencesSettingsList.h"
 #include "BuddycloudConstants.h"
 

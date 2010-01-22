@@ -11,7 +11,6 @@
 #define __BUDDYCLOUD_HRH__
 
 #define APPUID 0x2000C4A4
-#define HLPUID 0x2001018F
 
 #define EApplicationExit 100
 #define EMenuSeperator 101
@@ -95,16 +94,17 @@ enum TSettingsTabs {
 #define EMenuReportChannelCommand 258
 #define EMenuDeletePostCommand 259
 #define EMenuChangePermissionCommand 260
-#define EMenuMarkReadCommand 261
+#define EMenuCopyChannelIdCommand 261
+#define EMenuMarkReadCommand 262
 
-#define EMenuSeeFollowersCommand 262
-#define EMenuSeeModeratorsCommand 263
-#define EMenuSeeFollowingCommand 264
-#define EMenuSeeModeratingCommand 265
-#define EMenuSeeProducingCommand 266
-#define EMenuSeeNearbyCommand 267
-//#define EMenuSeeBeenHereCommand 268
-//#define EMenuSeeGoingHereCommand 269
+#define EMenuSeeFollowersCommand 263
+#define EMenuSeeModeratorsCommand 264
+#define EMenuSeeFollowingCommand 265
+#define EMenuSeeModeratingCommand 266
+#define EMenuSeeProducingCommand 267
+#define EMenuSeeNearbyCommand 268
+//#define EMenuSeeBeenHereCommand 
+//#define EMenuSeeGoingHereCommand 
 
 #define EMenuAcceptCommand 270
 #define EMenuAcceptAndFollowCommand 271

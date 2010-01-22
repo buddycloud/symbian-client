@@ -223,7 +223,7 @@ class CBuddycloudLogic : public CBase, MLocationEngineNotification, MTimeInterfa
 		TInt FollowChannelL(const TDesC& aNode);
 		void UnfollowChannelL(TInt aItemId);
 		
-		TInt CreateChannelL(CFollowingChannelItem* aChannelItem);
+		TInt CreateChannelL(const TDesC& aNodeId, const TDesC& aTitle, const TDesC& aDescription, TXmppPubsubAccessModel aAccessModel);
 
 	public: // User Status & Place
 		void SetMoodL(TDesC& aMood);

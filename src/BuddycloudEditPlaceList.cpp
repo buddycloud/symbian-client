@@ -12,7 +12,6 @@
 #include <eikspane.h>
 #include <Buddycloud_lang.rsg>
 #include "Buddycloud.hrh"
-#include "Buddycloud.hlp.hrh"
 #include "BuddycloudEditPlaceList.h"
 
 CBuddycloudEditPlaceList::CBuddycloudEditPlaceList() : CAknSettingItemList() {

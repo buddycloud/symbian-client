@@ -707,12 +707,6 @@ RESOURCE MENU_PANE r_messaging_options_menu
 		},
 		MENU_ITEM
 		{ 
-			command = EMenuOptionsItemCommand; 
-			cascade = r_messaging_options_item_menu; 
-			txt = "";
-		},
-		MENU_ITEM
-		{ 
 			command = EMenuWritePostCommand; 
 			txt = r_string_options_postmessage;
 		},
@@ -720,6 +714,12 @@ RESOURCE MENU_PANE r_messaging_options_menu
 		{ 
 			command = EMenuPostMediaCommand; 
 			txt = r_string_options_postmedia;
+		},
+		MENU_ITEM
+		{ 
+			command = EMenuOptionsItemCommand; 
+			cascade = r_messaging_options_item_menu; 
+			txt = "";
 		},
 		MENU_ITEM
 		{ 
@@ -796,6 +796,11 @@ RESOURCE MENU_PANE r_messaging_options_channel_menu
 {
 	items =
 	{
+		MENU_ITEM
+		{ 
+			command = EMenuCopyChannelIdCommand; 
+			txt = r_string_channel_copychannelid;
+		},
 		MENU_ITEM
 		{ 
 			command = EMenuMarkReadCommand; 
@@ -1297,7 +1302,6 @@ RESOURCE AVKON_SETTING_PAGE r_settings_item_fullname_page
 	label = r_string_settings_itemlist_fullname;
 	type = EEikCtEdwin;
 	editor_resource_id = r_allcase64_edwin;
-	hint_text = r_string_settings_itemlist_fullname_hint;
 }
 
 RESOURCE AVKON_SETTING_PAGE r_settings_item_username_page

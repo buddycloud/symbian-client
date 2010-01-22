@@ -16,7 +16,6 @@
 #include <Buddycloud.rsg>
 #include <Buddycloud_lang.rsg>
 #include "Buddycloud.hrh"
-#include "Buddycloud.hlp.hrh"
 #include "BuddycloudAccountSettingsList.h"
 #include "BuddycloudConstants.h"
 

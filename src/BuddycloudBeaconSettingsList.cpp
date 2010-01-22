@@ -13,7 +13,6 @@
 #include <eikspane.h>
 #include <Buddycloud.rsg>
 #include "Buddycloud.hrh"
-#include "Buddycloud.hlp.hrh"
 #include "BuddycloudBeaconSettingsList.h"
 #include "BuddycloudConstants.h"
 

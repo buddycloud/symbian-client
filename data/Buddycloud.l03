@@ -106,6 +106,7 @@ rls_string r_string_item_reportpost "Nachricht melden"
 rls_string r_string_item_removepost "Nachricht löschen"
 
 rls_string r_string_options_itemchannel "Channel"
+rls_string r_string_channel_copychannelid "#Id kopieren"
 rls_string r_string_channel_markread "Channel als gelesen markieren"
 rls_string r_string_options_reportchannel "Channel melden"
 
@@ -189,10 +190,9 @@ rls_string r_string_note_subscriptionrejected "Deine Anfrage diesem Channel zu f
 
 // Account settings
 rls_string r_string_settings_account_title "Konto"
-rls_string r_string_settings_itemlist_fullname "Voller Name"
-rls_string r_string_settings_itemlist_fullname_hint "Dein voller Name"
-rls_string r_string_settings_itemlist_username "Benutzername"
-rls_string r_string_settings_itemlist_username_hint "XMPP Server Username"
+rls_string r_string_settings_itemlist_fullname "Display name"
+rls_string r_string_settings_itemlist_username "Id"
+rls_string r_string_settings_itemlist_username_hint "e.g. 'name@gmail.com'"
 rls_string r_string_settings_itemlist_password "Passwort"
 rls_string r_string_settings_itemlist_password_hint "XMPP Server Passwort"
 rls_string r_string_settings_itemlist_server "XMPP Server"
@@ -332,12 +332,12 @@ rls_string r_string_step2_title "Sei berühmt!"
 rls_string r_string_step2_text "Über buddycloud channels kannst du deinen Followern zeigen wie großartig du bist.\n\nBau dir eine Gemeinschaft an Followern auf, buddycloud channels ermöglicht es dir bekannt zu werden für dein Wissen um ein Thema oder einen Platz."
 
 rls_string r_string_step3_title "Wie möchtest du dich einloggen?"
-rls_string r_string_step3_text "Empfohlen: Sofortige Anmeldung mit bestehendem Google account (oder jedem anderen Jabber account). Alternativ: Anmeldung für einen buddycloud account."
+rls_string r_string_step3_text "Empfohlen: Sofortige Anmeldung mit bestehendem Google/OVI account (oder jedem anderen Jabber account).\n\nAlternativ: Anmeldung für einen buddycloud account."
 rls_string r_string_step3_label1 "Bereits existierenen Account verwenden"
 rls_string r_string_step3_label2 "Melde ein neues Konto an."
 
 rls_string r_string_step4_title "Wer bist du?"
-rls_string r_string_step4_text1 "Gib deine existierenden Benutzerdaten ein. Es sollte aussehen wie 'name@gmail.com' oder 'name@googlemail.com'."
+rls_string r_string_step4_text1 "Gib deine existierenden Benutzerdaten ein. Es sollte aussehen wie 'name@gmail.com' oder 'name@gmail.com'."
 rls_string r_string_step4_text2 "Gib einen neuen Benutzernamen und ein Passwort ein um buddycloud zu verwenden. Falls du schon bei buddycloud registriert bist gib einfach dein Benutzernamen und dein Passwort ein"
 
 rls_string r_string_step5_title "Glückwunsch!"

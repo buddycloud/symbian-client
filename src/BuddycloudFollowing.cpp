@@ -100,14 +100,6 @@ CFollowingChannelItem::CFollowingChannelItem() {
 	iIconId = KIconChannel;
 }
 
-TXmppPubsubAccessModel CFollowingChannelItem::GetAccessModel() {
-	return iAccessModel;
-}
-
-void CFollowingChannelItem::SetAccessModel(TXmppPubsubAccessModel aAccessModel) {
-	iAccessModel = aAccessModel;
-}
-
 TXmppPubsubSubscription CFollowingChannelItem::GetPubsubSubscription() {
 	return iPubsubSubscription;
 }
@@ -215,10 +207,6 @@ void CFollowingRosterItem::SetIdL(TDesC& aId, TIdType aType) {
 			delete iJid;
 
 		iJid = aId.AllocL();
-		
-		if(GetTitle().Length() == 0) {
-			SetTitleL(aId);
-		}
 	}
 	else {
 		CFollowingChannelItem::SetIdL(aId, aType);

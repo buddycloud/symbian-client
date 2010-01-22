@@ -12,7 +12,6 @@
 #include <Buddycloud_lang.rsg>
 #include "BuddycloudChannelInfoContainer.h"
 #include "BuddycloudExplorer.h"
-#include "Buddycloud.hlp.hrh"
 #include "XmppUtilities.h"
 
 CBuddycloudChannelInfoContainer::CBuddycloudChannelInfoContainer(CBuddycloudLogic* aBuddycloudLogic) : 
@@ -96,18 +95,20 @@ void CBuddycloudChannelInfoContainer::AddStatisticL(TInt aTitleResource, TInt aV
 }
 
 void CBuddycloudChannelInfoContainer::AddStatisticL(TInt aTitleResource, TDesC& aValue) {
-	HBufC* aTitleText = iCoeEnv->AllocReadResourceLC(aTitleResource);
-	
-	HBufC* aStatisticText = HBufC::NewLC(aTitleText->Des().Length() + 3 + aValue.Length());
-	TPtr pStatisticText(aStatisticText->Des());
-	pStatisticText.Append(*aTitleText);
-	pStatisticText.Append(_L(" : "));
-	pStatisticText.Append(aValue);
-	
-	iStatistics.Append(aStatisticText);
-	CleanupStack::Pop(); // aStatisticText
-	
-	CleanupStack::PopAndDestroy(); // aTitleText
+	if(aValue.Length() > 0) {
+		HBufC* aTitleText = iCoeEnv->AllocReadResourceLC(aTitleResource);
+		
+		HBufC* aStatisticText = HBufC::NewLC(aTitleText->Des().Length() + 3 + aValue.Length());
+		TPtr pStatisticText(aStatisticText->Des());
+		pStatisticText.Append(*aTitleText);
+		pStatisticText.Append(_L(" : "));
+		pStatisticText.Append(aValue);
+		
+		iStatistics.Append(aStatisticText);
+		CleanupStack::Pop(); // aStatisticText
+		
+		CleanupStack::PopAndDestroy(); // aTitleText
+	}
 }
 	
 void CBuddycloudChannelInfoContainer::RenderWrappedText(TInt /*aIndex*/) {
@@ -117,7 +118,7 @@ void CBuddycloudChannelInfoContainer::RenderWrappedText(TInt /*aIndex*/) {
 	if(iCollectionState == EChannelInfoCollected) {	
 		// Wrap texts		
 		if(iChannelTitle) {
-			iTextUtilities->WrapToArrayL(iWrappedTextArray, i13BoldFont, *iChannelTitle, (iRect.Width() - 5 - iLeftBarSpacer - iRightBarSpacer));
+			iTextUtilities->WrapToArrayL(iWrappedTextArray, iPrimaryBoldFont, *iChannelTitle, (iRect.Width() - 5 - iLeftBarSpacer - iRightBarSpacer));
 		}
 		
 		if(iChannelDescription) {
@@ -127,7 +128,7 @@ void CBuddycloudChannelInfoContainer::RenderWrappedText(TInt /*aIndex*/) {
 			
 			iWrappedDescription.Reset();
 			
-			iTextUtilities->WrapToArrayL(iWrappedDescription, i10ItalicFont, *iChannelDescription, (iRect.Width() - 5 - iLeftBarSpacer - iRightBarSpacer));
+			iTextUtilities->WrapToArrayL(iWrappedDescription, iSecondaryItalicFont, *iChannelDescription, (iRect.Width() - 5 - iLeftBarSpacer - iRightBarSpacer));
 		}
 	}
 	else {
@@ -139,7 +140,7 @@ void CBuddycloudChannelInfoContainer::RenderWrappedText(TInt /*aIndex*/) {
 		
 		// Empty list
 		HBufC* aEmptyList = iEikonEnv->AllocReadResourceLC(aResourceId);		
-		iTextUtilities->WrapToArrayL(iWrappedTextArray, i10BoldFont, *aEmptyList, (iRect.Width() - 2 - iLeftBarSpacer - iRightBarSpacer));		
+		iTextUtilities->WrapToArrayL(iWrappedTextArray, iSecondaryBoldFont, *aEmptyList, (iRect.Width() - 2 - iLeftBarSpacer - iRightBarSpacer));		
 		CleanupStack::PopAndDestroy(); // aEmptyList		
 	}
 }
@@ -155,21 +156,21 @@ void CBuddycloudChannelInfoContainer::RenderListItems() {
 
 	if(iCollectionState == EChannelInfoCollected) {
 		// Title
-		iBufferGc->UseFont(i13BoldFont);
+		iBufferGc->UseFont(iPrimaryBoldFont);
 		
 		for(TInt i = 0; i < iWrappedTextArray.Count(); i++) {
-			aDrawPos += i13BoldFont->HeightInPixels();
+			aDrawPos += iPrimaryBoldFont->HeightInPixels();
 			iBufferGc->DrawText(iWrappedTextArray[i]->Des(), TPoint(iLeftBarSpacer + 5, aDrawPos));
 		}
 		
-		aDrawPos += i13BoldFont->FontMaxDescent();
+		aDrawPos += iPrimaryBoldFont->FontMaxDescent();
 		iBufferGc->DiscardFont();	
 		
 		// Description
-		iBufferGc->UseFont(i10ItalicFont);
+		iBufferGc->UseFont(iSecondaryItalicFont);
 		
 		for(TInt i = 0; i < iWrappedDescription.Count(); i++) {
-			aDrawPos += i10ItalicFont->HeightInPixels();
+			aDrawPos += iSecondaryItalicFont->HeightInPixels();
 			iBufferGc->DrawText(iWrappedDescription[i]->Des(), TPoint(iLeftBarSpacer + 5, aDrawPos));
 		}
 		
@@ -177,16 +178,16 @@ void CBuddycloudChannelInfoContainer::RenderListItems() {
 		
 		// Statistics
 		if(iStatistics.Count() > 0) {
-			aDrawPos += i10ItalicFont->FontMaxAscent();
+			aDrawPos += iSecondaryItalicFont->FontMaxAscent();
 			iBufferGc->SetPenStyle(CGraphicsContext::EDashedPen);
 			iBufferGc->DrawLine(TPoint(iLeftBarSpacer + 4, aDrawPos), TPoint((iRect.Width() - iRightBarSpacer - 5), aDrawPos));		
 			
-			aDrawPos += i10ItalicFont->FontMaxDescent();
+			aDrawPos += iSecondaryItalicFont->FontMaxDescent();
 			iBufferGc->SetPenStyle(CGraphicsContext::ESolidPen);		
-			iBufferGc->UseFont(i10NormalFont);
+			iBufferGc->UseFont(iSecondaryFont);
 
 			for(TInt i = 0; i < iStatistics.Count(); i++) {
-				aDrawPos += i10NormalFont->FontMaxHeight();
+				aDrawPos += iSecondaryFont->FontMaxHeight();
 				iBufferGc->DrawText(iTextUtilities->BidiLogicalToVisualL(iStatistics[i]->Des()), TPoint(iLeftBarSpacer + 5, aDrawPos));
 			}
 			
@@ -195,13 +196,13 @@ void CBuddycloudChannelInfoContainer::RenderListItems() {
 	}
 	else {
 		// Empty results
-		aDrawPos = ((iRect.Height() / 2) - ((iWrappedTextArray.Count() * i10BoldFont->HeightInPixels()) / 2));
+		aDrawPos = ((iRect.Height() / 2) - ((iWrappedTextArray.Count() * iSecondaryBoldFont->HeightInPixels()) / 2));
 		
-		iBufferGc->UseFont(i10BoldFont);
+		iBufferGc->UseFont(iSecondaryBoldFont);
 		
 		for(TInt i = 0; i < iWrappedTextArray.Count(); i++) {
-			aDrawPos += i10ItalicFont->HeightInPixels();
-			iBufferGc->DrawText(iWrappedTextArray[i]->Des(), TPoint(((iLeftBarSpacer + ((iRect.Width() - iLeftBarSpacer - iRightBarSpacer) / 2) - (i10BoldFont->TextWidthInPixels(iWrappedTextArray[i]->Des()) / 2))), aDrawPos));
+			aDrawPos += iSecondaryItalicFont->HeightInPixels();
+			iBufferGc->DrawText(iWrappedTextArray[i]->Des(), TPoint(((iLeftBarSpacer + ((iRect.Width() - iLeftBarSpacer - iRightBarSpacer) / 2) - (iSecondaryBoldFont->TextWidthInPixels(iWrappedTextArray[i]->Des()) / 2))), aDrawPos));
 		}
 		
 		iBufferGc->DiscardFont();
@@ -218,12 +219,12 @@ void CBuddycloudChannelInfoContainer::RepositionItems(TBool aSnapToItem) {
 	}
 	
 	// Calculate page size
-	iTotalListSize += (i13BoldFont->HeightInPixels() * iWrappedTextArray.Count()) + i13BoldFont->FontMaxDescent();		
-	iTotalListSize += (i10ItalicFont->HeightInPixels() * iWrappedDescription.Count());		
+	iTotalListSize += (iPrimaryBoldFont->HeightInPixels() * iWrappedTextArray.Count()) + iPrimaryBoldFont->FontMaxDescent();		
+	iTotalListSize += (iSecondaryItalicFont->HeightInPixels() * iWrappedDescription.Count());		
 	
 	if(iStatistics.Count() > 0) {
-		iTotalListSize += (i10ItalicFont->FontMaxAscent() + i10ItalicFont->FontMaxDescent());
-		iTotalListSize += (i10NormalFont->FontMaxHeight() * iStatistics.Count());
+		iTotalListSize += (iSecondaryItalicFont->FontMaxAscent() + iSecondaryItalicFont->FontMaxDescent());
+		iTotalListSize += (iSecondaryFont->FontMaxHeight() * iStatistics.Count());
 	}
 	
 	CBuddycloudListComponent::RepositionItems(aSnapToItem);
@@ -297,7 +298,7 @@ void CBuddycloudChannelInfoContainer::HandleCommandL(TInt aCommand) {
 		else if(aNodeParser->GetNode(0).Compare(_L8("channel")) == 0) {
 			TInt aItemId = iBuddycloudLogic->FollowChannelL(aId);
 
-			iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KMessagingViewId), TUid::Uid(aItemId), _L8(""));					
+			iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KMessagingViewId), TUid::Uid(aItemId), KNullDesC8);					
 		}
 		
 		CleanupStack::PopAndDestroy(); // aNodeParser
@@ -419,9 +420,17 @@ void CBuddycloudChannelInfoContainer::XmppStanzaAcknowledgedL(const TDesC8& aSta
 					
 					if(aAttributeVar.Compare(_L8("pubsub#title")) == 0) {
 						iChannelTitle = aEncDataValue.AllocL();
+						
+						if(iChannelItem && iChannelItem->GetItemType() == EItemChannel) {
+							iChannelItem->SetTitleL(aEncDataValue);
+						}
 					}
 					else if(aAttributeVar.Compare(_L8("pubsub#description")) == 0) {
 						iChannelDescription = aEncDataValue.AllocL();
+						
+						if(iChannelItem && iChannelItem->GetItemType() == EItemChannel) {
+							iChannelItem->SetDescriptionL(aEncDataValue);
+						}
 					}
 					else if(aAttributeVar.Compare(_L8("pubsub#access_model")) == 0) {
 						TXmppPubsubAccessModel aAccess = CXmppEnumerationConverter::PubsubAccessModel(aXmlParser->GetStringData());
@@ -442,25 +451,23 @@ void CBuddycloudChannelInfoContainer::XmppStanzaAcknowledgedL(const TDesC8& aSta
 						
 						AddStatisticL(R_LOCALIZED_STRING_NOTE_CHANNELSINCE, aStatisticText);
 					}
-					else if(aAttributeVar.Compare(_L8("pubsub#channel_rank")) == 0) {
+					else if(aAttributeVar.Compare(_L8("pubsub#num_subscribers")) == 0) {
+						AddStatisticL(R_LOCALIZED_STRING_NOTE_CHANNELFOLLOWERS, aEncDataValue);
+					}
+					else if(aAttributeVar.Compare(_L8("pubsub#owner")) == 0) {
+						AddStatisticL(R_LOCALIZED_STRING_NOTE_CHANNELOWNER, aEncDataValue);
+					}
+					else if(aAttributeVar.Compare(_L8("x-buddycloud#rank")) == 0) {
 						AddStatisticL(R_LOCALIZED_STRING_NOTE_CHANNELRANK, aEncDataValue);
 					}
-					else if(aAttributeVar.Compare(_L8("pubsub#channel_location")) == 0) {
+					else if(aAttributeVar.Compare(_L8("x-buddycloud#geoloc")) == 0) {
 						CXmppGeolocParser* aGeolocParser = CXmppGeolocParser::NewLC();			
 						iGeoloc = aGeolocParser->XmlToGeolocLC(aXmlParser->GetStringData());
 						
 						CleanupStack::Pop(); // iGeoloc
 						CleanupStack::PopAndDestroy(); // aGeolocParser
 						
-						if(iGeoloc->GetString(EGeolocText).Length() > 0) {
-							AddStatisticL(R_LOCALIZED_STRING_NOTE_CHANNELFOLLOWERS, iGeoloc->GetString(EGeolocText));
-						}		
-					}
-					else if(aAttributeVar.Compare(_L8("pubsub#channel_followers")) == 0) {
-						AddStatisticL(R_LOCALIZED_STRING_NOTE_CHANNELFOLLOWERS, aEncDataValue);
-					}
-					else if(aAttributeVar.Compare(_L8("pubsub#owner")) == 0) {
-						AddStatisticL(R_LOCALIZED_STRING_NOTE_CHANNELOWNER, aEncDataValue);
+						AddStatisticL(R_LOCALIZED_STRING_NOTE_CHANNELLOCATION, iGeoloc->GetString(EGeolocText));
 					}
 				}
 			}

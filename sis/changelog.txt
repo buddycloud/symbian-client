@@ -1,6 +1,30 @@
 Change Log
 ==========
 
+0.05.29
+
+- Correct the metadata field namespaces used for custom channel data
+- Re-set followed channel data from metadata on a 'See channel details'
+- Improve Following items Title and SubTitle display logic
+- [bug] Fix underline error in CBuddycloudPlacesContainer
+- [bug] LocationEngine is trigger too soon after first login before broadcaster is subscribed to
+- [bug] Fix an error in the username:password hash after a registration
+- Don't locally store channel access_model data
+- Rewrite of CBuddycloudEditChannelList logic
+- Add description element parsing to Maired directory items (if provided)
+- Add 'Copy #Id' to Channel menu in CBuddycloudMessagingContainer
+- Update from 99translations
+
+0.05.28
+
+- [bug] Fix a memory access error when a user is rebinded from OG to NG channel
+- Add item subtitle text to CBuddycloudListItem
+- Adaption of CBuddycloudFollowingContainer layout to include subtitle
+- Adaption of CBuddycloudExplorerContainer layout to include subtitle
+- Adaption of CBuddycloudPlacesContainer layout to include subtitle
+- Add xml:lang to stanza in MediaPostRequestL
+- Update from 99translations
+
 0.05.27
 
 - Show red error feedback on bad text input in CBuddycloudSetupContainer

@@ -106,6 +106,7 @@ rls_string r_string_item_reportpost "Report post"
 rls_string r_string_item_removepost "Delete post"
 
 rls_string r_string_options_itemchannel "频道"
+rls_string r_string_channel_copychannelid "Copy #Id"
 rls_string r_string_channel_markread "Mark channel read"
 rls_string r_string_options_reportchannel "Report channel"
 
@@ -189,10 +190,9 @@ rls_string r_string_note_subscriptionrejected "Your subscription to this channel
 
 // Account settings
 rls_string r_string_settings_account_title "账号"
-rls_string r_string_settings_itemlist_fullname "全名"
-rls_string r_string_settings_itemlist_fullname_hint "您的全名"
-rls_string r_string_settings_itemlist_username "用户名"
-rls_string r_string_settings_itemlist_username_hint "XMPP服务用户名"
+rls_string r_string_settings_itemlist_fullname "Display name"
+rls_string r_string_settings_itemlist_username "Id"
+rls_string r_string_settings_itemlist_username_hint "e.g. 'name@gmail.com'"
 rls_string r_string_settings_itemlist_password "密码"
 rls_string r_string_settings_itemlist_password_hint "XMPP服务密码"
 rls_string r_string_settings_itemlist_server "XMPP服务"
@@ -332,12 +332,12 @@ rls_string r_string_step2_title "欢迎加入buddycloud!"
 rls_string r_string_step2_text "buddycloud频道给予你以一种全新的方式来对你频道的追随者讲述你身边奇妙事情的机会。buddycloud频道赋予你因了解一个地方或一个话题，并为你频道的追随者建立一个网络社区而成名的能力。"
 
 rls_string r_string_step3_title "How do you want to log in?"
-rls_string r_string_step3_text "Recommended: Instantly sign-in using your Google account (or any Jabber account).\n\nAlternatively: Register for a buddycloud account."
+rls_string r_string_step3_text "Recommended: Instantly sign-in using your Google/OVI account (or any Jabber account).\n\nAlternatively: Register for a buddycloud account."
 rls_string r_string_step3_label1 "Use existing account"
 rls_string r_string_step3_label2 "Register new account"
 
 rls_string r_string_step4_title "Who are you?"
-rls_string r_string_step4_text1 "Enter your existing account details.\n\nThis looks like 'name@gmail.com' or 'name@googlemail.com'."
+rls_string r_string_step4_text1 "Enter your existing account details.\n\nThis looks like 'name@gmail.com' or 'name@ovi.com'."
 rls_string r_string_step4_text2 "Choose a new username and password to start using buddycloud.  If you have already registered for buddycloud on another phone, enter those details here."
 
 rls_string r_string_step5_title "恭喜！"

@@ -106,6 +106,7 @@ rls_string r_string_item_reportpost "Lapor pesan"
 rls_string r_string_item_removepost "Hapus pesan"
 
 rls_string r_string_options_itemchannel "Channel"
+rls_string r_string_channel_copychannelid "Copy #Id"
 rls_string r_string_channel_markread "Tandai channel terbaca"
 rls_string r_string_options_reportchannel "Lapor channel"
 
@@ -190,9 +191,8 @@ rls_string r_string_note_subscriptionrejected "Subskripsi anda terhadap channel 
 // Account settings
 rls_string r_string_settings_account_title "Akun"
 rls_string r_string_settings_itemlist_fullname "Nama lengkap"
-rls_string r_string_settings_itemlist_fullname_hint "Nama lengkap anda"
-rls_string r_string_settings_itemlist_username "Nama penguna"
-rls_string r_string_settings_itemlist_username_hint "XMPP server nama pengguna"
+rls_string r_string_settings_itemlist_username "Id"
+rls_string r_string_settings_itemlist_username_hint "e.g. 'name@gmail.com'"
 rls_string r_string_settings_itemlist_password "Kata sandi"
 rls_string r_string_settings_itemlist_password_hint "XMPP server kata sandi"
 rls_string r_string_settings_itemlist_server "XMPP server"
@@ -332,12 +332,12 @@ rls_string r_string_step2_title "Jadilah Terkenal!"
 rls_string r_string_step2_text "Channel2 buddycloud memberikan cara baru untuk menyiarkan kehebatanmu ke pengikutmu.\n\nChannel2 buddycloud bisa membuatmu terkenal atas pengetahuan unikmu mengenai tempat,topik,dan membangun komunitas dari pengikutmu."
 
 rls_string r_string_step3_title "Cara apa yang anda mau untuk log in?"
-rls_string r_string_step3_text "Disarankan : mendaftar secara instan dengan menggunakan akun Google anda (atau apapun akun Jabber). Cara lain : daftar untuk mendapatkan akun Buddycloud."
+rls_string r_string_step3_text "Disarankan : mendaftar secara instan dengan menggunakan akun Google/OVI anda (atau apapun akun Jabber).\n\nCara lain : daftar untuk mendapatkan akun Buddycloud."
 rls_string r_string_step3_label1 "Gunakan akun yg sudah ada"
 rls_string r_string_step3_label2 "Daftar akun baru"
 
 rls_string r_string_step4_title "Siapakah anda?"
-rls_string r_string_step4_text1 "Masukan keterangan akun anda yg sudah ada. Seperti 'name@gmail.com' atau 'name@googlemail.com'."
+rls_string r_string_step4_text1 "Masukan keterangan akun anda yg sudah ada. Seperti 'name@gmail.com' atau 'name@ovi.com'."
 rls_string r_string_step4_text2 "Pilih nama pengguna dan kata sandi baru untuk mulai menggunakan buddycloud. Jika anda sudah terdaftar di buddycloud menggunakan handphone lain, masukan keterangannya disini."
 
 rls_string r_string_step5_title "Selamat!"

@@ -43,7 +43,7 @@ rls_string r_string_options_delete "Usuń"
 
 rls_string r_string_note_noresultsfound "Nie znaleziono wyników"
 rls_string r_string_note_requestsent "Zapytanie wysłane"
-rls_string r_string_note_feedbacksent "Feedback sent"
+rls_string r_string_note_feedbacksent "Opinie nadsyłane (?)"
 rls_string r_string_note_messagequeued "Wiadomość zostanie wysłana gdy będziesz online"
 rls_string r_string_note_offlinerequired "Musisz być offline by to zrobić"
 
@@ -106,8 +106,9 @@ rls_string r_string_item_reportpost "Zgłoś post"
 rls_string r_string_item_removepost "Usuń post"
 
 rls_string r_string_options_itemchannel "Kanał"
+rls_string r_string_channel_copychannelid "Kopiuj #Id"
 rls_string r_string_channel_markread "Zaznacz kanał jako przeczytany"
-rls_string r_string_options_reportchannel "Report channel"
+rls_string r_string_options_reportchannel "Zgłoś kanał"
 
 // Menu: Places
 rls_string r_string_options_setcurrent "Zapisz nowe miejsce"
@@ -155,7 +156,7 @@ rls_string r_string_note_channellocation "Lokalizacja"
 rls_string r_string_note_channelfollowers "Śledzących"
 
 // Menu: Channels
-rls_string r_string_list_nearbytoyou "Explore Nearby"
+rls_string r_string_list_nearbytoyou "Przeglądaj Najbliższe"
 rls_string r_string_list_featuredchannels "Polecane kanały"
 rls_string r_string_list_channelsyoumightlike "Kanały, które mogłyby ci się spodobać"
 rls_string r_string_list_followersfavourites "Ulubione śledzących"
@@ -190,9 +191,8 @@ rls_string r_string_note_subscriptionrejected "Twoja subskrypcja tego kanału zo
 // Account settings
 rls_string r_string_settings_account_title "Konto"
 rls_string r_string_settings_itemlist_fullname "Pełna nazwa"
-rls_string r_string_settings_itemlist_fullname_hint "Imię i nazwisko"
-rls_string r_string_settings_itemlist_username "Login"
-rls_string r_string_settings_itemlist_username_hint "Login serwera XMPP"
+rls_string r_string_settings_itemlist_username "Id"
+rls_string r_string_settings_itemlist_username_hint "e.g. 'name@gmail.com'"
 rls_string r_string_settings_itemlist_password "Hasło"
 rls_string r_string_settings_itemlist_password_hint "Hasło serwera XMPP"
 rls_string r_string_settings_itemlist_server "Serwer XMPP"
@@ -272,9 +272,9 @@ rls_string r_string_editchannel_itemlist_description_hint "Opis kanałów"
 rls_string r_string_editchannel_itemlist_access "Dostęp"
 rls_string r_string_editchannel_itemlist_access_open "Otwórz kanał(?)"
 rls_string r_string_editchannel_itemlist_access_whitelist "Tylko członkowie"
-rls_string r_string_editchannel_itemlist_defaultaffiliation "New followers can"
-rls_string r_string_editchannel_itemlist_defaultaffiliation_member "Read only"
-rls_string r_string_editchannel_itemlist_defaultaffiliation_publisher "Read and post"
+rls_string r_string_editchannel_itemlist_defaultaffiliation "Nowi śledzący mogą"
+rls_string r_string_editchannel_itemlist_defaultaffiliation_member "Tylko do odczytu"
+rls_string r_string_editchannel_itemlist_defaultaffiliation_publisher "Czytanie i pisanie (?)"
 
 rls_string r_string_note_channelexists "Ten #channel_id już istnieje. Proszę podać unikatowy."
 
@@ -332,12 +332,12 @@ rls_string r_string_step2_title "Bądź sławny!"
 rls_string r_string_step2_text "Kanały buddycloud daje ci nowe możliwości do rozgłaszania swojej wyjątkowości swoim śledzącym.\n\nKanały buddycloud pozwalają ci zostać sławnym, za twoją unikalną wiedzę o danym miejscu lub temacie, wśród społeczności i śledzących."
 
 rls_string r_string_step3_title "Jak chcesz się zalogować?"
-rls_string r_string_step3_text "Polecamy: Natychmiast Zaloguj się za pomocą konta Google (lub konto Jabbera). Alternatywnie: Zarejestruj konto buddycloud."
+rls_string r_string_step3_text "Polecamy: Natychmiast Zaloguj się za pomocą konta Google/OVI (lub konto Jabbera).\n\nAlternatywnie: Zarejestruj konto buddycloud."
 rls_string r_string_step3_label1 "Użyj istniejącego konta"
 rls_string r_string_step3_label2 "Zarejestruj nowe konto"
 
 rls_string r_string_step4_title "Kim jesteś?"
-rls_string r_string_step4_text1 "Podaj dane istniejącego konta. To wygląda jak 'name@gmail.com' lub 'name@googlemail.com'."
+rls_string r_string_step4_text1 "Podaj dane istniejącego konta. To wygląda jak 'name@gmail.com' lub 'name@ovi.com'."
 rls_string r_string_step4_text2 "Wybierz nową nazwę użytkownika i hasło, aby zacząć korzystać z buddycloud. Jeśli jesteś już zarejestrowany na buddycloud na innym telefonie, wprowadź te informacje tutaj."
 
 rls_string r_string_step5_title "Gratulacje!"

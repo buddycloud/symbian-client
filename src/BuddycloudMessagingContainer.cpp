@@ -16,7 +16,6 @@
 #include <barsread.h>
 #include <txtetext.h>
 #include <Buddycloud_lang.rsg>
-#include "Buddycloud.hlp.hrh"
 #include "BrowserLauncher.h"
 #include "BuddycloudExplorer.h"
 #include "BuddycloudMessagingContainer.h"
@@ -213,7 +212,7 @@ void CBuddycloudMessagingContainer::InitializeMessageDataL() {
 void CBuddycloudMessagingContainer::NotificationEvent(TBuddycloudLogicNotificationType aEvent, TInt aId) {
 	if(aEvent == ENotificationFollowingItemDeleted) {
 		if(aId == iMessagingObject.iId) {
-			iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KFollowingViewId), TUid::Uid(0), _L8(""));
+			iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KFollowingViewId), TUid::Uid(0), KNullDesC8);
 		}
 	}
 	else {
@@ -441,13 +440,13 @@ void CBuddycloudMessagingContainer::TextWrapEntry(TInt aIndex) {
 		
 		// Font
 		CAtomEntryData* aEntry = aFormattedEntry->GetEntry();
-		CFont* aUsedFont = i10NormalFont;
+		CFont* aUsedFont = iSecondaryFont;
 	
 		if(aEntry->GetEntryType() == EEntryContentAction) {
-			aUsedFont = i10ItalicFont;
+			aUsedFont = iSecondaryItalicFont;
 		}
 		else if(!aEntry->Read()) {
-			aUsedFont = i10BoldFont;
+			aUsedFont = iSecondaryBoldFont;
 		}
 		
 		// Wrap
@@ -489,10 +488,10 @@ void CBuddycloudMessagingContainer::RenderSelectedText(TInt& aDrawPos) {
 		}
 		
 		// Font
-		CFont* aRenderingFont = i10NormalFont;
+		CFont* aRenderingFont = iSecondaryFont;
 		
 		if(!aEntry->Read()) {
-			aRenderingFont = i10BoldFont;
+			aRenderingFont = iSecondaryBoldFont;
 		}
 		
 		iBufferGc->UseFont(aRenderingFont);
@@ -543,7 +542,7 @@ void CBuddycloudMessagingContainer::RenderSelectedText(TInt& aDrawPos) {
 				TInt aTypingPos = aTypingStartPos;
 				TPtrC pDirectionalText(iTextUtilities->BidiLogicalToVisualL(pTextLine));
 				
-				aDrawPos += i10ItalicFont->HeightInPixels();
+				aDrawPos += iSecondaryItalicFont->HeightInPixels();
 				aGlobalPosition += aDisplayableWidth;
 				
 				if(pCurrentLink.Length() > 0 && aGlobalPosition > aCurrentLink.iStart) {
@@ -663,7 +662,7 @@ TInt CBuddycloudMessagingContainer::CalculateMessageSize(TInt aIndex, TBool aSel
 
 #ifdef __SERIES60_40__
 	if( !aSelected ) {
-		aItemSize += (i10BoldFont->DescentInPixels() * 2);
+		aItemSize += (iSecondaryBoldFont->DescentInPixels() * 2);
 	}
 #endif
 
@@ -673,13 +672,13 @@ TInt CBuddycloudMessagingContainer::CalculateMessageSize(TInt aIndex, TBool aSel
 		if(aEntry->GetEntryType() < EEntryContentAction) {
 			// From
 			if(aEntry->GetAuthorName().Length() > 0) {
-				aItemSize += i13BoldFont->HeightInPixels();
-				aItemSize += i13BoldFont->FontMaxDescent();
+				aItemSize += iPrimaryBoldFont->HeightInPixels();
+				aItemSize += iPrimaryBoldFont->FontMaxDescent();
 			}
 		}
 
 		// Wrapped text
-		aItemSize += (iWrappedTextArray.Count() * i10ItalicFont->HeightInPixels());
+		aItemSize += (iWrappedTextArray.Count() * iSecondaryItalicFont->HeightInPixels());
 		
 		if(aItemSize < (iItemIconSize + 2)) {
 			aItemSize = (iItemIconSize + 2);
@@ -688,10 +687,10 @@ TInt CBuddycloudMessagingContainer::CalculateMessageSize(TInt aIndex, TBool aSel
 	
 	if(aEntry->GetEntryType() < EEntryContentAction || !aSelected) {
 		// Textual message body or unselected user action/event
-		aItemSize += (i10ItalicFont->HeightInPixels() * iEntries[aIndex]->iLines.Count());			
+		aItemSize += (iSecondaryItalicFont->HeightInPixels() * iEntries[aIndex]->iLines.Count());			
 	}
 
-	aItemSize += i10NormalFont->FontMaxDescent() + 2;
+	aItemSize += iSecondaryFont->FontMaxDescent() + 2;
 
 	return (aItemSize < aMinimumSize) ? aMinimumSize : aItemSize;
 }
@@ -749,11 +748,11 @@ void CBuddycloudMessagingContainer::RenderWrappedText(TInt aIndex) {
 				}
 				
 				// Wrap
-				iTextUtilities->WrapToArrayL(iWrappedTextArray, i10ItalicFont, aBuf, aWrapWidth);
+				iTextUtilities->WrapToArrayL(iWrappedTextArray, iSecondaryItalicFont, aBuf, aWrapWidth);
 			}		
 			else {
 				// Wrap
-				iTextUtilities->WrapToArrayL(iWrappedTextArray, i10ItalicFont, aEntry->GetContent(), aWrapWidth);
+				iTextUtilities->WrapToArrayL(iWrappedTextArray, iSecondaryItalicFont, aEntry->GetContent(), aWrapWidth);
 			}
 		}
 	}
@@ -846,19 +845,19 @@ void CBuddycloudMessagingContainer::RenderListItems() {
 				}
 				
 				// Select font based of message type
-				CFont* aRenderingFont = i10NormalFont;
+				CFont* aRenderingFont = iSecondaryFont;
 				
 				if(aEntry->GetEntryType() == EEntryContentAction) {
-					aRenderingFont = i10ItalicFont;
+					aRenderingFont = iSecondaryItalicFont;
 				}
 				else if(!aEntry->Read()) {
-					aRenderingFont = i10BoldFont;
+					aRenderingFont = iSecondaryBoldFont;
 				}
 
 				iBufferGc->SetClippingRect(TRect(iLeftBarSpacer + aItemLeftOffset + 2, aItemDrawPos, (iRect.Width() - iRightBarSpacer - 2), iRect.Height()));
 #ifdef __SERIES60_40__
 				if(i != iSelectedItem) {
-					aItemDrawPos += i10BoldFont->DescentInPixels();
+					aItemDrawPos += iSecondaryBoldFont->DescentInPixels();
 				}
 #endif
 				
@@ -878,24 +877,24 @@ void CBuddycloudMessagingContainer::RenderListItems() {
 						// Name
 						TPtrC aDirectionalText(iTextUtilities->BidiLogicalToVisualL(aEntry->GetAuthorName()));
 						
-						if(i13BoldFont->TextCount(aDirectionalText, (iRect.Width() - iSelectedItemIconTextOffset - 2 - iLeftBarSpacer - aItemLeftOffset - iRightBarSpacer)) < aDirectionalText.Length()) {
-							iBufferGc->UseFont(i10BoldFont);
+						if(iPrimaryBoldFont->TextCount(aDirectionalText, (iRect.Width() - iSelectedItemIconTextOffset - 2 - iLeftBarSpacer - aItemLeftOffset - iRightBarSpacer)) < aDirectionalText.Length()) {
+							iBufferGc->UseFont(iSecondaryBoldFont);
 						}
 						else {
-							iBufferGc->UseFont(i13BoldFont);
+							iBufferGc->UseFont(iPrimaryBoldFont);
 						}
 	
-						aItemDrawPos += i13BoldFont->HeightInPixels();
+						aItemDrawPos += iPrimaryBoldFont->HeightInPixels();
 						iBufferGc->DrawText(aDirectionalText, TPoint(iLeftBarSpacer + aItemLeftOffset + iSelectedItemIconTextOffset, aItemDrawPos));
-						aItemDrawPos += i13BoldFont->FontMaxDescent();
+						aItemDrawPos += iPrimaryBoldFont->FontMaxDescent();
 						iBufferGc->DiscardFont();
 					}
 					
 					// Wrapped text
-					iBufferGc->UseFont(i10ItalicFont);
+					iBufferGc->UseFont(iSecondaryItalicFont);
 						
 					for(TInt i = 0; i < iWrappedTextArray.Count(); i++) {
-						aItemDrawPos += i10ItalicFont->HeightInPixels();
+						aItemDrawPos += iSecondaryItalicFont->HeightInPixels();
 						iBufferGc->DrawText(*iWrappedTextArray[i], TPoint(iLeftBarSpacer + aItemLeftOffset + iSelectedItemIconTextOffset, aItemDrawPos));
 					}
 						
@@ -916,7 +915,7 @@ void CBuddycloudMessagingContainer::RenderListItems() {
 					iBufferGc->UseFont(aRenderingFont);
 						
 					for(TInt x = 0; x < iEntries[i]->LineCount(); x++) {
-						aItemDrawPos += i10ItalicFont->HeightInPixels();
+						aItemDrawPos += iSecondaryItalicFont->HeightInPixels();
 						iBufferGc->DrawText(iEntries[i]->GetLine(x), TPoint(aRenderingPosition, aItemDrawPos));
 					}	
 						
@@ -947,8 +946,8 @@ void CBuddycloudMessagingContainer::RenderListItems() {
 		// No messages
 		_LIT(KNoMessages, "(No Messages)");
 		iBufferGc->SetPenColor(iColourText);
-		iBufferGc->UseFont(i10BoldFont);
-		iBufferGc->DrawText(KNoMessages, TPoint(iLeftBarSpacer + ((iRect.Width() - iLeftBarSpacer - iRightBarSpacer) / 2) - (i10BoldFont->TextWidthInPixels(KNoMessages) / 2), (iRect.Height() / 2) + (i10BoldFont->HeightInPixels() / 2)));
+		iBufferGc->UseFont(iSecondaryBoldFont);
+		iBufferGc->DrawText(KNoMessages, TPoint(iLeftBarSpacer + ((iRect.Width() - iLeftBarSpacer - iRightBarSpacer) / 2) - (iSecondaryBoldFont->TextWidthInPixels(KNoMessages) / 2), (iRect.Height() / 2) + (iSecondaryBoldFont->HeightInPixels() / 2)));
 		iBufferGc->DiscardFont();
 		
 		iSelectedItem = KErrNotFound;
@@ -1072,15 +1071,15 @@ void CBuddycloudMessagingContainer::HandleItemSelection(TInt aItemId) {
 				iViewAccessor->ViewMenuBar()->SetMenuTitleResourceId(R_MESSAGING_OPTIONS_MENUBAR);
 			}
 			else {
-				ComposeNewCommentL(_L(""));	
+				ComposeNewCommentL(KNullDesC);	
 			}
 		}
 		else {
-			ComposeNewPostL(_L(""));	
+			ComposeNewPostL(KNullDesC);	
 		}
 #else
 		if(iEntries.Count() == 0 || !OpenPostedLinkL()) {
-			ComposeNewPostL(_L(""));				
+			ComposeNewPostL(KNullDesC);				
 		}
 #endif
 	}
@@ -1251,10 +1250,15 @@ void CBuddycloudMessagingContainer::DynInitMenuPaneL(TInt aResourceId, CEikMenuP
 		}
 	}
 	else if(aResourceId == R_MESSAGING_OPTIONS_CHANNEL_MENU) {
+		aMenuPane->SetItemDimmed(EMenuCopyChannelIdCommand, true);
 		aMenuPane->SetItemDimmed(EMenuMarkReadCommand, true);
 		aMenuPane->SetItemDimmed(EMenuSeeFollowersCommand, true);
 		aMenuPane->SetItemDimmed(EMenuSeeModeratorsCommand, true);
 		aMenuPane->SetItemDimmed(EMenuEditChannelCommand, true);
+		
+		if(iItem->GetItemType() == EItemChannel && iItem->GetSubTitle().Length() > 0) {
+			aMenuPane->SetItemDimmed(EMenuCopyChannelIdCommand, false);
+		}
 		
 		if(iDiscussion->GetUnreadEntries() > 0) {
 			aMenuPane->SetItemDimmed(EMenuMarkReadCommand, false);
@@ -1280,6 +1284,7 @@ void CBuddycloudMessagingContainer::DynInitMenuPaneL(TInt aResourceId, CEikMenuP
 			if(aEntry) {
 				if(aEntry->GetEntryType() == EEntryContentNotice) {
 					// Content notice
+					aMenuPane->SetItemDimmed(EMenuChannelInfoCommand, false);
 					aMenuPane->SetItemDimmed(EMenuAcceptCommand, false);
 					aMenuPane->SetItemDimmed(EMenuDeclineCommand, false);		
 				}
@@ -1353,7 +1358,7 @@ void CBuddycloudMessagingContainer::HandleCommandL(TInt aCommand) {
 		CleanupStack::PopAndDestroy(); // aMessageText
 	}
 	else if(aCommand == EMenuWritePostCommand) {
-		ComposeNewPostL(_L(""));
+		ComposeNewPostL(KNullDesC);
 	}
 	else if(aCommand == EMenuPostMediaCommand) {
 		iBuddycloudLogic->MediaPostRequestL(iMessagingObject.iId);
@@ -1372,24 +1377,30 @@ void CBuddycloudMessagingContainer::HandleCommandL(TInt aCommand) {
 		}
 	}
 	else if(aCommand == EMenuAddCommentCommand) {
-		ComposeNewCommentL(_L(""));
+		ComposeNewCommentL(KNullDesC);
 	}
-	else if(aCommand == EMenuCopyPostCommand) {
-		CAtomEntryData* aEntry = iEntries[iSelectedItem]->GetEntry();
-		
-		if(aEntry) {
-			CClipboard* aClipbroad = CClipboard::NewForWritingLC(CCoeEnv::Static()->FsSession());
-			aClipbroad->StreamDictionary().At(KClipboardUidTypePlainText);
-		 
-			CPlainText* aPlainText = CPlainText::NewL();
-			CleanupStack::PushL(aPlainText);
-		 
-			aPlainText->InsertL(0, aEntry->GetContent());		 
-			aPlainText->CopyToStoreL(aClipbroad->Store(), aClipbroad->StreamDictionary(), 0, aPlainText->DocumentLength());
-			aClipbroad->CommitL();
-		 
-			CleanupStack::PopAndDestroy(2); // aPlainText, aClipbroad
+	else if(aCommand == EMenuCopyPostCommand || aCommand == EMenuCopyChannelIdCommand) {
+		CClipboard* aClipbroad = CClipboard::NewForWritingLC(CCoeEnv::Static()->FsSession());
+		aClipbroad->StreamDictionary().At(KClipboardUidTypePlainText);
+	 
+		CPlainText* aPlainText = CPlainText::NewL();
+		CleanupStack::PushL(aPlainText);
+	 
+		if(aCommand == EMenuCopyPostCommand) {
+			CAtomEntryData* aEntry = iEntries[iSelectedItem]->GetEntry();
+			
+			if(aEntry) {
+				aPlainText->InsertL(0, aEntry->GetContent());
+			}
 		}
+		else {
+			aPlainText->InsertL(0, iItem->GetSubTitle());	
+		}
+		
+		aPlainText->CopyToStoreL(aClipbroad->Store(), aClipbroad->StreamDictionary(), 0, aPlainText->DocumentLength());
+		aClipbroad->CommitL();
+	 
+		CleanupStack::PopAndDestroy(2); // aPlainText, aClipbroad
 	}
 	else if(aCommand == EMenuDeletePostCommand || aCommand == EMenuLikePostCommand || aCommand == EMenuReportPostCommand) {
 		CAtomEntryData* aEntry = iEntries[iSelectedItem]->GetEntry();
@@ -1607,7 +1618,7 @@ void CBuddycloudMessagingContainer::HandleCommandL(TInt aCommand) {
 			aReturnItemId = iBuddycloudLogic->GetFollowingStore()->GetIdByIndex(iFollowingItemIndex);
 		}
 		
-		iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KFollowingViewId), TUid::Uid(aReturnItemId), _L8(""));
+		iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KFollowingViewId), TUid::Uid(aReturnItemId), KNullDesC8);
 	}
 }
 
@@ -1618,7 +1629,7 @@ TKeyResponse CBuddycloudMessagingContainer::OfferKeyEventL(const TKeyEvent& aKey
 	if(aType == EEventKey) {
 		if(aKeyEvent.iCode == EKeyUpArrow) {
 			if(iSelectedItemBox.iTl.iY < 0) {
-				iScrollbarHandlePosition -= (iRect.Height() - i10NormalFont->HeightInPixels());	
+				iScrollbarHandlePosition -= (iRect.Height() - iSecondaryFont->HeightInPixels());	
 
 				CBuddycloudListComponent::RepositionItems(iSnapToItem);
 				aRenderNeeded = true;
@@ -1631,7 +1642,7 @@ TKeyResponse CBuddycloudMessagingContainer::OfferKeyEventL(const TKeyEvent& aKey
 		}
 		else if(aKeyEvent.iCode == EKeyDownArrow) {
 			if(iSelectedItemBox.iBr.iY > iRect.Height()) {
-				iScrollbarHandlePosition += (iRect.Height() - i10NormalFont->HeightInPixels());	
+				iScrollbarHandlePosition += (iRect.Height() - iSecondaryFont->HeightInPixels());	
 
 				CBuddycloudListComponent::RepositionItems(iSnapToItem);
 				aRenderNeeded = true;

@@ -16,7 +16,6 @@
 #include <f32file.h>
 #include <Buddycloud.rsg>
 #include "Buddycloud.hrh"
-#include "Buddycloud.hlp.hrh"
 #include "BuddycloudNotificationsSettingsList.h"
 #include "BuddycloudConstants.h"
 
