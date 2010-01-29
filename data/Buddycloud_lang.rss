@@ -68,6 +68,9 @@ RESOURCE AVKON_VIEW r_places_view
 RESOURCE AVKON_VIEW r_explorer_view
 {
 	menubar = r_explorer_options_menubar;
+#ifdef __SERIES60_40__
+	toolbar = r_explorer_toolbar;
+#endif
 	cba = R_AVKON_SOFTKEYS_OPTIONS_BACK;
 }
 
@@ -231,7 +234,7 @@ RESOURCE AVKON_TOOLBAR r_messaging_toolbar
 				{
 					AVKON_BUTTON_STATE
 					{
-						helptxt = r_string_item_addcomment;
+						helptxt = r_string_options_addcomment;
 					    bmpfile = "\\resource\\apps\\Buddycloud_Toolbar.mif";
 					    bmpid = EMbmToolbariconidsToolbarmessagereply;
 					    bmpmask = EMbmToolbariconidsToolbarmessagereply;
@@ -283,42 +286,86 @@ RESOURCE AVKON_TOOLBAR r_places_toolbar
 	flags = KAknToolbarFixed;
 	items =
 	{
-			TBAR_CTRL
+		TBAR_CTRL
+		{
+			type = EAknCtButton;
+			id = EMenuBookmarkPlaceCommand;
+			control = AVKON_BUTTON
 			{
-				type = EAknCtButton;
-				id = EMenuBookmarkPlaceCommand;
-				control = AVKON_BUTTON
+				states =
 				{
-					states =
+					AVKON_BUTTON_STATE
 					{
-						AVKON_BUTTON_STATE
-						{
-							helptxt = r_string_options_setcurrent;
-						    bmpfile = "\\resource\\apps\\Buddycloud_Toolbar.mif";
-						    bmpid = EMbmToolbariconidsToolbarbookmarkplace;
-						    bmpmask = EMbmToolbariconidsToolbarbookmarkplace;
-						}
-					};
+						helptxt = r_string_options_setcurrent;
+						bmpfile = "\\resource\\apps\\Buddycloud_Toolbar.mif";
+						bmpid = EMbmToolbariconidsToolbarbookmarkplace;
+						bmpmask = EMbmToolbariconidsToolbarbookmarkplace;
+					}
 				};
-			},
-			TBAR_CTRL
+			};
+		},
+		TBAR_CTRL
+		{
+			type = EAknCtButton;
+			id = EMenuNewSearchCommand;
+			control = AVKON_BUTTON
 			{
-				type = EAknCtButton;
-				id = EMenuNewSearchCommand;
-				control = AVKON_BUTTON
+				states =
 				{
-					states =
+					AVKON_BUTTON_STATE
 					{
-						AVKON_BUTTON_STATE
-						{
-							helptxt = r_string_options_newsearch;
-						    bmpfile = "\\resource\\apps\\Buddycloud_Toolbar.mif";
-						    bmpid = EMbmToolbariconidsToolbarsearch;
-						    bmpmask = EMbmToolbariconidsToolbarsearch;
-						}
-					};
+						helptxt = r_string_options_newsearch;
+						bmpfile = "\\resource\\apps\\Buddycloud_Toolbar.mif";
+						bmpid = EMbmToolbariconidsToolbarsearch;
+						bmpmask = EMbmToolbariconidsToolbarsearch;
+					}
 				};
-			}
+			};
+		},
+		TBAR_CTRL
+		{
+			type = EAknCtButton;
+			id = EMenuSetNextPlaceCommand;
+			control = AVKON_BUTTON
+			{
+				states =
+				{
+					AVKON_BUTTON_STATE
+					{
+						helptxt = r_string_options_setnext;
+						bmpfile = "\\resource\\apps\\Buddycloud_Toolbar.mif";
+						bmpid = EMbmToolbariconidsToolbarnextplace;
+						bmpmask = EMbmToolbariconidsToolbarnextplace;
+					}
+				};
+			};
+		}
+	};
+}
+
+RESOURCE AVKON_TOOLBAR r_explorer_toolbar
+{
+	flags = KAknToolbarFixed;
+	items =
+	{
+		TBAR_CTRL
+		{
+			type = EAknCtButton;
+			id = EMenuEditChannelCommand;
+			control = AVKON_BUTTON
+			{
+				states =
+				{
+					AVKON_BUTTON_STATE
+					{
+						helptxt = r_string_item_newchannel;
+						bmpfile = "\\resource\\apps\\Buddycloud_Toolbar.mif";
+						bmpid = EMbmToolbariconidsToolbarcreatechannel;
+						bmpmask = EMbmToolbariconidsToolbarcreatechannel;
+					}
+				};
+			};
+		}
 	};
 }
 #endif
@@ -625,13 +672,13 @@ RESOURCE MENU_PANE r_status_options_update_menu
 		},
 		MENU_ITEM
 		{ 
-			command = EMenuSetStatusCommand; 
-			txt = r_string_update_setstatus;
+			command = EMenuChannelInfoCommand; 
+			txt = r_string_item_showchanneldetails;
 		},
 		MENU_ITEM
 		{ 
-			command = EMenuChannelInfoCommand; 
-			txt = r_string_item_showchanneldetails;
+			command = EMenuSetStatusCommand; 
+			txt = r_string_update_setstatus;
 		}
 	};
 }
@@ -703,7 +750,7 @@ RESOURCE MENU_PANE r_messaging_options_menu
 		MENU_ITEM
 		{ 
 			command = EMenuAddCommentCommand; 
-			txt = r_string_item_addcomment;
+			txt = r_string_options_addcomment;
 		},
 		MENU_ITEM
 		{ 
@@ -798,13 +845,13 @@ RESOURCE MENU_PANE r_messaging_options_channel_menu
 	{
 		MENU_ITEM
 		{ 
-			command = EMenuCopyChannelIdCommand; 
-			txt = r_string_channel_copychannelid;
+			command = EMenuMarkReadCommand; 
+			txt = r_string_channel_markread;
 		},
 		MENU_ITEM
 		{ 
-			command = EMenuMarkReadCommand; 
-			txt = r_string_channel_markread;
+			command = EMenuEditChannelCommand; 
+			txt = r_string_item_showchanneldetails;
 		},
 		MENU_ITEM
 		{ 
@@ -818,8 +865,8 @@ RESOURCE MENU_PANE r_messaging_options_channel_menu
 		},
 		MENU_ITEM
 		{ 
-			command = EMenuEditChannelCommand; 
-			txt = r_string_item_showchanneldetails;
+			command = EMenuCopyChannelIdCommand; 
+			txt = r_string_channel_copychannelid;
 		}
 	};
 }
@@ -830,16 +877,6 @@ RESOURCE MENU_PANE r_messaging_follow_menu
 	{
 		MENU_ITEM
 		{ 
-			command = EMenuAcceptCommand; 
-			txt = r_string_item_noticeaccept;
-		},
-		MENU_ITEM
-		{ 
-			command = EMenuDeclineCommand; 
-			txt = r_string_item_noticedecline;
-		},
-		MENU_ITEM
-		{ 
 			command = EMenuFollowLinkCommand; 
 			txt = r_string_item_follow;
 		},
@@ -847,6 +884,16 @@ RESOURCE MENU_PANE r_messaging_follow_menu
 		{ 
 			command = EMenuChannelInfoCommand; 
 			txt = r_string_item_showchanneldetails;
+		},
+		MENU_ITEM
+		{ 
+			command = EMenuAcceptCommand; 
+			txt = r_string_item_noticeaccept;
+		},
+		MENU_ITEM
+		{ 
+			command = EMenuDeclineCommand; 
+			txt = r_string_item_noticedecline;
 		},
 		MENU_ITEM
 		{ 
@@ -974,11 +1021,6 @@ RESOURCE MENU_PANE r_explorer_options_menu
 		{ 
 			command = EMenuRefreshCommand; 
 			txt = r_string_options_refresh;
-		},
-		MENU_ITEM
-		{ 
-			command = EMenuSelectCommand; 
-			txt = r_string_item_open;
 		},
 		MENU_ITEM
 		{ 
@@ -2068,7 +2110,6 @@ RESOURCE TBUF r_localized_string_deletechannel_text { buf = r_string_deletechann
 // Settings
 RESOURCE TBUF r_localized_string_newplace_title { buf = r_string_newplace_title; }
 RESOURCE TBUF r_localized_string_editplace_title { buf = r_string_editplace_title; }
-RESOURCE TBUF r_localized_string_updatefailed_title { buf = r_string_updatefailed_title; }
 RESOURCE TBUF r_localized_string_accountsettings_title { buf = r_string_settings_account_title; }
 RESOURCE TBUF r_localized_string_preferencessettings_title { buf = r_string_settings_usersettings; }
 RESOURCE TBUF r_localized_string_notificationssettings_title { buf = r_string_settings_notifications_title; }
@@ -2087,8 +2128,9 @@ RESOURCE TBUF r_localized_string_note_requestsent { buf = r_string_note_requests
 RESOURCE TBUF r_localized_string_note_feedbacksent { buf = r_string_note_feedbacksent; }
 RESOURCE TBUF r_localized_string_note_messagequeued { buf = r_string_note_messagequeued; }
 RESOURCE TBUF r_localized_string_note_offlinerequired { buf = r_string_note_offlinerequired; }
-RESOURCE TBUF r_localized_string_note_credentials_success { buf = r_string_settings_credentials_success; }
 RESOURCE TBUF r_localized_string_note_credentials_fail { buf = r_string_settings_credentials_fail; }
+RESOURCE TBUF r_localized_string_note_updatesuccess { buf = r_string_note_updatesucessful; }
+RESOURCE TBUF r_localized_string_note_updatefailed { buf = r_string_note_updatefailed; }
 
 // New/Edit channel
 RESOURCE TBUF r_localized_string_newchannel_title { buf = r_string_newchannel_title; }

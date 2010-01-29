@@ -32,8 +32,8 @@ rls_string r_string_next_menu "Дальше"
 rls_string r_string_hide_menu "Скрыть"
 
 // Item
-rls_string r_string_item_newchannel "Новый канал..."
-rls_string r_string_item_newplace "Новое место..."
+rls_string r_string_item_newchannel "Новый канал"
+rls_string r_string_item_newplace "Новое место"
 
 // Menu: Settings & Edit place
 rls_string r_string_options_edititem "Изменить"
@@ -41,11 +41,14 @@ rls_string r_string_options_searchplace "Поиск по данным"
 rls_string r_string_options_remove "Удалить"
 rls_string r_string_options_delete "Delete"
 
+// Notes
 rls_string r_string_note_noresultsfound "Не найдено"
 rls_string r_string_note_requestsent "Запрос отправлен"
 rls_string r_string_note_feedbacksent "Feedback sent"
 rls_string r_string_note_messagequeued "Сообщение будет отправлено, как только Вы подключитесь к сети"
 rls_string r_string_note_offlinerequired "Для изменения, отключитесь от сети"
+rls_string r_string_note_updatesucessful "Обновление успешно завершено"
+rls_string r_string_note_updatefailed "Ошибка обновления"
 
 // Positioning methods
 rls_string r_string_positioning_stationary "Сейчас вы можете отметить это место"
@@ -73,17 +76,16 @@ rls_string r_string_options_done "Завершить"
 rls_string r_string_options_connect "Подключиться"
 rls_string r_string_options_disconnect "Отключиться"
 rls_string r_string_options_settings "Настройки"
-rls_string r_string_item_viewmessages "Просмотреть сообщения"
 rls_string r_string_item_viewchannelmessages "Просмотр канала"
-rls_string r_string_item_viewprivatemessages "Просмотреть личные сообщения"
-rls_string r_string_item_showplacedetails "See place details"
-rls_string r_string_item_showchanneldetails "See channel details"
+rls_string r_string_item_viewprivatemessages "Показать личные сообщения"
+rls_string r_string_item_showplacedetails "Подробности места"
+rls_string r_string_item_showchanneldetails "Информация о канале"
 rls_string r_string_item_sendplacebysms "Отправить координаты по СМС"
 rls_string r_string_item_sendinvite "Пригласить в Buddycloud"
 rls_string r_string_item_noticeaccept "Принять"
 rls_string r_string_item_noticeacceptandfollow "Принять и последующей"
 rls_string r_string_item_noticedecline "Закат"
-rls_string r_string_update_setstatus "Обновить статус"
+rls_string r_string_update_setstatus "Post status"
 rls_string r_string_options_invite "Подписаться..."
 rls_string r_string_settings_usersettings "Параметры"
 rls_string r_string_settings_communitysettings "Опубликовать в Online"
@@ -93,20 +95,19 @@ rls_string r_string_note_followinglistempty "You are not following anything.\n\n
 
 // Menu: Messaging
 rls_string r_string_options_postrequest "Request post privilege"
-rls_string r_string_options_postmessage "Write new post"
-rls_string r_string_options_postmedia "Закачать медиа-файл"
 rls_string r_string_options_jumptounread "Перейти к непрочитанному"
-rls_string r_string_options_notificationon "Включить оповещания"
-rls_string r_string_options_notificationoff "Отключить оповещания"
-
-rls_string r_string_item_addcomment "Write comment"
-rls_string r_string_item_likepost "♥ post"
-rls_string r_string_item_copypost "Copy post"
-rls_string r_string_item_reportpost "Report post"
-rls_string r_string_item_removepost "Delete post"
+rls_string r_string_options_addcomment "Post comment"
+rls_string r_string_options_postmessage "Post topic"
+rls_string r_string_options_postmedia "Закачать медиа-файл"
+rls_string r_string_options_notificationon "Enable buzz"
+rls_string r_string_options_notificationoff "Disable buzz"
+rls_string r_string_item_likepost "♥ топик"
+rls_string r_string_item_copypost "Скопировать топик"
+rls_string r_string_item_reportpost "Пожаловаться на топик"
+rls_string r_string_item_removepost "Удалить топик"
 
 rls_string r_string_options_itemchannel "Канал"
-rls_string r_string_channel_copychannelid "Copy #Id"
+rls_string r_string_channel_copychannelid "Copy #Channel Id"
 rls_string r_string_channel_markread "Mark channel read"
 rls_string r_string_options_reportchannel "Report channel"
 
@@ -134,12 +135,12 @@ rls_string r_string_item_subscribe "Добавить в мои места"
 
 // Menu: Explorer
 rls_string r_string_options_explore "Обзор"
-rls_string r_string_item_seefollowers "Просмотр на кого подписан"
-rls_string r_string_item_seemoderators "See moderators"
-rls_string r_string_item_seefollowing "Просмотр подписчиков"
-rls_string r_string_item_seemoderating "See moderating"
-rls_string r_string_item_seeproducing "Смотреть создателей"
-rls_string r_string_item_seenearby "Посмотреть кто рядом"
+rls_string r_string_item_seefollowers "Show followers"
+rls_string r_string_item_seemoderators "Show moderators"
+rls_string r_string_item_seefollowing "Show following"
+rls_string r_string_item_seemoderating "Show moderating"
+rls_string r_string_item_seeproducing "Show producing"
+rls_string r_string_item_seenearby "Show nearby"
 
 rls_string r_string_title_followedby "$OBJECT's подписанны"
 rls_string r_string_title_moderatedby "$OBJECT's moderators"
@@ -162,14 +163,13 @@ rls_string r_string_list_channelsyoumightlike "Каналы, возможно и
 rls_string r_string_list_followersfavourites "Followers' Favourites"
 rls_string r_string_list_mostpopularchannels "Популярные каналы"
 
-rls_string r_string_item_open "Открыть"
 rls_string r_string_item_follow "Подписаться"
 rls_string r_string_item_unfollow "Отписаться"
 
 // Channel: Settings & Configuration
 rls_string r_string_note_mediauploadready "Вы можете закачать медиа-файл по ссылке $LINK"
 
-rls_string r_string_item_changerole "Change permission"
+rls_string r_string_item_changerole "Изменить привелегии"
 rls_string r_string_changerole_itemlist_outcast "Заблокирован каналом"
 rls_string r_string_changerole_itemlist_follower "Подписан на"
 rls_string r_string_changerole_itemlist_publisher "Follower + post"
@@ -192,16 +192,16 @@ rls_string r_string_note_subscriptionrejected "Your subscription to this channel
 rls_string r_string_settings_account_title "Учётная запись"
 rls_string r_string_settings_itemlist_fullname "Display name"
 rls_string r_string_settings_itemlist_username "Id"
-rls_string r_string_settings_itemlist_username_hint "e.g. 'name@gmail.com'"
+rls_string r_string_settings_itemlist_username_hint "прм. 'name@gmail.com'"
 rls_string r_string_settings_itemlist_password "Пароль"
-rls_string r_string_settings_itemlist_password_hint "XMPP server password"
-rls_string r_string_settings_itemlist_server "XMPP server"
+rls_string r_string_settings_itemlist_password_hint "XMPP пароль"
+rls_string r_string_settings_itemlist_server "XMPP сервер"
 
 // Preference settings
 rls_string r_string_settings_itemlist_language "Язык интерфейса"
-rls_string r_string_settings_itemlist_blocking "Show private messages"
-rls_string r_string_settings_itemlist_blockingalwaysshow "From anyone"
-rls_string r_string_settings_itemlist_blockingfollowers "Followers only"
+rls_string r_string_settings_itemlist_blocking "Allow private messages"
+rls_string r_string_settings_itemlist_blockingalwaysshow "От Всех"
+rls_string r_string_settings_itemlist_blockingfollowers "Только подписчики"
 rls_string r_string_settings_itemlist_accesspoint "Точка доступа"
 rls_string r_string_settings_itemlist_accesspointuserdefined "Определено пользователем"
 rls_string r_string_settings_itemlist_accesspointalwaysask "Всегда спрашивать"
@@ -234,13 +234,11 @@ rls_string r_string_settings_itemlist_off "Выкл."
 
 // Communities
 rls_string r_string_settings_facebook_text "Вам необходимо добавить приложение Buddycloud, размещенное по адресу http://apps.facebook.com/buddycloud. Пожалуйста, добавьте это приложение, авторизируйтесь на сайте и получите полноценный доступ к сервису."
-rls_string r_string_settings_credentials_success "Обновление успешно завершено"
 rls_string r_string_settings_credentials_fail "Ошибка обновления.\nПожалуйста проверьте ваши полномочия и повторите попытку"
 
 // Edit Place List
 rls_string r_string_newplace_title "Новое место"
 rls_string r_string_editplace_title "Редактировать местоположение"
-rls_string r_string_updatefailed_title "Ошибка обновления"
 
 rls_string r_string_editplace_itemlist_name "Имя"
 rls_string r_string_editplace_itemlist_name_hint "например 'Дом' или 'Кафе Океан'"
@@ -273,7 +271,7 @@ rls_string r_string_editchannel_itemlist_access "Access"
 rls_string r_string_editchannel_itemlist_access_open "Open channel"
 rls_string r_string_editchannel_itemlist_access_whitelist "Members only"
 rls_string r_string_editchannel_itemlist_defaultaffiliation "New followers can"
-rls_string r_string_editchannel_itemlist_defaultaffiliation_member "Read only"
+rls_string r_string_editchannel_itemlist_defaultaffiliation_member "Чтение"
 rls_string r_string_editchannel_itemlist_defaultaffiliation_publisher "Read and post"
 
 rls_string r_string_note_channelexists "This #channel_id already exists. Please enter a unique one."
@@ -287,11 +285,11 @@ rls_string r_string_exit_title "Подтверждение выхода"
 rls_string r_string_exit_text "Отключиться от сети и закрыть Buddycloud.\nВы уверенны?"
 
 // Authorization Error
-rls_string r_string_authorizationerror_title "Authorization failed"
+rls_string r_string_authorizationerror_title "Авторизация неудачна"
 rls_string r_string_authorizationerror_text "Username already exists or password is incorrect. Please check your Account settings and try again."
 
 // Resolve Error
-rls_string r_string_serverresolveerror_title "Connection error"
+rls_string r_string_serverresolveerror_title "Ошибка соединения"
 rls_string r_string_serverresolveerror_text "XMPP server could not be resolved. Please enter your XMPP server and try again."
 
 // Delete Item Message
@@ -314,9 +312,9 @@ rls_string r_string_dialog_moodis "есть "
 rls_string r_string_dialog_setcurrentlocation "Указать мое место:"
 rls_string r_string_dialog_setnextlocation "Задать следующее место:"
 rls_string r_string_dialog_newmessage "Write post:"
-rls_string r_string_dialog_newcomment "Write comment:"
+rls_string r_string_dialog_newcomment "Оставить комментарий:"
 rls_string r_string_dialog_requestcomment "Request comment:"
-rls_string r_string_dialog_addcontact "Enter contact's Id (eg. test@gtalk.com):"
+rls_string r_string_dialog_addcontact "Ввести адресс пользователя (прм. test@gtalk.com):"
 
 // Notes
 rls_string r_string_note_connecting "Соединение..."
@@ -338,7 +336,7 @@ rls_string r_string_step3_label2 "Register new account"
 
 rls_string r_string_step4_title "Who are you?"
 rls_string r_string_step4_text1 "Enter your existing account details.\n\nThis looks like 'name@gmail.com' or 'name@ovi.com'."
-rls_string r_string_step4_text2 "Choose a new username and password to start using buddycloud.  If you have already registered for buddycloud on another phone, enter those details here."
+rls_string r_string_step4_text2 "Выберите новое имя пользователя и пароль, чтобы начать пользоваться buddycloud. Если вы уже зарегистрированы, укажите логин и пароль."
 
 rls_string r_string_step5_title "Поздравляем!"
 rls_string r_string_step5_text "You are setup and ready to use buddycloud channels."

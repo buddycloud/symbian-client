@@ -35,11 +35,14 @@ void CBuddycloudEditChannelList::ConstructL(const TRect& aRect, TViewData aQuery
 	if(iChannelItem == NULL) {		
 		TPtrC aEncData(iTextUtilities->Utf8ToUnicodeL(iQueryData.iData));
 		
-		iTitle.Copy(aEncData.Left(iTitle.MaxLength()));
 		iId.Copy(aEncData.Left(iId.MaxLength()));
 		
 		ValidateChannelId();
-	
+		
+		if(iId.Length() > 0) {
+			iChannelSaveAllowed = true;
+		}
+			
 		iChannelEditAllowed = true;
 	}
 	
@@ -70,14 +73,23 @@ void CBuddycloudEditChannelList::SetTitleL(TInt aResourceId) {
 void CBuddycloudEditChannelList::ValidateChannelId() {
 	iId.LowerCase();
 	
+	// Remove non-ascii characters
 	for(TInt i = iId.Length() - 1; i >= 0; i--) {
-		if(iId[i] == 32) {
-			iId[i] = 95;
-		}
-		else if(iId[i] <= 47 || (iId[i] >= 57 && iId[i] <= 64) ||
-				(iId[i] >= 91 && iId[i] <= 94) || iId[i] == 96 || iId[i] >= 123) {
+		if(iId[i] != 32 && iId[i] != 95 && iId[i] != 45 && 
+				(iId[i] <= 47 || (iId[i] >= 57 && iId[i] <= 64) ||
+				(iId[i] >= 91 && iId[i] <= 96) || iId[i] >= 123)) {
 			
 			iId.Delete(i, 1);
+		}
+	}
+	
+	// Trim whitespace
+	iId.Trim();
+	
+	// Add hyphens
+	for(TInt i = 0; i < iId.Length(); i++) {
+		if(iId[i] == 32 || iId[i] == 95) {
+			iId[i] = 45;
 		}
 	}
 }
@@ -92,7 +104,7 @@ void CBuddycloudEditChannelList::CollectChannelMetadataL(const TDesC& aNodeId) {
 	pDiscoItemsStanza.Insert(94, aEncNodeId);
 	pDiscoItemsStanza.Insert(8, KBuddycloudPubsubServer);
 	
-	iXmppInterface->SendAndAcknowledgeXmppStanza(pDiscoItemsStanza, this, true);
+	iXmppInterface->SendAndAcknowledgeXmppStanza(pDiscoItemsStanza, this, true, EXmppPriorityHigh);
 	CleanupStack::PopAndDestroy(); // aDiscoItemsStanza
 }
 
@@ -255,7 +267,7 @@ CAknSettingItem* CBuddycloudEditChannelList::CreateSettingItemL (TInt aIdentifie
 		case EEditChannelItemAccess:
 			aSettingItem = new (ELeave) CAknBinaryPopupSettingItem(aIdentifier, iAccess);
 			
-			if(!iChannelItem || iChannelItem->GetItemType() != EItemChannel) {
+			if(iChannelItem && iChannelItem->GetItemType() != EItemChannel) {
 				aSettingItem->SetHidden(true);
 			}
 			break;

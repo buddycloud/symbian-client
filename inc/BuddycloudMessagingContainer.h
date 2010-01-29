@@ -36,7 +36,7 @@ class CTextWrappedEntry : public CBase {
 		~CTextWrappedEntry();
 		
 	public:
-		CAtomEntryData* GetEntry();
+		CAtomEntryData* GetEntry();		
 		TBool Comment();
 		
 		TBool Read();

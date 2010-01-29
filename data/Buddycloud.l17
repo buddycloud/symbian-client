@@ -32,8 +32,8 @@ rls_string r_string_next_menu "Következő"
 rls_string r_string_hide_menu "Elrejt"
 
 // Item
-rls_string r_string_item_newchannel "Új csatorna..."
-rls_string r_string_item_newplace "Új hely..."
+rls_string r_string_item_newchannel "Új csatorna"
+rls_string r_string_item_newplace "Új hely"
 
 // Menu: Settings & Edit place
 rls_string r_string_options_edititem "Változtat"
@@ -41,11 +41,14 @@ rls_string r_string_options_searchplace "Részletek keresése"
 rls_string r_string_options_remove "Eltávolítás"
 rls_string r_string_options_delete "Delete"
 
+// Notes
 rls_string r_string_note_noresultsfound "Nincsen keresési eredmény"
 rls_string r_string_note_requestsent "Kérés elküldve"
 rls_string r_string_note_feedbacksent "Feedback sent"
 rls_string r_string_note_messagequeued "Üzenet következős kapcsolódáskor lesz elküldve"
 rls_string r_string_note_offlinerequired "Ezt csak offline módban csinálhatod"
+rls_string r_string_note_updatesucessful "Frissítés sikeres"
+rls_string r_string_note_updatefailed "Frissítés nem sikerült"
 
 // Positioning methods
 rls_string r_string_positioning_stationary "Most rögzítheted ezt a helyet"
@@ -73,11 +76,10 @@ rls_string r_string_options_done "Kész"
 rls_string r_string_options_connect "Csatlakozás"
 rls_string r_string_options_disconnect "Kapcsolat bontása"
 rls_string r_string_options_settings "Beállítások"
-rls_string r_string_item_viewmessages "Üzenet megtekintése"
 rls_string r_string_item_viewchannelmessages "Csatorna megtekintése"
-rls_string r_string_item_viewprivatemessages "Személyes üzenetek"
-rls_string r_string_item_showplacedetails "See place details"
-rls_string r_string_item_showchanneldetails "See channel details"
+rls_string r_string_item_viewprivatemessages "Privát üzenetek megtekintése"
+rls_string r_string_item_showplacedetails "Hely részletei"
+rls_string r_string_item_showchanneldetails "Csatorna részletei"
 rls_string r_string_item_sendplacebysms "Hely küldése sms-ben"
 rls_string r_string_item_sendinvite "Meghívás buddycloudra"
 rls_string r_string_item_noticeaccept "Elfogad"
@@ -93,20 +95,19 @@ rls_string r_string_note_followinglistempty "You are not following anything.\n\n
 
 // Menu: Messaging
 rls_string r_string_options_postrequest "Írási jog kérése"
+rls_string r_string_options_jumptounread "Ugrás az olvasatlanokhoz"
+rls_string r_string_options_addcomment "Post comment"
 rls_string r_string_options_postmessage "Új hozzászólás írása"
 rls_string r_string_options_postmedia "Média közzététele"
-rls_string r_string_options_jumptounread "Ugrás az olvasatlanokhoz"
 rls_string r_string_options_notificationon "Figyelmeztetés bekapcs."
 rls_string r_string_options_notificationoff "Figyelmeztetés kikapcs."
-
-rls_string r_string_item_addcomment "Megjegyzés írása"
 rls_string r_string_item_likepost "♥ hozzászólás"
 rls_string r_string_item_copypost "Hozzászólás másolása"
 rls_string r_string_item_reportpost "Hozzászólás jelentése"
 rls_string r_string_item_removepost "Hozzászólás törlése"
 
 rls_string r_string_options_itemchannel "Csatorna"
-rls_string r_string_channel_copychannelid "Copy #Id"
+rls_string r_string_channel_copychannelid "Copy #Channel Id"
 rls_string r_string_channel_markread "Csatorna megjelölése olvasottként"
 rls_string r_string_options_reportchannel "Report channel"
 
@@ -135,9 +136,9 @@ rls_string r_string_item_subscribe "Hozzáadás a Helyeimhez"
 // Menu: Explorer
 rls_string r_string_options_explore "Böngészés"
 rls_string r_string_item_seefollowers "Követői"
-rls_string r_string_item_seemoderators "See moderators"
+rls_string r_string_item_seemoderators "Show moderators"
 rls_string r_string_item_seefollowing "Követett csatornák"
-rls_string r_string_item_seemoderating "See moderating"
+rls_string r_string_item_seemoderating "Show moderating"
 rls_string r_string_item_seeproducing "Létrehozott csatornák"
 rls_string r_string_item_seenearby "Mi van a környékén?"
 
@@ -162,7 +163,6 @@ rls_string r_string_list_channelsyoumightlike "Számodra érdekes csatornák"
 rls_string r_string_list_followersfavourites "Követők kedvencei"
 rls_string r_string_list_mostpopularchannels "Legnépszerűbb csatornák"
 
-rls_string r_string_item_open "Megnyit"
 rls_string r_string_item_follow "Kövesd..."
 rls_string r_string_item_unfollow "Követés megszüntetése"
 
@@ -199,7 +199,7 @@ rls_string r_string_settings_itemlist_server "XMPP szerver"
 
 // Preference settings
 rls_string r_string_settings_itemlist_language "Nyelv kijelzése"
-rls_string r_string_settings_itemlist_blocking "Privát üzenetek megtekintése"
+rls_string r_string_settings_itemlist_blocking "Allow private messages"
 rls_string r_string_settings_itemlist_blockingalwaysshow "Mindenkitől"
 rls_string r_string_settings_itemlist_blockingfollowers "Csak követők"
 rls_string r_string_settings_itemlist_accesspoint "Használandó Hozzáférési Pont"
@@ -234,13 +234,11 @@ rls_string r_string_settings_itemlist_off "Ki"
 
 // Communities
 rls_string r_string_settings_facebook_text "Továbbítunk a http://apps.facebook.com/buddycloud weboldalra, amely a buddycloud alkalmazás oldala. Kérlek lépj be és engedélyezd az alkalmazást."
-rls_string r_string_settings_credentials_success "Frissítés sikeres"
 rls_string r_string_settings_credentials_fail "Frissítés nem sikerült.\nKérlek nézd át a beállításaidat és próbáld újra"
 
 // Edit Place List
 rls_string r_string_newplace_title "Új hely"
 rls_string r_string_editplace_title "Hely szerkesztése"
-rls_string r_string_updatefailed_title "Frissítés nem sikerült"
 
 rls_string r_string_editplace_itemlist_name "Név"
 rls_string r_string_editplace_itemlist_name_hint "pl. 'Otthon' vagy 'Mozi'"
@@ -316,7 +314,7 @@ rls_string r_string_dialog_setnextlocation "Következő hely beállítása:"
 rls_string r_string_dialog_newmessage "Hozzászlás:"
 rls_string r_string_dialog_newcomment "Hozzászólás írása:"
 rls_string r_string_dialog_requestcomment "Megjegyzés kérése:"
-rls_string r_string_dialog_addcontact "Add meg az ismerős azonosítóját (pl. test@gtalk.com):"
+rls_string r_string_dialog_addcontact "Enter contact (eg. 'test@gmail.com') or channel Id (eg. '#help'):"
 
 // Notes
 rls_string r_string_note_connecting "Csatlakozás..."

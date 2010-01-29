@@ -33,7 +33,7 @@ enum TExplorerItemType {
 };
 
 enum TExplorerState {
-	EExplorerIdle, EExplorerRequesting
+	EExplorerIdle, EExplorerNoItems, EExplorerRequesting
 };
 
 /*

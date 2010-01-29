@@ -311,8 +311,12 @@ void CXmppEngine::Disconnect() {
 #ifdef _DEBUG
 	iEngineObserver->XmppDebug(_L8("XMPP  CXmppEngine::Disconnect"));
 #endif
-
+	
 	iEngineState = EXmppDisconnected;
+	
+	iStateTimer->Stop();
+	iReadTimer->Stop();
+
 	iEngineObserver->XmppStateChanged(EXmppDisconnected);
 	iConnectionId = 0;
 
@@ -739,7 +743,7 @@ void CXmppEngine::SendAndForgetXmppStanza(const TDesC8& aStanza, TBool aPersisan
 	iXmppOutbox->AddMessage(aMessage);
 	CleanupStack::Pop(); // aMessage
 	
-	if(iSilenceState == EXmppSilenceTest && !iXmppOutbox->SendInProgress()) {
+	if(iEngineState > EXmppConnecting && iSilenceState == EXmppSilenceTest && !iXmppOutbox->SendInProgress()) {
 		if(iSendQueuedMessages || iXmppOutbox->ContainsPriorityMessages(EXmppPriorityHigh)) {			
 			WriteToStreamL(iXmppOutbox->GetNextMessage()->GetStanza());
 		}
@@ -747,7 +751,7 @@ void CXmppEngine::SendAndForgetXmppStanza(const TDesC8& aStanza, TBool aPersisan
 }
 
 void CXmppEngine::SendAndAcknowledgeXmppStanza(const TDesC8& aStanza, MXmppStanzaObserver* aObserver, TBool aPersisant, TXmppMessagePriority aPriority) {
-	if(aPersisant || aPriority == EXmppPriorityHigh || (!aPersisant && (iEngineState == EXmppOnline || iLastError != EXmppNone))) {
+	if(aPersisant || aPriority == EXmppPriorityHigh || (!aPersisant && (iEngineState > EXmppConnecting || iLastError != EXmppNone))) {
 		// Add observer to observing list
 		CXmlParser* aXmlParser = CXmlParser::NewLC(aStanza);
 		TPtrC8 aStanzaId = aXmlParser->GetStringAttribute(_L8("id"));
@@ -793,15 +797,8 @@ void CXmppEngine::XmppStanzaAcknowledgedL(const TDesC8& aStanza, const TDesC8& a
 	else if(aId.Compare(_L8("roster1")) == 0) {
 		// Receive Roster				
 		if(iRosterObserver) {
-			CTextUtilities* aTextUtilities = CTextUtilities::NewLC();
-				
-			iRosterObserver->RosterOwnJidL(aTextUtilities->Utf8ToUnicodeL(aXmlParser->GetStringAttribute(_L8("to"))));
-			CleanupStack::PopAndDestroy(); // aTextUtilities
-
 			if(aAttributeType.Compare(_L8("result")) == 0) {
-				if(aXmlParser->MoveToElement(_L8("query"))) {
-					iRosterObserver->RosterItemsL(aXmlParser->GetStringData(), false);
-				}
+				iRosterObserver->XmppRosterL(aStanza);
 			}
 		}
 
@@ -1046,7 +1043,7 @@ void CXmppEngine::Error(TTcpIpEngineError aError) {
 		case ETcpIpSecureFailed:
 			iLastError = EXmppTlsFailed;
 		default:
-			if(iConnectionAttempts > 5) {
+			if(aError != ETcpIpDnsTimeout && iConnectionAttempts > 5) {
 				// Connection failed too many times
 				HostResolved(KNullDesC, 5222);
 				

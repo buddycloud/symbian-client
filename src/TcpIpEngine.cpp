@@ -569,7 +569,13 @@ void CTcpIpEngine::RunL() {
 				CloseConnection();
 
 				iEngineStatus = ETcpIpDisconnected;
-				iEngineObserver->Error(ETcpIpHostNameLookUpFailed);
+				
+				if(iStatus == -5120) {
+					iEngineObserver->Error(ETcpIpDnsTimeout);
+				}
+				else {
+					iEngineObserver->Error(ETcpIpHostNameLookUpFailed);
+				}
 			}
 			break;
 		case ETcpIpLookUpAddress:
@@ -599,7 +605,13 @@ void CTcpIpEngine::RunL() {
 				CloseConnection();
 
 				iEngineStatus = ETcpIpDisconnected;
-				iEngineObserver->Error(ETcpIpAddressLookUpFailed);
+				
+				if(iStatus == -5120) {
+					iEngineObserver->Error(ETcpIpDnsTimeout);
+				}
+				else {
+					iEngineObserver->Error(ETcpIpAddressLookUpFailed);
+				}
 			}
 			break;
 		case ETcpIpConnecting:
@@ -634,7 +646,13 @@ void CTcpIpEngine::RunL() {
 				CloseConnection();
 
 				iEngineStatus = ETcpIpDisconnected;
-				iEngineObserver->Error(ETcpIpSecureFailed);
+				
+				if(iStatus == KErrAbort) {
+					iEngineObserver->Error(ETcpIpCancelled);
+				}
+				else {
+					iEngineObserver->Error(ETcpIpSecureFailed);
+				}
 			}			
 			break;
 		case ETcpIpCarrierChanging:

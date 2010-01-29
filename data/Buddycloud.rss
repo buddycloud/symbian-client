@@ -40,10 +40,10 @@ RESOURCE EIK_APP_INFO {}
 
 RESOURCE TBUF r_string_appversion 
 {
-	buf = "S60_9_0.05.29"; 
+	buf = "S60_9_0.05.36"; 
 }
 
-rls_string r_string_about_text "©2009 buddycloud\nVersion: 0.05.29\nhttp://buddycloud.com\n\nData Sent: %dKB\nData Received: %dKB" 
+rls_string r_string_about_text "©2009 buddycloud\nVersion: 0.05.36\nhttp://buddycloud.com\n\nData Sent: %dKB\nData Received: %dKB" 
 
 RESOURCE TBUF r_localized_string_about_text { buf = r_string_about_text; }
 
@@ -311,6 +311,11 @@ RESOURCE ARRAY r_settings_item_language_texts
 		{
 			value = 513;
 			text = "Boarisch";
+		},
+		AVKON_ENUMERATED_TEXT
+		{
+			value = 514;
+			text = "LOLspeak";
 		}
 	};
 }

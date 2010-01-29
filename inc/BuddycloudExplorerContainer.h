@@ -19,6 +19,10 @@
 #include "ViewReference.h"
 #include "XmppInterfaces.h"
 
+#ifdef __SERIES60_40__
+#include <akntoolbar.h>
+#endif
+
 /*
 ----------------------------------------------------------------------------
 --
@@ -54,6 +58,11 @@ class CBuddycloudExplorerContainer : public CBuddycloudListComponent, public MAk
 		void RenderListItems();
 		void RepositionItems(TBool aSnapToItem);
 		void HandleItemSelection(TInt aItemId);
+
+#ifdef __SERIES60_40__
+	public:
+		void DynInitToolbarL(TInt aResourceId, CAknToolbar* aToolbar);
+#endif
 
 	public:
 		void DynInitMenuPaneL(TInt aResourceId, CEikMenuPane* aMenuPane);

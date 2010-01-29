@@ -56,8 +56,8 @@ enum TBuddycloudXmppIdEnumerations {
 	EXmppIdSetCurrentPlace, EXmppIdCreatePlace, EXmppIdSearchForPlace, EXmppIdGetPlaceDetails, EXmppEditPlaceDetails, 
 	// Pubsub id's
 	EXmppIdGetPubsubSubscriptions, EXmppIdGetUsersPubsubNodeAffiliations, EXmppIdPublishMood, EXmppIdPublishFuturePlace, 
-	EXmppIdCreateChannel, EXmppIdPublishChannelPost, EXmppIdAddChannelSubscription, EXmppIdGetChannelMetadata, 
-	EXmppIdRequestMediaPost,
+	EXmppIdCreateChannel, EXmppIdPublishChannelPost, EXmppIdChangeChannelAffiliation, EXmppIdAddChannelSubscription, 
+	EXmppIdGetChannelMetadata, EXmppIdRequestMediaPost,
 	// Explorer id's
 	EXmppIdGetDirectories, EXmppIdGetNearbyObjects, EXmppIdGetNodeAffiliations, EXmppIdGetMaitredList
 };

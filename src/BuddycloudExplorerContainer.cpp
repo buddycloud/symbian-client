@@ -56,7 +56,11 @@ void CBuddycloudExplorerContainer::ConstructL(const TRect& aRect, TViewReference
 	CBuddycloudListComponent::ConstructL();
 	
 	SetRect(iRect);
-	ActivateL();	
+	ActivateL();		
+	
+#ifdef __SERIES60_40__
+	DynInitToolbarL(R_EXPLORER_TOOLBAR, iViewAccessor->ViewToolbar());
+#endif		
 	
 	// Initialize explorer
 	TViewData aQuery = iQueryReference.iNewViewData;
@@ -107,11 +111,19 @@ void CBuddycloudExplorerContainer::NotificationEvent(TBuddycloudLogicNotificatio
 	if(aEvent == ENotificationLocationUpdated) {
 		TInt aLevel = iExplorerLevels.Count() - 1;
 
-		if(iExplorerLevels.Count() > 0 && iExplorerLevels[aLevel]->iResultItems.Count() == 0) {			
+		if(iExplorerState < EExplorerRequesting && 
+				iExplorerLevels.Count() > 0 && iExplorerLevels[aLevel]->iResultItems.Count() == 0) {			
+			
 			// Re-request explorer level results
 			RefreshLevelL();
 		}		
 	}
+#ifdef __SERIES60_40__
+	else if(aEvent == ENotificationConnectivityChanged) {
+		DynInitToolbarL(R_EXPLORER_TOOLBAR, iViewAccessor->ViewToolbar());
+		
+	}
+#endif		
 	else {
 		CBuddycloudListComponent::NotificationEvent(aEvent, aId);
 	}
@@ -132,23 +144,25 @@ void CBuddycloudExplorerContainer::ParseAndSendXmppStanzasL(const TDesC8& aStanz
 			iQueryResultSize++;
 	
 			// Send query
-			iXmppInterface->SendAndAcknowledgeXmppStanza(aSlicedStanza.Left(aSearchResult), this, true);		
+			iXmppInterface->SendAndAcknowledgeXmppStanza(aSlicedStanza.Left(aSearchResult), this, true, EXmppPriorityHigh);		
 			aSlicedStanza.Set(aSlicedStanza.Mid(aSearchResult));
 		}
 		
 		if(aSlicedStanza.Length() > 0) {
 			iQueryResultSize++;
-			iXmppInterface->SendAndAcknowledgeXmppStanza(aSlicedStanza, this, true);		
+			iXmppInterface->SendAndAcknowledgeXmppStanza(aSlicedStanza, this, true, EXmppPriorityHigh);		
 		}
 		
 		if(iQueryResultSize == 0) {
-			iExplorerState = EExplorerIdle;
+			iExplorerState = EExplorerNoItems;
 		}
 	}
 }
 
 void CBuddycloudExplorerContainer::PushLevelL(const TDesC& aTitle, const TDesC8& aStanza) {
 	if(aStanza.Length() > 0) {
+		iTimer->Stop();
+		
 		if(iExplorerLevels.Count() > 0) {
 			TInt aLevel = iExplorerLevels.Count() - 1;
 			iExplorerLevels[aLevel]->iSelectedResultItem = iSelectedItem;
@@ -173,7 +187,6 @@ void CBuddycloudExplorerContainer::PushLevelL(const TDesC& aTitle, const TDesC8&
 		
 		// Set title
 		SetTitleL(aTitle);
-		iTimer->After(15000000);
 	
 		// Send query
 		ParseAndSendXmppStanzasL(aStanza);
@@ -204,7 +217,6 @@ void CBuddycloudExplorerContainer::PopLevelL() {
 		
 		// Set title
 		SetTitleL(iExplorerLevels[aLevel]->GetQueryTitle());
-		iTimer->After(15000000);
 
 		// Update screen
 		RenderWrappedText(iSelectedItem);
@@ -216,13 +228,18 @@ void CBuddycloudExplorerContainer::PopLevelL() {
 void CBuddycloudExplorerContainer::RefreshLevelL() {
 	TInt aLevel = iExplorerLevels.Count() - 1;
 
-	if(iExplorerState == EExplorerIdle && aLevel >= 0) {
+	if(iExplorerState < EExplorerRequesting && aLevel >= 0) {
 		if(iExplorerLevels[aLevel]->GetQueriedStanza().Length() > 0) {
 			// Clear previous result data
 			iExplorerLevels[aLevel]->ClearResultItems();
 			
 			// Send query
 			ParseAndSendXmppStanzasL(iExplorerLevels[aLevel]->GetQueriedStanza());
+			
+			// Update screen
+			RenderWrappedText(iSelectedItem);
+			RepositionItems(true);
+			RenderScreen();
 		}
 	}
 }
@@ -252,7 +269,7 @@ void CBuddycloudExplorerContainer::RequestMoreResultsL() {
 			// Send query
 			iQueryResultSize++;
 			iExplorerState = EExplorerRequesting;
-			iXmppInterface->SendAndAcknowledgeXmppStanza(pNextResultsStanza, this, true);		
+			iXmppInterface->SendAndAcknowledgeXmppStanza(pNextResultsStanza, this, true, EXmppPriorityHigh);		
 			
 			CleanupStack::PopAndDestroy(); // aNextResultsStanza
 		}
@@ -273,15 +290,17 @@ void CBuddycloudExplorerContainer::RenderWrappedText(TInt aIndex) {
 	}
 	else {
 		// Empty list
-		TInt aResourceId = R_LOCALIZED_STRING_NOTE_NORESULTSFOUND;
-			
-		if(iExplorerState != EExplorerIdle) {
-			aResourceId = R_LOCALIZED_STRING_NOTE_REQUESTING;
-		}		
-
-		HBufC* aEmptyList = iEikonEnv->AllocReadResourceLC(aResourceId);		
-		iTextUtilities->WrapToArrayL(iWrappedTextArray, iSecondaryBoldFont, *aEmptyList, (iRect.Width() - 2 - iLeftBarSpacer - iRightBarSpacer));		
-		CleanupStack::PopAndDestroy(); // aEmptyList		
+		if(iExplorerState > EExplorerIdle) {
+			TInt aResourceId = R_LOCALIZED_STRING_NOTE_NORESULTSFOUND;
+				
+			if(iExplorerState == EExplorerRequesting) {
+				aResourceId = R_LOCALIZED_STRING_NOTE_REQUESTING;
+			}		
+	
+			HBufC* aEmptyList = iEikonEnv->AllocReadResourceLC(aResourceId);		
+			iTextUtilities->WrapToArrayL(iWrappedTextArray, iSecondaryBoldFont, *aEmptyList, (iRect.Width() - 2 - iLeftBarSpacer - iRightBarSpacer));		
+			CleanupStack::PopAndDestroy(); // aEmptyList
+		}
 	}
 }
 
@@ -627,13 +646,24 @@ void CBuddycloudExplorerContainer::HandleItemSelection(TInt aItemId) {
 	}
 }
 
+#ifdef __SERIES60_40__
+void CBuddycloudExplorerContainer::DynInitToolbarL(TInt aResourceId, CAknToolbar* aToolbar) {
+	if(aResourceId == R_EXPLORER_TOOLBAR) {
+		aToolbar->SetItemDimmed(EMenuEditChannelCommand, true, true);
+		
+		if(iBuddycloudLogic->GetState() == ELogicOnline) {
+			aToolbar->SetItemDimmed(EMenuEditChannelCommand, false, true);
+		}
+	}	
+}
+#endif
+
 void CBuddycloudExplorerContainer::DynInitMenuPaneL(TInt aResourceId, CEikMenuPane* aMenuPane) {
 	TInt aLevel = iExplorerLevels.Count() - 1;
 
 	if(aResourceId == R_EXPLORER_OPTIONS_MENU) {
 		aMenuPane->SetItemDimmed(EMenuConnectCommand, true);
 		aMenuPane->SetItemDimmed(EMenuRefreshCommand, true);
-		aMenuPane->SetItemDimmed(EMenuSelectCommand, true);
 		aMenuPane->SetItemDimmed(EMenuEditChannelCommand, true);
 		aMenuPane->SetItemDimmed(EMenuOptionsItemCommand, true);
 		aMenuPane->SetItemDimmed(EMenuOptionsExploreCommand, true);
@@ -641,32 +671,29 @@ void CBuddycloudExplorerContainer::DynInitMenuPaneL(TInt aResourceId, CEikMenuPa
 		
 		if(iBuddycloudLogic->GetState() == ELogicOnline) {			
 			aMenuPane->SetItemDimmed(EMenuDisconnectCommand, false);
+		
+			if(iExplorerLevels.Count() > 0) {
+				if(iExplorerLevels[aLevel]->iResultItems.Count() > 0) {
+					CExplorerResultItem* aResultItem = iExplorerLevels[aLevel]->iResultItems[iSelectedItem];
+					
+					if(aResultItem->GetResultType() >= EExplorerItemPlace && aResultItem->GetResultType() <= EExplorerItemChannel) {
+						aMenuPane->SetItemTextL(EMenuOptionsItemCommand, aResultItem->GetTitle().Left(32));
+						aMenuPane->SetItemDimmed(EMenuOptionsItemCommand, false);
+						aMenuPane->SetItemDimmed(EMenuOptionsExploreCommand, false);
+					}
+					
+					if(aResultItem->GetResultType() == EExplorerItemDirectory || aResultItem->GetResultType() == EExplorerItemChannel) {
+						aMenuPane->SetItemDimmed(EMenuEditChannelCommand, false);
+					}
+				}
+				
+				if(iExplorerState < EExplorerRequesting && iExplorerLevels[aLevel]->GetQueriedStanza().Length() > 0) {
+					aMenuPane->SetItemDimmed(EMenuRefreshCommand, false);
+				}	
+			}
 		}
 		else {
 			aMenuPane->SetItemDimmed(EMenuConnectCommand, false);
-		}
-		
-		if(iExplorerLevels.Count() > 0) {
-			if(iExplorerLevels[aLevel]->iResultItems.Count() > 0) {
-				CExplorerResultItem* aResultItem = iExplorerLevels[aLevel]->iResultItems[iSelectedItem];
-				
-				if(aResultItem->GetResultType() == EExplorerItemDirectory || aResultItem->GetResultType() == EExplorerItemLink) {
-					aMenuPane->SetItemDimmed(EMenuSelectCommand, false);
-				}
-				else if(aResultItem->GetResultType() > EExplorerItemDirectory) {
-					aMenuPane->SetItemTextL(EMenuOptionsItemCommand, aResultItem->GetTitle().Left(32));
-					aMenuPane->SetItemDimmed(EMenuOptionsItemCommand, false);
-					aMenuPane->SetItemDimmed(EMenuOptionsExploreCommand, false);
-				}
-				
-				if(aResultItem->GetResultType() == EExplorerItemDirectory || aResultItem->GetResultType() == EExplorerItemChannel) {
-					aMenuPane->SetItemDimmed(EMenuEditChannelCommand, false);
-				}
-			}
-			
-			if(iExplorerState == EExplorerIdle && iExplorerLevels[aLevel]->GetQueriedStanza().Length() > 0) {
-				aMenuPane->SetItemDimmed(EMenuRefreshCommand, false);
-			}	
 		}
 	}
 	else if(aResourceId == R_EXPLORER_OPTIONS_ITEM_MENU) {
@@ -941,36 +968,10 @@ void CBuddycloudExplorerContainer::HandleCommandL(TInt aCommand) {
 		CFollowingChannelItem* aChannelItem = iExplorerLevels[aLevel]->GetQueriedChannel();
 		
 		if(aChannelItem && aResultItem->GetResultType() == EExplorerItemPerson) {
-			TInt aSelectedIndex = 0;
+			aResultItem->SetChannelAffiliation(iBuddycloudLogic->ShowAffiliationDialogL(aResultItem->GetId(), aChannelItem->GetId(), aResultItem->GetChannelAffiliation()));		
+			aResultItem->SetOverlayId(aResultItem->GetChannelAffiliation() != EPubsubAffiliationOutcast ? 0 : KOverlayLocked);
 			
-			// Show list dialog
-			CAknListQueryDialog* aDialog = new (ELeave) CAknListQueryDialog(&aSelectedIndex);
-			aDialog->PrepareLC(R_LIST_CHANGEPERMISSION);
-			aDialog->ListBox()->SetCurrentItemIndex(1);
-
-			if(aDialog->RunLD()) {
-				TXmppPubsubAffiliation aAffiliation = EPubsubAffiliationNone;
-				
-				switch(aSelectedIndex) {
-					case 0: // Remove
-						aAffiliation = EPubsubAffiliationOutcast;
-						break;
-					case 2: // Publisher
-						aAffiliation = EPubsubAffiliationPublisher;
-						break;
-					case 3: // Moderator
-						aAffiliation = EPubsubAffiliationModerator;
-						break;
-					default: // Follower
-						aAffiliation = EPubsubAffiliationMember;
-						break;					
-				}
-				
-				iBuddycloudLogic->SetPubsubNodeAffiliationL(aResultItem->GetId(), aChannelItem->GetId(), aAffiliation);		
-			
-				// Refresh results
-				RefreshLevelL();
-			}
+			RenderScreen();
 		}
 	}
 	else if(aCommand == EMenuSeeFollowingCommand || aCommand == EMenuSeeModeratingCommand || aCommand == EMenuSeeProducingCommand) {
@@ -1238,10 +1239,7 @@ void CBuddycloudExplorerContainer::XmppStanzaAcknowledgedL(const TDesC8& aStanza
 							// Set items affiliation
 							TPtrC8 aAttributeAffiliation(aXmlParser->GetStringAttribute(_L8("affiliation")));
 							aResultItem->SetChannelAffiliation(CXmppEnumerationConverter::PubsubAffiliation(aAttributeAffiliation));
-							
-							if(aResultItem->GetChannelAffiliation() == EPubsubAffiliationOutcast) {
-								aResultItem->SetOverlayId(KOverlayLocked);
-							}
+							aResultItem->SetOverlayId(aResultItem->GetChannelAffiliation() != EPubsubAffiliationOutcast ? 0 : KOverlayLocked);
 							
 							// Sensor jid when not following or not a channel moderator
 							if(aChannelItem == NULL || aChannelItem->GetPubsubAffiliation() < EPubsubAffiliationModerator) {
@@ -1444,7 +1442,12 @@ void CBuddycloudExplorerContainer::XmppStanzaAcknowledgedL(const TDesC8& aStanza
 	iQueryResultCount++;
 		
 	if(iQueryResultCount == iQueryResultSize) {
-		iExplorerState = EExplorerIdle;
+		if(iExplorerLevels.Count() > 0 && iExplorerLevels[aLevel]->iResultItems.Count() == 0) {
+			iExplorerState = EExplorerNoItems;
+		}
+		else {
+			iExplorerState = EExplorerIdle;
+		}
 	}	
 	
 	// Update screen

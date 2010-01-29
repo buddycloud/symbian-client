@@ -1,6 +1,78 @@
 Change Log
 ==========
 
+0.05.36
+
+- Improve notification logic for pubsub events in CBuddycloudLogic
+- Optimization of CPhoneUtilities::InCall function
+- [bug] 'Done' never displayed when 'Show channel details' on clicking a '#channel'
+- Change the #Channel Id validation logic from '_' to '-' (not allowed in DNS spec)
+- Update from 99translations
+
+0.05.35
+
+- [bug] Memory access violation on a channel deletion when client is viewing channel
+- Add support for pubsub delete node <redirect/> (allows channel to be split off to new node Id's)
+- [bug] Not collecting history of newly subscribed channel after no previous items collected
+- Cleanup of offline menu dimming for CBuddycloudPlacesContainer & CBuddycloudExplorerContainer
+- Addition of offline toolbar dimming for CBuddycloudPlacesContainer & CBuddycloudExplorerContainer
+- Handle a CSecureSocket abort (KErrAbort) correctly
+- Update from 99translations
+
+0.05.34
+
+- Remove geoloc data from private message (use users node data instead)
+- [bug] Make sure all contact & node Id comparisons are folded
+- Rework of pubsub event handling to use <iq> instead of <message>
+- [bug] Fix 'See channel details' from a subscription/affiliation notification item
+- In Atom entry remove <in-reply-to/> and <published/> processing
+- Update from 99translations
+
+0.05.33
+
+- Improve Channel Id validation in CBuddycloudEditChannelList
+- Rework of Notice item processing in ProcessPresenceSubscriptionL
+- Add toolbar to CBuddycloudExplorerContainer
+- [bug] Add a fix for google specific roster behaviour
+- [workaround] Add a second direct presence to broadcaster to avoid google multi recollection
+- [bug] Fix logic for when a pubsub channel is deleted
+- Update from 99translations
+
+0.05.32
+
+- Add a notification option to ShowAffiliationDialogL
+- Display a notification dialog to 'Change permission' if requested
+- Change the geoloc handling in CBuddycloudChannelInfoContainer to conform to the data form spec
+- Add 'Request sent' popup dialog for when requesting post privilege
+- Add 'Show channel details' to a following request Notice item
+- Add 'Request sent' popup dialog on 'Accept and Follow' selection
+- [bug] Fix only notifying on an affiliation change (not if the same)
+- Rework of roster management & roster item push handling
+- Update from 99translations
+
+0.05.31
+
+- [bug] Fix not re-collecting of users subscriptions after a disconnect during a cold start
+- [bug] Silently ignore DndTimedOut errors during host resolving (caused by no connection signal)
+- Move affiliation change dialog into CBuddycloudLogic::ShowAffiliationDialogL
+- Pre-select current affiliation when showing ShowAffiliationDialogL
+- [bug] Fix not sending offline queued stanzas until presence is sent to Broadcaster
+- [bug] Fix 'Message will be sent when you go online' being displayed
+- In Atom entry use <updated/> instead of <published/>
+- In Atom entry remove <header/> processing, now use <thr:in-reply-to/> instead
+- Harmonize menu string's ("See", "View", "Show") => "Show"
+- Handle #channel_id processing from 'Follow...' menu item
+- [bug] Fix not showing 'Access' menu item in CBuddycloudEditChannelList on 'New Channel'
+- Update from 99translations
+- Add LOLspeak language
+
+0.05.30
+
+- [bug] Fix next item selection when Unfollowing in CBuddycloudFollowingContainer
+- [bug] Fix total page length calculation of CBuddycloudChannelInfoContainer
+- Make CBuddycloudExplorerContainer & CBuddycloudChannelInfoContainer data collection EXmppPriorityHigh
+- Delay collection of query in CBuddycloudExplorerContainer until online state event
+
 0.05.29
 
 - Correct the metadata field namespaces used for custom channel data

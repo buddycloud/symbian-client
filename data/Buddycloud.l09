@@ -32,8 +32,8 @@ rls_string r_string_next_menu "Seuraava"
 rls_string r_string_hide_menu "Piilota"
 
 // Item
-rls_string r_string_item_newchannel "Uusi kanava..."
-rls_string r_string_item_newplace "Uusi paikka..."
+rls_string r_string_item_newchannel "Uusi kanava"
+rls_string r_string_item_newplace "Uusi paikka"
 
 // Menu: Settings & Edit place
 rls_string r_string_options_edititem "Muuta"
@@ -41,11 +41,14 @@ rls_string r_string_options_searchplace "Etsi lisätietoja"
 rls_string r_string_options_remove "Poista"
 rls_string r_string_options_delete "Poista"
 
+// Notes
 rls_string r_string_note_noresultsfound "Haku ei tuottanut tulosta"
 rls_string r_string_note_requestsent "Pyyntö lähetetty"
 rls_string r_string_note_feedbacksent "Palaute lähetetty"
 rls_string r_string_note_messagequeued "Viesti lähetetään kun siirryt online-tilaan"
 rls_string r_string_note_offlinerequired "Sinun täytyy olla katkaista yhteys tehdäksesi tämän"
+rls_string r_string_note_updatesucessful "Päivitys onnistui"
+rls_string r_string_note_updatefailed "Päivitys epäonnistui"
 
 // Positioning methods
 rls_string r_string_positioning_stationary "Voit nyt kirjanmerkitä tämän paikan"
@@ -73,7 +76,6 @@ rls_string r_string_options_done "Valmis"
 rls_string r_string_options_connect "Yhdistä"
 rls_string r_string_options_disconnect "Katkaise yhteys"
 rls_string r_string_options_settings "Asetukset"
-rls_string r_string_item_viewmessages "Näytä viestit"
 rls_string r_string_item_viewchannelmessages "Näytä kanava"
 rls_string r_string_item_viewprivatemessages "Näytä yksityisviestit"
 rls_string r_string_item_showplacedetails "Paikan tiedot"
@@ -93,20 +95,19 @@ rls_string r_string_note_followinglistempty "Et seuraa mitään. Käytä tutki-v
 
 // Menu: Messaging
 rls_string r_string_options_postrequest "Pyyntö etuoikeutetulle viestille"
+rls_string r_string_options_jumptounread "Mene lukemattomiin"
+rls_string r_string_options_addcomment "Kommentti"
 rls_string r_string_options_postmessage "Uusi viesti"
 rls_string r_string_options_postmedia "Lähetä mediaa"
-rls_string r_string_options_jumptounread "Mene lukemattomiin"
 rls_string r_string_options_notificationon "Aseta värinä päälle"
 rls_string r_string_options_notificationoff "Aseta värinä pois päältä"
-
-rls_string r_string_item_addcomment "Kommentti"
 rls_string r_string_item_likepost "♥ viesti"
 rls_string r_string_item_copypost "Kopioi viesti"
 rls_string r_string_item_reportpost "Raportoi viesti"
 rls_string r_string_item_removepost "Poista viesti"
 
 rls_string r_string_options_itemchannel "Kanava"
-rls_string r_string_channel_copychannelid "Kopioi #Id"
+rls_string r_string_channel_copychannelid "Copy #Channel Id"
 rls_string r_string_channel_markread "Merkitse kanava luetuksi"
 rls_string r_string_options_reportchannel "Raportoi kanavalle"
 
@@ -162,7 +163,6 @@ rls_string r_string_list_channelsyoumightlike "Kanavia joista saatat pitää"
 rls_string r_string_list_followersfavourites "Seuraajien suosikit"
 rls_string r_string_list_mostpopularchannels "Suosituimmat kanavat"
 
-rls_string r_string_item_open "Avaa"
 rls_string r_string_item_follow "Seuraa"
 rls_string r_string_item_unfollow "Lopeta seuraaminen"
 
@@ -199,7 +199,7 @@ rls_string r_string_settings_itemlist_server "XMPP palvelin"
 
 // Preference settings
 rls_string r_string_settings_itemlist_language "Käyttöliittymän kieli"
-rls_string r_string_settings_itemlist_blocking "Näytä yksityisviestit"
+rls_string r_string_settings_itemlist_blocking "Allow private messages"
 rls_string r_string_settings_itemlist_blockingalwaysshow "Kaikilta"
 rls_string r_string_settings_itemlist_blockingfollowers "Ainoastaan seuraajat"
 rls_string r_string_settings_itemlist_accesspoint "Käytettävä yhteys"
@@ -234,13 +234,11 @@ rls_string r_string_settings_itemlist_off "Pois päältä"
 
 // Communities
 rls_string r_string_settings_facebook_text "Sinut ohjataan nyt buddycloud-sovelluksen sivulle Facebookissa (http://apps.facebook.com/buddycloud). Ole hyvä ja lisää sovellus, kirjaudu sisään ja anna sovellukselle lupa."
-rls_string r_string_settings_credentials_success "Päivitys onnistui"
 rls_string r_string_settings_credentials_fail "Päivitys epäonnistui. Tarkista tietosi ja yritä uudestaan."
 
 // Edit Place List
 rls_string r_string_newplace_title "Uusi paikka"
 rls_string r_string_editplace_title "Muokkaa paikkaa"
-rls_string r_string_updatefailed_title "Päivitys epäonnistui"
 
 rls_string r_string_editplace_itemlist_name "Nimi"
 rls_string r_string_editplace_itemlist_name_hint "esim. 'Koti' tai 'Mäkkäri'"
@@ -316,7 +314,7 @@ rls_string r_string_dialog_setnextlocation "Aseta seuraava paikka:"
 rls_string r_string_dialog_newmessage "Kirjoita viesti:"
 rls_string r_string_dialog_newcomment "Kirjoita kommentti:"
 rls_string r_string_dialog_requestcomment "Kommentti pyynnölle:"
-rls_string r_string_dialog_addcontact "Kirjoita yhteystiedon Id (esim. test@gtalk.com)"
+rls_string r_string_dialog_addcontact "Enter contact (eg. 'test@gmail.com') or channel Id (eg. '#help'):"
 
 // Notes
 rls_string r_string_note_connecting "Yhdistää..."

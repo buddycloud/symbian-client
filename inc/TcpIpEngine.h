@@ -42,8 +42,8 @@ enum TTcpIpEngineState {
 };
 
 enum TTcpIpEngineError {
-	ETcpIpAlreadyBusy, ETcpIpCancelled, ETcpIpHostNameLookUpFailed, ETcpIpAddressLookUpFailed, 
-	ETcpIpAccessPointFailed, ETcpIpConnectFailed, ETcpIpSecureFailed, ETcpIpReadWriteError
+	ETcpIpAlreadyBusy, ETcpIpCancelled, ETcpIpAccessPointFailed, ETcpIpHostNameLookUpFailed, 
+	ETcpIpAddressLookUpFailed, ETcpIpDnsTimeout, ETcpIpConnectFailed, ETcpIpSecureFailed, ETcpIpReadWriteError
 };
 
 enum TTcpIpEngineConnectionMode {

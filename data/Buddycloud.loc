@@ -114,4 +114,8 @@
 #include "Buddycloud.l513"
 #endif
 
+#ifdef LANGUAGE_514
+#include "Buddycloud.l514"
+#endif
+
 #endif // __BUDDYCLOUD_LOC__

@@ -17,8 +17,7 @@
 
 class MXmppRosterObserver {
 	public:
-		virtual void RosterItemsL(const TDesC8& aItems, TBool aPush) = 0;
-		virtual void RosterOwnJidL(TDesC& aJid) = 0;
+		virtual void XmppRosterL(const TDesC8& aStanza) = 0;
 };
 
 class MXmppStanzaObserver {

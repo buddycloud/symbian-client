@@ -32,20 +32,23 @@ rls_string r_string_next_menu "التالي"
 rls_string r_string_hide_menu "إخفاء"
 
 // Item
-rls_string r_string_item_newchannel "قناة جديدة"
-rls_string r_string_item_newplace "مكان جديد"
+rls_string r_string_item_newchannel "Create channel"
+rls_string r_string_item_newplace "Create place"
 
 // Menu: Settings & Edit place
 rls_string r_string_options_edititem "تغيير"
-rls_string r_string_options_searchplace "البحث عن تفاصيل"
+rls_string r_string_options_searchplace "Search for address"
 rls_string r_string_options_remove "يزيل"
 rls_string r_string_options_delete "Delete"
 
+// Notes
 rls_string r_string_note_noresultsfound "لا توجد نتائج"
 rls_string r_string_note_requestsent "طلب إرسال"
 rls_string r_string_note_feedbacksent "Feedback sent"
 rls_string r_string_note_messagequeued "سيتم إرسال الرسالة عندما تذهب الانترنت"
 rls_string r_string_note_offlinerequired "تحتاج إلى أن يكون حاليا للقيام بذلك"
+rls_string r_string_note_updatesucessful "التحديث الناجحة"
+rls_string r_string_note_updatefailed "فشل التحديث"
 
 // Positioning methods
 rls_string r_string_positioning_stationary "يمكنك الآن احفظ هذا المكان"
@@ -73,17 +76,16 @@ rls_string r_string_options_done "انتها"
 rls_string r_string_options_connect "الذهاب على الانترنت"
 rls_string r_string_options_disconnect "تذهب حاليا"
 rls_string r_string_options_settings "إعدادات"
-rls_string r_string_item_viewmessages "عرض الرسائل"
-rls_string r_string_item_viewchannelmessages "عرض القناة"
-rls_string r_string_item_viewprivatemessages "عرض الرسائل الخاصة"
-rls_string r_string_item_showplacedetails "See place details"
-rls_string r_string_item_showchanneldetails "See channel details"
+rls_string r_string_item_viewchannelmessages "Show channel"
+rls_string r_string_item_viewprivatemessages "وتظهر رسائل خاصة"
+rls_string r_string_item_showplacedetails "وتظهر تفاصيل المكان"
+rls_string r_string_item_showchanneldetails "وتظهر تفاصيل القناة"
 rls_string r_string_item_sendplacebysms "ارسال مكان عبر الرسائل القصيرة"
 rls_string r_string_item_sendinvite "buddycloud دعوة إلى"
 rls_string r_string_item_noticeaccept "قبول"
 rls_string r_string_item_noticeacceptandfollow "تقبل واتبع"
 rls_string r_string_item_noticedecline "انخفاض"
-rls_string r_string_update_setstatus "حالة التحديث"
+rls_string r_string_update_setstatus "Post status"
 rls_string r_string_options_invite "يتبع"
 rls_string r_string_settings_usersettings "التفضيلات"
 rls_string r_string_settings_communitysettings "مشاركة على الانترنت"
@@ -93,20 +95,19 @@ rls_string r_string_note_followinglistempty "You are not following anything.\n\n
 
 // Menu: Messaging
 rls_string r_string_options_postrequest "Request post privilege"
-rls_string r_string_options_postmessage "Write new post"
-rls_string r_string_options_postmedia "يقدم الوسائط المتعددة"
 rls_string r_string_options_jumptounread "القفز الى غير المقروءة"
-rls_string r_string_options_notificationon "بدوره على شرب حتى الثمالة"
-rls_string r_string_options_notificationoff "بدوره بهرب"
-
-rls_string r_string_item_addcomment "Write comment"
+rls_string r_string_options_addcomment "Post comment"
+rls_string r_string_options_postmessage "Post topic"
+rls_string r_string_options_postmedia "يقدم الوسائط المتعددة"
+rls_string r_string_options_notificationon "Enable buzz"
+rls_string r_string_options_notificationoff "Disable buzz"
 rls_string r_string_item_likepost "♥ post"
 rls_string r_string_item_copypost "Copy post"
 rls_string r_string_item_reportpost "Report post"
 rls_string r_string_item_removepost "Delete post"
 
 rls_string r_string_options_itemchannel "القناة"
-rls_string r_string_channel_copychannelid "Copy #Id"
+rls_string r_string_channel_copychannelid "Copy #Channel Id"
 rls_string r_string_channel_markread "Mark channel read"
 rls_string r_string_options_reportchannel "Report channel"
 
@@ -134,12 +135,12 @@ rls_string r_string_item_subscribe "ظيف إلى مكاني"
 
 // Menu: Explorer
 rls_string r_string_options_explore "استكشاف"
-rls_string r_string_item_seefollowers "انظر أتباع"
-rls_string r_string_item_seemoderators "See moderators"
-rls_string r_string_item_seefollowing " انظر إتباع"
-rls_string r_string_item_seemoderating "See moderating"
-rls_string r_string_item_seeproducing "انظر المنتجة"
-rls_string r_string_item_seenearby "انظر قريب"
+rls_string r_string_item_seefollowers "Show followers"
+rls_string r_string_item_seemoderators "Show moderators"
+rls_string r_string_item_seefollowing "Show following"
+rls_string r_string_item_seemoderating "Show moderating"
+rls_string r_string_item_seeproducing "Show producing"
+rls_string r_string_item_seenearby "Show nearby"
 
 rls_string r_string_title_followedby "$OBJECT's أتباع"
 rls_string r_string_title_moderatedby "$OBJECT's moderators"
@@ -162,14 +163,13 @@ rls_string r_string_list_channelsyoumightlike "القنوات قد ترغب في
 rls_string r_string_list_followersfavourites "أتباع 'المفضلة"
 rls_string r_string_list_mostpopularchannels "الأكثر شعبية قنوات"
 
-rls_string r_string_item_open "يفتح"
 rls_string r_string_item_follow "يتبع"
 rls_string r_string_item_unfollow "فولو"
 
 // Channel: Settings & Configuration
 rls_string r_string_note_mediauploadready "يمكنك الآن تحميل الملف وسائط بمبلغ $LINK"
 
-rls_string r_string_item_changerole "Change permission"
+rls_string r_string_item_changerole "تغيير إذن "
 rls_string r_string_changerole_itemlist_outcast "منع من القناه"
 rls_string r_string_changerole_itemlist_follower "أتباع"
 rls_string r_string_changerole_itemlist_publisher "Follower + post"
@@ -184,9 +184,9 @@ rls_string r_string_note_affiliationpublisher "You can now read and post content
 rls_string r_string_note_affiliationmoderator "You can now read, post, and moderate content in this channel."
 
 rls_string r_string_note_subscriptionrequest_text "$USER has requested to follow this channel. To approve this request press 'Accept', else press 'Decline'."
-rls_string r_string_note_subscriptionpending "Your subscription request has been sent to the channel's producer."
-rls_string r_string_note_subscriptionaccepted "Your subscription to this channel has been accepted."
-rls_string r_string_note_subscriptionrejected "Your subscription to this channel has been rejected."
+rls_string r_string_note_subscriptionpending " تم إرسال طلب اشتراكك إلى منتج القناة"
+rls_string r_string_note_subscriptionaccepted "اشتراكك في هذه القناة قد قبل"
+rls_string r_string_note_subscriptionrejected "اشتراكك في هذه القناة قد تم رفضه"
 
 // Account settings
 rls_string r_string_settings_account_title "الحساب"
@@ -199,7 +199,7 @@ rls_string r_string_settings_itemlist_server "سرور XMPP"
 
 // Preference settings
 rls_string r_string_settings_itemlist_language "اظهار اللغة"
-rls_string r_string_settings_itemlist_blocking "وتظهر رسائل خاصة"
+rls_string r_string_settings_itemlist_blocking "Allow private messages"
 rls_string r_string_settings_itemlist_blockingalwaysshow "من أي شخص"
 rls_string r_string_settings_itemlist_blockingfollowers "أتباع فقط"
 rls_string r_string_settings_itemlist_accesspoint "نقطة وصول لاستخدام"
@@ -209,8 +209,8 @@ rls_string r_string_settings_itemlist_autostart "في بداية إطلاق ال
 
 // Notification settings
 rls_string r_string_settings_notifications_title "الإخطارات"
-rls_string r_string_settings_itemlist_notifyfollowing "Channels I follow"
-rls_string r_string_settings_itemlist_notifymoderating "Channels I moderate"
+rls_string r_string_settings_itemlist_notifyfollowing "قنوات أتابع"
+rls_string r_string_settings_itemlist_notifymoderating "قنوات أنا مراقب"
 rls_string r_string_settings_itemlist_notifyreply "Replies to my post"
 
 rls_string r_string_settings_itemlist_groupnever "لم يخطر"
@@ -219,7 +219,7 @@ rls_string r_string_settings_itemlist_groupallmessages "جميع الملصقا�
 
 rls_string r_string_settings_itemlist_privatemessagetone "رسالة خاصة لهجة"
 rls_string r_string_settings_itemlist_channelposttone "قناة بعد لهجة"
-rls_string r_string_settings_itemlist_directreplytone "Replied comment tone"
+rls_string r_string_settings_itemlist_directreplytone "نغمة إجابة التعليق"
 rls_string r_string_settings_itemlist_tonenone "أي لهجة"
 rls_string r_string_settings_itemlist_tonedefault "النغمة الافتراضية"
 
@@ -234,13 +234,11 @@ rls_string r_string_settings_itemlist_off "بعيدا"
 
 // Communities
 rls_string r_string_settings_facebook_text "سيكون لديك الآن يجب اتخاذها ل http://apps.facebook.com/buddycloud صفحة تطبيق buddycloud. الرجاء إضافة التطبيق ، لتسجيل الدخول ومنح حق الوصول إليها."
-rls_string r_string_settings_credentials_success "التحديث الناجحة"
 rls_string r_string_settings_credentials_fail "فشل التحديث. الرجاء التحقق من أوراق الاعتماد وحاول مرة أخرى"
 
 // Edit Place List
 rls_string r_string_newplace_title "مكان جديد"
 rls_string r_string_editplace_title "إظافه مكان"
-rls_string r_string_updatefailed_title "فشل التحديث"
 
 rls_string r_string_editplace_itemlist_name "اسم"
 rls_string r_string_editplace_itemlist_name_hint "'على سبيل المثال 'البداية' أو 'ستاربكس"
@@ -261,17 +259,17 @@ rls_string r_string_editplace_itemlist_visibility_public "مشترك"
 rls_string r_string_editplace_itemlist_visibility_private "الشخصية"
 
 // Edit channel list
-rls_string r_string_newchannel_title "New channel"
-rls_string r_string_editchannel_title "Edit channel"
-rls_string r_string_editchannel_itemlist_title "Title"
-rls_string r_string_editchannel_itemlist_title_hint "Channel's title"
-rls_string r_string_editchannel_itemlist_id "#Channel Id"
-rls_string r_string_editchannel_itemlist_id_hint "Channel's unique Id"
-rls_string r_string_editchannel_itemlist_description "Description"
-rls_string r_string_editchannel_itemlist_description_hint "Channel's description"
-rls_string r_string_editchannel_itemlist_access "Access"
-rls_string r_string_editchannel_itemlist_access_open "Open channel"
-rls_string r_string_editchannel_itemlist_access_whitelist "Members only"
+rls_string r_string_newchannel_title "قناة جديدة"
+rls_string r_string_editchannel_title "تحرير قناة"
+rls_string r_string_editchannel_itemlist_title "العنوان"
+rls_string r_string_editchannel_itemlist_title_hint "عنوان االقناة "
+rls_string r_string_editchannel_itemlist_id "# رقم تعريف القناة"
+rls_string r_string_editchannel_itemlist_id_hint "تعريف  فريد للقناة"
+rls_string r_string_editchannel_itemlist_description "وصف"
+rls_string r_string_editchannel_itemlist_description_hint "وصف القناة "
+rls_string r_string_editchannel_itemlist_access "وصول"
+rls_string r_string_editchannel_itemlist_access_open "قناة مفتوحة"
+rls_string r_string_editchannel_itemlist_access_whitelist "أعضاء فقط"
 rls_string r_string_editchannel_itemlist_defaultaffiliation "New followers can"
 rls_string r_string_editchannel_itemlist_defaultaffiliation_member "Read only"
 rls_string r_string_editchannel_itemlist_defaultaffiliation_publisher "Read and post"
@@ -316,7 +314,7 @@ rls_string r_string_dialog_setnextlocation "حيث يقول أذهب المقب�
 rls_string r_string_dialog_newmessage "Write post:"
 rls_string r_string_dialog_newcomment "Write comment:"
 rls_string r_string_dialog_requestcomment "Request comment:"
-rls_string r_string_dialog_addcontact "Enter contact's Id (eg. test@gtalk.com):"
+rls_string r_string_dialog_addcontact "Enter contact (eg. 'test@gmail.com') or channel Id (eg. '#help'):"
 
 // Notes
 rls_string r_string_note_connecting "يجري التصال"

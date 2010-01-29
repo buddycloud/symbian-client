@@ -339,7 +339,7 @@ void CLocationEngine::BuildLocationPayload() {
 		InsertIntoPayload(52, *iLangCode, pLogStanza);
 	
 		if(iXmppInterface) {
-			iXmppInterface->SendAndAcknowledgeXmppStanza(pLogStanza, this, false, EXmppPriorityHigh);
+			iXmppInterface->SendAndAcknowledgeXmppStanza(pLogStanza, this, false);
 		}
 
 		iEngineState = ELocationWaitForTimeout;

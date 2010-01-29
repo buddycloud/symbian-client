@@ -46,7 +46,7 @@ enum TDescSettingItems {
 
 enum TIntSettingItems {
 	ESettingItemNotifyChannelsFollowing = ESettingItemTwitterPassword + 1, ESettingItemNotifyChannelsModerating, 
-	ESettingItemPrivateMessageTone, ESettingItemChannelPostTone, ESettingItemDirectReplyTone, ESettingItemLanguage
+	ESettingItemChannelPostTone, ESettingItemDirectReplyTone, ESettingItemPrivateMessageTone, ESettingItemLanguage
 };
 
 enum TBoolSettingItems {
@@ -62,7 +62,7 @@ enum TBuddycloudLogicState {
 
 enum TBuddycloudLogicNotificationType {
 	ENotificationLogicEngineStarted, ENotificationLogicEngineDestroyed, 
-	ENotificationFollowingItemsUpdated, ENotificationFollowingItemDeleted, 
+	ENotificationFollowingItemsUpdated, ENotificationFollowingItemsReconfigured, ENotificationFollowingItemDeleted, 
 	ENotificationPlaceItemsUpdated, ENotificationLocationUpdated, 
 	ENotificationMessageNotifiedEvent, ENotificationMessageSilentEvent, 
 	ENotificationEditPlaceRequested, ENotificationEditPlaceCompleted, 
@@ -76,6 +76,10 @@ enum TBuddycloudLogicTimeoutState {
 
 enum TBuddycloudToneType {
 	EToneDefault, EToneNone, EToneUserDefined
+};
+
+enum TBuddycloudCustomLanguages {
+	ELangPirate = 512, ELangBoarisch, ELangLOLspeak
 };
 
 /*
@@ -173,6 +177,9 @@ class CBuddycloudLogic : public CBase, MLocationEngineNotification, MTimeInterfa
 	private: 
 		void SetActivityStatus(TInt aResourceId);
 		void ShowInformationDialogL(TInt aResourceId);
+		
+	public:
+		TXmppPubsubAffiliation ShowAffiliationDialogL(const TDesC& aJid, const TDesC& aNode, TXmppPubsubAffiliation aAffiliation, TBool aNotifyResult = false);
 
 	private:
 		TInt DisplaySingleLinePopupMenuL(RPointerArray<HBufC>& aMenuItems);
@@ -188,7 +195,7 @@ class CBuddycloudLogic : public CBase, MLocationEngineNotification, MTimeInterfa
 		void FollowContactL(const TDesC& aContact);
 
 	private: // Pubsub
-		void SendPresenceToPubsubL();
+		void SendPresenceToPubsubL(const TDesC8& aLastNodeId, TXmppMessagePriority aPriority = EXmppPriorityNormal);
 		void SetLastNodeIdReceived(const TDesC8& aNodeItemId);
 		
 		void CollectPubsubSubscriptionsL(const TDesC8& aAfter = KNullDesC8);
@@ -204,7 +211,7 @@ class CBuddycloudLogic : public CBase, MLocationEngineNotification, MTimeInterfa
 		void ProcessChannelMetadataL(const TDesC8& aStanza);
 		
 	public: // Pubsub
-		void SetPubsubNodeAffiliationL(const TDesC& aJid, const TDesC& aNode, TXmppPubsubAffiliation aAffiliation);
+		void SetPubsubNodeAffiliationL(const TDesC& aJid, const TDesC& aNode, TXmppPubsubAffiliation aAffiliation, TBool aNotifyResult = false);
 		void SetPubsubNodeSubscriptionL(const TDesC& aJid, const TDesC& aNode, TXmppPubsubSubscription aSubscription);
     	
 		void RequestPubsubNodeAffiliationL(const TDesC& aNode, TXmppPubsubAffiliation aAffiliation, const TDesC& aText);
@@ -212,8 +219,10 @@ class CBuddycloudLogic : public CBase, MLocationEngineNotification, MTimeInterfa
 		void RetractPubsubNodeItemL(const TDesC& aNode, const TDesC8& aNodeItemId);
 		
     private: // Pubsub handling
-		void HandlePubsubEventL(const TDesC8& aStanza, TBool aNewEvent);
+		void HandlePubsubEventL(const TDesC8& aStanza);
 		void HandlePubsubRequestL(const TDesC8& aStanza);
+		
+		void AcknowledgePubsubEventL(const TDesC8& aId);
 		
     public: // Flag/Tag
     	void FlagTagNodeL(const TDesC8& aType, const TDesC& aNode);
@@ -330,9 +339,12 @@ class CBuddycloudLogic : public CBase, MLocationEngineNotification, MTimeInterfa
 		void XmppDebug(const TDesC8& aMessage);
 
     public: // From MXmppRosterObserver
-    	void RosterItemsL(const TDesC8& aItems, TBool aPush = false);
-    	void RosterOwnJidL(TDesC& aJid);
-	
+    	void XmppRosterL(const TDesC8& aStanza);
+ 
+    private: // Roster item handling
+    	void HandleUserItemConfigurationL(const TDesC& aJid);
+    	void HandleRosterItemPushL(const TDesC8& aStanza);
+    	
     public: // From MXmppStanzaObserver
 		void XmppStanzaAcknowledgedL(const TDesC8& aStanza, const TDesC8& aId);
  

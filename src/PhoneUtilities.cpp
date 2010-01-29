@@ -10,9 +10,10 @@
 ============================================================================
 */
 
-#include <s32file.h>
-#include <etel3rdparty.h>
+#include <e32property.h>
 #include <f32file.h>
+#include <s32file.h>
+#include <TelephonyInternalPSKeys.h>
 #include "PhoneUtilities.h"
 
 void CPhoneUtilities::GetPhoneModelL(TDes& aPhoneModel) {
@@ -62,20 +63,15 @@ void CPhoneUtilities::GetFirmwareVersionL(TDes& aFirmwareVersion) {
 }
 
 TBool CPhoneUtilities::InCall() {
-	TBool aResult = false;
+	TInt aCallStatus = EPSTelephonyCallStateNone;		
+	TInt aCallType = EPSTelephonyCallTypeNone;		
 	
-	CTelephony* aTelephony = CTelephony::NewLC();
+	RProperty::Get(KPSUidTelephonyCallHandling, KTelephonyCallState, aCallStatus);
+	RProperty::Get(KPSUidTelephonyCallHandling, KTelephonyCallType, aCallType);
 	
-	CTelephony::TCallStatusV1 aCallStatus;
-	CTelephony::TCallStatusV1Pckg aCallStatusV1Pckg(aCallStatus);
-	
-	if(aTelephony->GetLineStatus(CTelephony::EVoiceLine, aCallStatusV1Pckg) == KErrNone) {
-		if(aCallStatus.iStatus > CTelephony::EStatusIdle) {
-			aResult = true;
-		}
+	if(aCallStatus > EPSTelephonyCallStateNone || aCallType > EPSTelephonyCallTypeNone) {		
+		return true;
 	}
 	
-	CleanupStack::PopAndDestroy(); // aTelephony
-	
-	return aResult;
+	return false;
 }

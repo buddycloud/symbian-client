@@ -32,8 +32,8 @@ rls_string r_string_next_menu "Siguiente"
 rls_string r_string_hide_menu "Oculto"
 
 // Item
-rls_string r_string_item_newchannel "Nuevo canal..."
-rls_string r_string_item_newplace "Nuevo lugar...."
+rls_string r_string_item_newchannel "Nuevo canal"
+rls_string r_string_item_newplace "Nuevo lugar"
 
 // Menu: Settings & Edit place
 rls_string r_string_options_edititem "Cambiar"
@@ -41,11 +41,14 @@ rls_string r_string_options_searchplace "Buscar detalles"
 rls_string r_string_options_remove "Eliminar"
 rls_string r_string_options_delete "Eliminar"
 
+// Notes
 rls_string r_string_note_noresultsfound "No se encontraron resultados"
 rls_string r_string_note_requestsent "Petición enviada"
 rls_string r_string_note_feedbacksent "Nombre completo"
 rls_string r_string_note_messagequeued "Se enviará un mensaje cuando te conectes"
 rls_string r_string_note_offlinerequired "Necesitas estar desconectado para hacer esto"
+rls_string r_string_note_updatesucessful "Actualización efectuada"
+rls_string r_string_note_updatefailed "Actualización fallida"
 
 // Positioning methods
 rls_string r_string_positioning_stationary "Ahora puedes marcar este lugar"
@@ -73,7 +76,6 @@ rls_string r_string_options_done "Hecho"
 rls_string r_string_options_connect "Conectar"
 rls_string r_string_options_disconnect "Desconectar"
 rls_string r_string_options_settings "Parámetros"
-rls_string r_string_item_viewmessages "Ver mensajes"
 rls_string r_string_item_viewchannelmessages "Ver canal"
 rls_string r_string_item_viewprivatemessages "Ver mensajes privados"
 rls_string r_string_item_showplacedetails "Ver detalles lugar"
@@ -93,20 +95,19 @@ rls_string r_string_note_followinglistempty "No estas siguiendo nada. Usa el Exp
 
 // Menu: Messaging
 rls_string r_string_options_postrequest "Solicitar privilegios para postear"
+rls_string r_string_options_jumptounread "Ir a no leídos"
+rls_string r_string_options_addcomment "Escribir comentario"
 rls_string r_string_options_postmessage "Escribir nuevo mensaje"
 rls_string r_string_options_postmedia "Subir multimedia"
-rls_string r_string_options_jumptounread "Ir a no leídos"
 rls_string r_string_options_notificationon "Poner zumbido"
 rls_string r_string_options_notificationoff "Quitar zumbido"
-
-rls_string r_string_item_addcomment "Escribir comentario"
 rls_string r_string_item_likepost "♥ mensaje"
 rls_string r_string_item_copypost "Copiar mensaje"
 rls_string r_string_item_reportpost "Informar mensaje ofensivo"
 rls_string r_string_item_removepost "Borrar mensaje"
 
 rls_string r_string_options_itemchannel "Canal"
-rls_string r_string_channel_copychannelid "Copiar #Id"
+rls_string r_string_channel_copychannelid "Copia #Channel Id"
 rls_string r_string_channel_markread "Marque el canal solo lectura"
 rls_string r_string_options_reportchannel "Informar canal ofensivo"
 
@@ -156,13 +157,12 @@ rls_string r_string_note_channellocation "Localización"
 rls_string r_string_note_channelfollowers "Seguidores"
 
 // Menu: Channels
-rls_string r_string_list_nearbytoyou "Explore Nearby"
+rls_string r_string_list_nearbytoyou "Explorar Alrededores"
 rls_string r_string_list_featuredchannels "Canales destacados"
 rls_string r_string_list_channelsyoumightlike "Canales que podrían gustarte"
 rls_string r_string_list_followersfavourites "Favoritos de tus seguidores"
 rls_string r_string_list_mostpopularchannels "Los canales más populares"
 
-rls_string r_string_item_open "Abrir"
 rls_string r_string_item_follow "Seguir"
 rls_string r_string_item_unfollow "Dejar de seguir"
 
@@ -190,16 +190,16 @@ rls_string r_string_note_subscriptionrejected "Tu suscripcion a este canal ha si
 
 // Account settings
 rls_string r_string_settings_account_title "Cuenta"
-rls_string r_string_settings_itemlist_fullname "Display name"
+rls_string r_string_settings_itemlist_fullname "Mostrar nombre"
 rls_string r_string_settings_itemlist_username "Id"
-rls_string r_string_settings_itemlist_username_hint "e.g. 'name@gmail.com'"
+rls_string r_string_settings_itemlist_username_hint "ejemplo 'nombre@gmail.com'"
 rls_string r_string_settings_itemlist_password "Contraseña"
 rls_string r_string_settings_itemlist_password_hint "Clave del Servidor XMPP"
 rls_string r_string_settings_itemlist_server "Servidor XMPP"
 
 // Preference settings
 rls_string r_string_settings_itemlist_language "Ajustar idioma"
-rls_string r_string_settings_itemlist_blocking "Mostrar mensajes privados"
+rls_string r_string_settings_itemlist_blocking "Permitir mensajes privados"
 rls_string r_string_settings_itemlist_blockingalwaysshow "De cualquiera"
 rls_string r_string_settings_itemlist_blockingfollowers "Solo seguidores"
 rls_string r_string_settings_itemlist_accesspoint "Punto de acceso a usar"
@@ -234,13 +234,11 @@ rls_string r_string_settings_itemlist_off "Apagado"
 
 // Communities
 rls_string r_string_settings_facebook_text "Ahora serás llevad@ a http://apps.facebook.com/buddycloud, la página de programa de buddycloud. Por favor, añade la aplicación, la inscripción y concede acceso allí"
-rls_string r_string_settings_credentials_success "Actualización efectuada"
 rls_string r_string_settings_credentials_fail "Actualización fallida. Por favor revisa tus credenciales y vuelve a intentarlo "
 
 // Edit Place List
 rls_string r_string_newplace_title "Nuevo lugar"
 rls_string r_string_editplace_title "Modificar lugar"
-rls_string r_string_updatefailed_title "Actualización fallida"
 
 rls_string r_string_editplace_itemlist_name "Nombre"
 rls_string r_string_editplace_itemlist_name_hint "p.ej. 'Casa' o 'Starbucks'"
@@ -316,7 +314,7 @@ rls_string r_string_dialog_setnextlocation "Poner siguiente lugar:"
 rls_string r_string_dialog_newmessage "Escribir mensaje:"
 rls_string r_string_dialog_newcomment "Escribir comentario:"
 rls_string r_string_dialog_requestcomment "Comentario de peticion:"
-rls_string r_string_dialog_addcontact "Introduce la Id del contacto (ej. test@gtalk.com):"
+rls_string r_string_dialog_addcontact "Introducir contacto (ejem.'test@gmail.com') o channel Id (eg. '#help'):"
 
 // Notes
 rls_string r_string_note_connecting "Conectando..."

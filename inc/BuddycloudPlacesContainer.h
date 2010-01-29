@@ -18,6 +18,10 @@
 #include "BuddycloudPlaces.h"
 #include "LocationInterfaces.h"
 
+#ifdef __SERIES60_40__
+#include <akntoolbar.h>
+#endif
+
 /*
 ----------------------------------------------------------------------------
 --
@@ -45,6 +49,11 @@ class CBuddycloudPlacesContainer : public CBuddycloudListComponent, MAknTabObser
 		void RenderListItems();
 		void RepositionItems(TBool aSnapToItem);
 		void HandleItemSelection(TInt aItemId);
+
+#ifdef __SERIES60_40__
+	public:
+		void DynInitToolbarL(TInt aResourceId, CAknToolbar* aToolbar);
+#endif
 
 	public:
 		void DynInitMenuPaneL(TInt aResourceId, CEikMenuPane* aMenuPane);

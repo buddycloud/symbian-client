@@ -225,9 +225,9 @@ void CBuddycloudFollowingContainer::NotificationEvent(TBuddycloudLogicNotificati
 #ifdef __SERIES60_40__
 			DynInitToolbarL(R_STATUS_TOOLBAR, iViewAccessor->ViewToolbar());
 #endif		
-			RenderWrappedText(iSelectedItem);
 		}
 		
+		RenderWrappedText(iSelectedItem);			
 		RenderScreen();
 	}
 	else {
@@ -862,6 +862,10 @@ void CBuddycloudFollowingContainer::DynInitMenuPaneL(TInt aResourceId, CEikMenuP
 				if(aItem->GetIdType() == EIdRoster && !iBuddycloudLogic->IsSubscribedTo(aItem->GetId(), EItemRoster)) {
 					aMenuPane->SetItemDimmed(EMenuAcceptAndFollowCommand, false);
 				}
+				
+				if(iBuddycloudLogic->GetState() == ELogicOnline) {
+					aMenuPane->SetItemDimmed(EMenuChannelInfoCommand, false);
+				}
 			}
 			else if(aItem->GetItemType() == EItemRoster) {
 				CFollowingRosterItem* aRosterItem = static_cast <CFollowingRosterItem*> (aItem);				
@@ -878,12 +882,15 @@ void CBuddycloudFollowingContainer::DynInitMenuPaneL(TInt aResourceId, CEikMenuP
 					}
 				}
 
+				// Follow & Unfollow
 				if(!aRosterItem->OwnItem()) {
-					if(aRosterItem->GetSubscription() <= EPresenceSubscriptionFrom) {
+					if(aRosterItem->GetSubscription() == EPresenceSubscriptionFrom) {
 						aMenuPane->SetItemDimmed(EMenuFollowCommand, false);
 					}
 					
-					if(aRosterItem->GetSubscription() >= EPresenceSubscriptionFrom) {
+					if(aRosterItem->GetSubscription() == EPresenceSubscriptionTo || 
+							aRosterItem->GetSubscription() == EPresenceSubscriptionBoth) {
+						
 						aMenuPane->SetItemDimmed(EMenuUnfollowCommand, false);
 					}
 				}
@@ -1005,13 +1012,26 @@ void CBuddycloudFollowingContainer::HandleCommandL(TInt aCommand) {
 		iBuddycloudLogic->SendInviteL(iSelectedItem);
 	}
 	else if(aCommand == EMenuAddContactCommand) {
-		TBuf<64> aContact;
+		TBuf<64> aFollow;
 
-		CAknTextQueryDialog* aDialog = CAknTextQueryDialog::NewL(aContact, CAknQueryDialog::ENoTone);
+		CAknTextQueryDialog* aDialog = CAknTextQueryDialog::NewL(aFollow, CAknQueryDialog::ENoTone);
 		aDialog->SetPredictiveTextInputPermitted(true);
 
 		if(aDialog->ExecuteLD(R_ADDCONTACT_DIALOG) != 0) {
-			iBuddycloudLogic->FollowContactL(aContact);
+			if(aFollow.Locate('@') != KErrNotFound) {
+				iBuddycloudLogic->FollowContactL(aFollow);
+			}
+			else if(aFollow.Locate('#') != KErrNotFound) {
+				TViewReferenceBuf aViewReference;	
+				aViewReference().iCallbackRequested = true;
+				aViewReference().iCallbackViewId = KFollowingViewId;
+				aViewReference().iOldViewData.iId = iSelectedItem;
+				aViewReference().iNewViewData.iTitle.Copy(aFollow);
+				aViewReference().iNewViewData.iData.Copy(_L8("/channel/"));
+				aViewReference().iNewViewData.iData.Append(aFollow.Mid(aFollow.Locate('#') + 1));
+
+				iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KChannelInfoViewId), TUid::Uid(0), aViewReference);			
+			}
 		}
 	}
 	else if(aCommand == EMenuUnfollowCommand) {
@@ -1019,6 +1039,8 @@ void CBuddycloudFollowingContainer::HandleCommandL(TInt aCommand) {
 
 		if(aDialog->ExecuteLD(R_DELETE_DIALOG) != 0) {
 			iBuddycloudLogic->UnfollowItemL(iSelectedItem);
+			
+			RenderScreen();
 		}
 	}
 	else if(aCommand == EMenuPrivateMessagesCommand || aCommand == EMenuChannelMessagesCommand) {
@@ -1042,14 +1064,23 @@ void CBuddycloudFollowingContainer::HandleCommandL(TInt aCommand) {
 	else if(aCommand == EMenuChannelInfoCommand) {
 		CFollowingItem* aItem = static_cast <CFollowingItem*> (iItemStore->GetItemById(iSelectedItem));
 
-		if(aItem && aItem->GetItemType() >= EItemRoster) {
+		if(aItem && aItem->GetId().Length() > 0) {
 			TViewReferenceBuf aViewReference;	
 			aViewReference().iCallbackRequested = true;
 			aViewReference().iCallbackViewId = KFollowingViewId;
 			aViewReference().iOldViewData.iId = iSelectedItem;
-			aViewReference().iNewViewData.iTitle.Copy(aItem->GetTitle());
-			aViewReference().iNewViewData.iData.Copy(aItem->GetId());
 
+			if(aItem->GetItemType() == EItemNotice) {
+				aViewReference().iNewViewData.iTitle.Copy(aItem->GetId());
+				aViewReference().iNewViewData.iData.Copy(aItem->GetId());
+				aViewReference().iNewViewData.iData.Insert(0, _L8("/user/"));
+				aViewReference().iNewViewData.iData.Append(_L8("/channel"));				
+			}
+			else if(aItem->GetItemType() >= EItemRoster) {
+				aViewReference().iNewViewData.iTitle.Copy(aItem->GetTitle());
+				aViewReference().iNewViewData.iData.Copy(aItem->GetId());
+			}
+			
 			iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KChannelInfoViewId), TUid::Uid(0), aViewReference);			
 		}
 	}

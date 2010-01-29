@@ -32,8 +32,8 @@ rls_string r_string_next_menu "Nächster"
 rls_string r_string_hide_menu "Minimieren"
 
 // Item
-rls_string r_string_item_newchannel "Neuer Channel..."
-rls_string r_string_item_newplace "Neuer Platz..."
+rls_string r_string_item_newchannel "Neuer Channel"
+rls_string r_string_item_newplace "Neuer Platz"
 
 // Menu: Settings & Edit place
 rls_string r_string_options_edititem "Wechseln"
@@ -41,11 +41,14 @@ rls_string r_string_options_searchplace "Nach Details suchen"
 rls_string r_string_options_remove "Entfernen"
 rls_string r_string_options_delete "Löschen"
 
+// Notes
 rls_string r_string_note_noresultsfound "Keine Ergebnisse gefunden"
 rls_string r_string_note_requestsent "Anfrage gesendet"
 rls_string r_string_note_feedbacksent "Feedback gesendet"
 rls_string r_string_note_messagequeued "Nachricht wird gesendet, sobald Du Online gehst"
 rls_string r_string_note_offlinerequired "Du musst offline sein um das zu machen"
+rls_string r_string_note_updatesucessful "Update erfolgreich"
+rls_string r_string_note_updatefailed "Update fehlgeschlagen"
 
 // Positioning methods
 rls_string r_string_positioning_stationary "Du kannst diesen Platz nun bookmarken"
@@ -73,9 +76,8 @@ rls_string r_string_options_done "Erledigt"
 rls_string r_string_options_connect "Online gehen"
 rls_string r_string_options_disconnect "Offline gehen"
 rls_string r_string_options_settings "Einstellungen"
-rls_string r_string_item_viewmessages "Nachrichten ansehen"
 rls_string r_string_item_viewchannelmessages "Channel ansehen"
-rls_string r_string_item_viewprivatemessages "Private Nachrichten"
+rls_string r_string_item_viewprivatemessages "Private Nachrichten ansehen"
 rls_string r_string_item_showplacedetails "Platzdetails ansehen"
 rls_string r_string_item_showchanneldetails "Channel Informationen ansehen"
 rls_string r_string_item_sendplacebysms "Platz via SMS senden"
@@ -93,13 +95,12 @@ rls_string r_string_note_followinglistempty "Du folgst keinem Channel und keinen
 
 // Menu: Messaging
 rls_string r_string_options_postrequest "Postberechtigung erfragen"
+rls_string r_string_options_jumptounread "zu ungelesenen springen"
+rls_string r_string_options_addcomment "Kommentar schreiben"
 rls_string r_string_options_postmessage "Neuen Beitrag schreiben"
 rls_string r_string_options_postmedia "Mediendatei hochladen"
-rls_string r_string_options_jumptounread "zu ungelesenen springen"
 rls_string r_string_options_notificationon "Vibration einschalten"
 rls_string r_string_options_notificationoff "Vibration ausschalten"
-
-rls_string r_string_item_addcomment "Kommentar schreiben"
 rls_string r_string_item_likepost "Post ♥en"
 rls_string r_string_item_copypost "Nachricht kopieren"
 rls_string r_string_item_reportpost "Nachricht melden"
@@ -138,7 +139,7 @@ rls_string r_string_item_seefollowers "Follower anzeigen"
 rls_string r_string_item_seemoderators "Wer moderiert?"
 rls_string r_string_item_seefollowing "Channel Mitgliedschaft"
 rls_string r_string_item_seemoderating "Moderatoren sehen"
-rls_string r_string_item_seeproducing "erstellte Channel"
+rls_string r_string_item_seeproducing "Erstellte Channel"
 rls_string r_string_item_seenearby "Wer ist in der Nähe"
 
 rls_string r_string_title_followedby "$OBJECTs Follower"
@@ -162,7 +163,6 @@ rls_string r_string_list_channelsyoumightlike "Channels die Dir gefallen könnte
 rls_string r_string_list_followersfavourites "Favoriten der Follower"
 rls_string r_string_list_mostpopularchannels "Beliebteste Channels"
 
-rls_string r_string_item_open "Öffnen"
 rls_string r_string_item_follow "Folge"
 rls_string r_string_item_unfollow "Nicht weiter folgen"
 
@@ -190,16 +190,16 @@ rls_string r_string_note_subscriptionrejected "Deine Anfrage diesem Channel zu f
 
 // Account settings
 rls_string r_string_settings_account_title "Konto"
-rls_string r_string_settings_itemlist_fullname "Display name"
+rls_string r_string_settings_itemlist_fullname "Anzeigename"
 rls_string r_string_settings_itemlist_username "Id"
-rls_string r_string_settings_itemlist_username_hint "e.g. 'name@gmail.com'"
+rls_string r_string_settings_itemlist_username_hint "z.B. 'Name@gmail.com'"
 rls_string r_string_settings_itemlist_password "Passwort"
 rls_string r_string_settings_itemlist_password_hint "XMPP Server Passwort"
 rls_string r_string_settings_itemlist_server "XMPP Server"
 
 // Preference settings
 rls_string r_string_settings_itemlist_language "Sprache einstellen"
-rls_string r_string_settings_itemlist_blocking "Private Nachrichten ansehen"
+rls_string r_string_settings_itemlist_blocking "Erlaube private Nachrichten"
 rls_string r_string_settings_itemlist_blockingalwaysshow "Von jedem"
 rls_string r_string_settings_itemlist_blockingfollowers "Nur Follower"
 rls_string r_string_settings_itemlist_accesspoint "Zu nutzender Zugriffspunkt"
@@ -234,13 +234,11 @@ rls_string r_string_settings_itemlist_off "Aus"
 
 // Communities
 rls_string r_string_settings_facebook_text "Du wirst nun zu http://apps.facebook.com/buddycloud der Anwendungsseite von buddycloud gebracht. Bitte füge die Anwendung hinzu, loge Dich ein und erteile dafür die Zugriffsberechtigung."
-rls_string r_string_settings_credentials_success "Update erfolgreich"
 rls_string r_string_settings_credentials_fail "Update fehlgeschlagen.\nÜberprüfe bitte deine Zugangsdaten und versuche es noch einmal"
 
 // Edit Place List
 rls_string r_string_newplace_title "Neuer Platz"
 rls_string r_string_editplace_title "Platz bearbeiten"
-rls_string r_string_updatefailed_title "Update fehlgeschlagen"
 
 rls_string r_string_editplace_itemlist_name "Name"
 rls_string r_string_editplace_itemlist_name_hint "z.B. 'Home' oder 'Starbucks'"
@@ -316,7 +314,7 @@ rls_string r_string_dialog_setnextlocation "Nächsten Platz setzen:"
 rls_string r_string_dialog_newmessage "Beitrag schreiben"
 rls_string r_string_dialog_newcomment "Kommentar schreiben:"
 rls_string r_string_dialog_requestcomment "Anfrage Kommentar"
-rls_string r_string_dialog_addcontact "Gib deine Kontakt-ID ein (z.B. test@gtalk.com): "
+rls_string r_string_dialog_addcontact "Gib Kontakt-ID ein (z.B. test@gtalk.com) oder channel Id (eg. '#help'):"
 
 // Notes
 rls_string r_string_note_connecting "Verbinden..."

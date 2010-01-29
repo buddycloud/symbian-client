@@ -32,20 +32,23 @@ rls_string r_string_next_menu "Următorul"
 rls_string r_string_hide_menu "Ascunde"
 
 // Item
-rls_string r_string_item_newchannel "Noul canal..."
-rls_string r_string_item_newplace "Loc nou..."
+rls_string r_string_item_newchannel "Create channel"
+rls_string r_string_item_newplace "Create place"
 
 // Menu: Settings & Edit place
 rls_string r_string_options_edititem "Schimba"
-rls_string r_string_options_searchplace "Cautati pentru detalii"
+rls_string r_string_options_searchplace "Search for address"
 rls_string r_string_options_remove "Elimina"
 rls_string r_string_options_delete "Delete"
 
+// Notes
 rls_string r_string_note_noresultsfound "Nu sa găsit niciun rezultat"
 rls_string r_string_note_requestsent "Cerere de trimis"
 rls_string r_string_note_feedbacksent "Feedback sent"
 rls_string r_string_note_messagequeued "Mesajul va fi trimis cand ve-ti fi online"
 rls_string r_string_note_offlinerequired "Ai nevoie de a fi off-line pentru a face acest lucru"
+rls_string r_string_note_updatesucessful "Update de succes"
+rls_string r_string_note_updatefailed "Update nu a reuşit"
 
 // Positioning methods
 rls_string r_string_positioning_stationary "Acum, puteţi salva acest loc"
@@ -73,17 +76,16 @@ rls_string r_string_options_done "Gata"
 rls_string r_string_options_connect "Du-te online"
 rls_string r_string_options_disconnect "Du-te offline"
 rls_string r_string_options_settings "Setari"
-rls_string r_string_item_viewmessages "Vezi mesajele"
-rls_string r_string_item_viewchannelmessages "Vezi canal"
-rls_string r_string_item_viewprivatemessages "Vizualizati mesaje private"
-rls_string r_string_item_showplacedetails "See place details"
-rls_string r_string_item_showchanneldetails "See channel details"
+rls_string r_string_item_viewchannelmessages "Show channel"
+rls_string r_string_item_viewprivatemessages "Show private messages"
+rls_string r_string_item_showplacedetails "Arata detaliile locatiei"
+rls_string r_string_item_showchanneldetails "Detaliile canalului"
 rls_string r_string_item_sendplacebysms "Trimite loc prin SMS"
 rls_string r_string_item_sendinvite "Invita in buddycloud"
 rls_string r_string_item_noticeaccept "Accepta"
 rls_string r_string_item_noticeacceptandfollow "Accepta si Continua"
 rls_string r_string_item_noticedecline "Neacceptare"
-rls_string r_string_update_setstatus "Actualizeaza starea"
+rls_string r_string_update_setstatus "Post status"
 rls_string r_string_options_invite "Urmariti..."
 rls_string r_string_settings_usersettings "Preferinte"
 rls_string r_string_settings_communitysettings "Partajare online"
@@ -93,20 +95,19 @@ rls_string r_string_note_followinglistempty "You are not following anything.\n\n
 
 // Menu: Messaging
 rls_string r_string_options_postrequest "Request post privilege"
-rls_string r_string_options_postmessage "Write new post"
-rls_string r_string_options_postmedia "Posteaza Media"
 rls_string r_string_options_jumptounread "Sariti la necitit"
-rls_string r_string_options_notificationon "Pune Buzz On"
-rls_string r_string_options_notificationoff "Pune Buzz off"
-
-rls_string r_string_item_addcomment "Write comment"
+rls_string r_string_options_addcomment "Post comment"
+rls_string r_string_options_postmessage "Post topic"
+rls_string r_string_options_postmedia "Posteaza Media"
+rls_string r_string_options_notificationon "Enable buzz"
+rls_string r_string_options_notificationoff "Disable buzz"
 rls_string r_string_item_likepost "♥ post"
 rls_string r_string_item_copypost "Copy post"
 rls_string r_string_item_reportpost "Report post"
 rls_string r_string_item_removepost "Delete post"
 
 rls_string r_string_options_itemchannel "Canal"
-rls_string r_string_channel_copychannelid "Copy #Id"
+rls_string r_string_channel_copychannelid "Copy #Channel Id"
 rls_string r_string_channel_markread "Mark channel read"
 rls_string r_string_options_reportchannel "Report channel"
 
@@ -134,12 +135,12 @@ rls_string r_string_item_subscribe "Adauga la locatiile mele"
 
 // Menu: Explorer
 rls_string r_string_options_explore "Exploreaza"
-rls_string r_string_item_seefollowers "Vezi adepţi"
-rls_string r_string_item_seemoderators "See moderators"
-rls_string r_string_item_seefollowing "A se vedea următoarele"
-rls_string r_string_item_seemoderating "See moderating"
-rls_string r_string_item_seeproducing "Vezi producatoare"
-rls_string r_string_item_seenearby "A se vedea în apropiere"
+rls_string r_string_item_seefollowers "Show followers"
+rls_string r_string_item_seemoderators "Show moderators"
+rls_string r_string_item_seefollowing "Show following"
+rls_string r_string_item_seemoderating "Show moderating"
+rls_string r_string_item_seeproducing "Show producing"
+rls_string r_string_item_seenearby "Show nearby"
 
 rls_string r_string_title_followedby "$OBJECT urmaritorii"
 rls_string r_string_title_moderatedby "$OBJECT's moderators"
@@ -162,7 +163,6 @@ rls_string r_string_list_channelsyoumightlike "Canale care ar putea sa-ti placa"
 rls_string r_string_list_followersfavourites "Adepţii 'Favoriti'"
 rls_string r_string_list_mostpopularchannels "Cele mai populare canale"
 
-rls_string r_string_item_open "Deschide"
 rls_string r_string_item_follow "Urmareste"
 rls_string r_string_item_unfollow "Nu mai urmareste"
 
@@ -199,7 +199,7 @@ rls_string r_string_settings_itemlist_server "XMPP server"
 
 // Preference settings
 rls_string r_string_settings_itemlist_language "Arata limba"
-rls_string r_string_settings_itemlist_blocking "Show private messages"
+rls_string r_string_settings_itemlist_blocking "Allow private messages"
 rls_string r_string_settings_itemlist_blockingalwaysshow "From anyone"
 rls_string r_string_settings_itemlist_blockingfollowers "Followers only"
 rls_string r_string_settings_itemlist_accesspoint "Puncte de access internet in folosinta"
@@ -234,13 +234,11 @@ rls_string r_string_settings_itemlist_off "off"
 
 // Communities
 rls_string r_string_settings_facebook_text "Acum, veţi fi redirectionat catre http://apps.facebook.com/buddycloud. Vă rugăm să adăugaţi la cerere, de login şi să permită accesul la aceasta."
-rls_string r_string_settings_credentials_success "Update de succes"
 rls_string r_string_settings_credentials_fail "Update nu a reuşit.\nVă rugăm să vă verificaţi datele d-voastra şi să încercaţi din nou"
 
 // Edit Place List
 rls_string r_string_newplace_title "Loc Nou"
 rls_string r_string_editplace_title "Editeaza locatia"
-rls_string r_string_updatefailed_title "Update nu a reuşit"
 
 rls_string r_string_editplace_itemlist_name "Nume"
 rls_string r_string_editplace_itemlist_name_hint "de exemplu, 'Acasă' sau 'Starbucks'"
@@ -316,7 +314,7 @@ rls_string r_string_dialog_setnextlocation "Seteaza locul urmator:"
 rls_string r_string_dialog_newmessage "Write post:"
 rls_string r_string_dialog_newcomment "Write comment:"
 rls_string r_string_dialog_requestcomment "Request comment:"
-rls_string r_string_dialog_addcontact "Enter contact's Id (eg. test@gtalk.com):"
+rls_string r_string_dialog_addcontact "Enter contact (eg. 'test@gmail.com') or channel Id (eg. '#help'):"
 
 // Notes
 rls_string r_string_note_connecting "Conectare..."

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1 Tiny//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11-tiny.dtd">
 <svg xmlns="http://www.w3.org/2000/svg" baseProfile="tiny" height="50" version="1.0" viewBox="0 0 50 50" width="50">
+<defs/>
 <path d="M 47.108978,33.518915 L 42.49737,37.73762 L 43.559122,43.720617 L 37.889921,40.878024 L 32.198955,43.681481 L 33.306804,37.705957 L 28.727843,33.455591 L 35.081732,32.605107 L 37.942744,27.17478 L 40.761815,32.624675 L 47.108978,33.518915 z" style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1.02575314;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0.47058824"/>
-<path d="M 30.341575,21.781411 C 31.739103,20.646988 35,18 35,18 L 33.684477,30.659755 L 21.024723,29.344233 C 21.024723,29.344233 24,27 25.683148,25.562822 C 21,21 14,19 5,22 C 9,16 5,22 9,16 C 5,10 9,16 5,10 C 18,10 26,14 30.341575,21.781411 z" style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:0.47058824"/>
+<path d="M 30.341575,21.781411 C 31.739103,20.646988 35,18 35,18 L 33.684477,30.659755 L 21.024723,29.344233 C 21.024723,29.344233 24,27 25.683148,25.562822 C 21,21 14,19 5,22 C 9,16 5,22 9,16 C 5,10 9,16 5,10 C 18,10 26,14 30.341575,21.781411 z" style="fill:#ffffff;fill-opacity:0.82352942;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:0.47058823999999999"/>
 </svg>

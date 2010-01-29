@@ -32,20 +32,23 @@ rls_string r_string_next_menu "下一步"
 rls_string r_string_hide_menu "隐藏"
 
 // Item
-rls_string r_string_item_newchannel "新的频道"
-rls_string r_string_item_newplace "新的地点"
+rls_string r_string_item_newchannel "Create channel"
+rls_string r_string_item_newplace "Create place"
 
 // Menu: Settings & Edit place
 rls_string r_string_options_edititem "更改"
-rls_string r_string_options_searchplace "查找详情"
+rls_string r_string_options_searchplace "Search for address"
 rls_string r_string_options_remove "删除"
 rls_string r_string_options_delete "Delete"
 
+// Notes
 rls_string r_string_note_noresultsfound "没有找到结果"
 rls_string r_string_note_requestsent "请求送出"
 rls_string r_string_note_feedbacksent "Feedback sent"
 rls_string r_string_note_messagequeued "信息将在你上线后发送"
 rls_string r_string_note_offlinerequired "你必须在离线时操作"
+rls_string r_string_note_updatesucessful "更新成功"
+rls_string r_string_note_updatefailed "更新失败"
 
 // Positioning methods
 rls_string r_string_positioning_stationary "你现在可以标记此地点"
@@ -73,17 +76,16 @@ rls_string r_string_options_done "完成"
 rls_string r_string_options_connect "上线"
 rls_string r_string_options_disconnect "离线"
 rls_string r_string_options_settings "设置"
-rls_string r_string_item_viewmessages "查看信息"
-rls_string r_string_item_viewchannelmessages "查看频道"
-rls_string r_string_item_viewprivatemessages "查看私人信息"
-rls_string r_string_item_showplacedetails "See place details"
-rls_string r_string_item_showchanneldetails "See channel details"
+rls_string r_string_item_viewchannelmessages "Show channel"
+rls_string r_string_item_viewprivatemessages "显示私人信息"
+rls_string r_string_item_showplacedetails "查看地点详情"
+rls_string r_string_item_showchanneldetails "显示频道详情"
 rls_string r_string_item_sendplacebysms "通过短信发送所在位置"
 rls_string r_string_item_sendinvite "邀请加入buddycloud"
 rls_string r_string_item_noticeaccept "接受"
 rls_string r_string_item_noticeacceptandfollow "同意并跟随"
 rls_string r_string_item_noticedecline "拒绝"
-rls_string r_string_update_setstatus "更新心情状态"
+rls_string r_string_update_setstatus "Post status"
 rls_string r_string_options_invite "加入..."
 rls_string r_string_settings_usersettings "使用设定"
 rls_string r_string_settings_communitysettings "在线共享"
@@ -93,20 +95,19 @@ rls_string r_string_note_followinglistempty "You are not following anything.\n\n
 
 // Menu: Messaging
 rls_string r_string_options_postrequest "Request post privilege"
-rls_string r_string_options_postmessage "Write new post"
-rls_string r_string_options_postmedia "发表多媒体"
 rls_string r_string_options_jumptounread "转到未读消息"
-rls_string r_string_options_notificationon "打开震动"
-rls_string r_string_options_notificationoff "关闭震动"
-
-rls_string r_string_item_addcomment "Write comment"
+rls_string r_string_options_addcomment "Post comment"
+rls_string r_string_options_postmessage "Post topic"
+rls_string r_string_options_postmedia "发表多媒体"
+rls_string r_string_options_notificationon "Enable buzz"
+rls_string r_string_options_notificationoff "Disable buzz"
 rls_string r_string_item_likepost "♥ post"
 rls_string r_string_item_copypost "Copy post"
 rls_string r_string_item_reportpost "Report post"
 rls_string r_string_item_removepost "Delete post"
 
 rls_string r_string_options_itemchannel "频道"
-rls_string r_string_channel_copychannelid "Copy #Id"
+rls_string r_string_channel_copychannelid "Copy #Channel Id"
 rls_string r_string_channel_markread "Mark channel read"
 rls_string r_string_options_reportchannel "Report channel"
 
@@ -134,12 +135,12 @@ rls_string r_string_item_subscribe "添加到我的地点"
 
 // Menu: Explorer
 rls_string r_string_options_explore "探索"
-rls_string r_string_item_seefollowers "查看追随者"
-rls_string r_string_item_seemoderators "See moderators"
-rls_string r_string_item_seefollowing "查看我所追随的"
-rls_string r_string_item_seemoderating "See moderating"
-rls_string r_string_item_seeproducing "查看我所创造的"
-rls_string r_string_item_seenearby "查看附近用户"
+rls_string r_string_item_seefollowers "Show followers"
+rls_string r_string_item_seemoderators "Show moderators"
+rls_string r_string_item_seefollowing "Show following"
+rls_string r_string_item_seemoderating "Show moderating"
+rls_string r_string_item_seeproducing "Show producing"
+rls_string r_string_item_seenearby "Show nearby"
 
 rls_string r_string_title_followedby "$OBJECT的跟随者"
 rls_string r_string_title_moderatedby "$OBJECT's moderators"
@@ -162,7 +163,6 @@ rls_string r_string_list_channelsyoumightlike "你可能喜欢的频道"
 rls_string r_string_list_followersfavourites "追随者的最爱"
 rls_string r_string_list_mostpopularchannels "最受欢迎的频道"
 
-rls_string r_string_item_open "打开"
 rls_string r_string_item_follow "加入"
 rls_string r_string_item_unfollow "删除"
 
@@ -199,7 +199,7 @@ rls_string r_string_settings_itemlist_server "XMPP服务"
 
 // Preference settings
 rls_string r_string_settings_itemlist_language "语言"
-rls_string r_string_settings_itemlist_blocking "显示私人信息"
+rls_string r_string_settings_itemlist_blocking "Allow private messages"
 rls_string r_string_settings_itemlist_blockingalwaysshow "源于所有人"
 rls_string r_string_settings_itemlist_blockingfollowers "只限跟随者"
 rls_string r_string_settings_itemlist_accesspoint "可用接入点"
@@ -234,13 +234,11 @@ rls_string r_string_settings_itemlist_off "关"
 
 // Communities
 rls_string r_string_settings_facebook_text "你将会前往buddycloud在Facebook上的组件页面http://apps.facebook.com/buddycloud。请添加这个组件，登陆并同意运行这个组件"
-rls_string r_string_settings_credentials_success "更新成功"
 rls_string r_string_settings_credentials_fail "更新失败。请检查你的证书然后重试"
 
 // Edit Place List
 rls_string r_string_newplace_title "新的地点"
 rls_string r_string_editplace_title "编辑地点"
-rls_string r_string_updatefailed_title "更新失败"
 
 rls_string r_string_editplace_itemlist_name "名字"
 rls_string r_string_editplace_itemlist_name_hint "例如'家'或'星巴克'"
@@ -316,7 +314,7 @@ rls_string r_string_dialog_setnextlocation "设置下个地点："
 rls_string r_string_dialog_newmessage "Write post:"
 rls_string r_string_dialog_newcomment "Write comment:"
 rls_string r_string_dialog_requestcomment "Request comment:"
-rls_string r_string_dialog_addcontact "Enter contact's Id (eg. test@gtalk.com):"
+rls_string r_string_dialog_addcontact "Enter contact (eg. 'test@gmail.com') or channel Id (eg. '#help'):"
 
 // Notes
 rls_string r_string_note_connecting "正在连接"

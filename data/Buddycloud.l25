@@ -32,20 +32,23 @@ rls_string r_string_next_menu "Další"
 rls_string r_string_hide_menu "Hide"
 
 // Item
-rls_string r_string_item_newchannel "Nový kanál..."
-rls_string r_string_item_newplace "Nové místo..."
+rls_string r_string_item_newchannel "Create channel"
+rls_string r_string_item_newplace "Create place"
 
 // Menu: Settings & Edit place
 rls_string r_string_options_edititem "Změnit"
-rls_string r_string_options_searchplace "Vyhledat detaily"
+rls_string r_string_options_searchplace "Search for address"
 rls_string r_string_options_remove "Odstranit"
 rls_string r_string_options_delete "Delete"
 
+// Notes
 rls_string r_string_note_noresultsfound "Žádné výsledky"
 rls_string r_string_note_requestsent "Žádost odeslána"
 rls_string r_string_note_feedbacksent "Feedback sent"
 rls_string r_string_note_messagequeued "Zpráva bude odeslána jakmile budeš online"
 rls_string r_string_note_offlinerequired "Pro provedení této operace musíš být offline"
+rls_string r_string_note_updatesucessful "Aktualizace byla úspěšná"
+rls_string r_string_note_updatefailed "Aktualizace selhala"
 
 // Positioning methods
 rls_string r_string_positioning_stationary "Nyní můžeš pro toto místo vytvořit Záložku"
@@ -73,17 +76,16 @@ rls_string r_string_options_done "Hotovo"
 rls_string r_string_options_connect "Připojit se"
 rls_string r_string_options_disconnect "Odpojit se"
 rls_string r_string_options_settings "Nastavení"
-rls_string r_string_item_viewmessages "Zobrazit zprávy"
-rls_string r_string_item_viewchannelmessages "Zobrazit kanál"
-rls_string r_string_item_viewprivatemessages "Zobrazit zprávy"
-rls_string r_string_item_showplacedetails "See place details"
-rls_string r_string_item_showchanneldetails "See channel details"
+rls_string r_string_item_viewchannelmessages "Show channel"
+rls_string r_string_item_viewprivatemessages "Show private messages"
+rls_string r_string_item_showplacedetails "Zobrazit detaily místa"
+rls_string r_string_item_showchanneldetails "Show channel details"
 rls_string r_string_item_sendplacebysms "Poslat info o poloze"
 rls_string r_string_item_sendinvite "Pozvat na buddycloud"
 rls_string r_string_item_noticeaccept "Accept"
 rls_string r_string_item_noticeacceptandfollow "Accept and Follow"
 rls_string r_string_item_noticedecline "Decline"
-rls_string r_string_update_setstatus "Aktualizovat status"
+rls_string r_string_update_setstatus "Post status"
 rls_string r_string_options_invite "Odebírat..."
 rls_string r_string_settings_usersettings "Předvolby"
 rls_string r_string_settings_communitysettings "Sdílet online"
@@ -93,20 +95,19 @@ rls_string r_string_note_followinglistempty "You are not following anything.\n\n
 
 // Menu: Messaging
 rls_string r_string_options_postrequest "Request post privilege"
-rls_string r_string_options_postmessage "Write new post"
-rls_string r_string_options_postmedia "Post media"
 rls_string r_string_options_jumptounread "Skoč na nepřečtené"
-rls_string r_string_options_notificationon "Zapnout vibrace"
-rls_string r_string_options_notificationoff "Vypnout vibrace"
-
-rls_string r_string_item_addcomment "Write comment"
+rls_string r_string_options_addcomment "Post comment"
+rls_string r_string_options_postmessage "Post topic"
+rls_string r_string_options_postmedia "Post media"
+rls_string r_string_options_notificationon "Enable buzz"
+rls_string r_string_options_notificationoff "Disable buzz"
 rls_string r_string_item_likepost "♥ post"
 rls_string r_string_item_copypost "Copy post"
 rls_string r_string_item_reportpost "Report post"
 rls_string r_string_item_removepost "Delete post"
 
 rls_string r_string_options_itemchannel "Kanál"
-rls_string r_string_channel_copychannelid "Copy #Id"
+rls_string r_string_channel_copychannelid "Copy #Channel Id"
 rls_string r_string_channel_markread "Mark channel read"
 rls_string r_string_options_reportchannel "Report channel"
 
@@ -134,12 +135,12 @@ rls_string r_string_item_subscribe "Přidat k mým Místům"
 
 // Menu: Explorer
 rls_string r_string_options_explore "Prozkoumat"
-rls_string r_string_item_seefollowers "Zobrazit odebírající"
-rls_string r_string_item_seemoderators "See moderators"
-rls_string r_string_item_seefollowing "Zobrazit odebírané"
-rls_string r_string_item_seemoderating "See moderating"
-rls_string r_string_item_seeproducing "Zobrazit vytvořené"
-rls_string r_string_item_seenearby "Zobrazit okolí"
+rls_string r_string_item_seefollowers "Show followers"
+rls_string r_string_item_seemoderators "Show moderators"
+rls_string r_string_item_seefollowing "Show following"
+rls_string r_string_item_seemoderating "Show moderating"
+rls_string r_string_item_seeproducing "Show producing"
+rls_string r_string_item_seenearby "Show nearby"
 
 rls_string r_string_title_followedby "Odběratelé $OBJECT"
 rls_string r_string_title_moderatedby "$OBJECT's moderators"
@@ -162,7 +163,6 @@ rls_string r_string_list_channelsyoumightlike "Kanály které se Ti mohou líbit
 rls_string r_string_list_followersfavourites "Oblíbené kanály odběratelů"
 rls_string r_string_list_mostpopularchannels "Nejpopulárnější kanály"
 
-rls_string r_string_item_open "Otevřít"
 rls_string r_string_item_follow "Odebírat"
 rls_string r_string_item_unfollow "Zrušit odběr"
 
@@ -199,7 +199,7 @@ rls_string r_string_settings_itemlist_server "XMPP server"
 
 // Preference settings
 rls_string r_string_settings_itemlist_language "Použitý jazyk"
-rls_string r_string_settings_itemlist_blocking "Show private messages"
+rls_string r_string_settings_itemlist_blocking "Allow private messages"
 rls_string r_string_settings_itemlist_blockingalwaysshow "From anyone"
 rls_string r_string_settings_itemlist_blockingfollowers "Followers only"
 rls_string r_string_settings_itemlist_accesspoint "Použít přístupový bod"
@@ -234,13 +234,11 @@ rls_string r_string_settings_itemlist_off "Vypnuto"
 
 // Communities
 rls_string r_string_settings_facebook_text "Nyní budeš přesměrován na http://apps.facebook.com/buddycloud - stránku aplikace buddycloud. Prosím vlož aplikaci, přihlaš se a povol jí přístup."
-rls_string r_string_settings_credentials_success "Aktualizace byla úspěšná"
 rls_string r_string_settings_credentials_fail "Aktualizace selhala.\nProsím zkontroluj své přihlašovací údaje a zkus to znovu"
 
 // Edit Place List
 rls_string r_string_newplace_title "Nové místo"
 rls_string r_string_editplace_title "Upravit místo"
-rls_string r_string_updatefailed_title "Aktualizace selhala"
 
 rls_string r_string_editplace_itemlist_name "Jméno"
 rls_string r_string_editplace_itemlist_name_hint "např. 'Doma' nebo 'Starbucks'"
@@ -316,7 +314,7 @@ rls_string r_string_dialog_setnextlocation "Nastavit příští místo:"
 rls_string r_string_dialog_newmessage "Write post:"
 rls_string r_string_dialog_newcomment "Write comment:"
 rls_string r_string_dialog_requestcomment "Request comment:"
-rls_string r_string_dialog_addcontact "Enter contact's Id (eg. test@gtalk.com):"
+rls_string r_string_dialog_addcontact "Enter contact (eg. 'test@gmail.com') or channel Id (eg. '#help'):"
 
 // Notes
 rls_string r_string_note_connecting "Připojuji se..."

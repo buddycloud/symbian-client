@@ -32,20 +32,23 @@ rls_string r_string_next_menu "Volgende"
 rls_string r_string_hide_menu "Verbergen"
 
 // Item
-rls_string r_string_item_newchannel "Nieuw kanaal..."
-rls_string r_string_item_newplace "Nieuwe plaats..."
+rls_string r_string_item_newchannel "Create channel"
+rls_string r_string_item_newplace "Create place"
 
 // Menu: Settings & Edit place
 rls_string r_string_options_edititem "Wijzigen"
-rls_string r_string_options_searchplace "Zoek voor details"
+rls_string r_string_options_searchplace "Search for address"
 rls_string r_string_options_remove "Verwijderen"
 rls_string r_string_options_delete "Delete"
 
+// Notes
 rls_string r_string_note_noresultsfound "Geen resultaten gevonden"
 rls_string r_string_note_requestsent "Verzoek verstuurd"
 rls_string r_string_note_feedbacksent "Feedback sent"
 rls_string r_string_note_messagequeued "Bericht wordt verstuurd zodra u online bent"
 rls_string r_string_note_offlinerequired "U dient offline te zijn om dit actie uit te voeren"
+rls_string r_string_note_updatesucessful "Update gelukt"
+rls_string r_string_note_updatefailed "Update mislukt"
 
 // Positioning methods
 rls_string r_string_positioning_stationary "You can now Bookmark this place"
@@ -73,17 +76,16 @@ rls_string r_string_options_done "Klaar"
 rls_string r_string_options_connect "Ga online"
 rls_string r_string_options_disconnect "Ga offline"
 rls_string r_string_options_settings "Instellingen"
-rls_string r_string_item_viewmessages "Bericht lezen"
-rls_string r_string_item_viewchannelmessages "Channel kijken"
-rls_string r_string_item_viewprivatemessages "Private berichten lezen"
-rls_string r_string_item_showplacedetails "See place details"
-rls_string r_string_item_showchanneldetails "See channel details"
+rls_string r_string_item_viewchannelmessages "Show channel"
+rls_string r_string_item_viewprivatemessages "Show private messages"
+rls_string r_string_item_showplacedetails "Show place details"
+rls_string r_string_item_showchanneldetails "Details weergeven"
 rls_string r_string_item_sendplacebysms "Stuur plaats via SMS"
 rls_string r_string_item_sendinvite "Nodig uit voor buddycloud"
 rls_string r_string_item_noticeaccept "Aanvaard "
 rls_string r_string_item_noticeacceptandfollow "Aanvaard & Volg"
 rls_string r_string_item_noticedecline "Weigeren"
-rls_string r_string_update_setstatus "Status updaten"
+rls_string r_string_update_setstatus "Post status"
 rls_string r_string_options_invite "Volgen..."
 rls_string r_string_settings_usersettings "Instellingen"
 rls_string r_string_settings_communitysettings "Online delen"
@@ -93,20 +95,19 @@ rls_string r_string_note_followinglistempty "You are not following anything.\n\n
 
 // Menu: Messaging
 rls_string r_string_options_postrequest "Request post privilege"
-rls_string r_string_options_postmessage "Write new post"
-rls_string r_string_options_postmedia "Media opsturen"
 rls_string r_string_options_jumptounread "Overslaan naar ongelezen bericht"
-rls_string r_string_options_notificationon "Trilfunctie aanzetten"
-rls_string r_string_options_notificationoff "Trilfunctie uitzetten"
-
-rls_string r_string_item_addcomment "Write comment"
+rls_string r_string_options_addcomment "Post comment"
+rls_string r_string_options_postmessage "Post topic"
+rls_string r_string_options_postmedia "Media opsturen"
+rls_string r_string_options_notificationon "Enable buzz"
+rls_string r_string_options_notificationoff "Disable buzz"
 rls_string r_string_item_likepost "♥ post"
 rls_string r_string_item_copypost "Copy post"
 rls_string r_string_item_reportpost "Report post"
 rls_string r_string_item_removepost "Delete post"
 
 rls_string r_string_options_itemchannel "Channel"
-rls_string r_string_channel_copychannelid "Copy #Id"
+rls_string r_string_channel_copychannelid "Copy #Channel Id"
 rls_string r_string_channel_markread "Mark channel read"
 rls_string r_string_options_reportchannel "Report channel"
 
@@ -134,12 +135,12 @@ rls_string r_string_item_subscribe "Voeg toe aan mijn lokaties"
 
 // Menu: Explorer
 rls_string r_string_options_explore "Verkennen"
-rls_string r_string_item_seefollowers "Zie aanhangers"
-rls_string r_string_item_seemoderators "See moderators"
-rls_string r_string_item_seefollowing "Zie aanhangers"
-rls_string r_string_item_seemoderating "See moderating"
-rls_string r_string_item_seeproducing "Zie producerend"
-rls_string r_string_item_seenearby "Zie dichtstbijzijnde "
+rls_string r_string_item_seefollowers "Show followers"
+rls_string r_string_item_seemoderators "Show moderators"
+rls_string r_string_item_seefollowing "Show following"
+rls_string r_string_item_seemoderating "Show moderating"
+rls_string r_string_item_seeproducing "Show producing"
+rls_string r_string_item_seenearby "Show nearby"
 
 rls_string r_string_title_followedby "$OBJECT's aanhanger"
 rls_string r_string_title_moderatedby "$OBJECT's moderators"
@@ -162,7 +163,6 @@ rls_string r_string_list_channelsyoumightlike "Channels die je misschien leuk vi
 rls_string r_string_list_followersfavourites "Aanhangers' Favorieten "
 rls_string r_string_list_mostpopularchannels "Meest populair channels"
 
-rls_string r_string_item_open "Openen"
 rls_string r_string_item_follow "Volgen"
 rls_string r_string_item_unfollow "Loskoppelen"
 
@@ -199,7 +199,7 @@ rls_string r_string_settings_itemlist_server "XMPP server"
 
 // Preference settings
 rls_string r_string_settings_itemlist_language "Taal"
-rls_string r_string_settings_itemlist_blocking "Show private messages"
+rls_string r_string_settings_itemlist_blocking "Allow private messages"
 rls_string r_string_settings_itemlist_blockingalwaysshow "From anyone"
 rls_string r_string_settings_itemlist_blockingfollowers "Followers only"
 rls_string r_string_settings_itemlist_accesspoint "Te gebruiken access point"
@@ -234,13 +234,11 @@ rls_string r_string_settings_itemlist_off "Uit"
 
 // Communities
 rls_string r_string_settings_facebook_text "You will now be taken to http://apps.facebook.com/buddycloud the application page of buddycloud. Please add the application, login and grant access to it."
-rls_string r_string_settings_credentials_success "Update gelukt"
 rls_string r_string_settings_credentials_fail "Update mislukt. Gaarne uw instellingen nakijken en probeer opnieuw."
 
 // Edit Place List
 rls_string r_string_newplace_title "Nieuw plaatsnaam"
 rls_string r_string_editplace_title "Wijzig plaats"
-rls_string r_string_updatefailed_title "Update mislukt"
 
 rls_string r_string_editplace_itemlist_name "Naam"
 rls_string r_string_editplace_itemlist_name_hint "e.g. 'Home' or 'Starbucks'"
@@ -316,7 +314,7 @@ rls_string r_string_dialog_setnextlocation "Volgende bestemming instellen:"
 rls_string r_string_dialog_newmessage "Write post:"
 rls_string r_string_dialog_newcomment "Write comment:"
 rls_string r_string_dialog_requestcomment "Request comment:"
-rls_string r_string_dialog_addcontact "Enter contact's Id (eg. test@gtalk.com):"
+rls_string r_string_dialog_addcontact "Enter contact (eg. 'test@gmail.com') or channel Id (eg. '#help'):"
 
 // Notes
 rls_string r_string_note_connecting "Verbinden..."

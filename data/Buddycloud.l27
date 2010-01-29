@@ -22,7 +22,7 @@ rls_string r_string_translatedby "Przetłumaczył: FRANQ_23_PL"
 
 rls_string r_string_followingtab_hint "Śledzone"
 rls_string r_string_placestab_hint "Miejsca"
-rls_string r_string_explorertab_hint "Explorer(?)"
+rls_string r_string_explorertab_hint "Eksploruj"
 
 // CBA
 rls_string r_string_options_menu "Opcje"
@@ -32,8 +32,8 @@ rls_string r_string_next_menu "Następny"
 rls_string r_string_hide_menu "Ukryj"
 
 // Item
-rls_string r_string_item_newchannel "Nowy kanał..."
-rls_string r_string_item_newplace "Nowe miejsce..."
+rls_string r_string_item_newchannel "Nowy kanał"
+rls_string r_string_item_newplace "Nowe miejsce"
 
 // Menu: Settings & Edit place
 rls_string r_string_options_edititem "Zmień"
@@ -41,11 +41,14 @@ rls_string r_string_options_searchplace "Szukaj szczegółów"
 rls_string r_string_options_remove "Usuń"
 rls_string r_string_options_delete "Usuń"
 
+// Notes
 rls_string r_string_note_noresultsfound "Nie znaleziono wyników"
 rls_string r_string_note_requestsent "Zapytanie wysłane"
-rls_string r_string_note_feedbacksent "Opinie nadsyłane (?)"
+rls_string r_string_note_feedbacksent "Opinia wysłana"
 rls_string r_string_note_messagequeued "Wiadomość zostanie wysłana gdy będziesz online"
 rls_string r_string_note_offlinerequired "Musisz być offline by to zrobić"
+rls_string r_string_note_updatesucessful "Aktualizacja udana"
+rls_string r_string_note_updatefailed "Aktualizacja nie powiodła się"
 
 // Positioning methods
 rls_string r_string_positioning_stationary "Możesz teraz zapisać to miejsce"
@@ -73,16 +76,15 @@ rls_string r_string_options_done "Zrobione"
 rls_string r_string_options_connect "Przejdź do trybu online"
 rls_string r_string_options_disconnect "Przejdź do trybu offline"
 rls_string r_string_options_settings "Ustawienia"
-rls_string r_string_item_viewmessages "Wyświetl wiadomości"
 rls_string r_string_item_viewchannelmessages "Wyświetl kanał"
-rls_string r_string_item_viewprivatemessages "Wyświetl prywatne wiadomości"
+rls_string r_string_item_viewprivatemessages "Pokaż prywatne wiadomości"
 rls_string r_string_item_showplacedetails "Zobacz szczegóły miejsca"
 rls_string r_string_item_showchanneldetails "Zobacz szczegóły kanału"
 rls_string r_string_item_sendplacebysms "Wyślij miejsce przez SMS"
 rls_string r_string_item_sendinvite "Zaproś do buddycloud"
 rls_string r_string_item_noticeaccept "Akceptuj"
 rls_string r_string_item_noticeacceptandfollow "Akceptuj i śledź"
-rls_string r_string_item_noticedecline "Odrzuć(?)"
+rls_string r_string_item_noticedecline "Odrzuć"
 rls_string r_string_update_setstatus "Aktualizacja statusu"
 rls_string r_string_options_invite "Śledź..."
 rls_string r_string_settings_usersettings "Preferencje"
@@ -92,14 +94,13 @@ rls_string r_string_settings_clearconnection "Zmień połączenie"
 rls_string r_string_note_followinglistempty "Nie śledzisz niczego. Skorzystaj z karty Explorer do wyszukiwania rzeczy do śledzenia."
 
 // Menu: Messaging
-rls_string r_string_options_postrequest "Poproś o przywileje postu(?)"
+rls_string r_string_options_postrequest "Poproś o możliwość pisania"
+rls_string r_string_options_jumptounread "Skocz do nieprzeczytanych"
+rls_string r_string_options_addcomment "Napisz komentarz"
 rls_string r_string_options_postmessage "Napisz nowy post"
 rls_string r_string_options_postmedia "Dodaj media"
-rls_string r_string_options_jumptounread "Skocz do nieprzeczytanych"
 rls_string r_string_options_notificationon "Włącz powiadomienie"
 rls_string r_string_options_notificationoff "Wyłącz powiadomienie"
-
-rls_string r_string_item_addcomment "Napisz komentarz"
 rls_string r_string_item_likepost "♥ post"
 rls_string r_string_item_copypost "Kopiuj post"
 rls_string r_string_item_reportpost "Zgłoś post"
@@ -128,7 +129,7 @@ rls_string r_string_note_placeslistempty "Nie masz zapisanych miejsc.\n\nBy uczy
 
 // Menu: Nearby
 rls_string r_string_options_refresh "Odśwież"
-rls_string r_string_item_placeinfo "Umieść szczegóły"
+rls_string r_string_item_placeinfo "Szczegóły miejsca"
 rls_string r_string_item_setcurrent "Ustaw jako to miejsce"
 rls_string r_string_item_subscribe "Dodaj do moich miejsc"
 
@@ -137,12 +138,12 @@ rls_string r_string_options_explore "Eksploruj"
 rls_string r_string_item_seefollowers "Zobacz śledzących"
 rls_string r_string_item_seemoderators "Zobacz moderatorów"
 rls_string r_string_item_seefollowing "Zobacz śledzone"
-rls_string r_string_item_seemoderating "Zobacz moderowane(?)"
+rls_string r_string_item_seemoderating "Zobacz moderowane"
 rls_string r_string_item_seeproducing "Zobacz produkujących"
 rls_string r_string_item_seenearby "Zobacz w pobliżu"
 
 rls_string r_string_title_followedby "$OBJECT śledzących"
-rls_string r_string_title_moderatedby "$OBJECT's moderatorzy(?)"
+rls_string r_string_title_moderatedby "$OBJECT's moderatorzy"
 rls_string r_string_title_isfollowing "$USER śledzi"
 rls_string r_string_title_ismoderating "$USER jest moderowany"
 rls_string r_string_title_isproducing "$USER produkuje"
@@ -150,19 +151,18 @@ rls_string r_string_title_nearbyto "Najbliższe do $OBJECT"
 
 rls_string r_string_note_requesting "Zapytanie..."
 rls_string r_string_note_channelrank "Ranga"
-rls_string r_string_note_channelsince "Dzienne nadawanie(?)"
+rls_string r_string_note_channelsince "Dziennie postów"
 rls_string r_string_note_channelowner "Produkowane przez"
 rls_string r_string_note_channellocation "Lokalizacja"
 rls_string r_string_note_channelfollowers "Śledzących"
 
 // Menu: Channels
-rls_string r_string_list_nearbytoyou "Przeglądaj Najbliższe"
+rls_string r_string_list_nearbytoyou "Przeglądaj najbliższe"
 rls_string r_string_list_featuredchannels "Polecane kanały"
 rls_string r_string_list_channelsyoumightlike "Kanały, które mogłyby ci się spodobać"
 rls_string r_string_list_followersfavourites "Ulubione śledzących"
 rls_string r_string_list_mostpopularchannels "Najpopularniejsze kanały"
 
-rls_string r_string_item_open "Otwórz"
 rls_string r_string_item_follow "Śledź"
 rls_string r_string_item_unfollow "Nie śledź"
 
@@ -191,17 +191,17 @@ rls_string r_string_note_subscriptionrejected "Twoja subskrypcja tego kanału zo
 // Account settings
 rls_string r_string_settings_account_title "Konto"
 rls_string r_string_settings_itemlist_fullname "Pełna nazwa"
-rls_string r_string_settings_itemlist_username "Id"
-rls_string r_string_settings_itemlist_username_hint "e.g. 'name@gmail.com'"
+rls_string r_string_settings_itemlist_username "ID"
+rls_string r_string_settings_itemlist_username_hint "np. 'imię@gmail.com'"
 rls_string r_string_settings_itemlist_password "Hasło"
 rls_string r_string_settings_itemlist_password_hint "Hasło serwera XMPP"
 rls_string r_string_settings_itemlist_server "Serwer XMPP"
 
 // Preference settings
 rls_string r_string_settings_itemlist_language "Język wyświetlania"
-rls_string r_string_settings_itemlist_blocking "Pokaż prywatne wiadomości"
+rls_string r_string_settings_itemlist_blocking "Zezwól na prywatne wiadomości"
 rls_string r_string_settings_itemlist_blockingalwaysshow "Od każdego"
-rls_string r_string_settings_itemlist_blockingfollowers "Tylko śledzący"
+rls_string r_string_settings_itemlist_blockingfollowers "Tylko od śledzących"
 rls_string r_string_settings_itemlist_accesspoint "Punkt dostępu do użycia"
 rls_string r_string_settings_itemlist_accesspointuserdefined "Użytkownika"
 rls_string r_string_settings_itemlist_accesspointalwaysask "Zawsze pytaj"
@@ -219,7 +219,7 @@ rls_string r_string_settings_itemlist_groupallmessages "Wszystkie posty"
 
 rls_string r_string_settings_itemlist_privatemessagetone "Dźwięk prywatnej wiadomości"
 rls_string r_string_settings_itemlist_channelposttone "Dźwięk wiadomości na kanale"
-rls_string r_string_settings_itemlist_directreplytone "Dźwięk odpowiedzi na komentarz(?)"
+rls_string r_string_settings_itemlist_directreplytone "Dźwięk odpowiedzi na komentarz"
 rls_string r_string_settings_itemlist_tonenone "Bez dźwięku"
 rls_string r_string_settings_itemlist_tonedefault "Dźwięk domyślny"
 
@@ -234,13 +234,11 @@ rls_string r_string_settings_itemlist_off "Wyłącz"
 
 // Communities
 rls_string r_string_settings_facebook_text "Teraz będziesz przeniesiony do http://apps.facebook.com/buddycloud - strony aplikacji buddycloud. Proszę dodać aplikację, login by uzyskać dostęp."
-rls_string r_string_settings_credentials_success "Aktualizacja udana"
 rls_string r_string_settings_credentials_fail "Aktualizacja nie powiodła się.\nSprawdź poświadczenia i spróbuj ponownie"
 
 // Edit Place List
 rls_string r_string_newplace_title "Nowe miejsce"
 rls_string r_string_editplace_title "Edytuj miejsce"
-rls_string r_string_updatefailed_title "Aktualizacja nie powiodła się"
 
 rls_string r_string_editplace_itemlist_name "Nazwa"
 rls_string r_string_editplace_itemlist_name_hint "np. 'Dom' lub 'Szkoła'"
@@ -270,11 +268,11 @@ rls_string r_string_editchannel_itemlist_id_hint "Unikatowy ID kanału"
 rls_string r_string_editchannel_itemlist_description "Opis"
 rls_string r_string_editchannel_itemlist_description_hint "Opis kanałów"
 rls_string r_string_editchannel_itemlist_access "Dostęp"
-rls_string r_string_editchannel_itemlist_access_open "Otwórz kanał(?)"
+rls_string r_string_editchannel_itemlist_access_open "Kanał otwarty"
 rls_string r_string_editchannel_itemlist_access_whitelist "Tylko członkowie"
 rls_string r_string_editchannel_itemlist_defaultaffiliation "Nowi śledzący mogą"
 rls_string r_string_editchannel_itemlist_defaultaffiliation_member "Tylko do odczytu"
-rls_string r_string_editchannel_itemlist_defaultaffiliation_publisher "Czytanie i pisanie (?)"
+rls_string r_string_editchannel_itemlist_defaultaffiliation_publisher "Czytanie i pisanie"
 
 rls_string r_string_note_channelexists "Ten #channel_id już istnieje. Proszę podać unikatowy."
 
@@ -315,8 +313,8 @@ rls_string r_string_dialog_setcurrentlocation "Ustaw moje miejsce:"
 rls_string r_string_dialog_setnextlocation "Ustaw następne miejsce:"
 rls_string r_string_dialog_newmessage "Napisz post:"
 rls_string r_string_dialog_newcomment "Napisz komentarz:"
-rls_string r_string_dialog_requestcomment "Poproś o komentarz(?):"
-rls_string r_string_dialog_addcontact "Podaj ID kontaktów (np. test@gtalk.com):"
+rls_string r_string_dialog_requestcomment "Poproś o komentarz:"
+rls_string r_string_dialog_addcontact "Podaj kontaktów (np. test@gtalk.com) lub kanał ID (np. #help):"
 
 // Notes
 rls_string r_string_note_connecting "Łączenie..."

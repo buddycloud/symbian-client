@@ -9,5 +9,7 @@ enum TMifToolbariconids
 	EMbmToolbariconidsToolbarunreadjump = 16392,
 	EMbmToolbariconidsToolbarmessagepost = 16394,
 	EMbmToolbariconidsToolbarbookmarkplace = 16396,
+	EMbmToolbariconidsToolbarnextplace = 16398,
+	EMbmToolbariconidsToolbarcreatechannel = 16400,
 	EMbmToolbariconidsLastElement
 	};

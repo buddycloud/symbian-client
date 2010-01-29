@@ -88,6 +88,10 @@ void CBuddycloudPlacesContainer::ConstructL(const TRect& aRect, TInt aPlaceId) {
 	SetRect(iRect);
 	RenderScreen();
 	ActivateL();
+	
+#ifdef __SERIES60_40__
+	DynInitToolbarL(R_PLACES_TOOLBAR, iViewAccessor->ViewToolbar());
+#endif		
 }
 
 CBuddycloudPlacesContainer::~CBuddycloudPlacesContainer() {
@@ -177,6 +181,12 @@ void CBuddycloudPlacesContainer::NotificationEvent(TBuddycloudLogicNotificationT
 		RepositionItems(iSnapToItem);
 		RenderScreen();
 	}
+#ifdef __SERIES60_40__
+	else if(aEvent == ENotificationConnectivityChanged) {
+		DynInitToolbarL(R_PLACES_TOOLBAR, iViewAccessor->ViewToolbar());
+		
+	}
+#endif		
 	else {
 		CBuddycloudListComponent::NotificationEvent(aEvent, aId);
 	}
@@ -784,53 +794,72 @@ void CBuddycloudPlacesContainer::HandleItemSelection(TInt aItemId) {
 	}
 }
 
+#ifdef __SERIES60_40__
+void CBuddycloudPlacesContainer::DynInitToolbarL(TInt aResourceId, CAknToolbar* aToolbar) {
+	if(aResourceId == R_PLACES_TOOLBAR) {
+		aToolbar->SetItemDimmed(EMenuBookmarkPlaceCommand, true, true);
+		aToolbar->SetItemDimmed(EMenuSetNextPlaceCommand, true, true);
+		
+		if(iBuddycloudLogic->GetState() == ELogicOnline) {
+			aToolbar->SetItemDimmed(EMenuBookmarkPlaceCommand, false, true);
+			aToolbar->SetItemDimmed(EMenuSetNextPlaceCommand, false, true);
+		}
+	}	
+}
+#endif
+
 void CBuddycloudPlacesContainer::DynInitMenuPaneL(TInt aResourceId, CEikMenuPane* aMenuPane) {
 	if(aResourceId == R_PLACES_OPTIONS_MENU) {
 		aMenuPane->SetItemDimmed(EMenuConnectCommand, true);
 		aMenuPane->SetItemDimmed(EMenuOptionsItemCommand, true);
 		aMenuPane->SetItemDimmed(EMenuBookmarkPlaceCommand, true);
 		aMenuPane->SetItemDimmed(EMenuSetNextPlaceCommand, true);
+		aMenuPane->SetItemDimmed(EMenuOptionsExploreCommand, true);
 		aMenuPane->SetItemDimmed(EMenuDisconnectCommand, true);
 		
 		if(iBuddycloudLogic->GetState() == ELogicOnline) {
 			aMenuPane->SetItemDimmed(EMenuBookmarkPlaceCommand, false);
 			aMenuPane->SetItemDimmed(EMenuSetNextPlaceCommand, false);
 			aMenuPane->SetItemDimmed(EMenuDisconnectCommand, false);
-		}
-		else {
-			aMenuPane->SetItemDimmed(EMenuConnectCommand, false);
-		}
 		
-		if(iPlaceStore->Count() > 0) {
-			CBuddycloudExtendedPlace* aPlace = static_cast <CBuddycloudExtendedPlace*> (iPlaceStore->GetItemById(iSelectedItem));
-			TInt aPlaceIndex = iPlaceStore->GetIndexById(iSelectedItem);
-			
-			if(aPlace) {
-				TPtrC aPlaceName(aPlace->GetGeoloc()->GetString(EGeolocText));
+			if(iPlaceStore->Count() > 0) {
+				CBuddycloudExtendedPlace* aPlace = static_cast <CBuddycloudExtendedPlace*> (iPlaceStore->GetItemById(iSelectedItem));
+				TInt aPlaceIndex = iPlaceStore->GetIndexById(iSelectedItem);
 				
-				if(aPlaceIndex == 0) {
-					if(aPlace->GetItemId() <= 0 || aPlace->GetItemId() == iLocationInterface->GetLastPlaceId()) {
-						CFollowingRosterItem* aOwnItem = iBuddycloudLogic->GetOwnItem();
-						
-						if(aOwnItem) {
-							CGeolocData* aGeoloc = aOwnItem->GetGeolocItem(EGeolocItemCurrent);
+				if(aPlace) {
+					TPtrC aPlaceName(aPlace->GetGeoloc()->GetString(EGeolocText));
+					
+					if(aPlaceIndex == 0) {
+						if(aPlace->GetItemId() <= 0 || aPlace->GetItemId() == iLocationInterface->GetLastPlaceId()) {
+							CFollowingRosterItem* aOwnItem = iBuddycloudLogic->GetOwnItem();
 							
-							if(aGeoloc->GetString(EGeolocText).Length() > 0) {
-								aPlaceName.Set(aGeoloc->GetString(EGeolocText));
+							if(aOwnItem) {
+								CGeolocData* aGeoloc = aOwnItem->GetGeolocItem(EGeolocItemCurrent);
+								
+								if(aGeoloc->GetString(EGeolocText).Length() > 0) {
+									aPlaceName.Set(aGeoloc->GetString(EGeolocText));
+								}
 							}
 						}
 					}
-				}
-
-				if(aPlaceName.Length() > 32) {
-					aMenuPane->SetItemTextL(EMenuOptionsItemCommand, aPlaceName.Left(32));
-				}
-				else {
-					aMenuPane->SetItemTextL(EMenuOptionsItemCommand, aPlaceName);
-				}
+	
+					if(aPlaceName.Length() > 32) {
+						aMenuPane->SetItemTextL(EMenuOptionsItemCommand, aPlaceName.Left(32));
+					}
+					else {
+						aMenuPane->SetItemTextL(EMenuOptionsItemCommand, aPlaceName);
+					}
+						
+					aMenuPane->SetItemDimmed(EMenuOptionsItemCommand, false);				
 					
-				aMenuPane->SetItemDimmed(EMenuOptionsItemCommand, false);				
+					if(aPlace->GetGeoloc()->GetReal(EGeolocLatitude) != 0.0 || aPlace->GetGeoloc()->GetReal(EGeolocLongitude) != 0.0) {
+						aMenuPane->SetItemDimmed(EMenuOptionsExploreCommand, false);
+					}
+				}
 			}
+		}
+		else {
+			aMenuPane->SetItemDimmed(EMenuConnectCommand, false);
 		}
 	}
 	else if(aResourceId == R_PLACES_OPTIONS_ITEM_MENU) {
@@ -864,13 +893,8 @@ void CBuddycloudPlacesContainer::DynInitMenuPaneL(TInt aResourceId, CEikMenuPane
 		aMenuPane->SetItemDimmed(EMenuSeeFollowingCommand, true);
 		aMenuPane->SetItemDimmed(EMenuSeeModeratingCommand, true);
 		aMenuPane->SetItemDimmed(EMenuSeeProducingCommand, true);
-		aMenuPane->SetItemDimmed(EMenuSeeNearbyCommand, true);
 		
-		CBuddycloudExtendedPlace* aPlace = static_cast <CBuddycloudExtendedPlace*> (iPlaceStore->GetItemById(iSelectedItem));
-
-		if(aPlace && (aPlace->GetGeoloc()->GetReal(EGeolocLatitude) != 0.0 || aPlace->GetGeoloc()->GetReal(EGeolocLongitude) != 0.0)) {				
-			aMenuPane->SetItemDimmed(EMenuSeeNearbyCommand, false);
-		}
+		aMenuPane->SetItemDimmed(EMenuSeeNearbyCommand, false);
 	}
 }
 

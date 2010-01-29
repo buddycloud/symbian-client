@@ -32,20 +32,23 @@ rls_string r_string_next_menu "Edasi"
 rls_string r_string_hide_menu "Peida"
 
 // Item
-rls_string r_string_item_newchannel "Uus kanal..."
-rls_string r_string_item_newplace "Uus asukoht..."
+rls_string r_string_item_newchannel "Create channel"
+rls_string r_string_item_newplace "Create place"
 
 // Menu: Settings & Edit place
 rls_string r_string_options_edititem "Muuda"
-rls_string r_string_options_searchplace "Otsi täpsemalt"
+rls_string r_string_options_searchplace "Search for address"
 rls_string r_string_options_remove "Eemalda"
 rls_string r_string_options_delete "Delete"
 
+// Notes
 rls_string r_string_note_noresultsfound "Tulemuseta"
 rls_string r_string_note_requestsent "Kutse saadetud"
 rls_string r_string_note_feedbacksent "Feedback sent"
 rls_string r_string_note_messagequeued "Sõnum saadetakse, kui oled onlines"
 rls_string r_string_note_offlinerequired "Sa pead olema offlines seda tehes"
+rls_string r_string_note_updatesucessful "Uuendus õnnestus"
+rls_string r_string_note_updatefailed "Uuendus ei õnnestunud"
 
 // Positioning methods
 rls_string r_string_positioning_stationary "Sa võid nüüd määrata selle koha"
@@ -73,17 +76,16 @@ rls_string r_string_options_done "Valmis"
 rls_string r_string_options_connect "Mine online"
 rls_string r_string_options_disconnect "Mine offline"
 rls_string r_string_options_settings "Asetused"
-rls_string r_string_item_viewmessages "Vaata sõnumeid"
-rls_string r_string_item_viewchannelmessages "Vaata kanalit"
-rls_string r_string_item_viewprivatemessages "Vaata privaatseid sõnumeid"
-rls_string r_string_item_showplacedetails "See place details"
-rls_string r_string_item_showchanneldetails "See channel details"
+rls_string r_string_item_viewchannelmessages "Show channel"
+rls_string r_string_item_viewprivatemessages "Show private messages"
+rls_string r_string_item_showplacedetails "Näita asukohta detailsemalt"
+rls_string r_string_item_showchanneldetails "Näita kanali andmeid"
 rls_string r_string_item_sendplacebysms "Saada asukoht sms-iga"
 rls_string r_string_item_sendinvite "Kutsu buddycloudi"
 rls_string r_string_item_noticeaccept "Nõustu"
 rls_string r_string_item_noticeacceptandfollow "Nõustu ja Järgne"
 rls_string r_string_item_noticedecline "Loobu"
-rls_string r_string_update_setstatus "Uuenda saatus"
+rls_string r_string_update_setstatus "Post status"
 rls_string r_string_options_invite "Järgne..."
 rls_string r_string_settings_usersettings "Eelistused"
 rls_string r_string_settings_communitysettings "Jaga onlines"
@@ -93,20 +95,19 @@ rls_string r_string_note_followinglistempty "You are not following anything.\n\n
 
 // Menu: Messaging
 rls_string r_string_options_postrequest "Request post privilege"
-rls_string r_string_options_postmessage "Write new post"
-rls_string r_string_options_postmedia "Postita meedia"
 rls_string r_string_options_jumptounread "Mine ei loetutesse"
-rls_string r_string_options_notificationon "Lülita värin sisse"
-rls_string r_string_options_notificationoff "Lülita värin välja"
-
-rls_string r_string_item_addcomment "Write comment"
+rls_string r_string_options_addcomment "Post comment"
+rls_string r_string_options_postmessage "Post topic"
+rls_string r_string_options_postmedia "Postita meedia"
+rls_string r_string_options_notificationon "Enable buzz"
+rls_string r_string_options_notificationoff "Disable buzz"
 rls_string r_string_item_likepost "♥ post"
 rls_string r_string_item_copypost "Copy post"
 rls_string r_string_item_reportpost "Report post"
 rls_string r_string_item_removepost "Delete post"
 
 rls_string r_string_options_itemchannel "Kanal"
-rls_string r_string_channel_copychannelid "Copy #Id"
+rls_string r_string_channel_copychannelid "Copy #Channel Id"
 rls_string r_string_channel_markread "Mark channel read"
 rls_string r_string_options_reportchannel "Report channel"
 
@@ -134,12 +135,12 @@ rls_string r_string_item_subscribe "Lisa minu asukohad"
 
 // Menu: Explorer
 rls_string r_string_options_explore "Uuri"
-rls_string r_string_item_seefollowers "Vaata järgnejaid"
-rls_string r_string_item_seemoderators "See moderators"
-rls_string r_string_item_seefollowing "Vaata järgnemist"
-rls_string r_string_item_seemoderating "See moderating"
-rls_string r_string_item_seeproducing "Vaata loodud"
-rls_string r_string_item_seenearby "Vaata läheduses"
+rls_string r_string_item_seefollowers "Show followers"
+rls_string r_string_item_seemoderators "Show moderators"
+rls_string r_string_item_seefollowing "Show following"
+rls_string r_string_item_seemoderating "Show moderating"
+rls_string r_string_item_seeproducing "Show producing"
+rls_string r_string_item_seenearby "Show nearby"
 
 rls_string r_string_title_followedby "$OBJECT's järgnejad"
 rls_string r_string_title_moderatedby "$OBJECT's moderators"
@@ -162,7 +163,6 @@ rls_string r_string_list_channelsyoumightlike "Kanalid, mis sulle võiksid meeld
 rls_string r_string_list_followersfavourites "Järgnejate Lemmikud"
 rls_string r_string_list_mostpopularchannels "Populaarsemad kanalid"
 
-rls_string r_string_item_open "Ava"
 rls_string r_string_item_follow "Järgne"
 rls_string r_string_item_unfollow "Lõpeta järgnemine"
 
@@ -199,7 +199,7 @@ rls_string r_string_settings_itemlist_server "XMPP server"
 
 // Preference settings
 rls_string r_string_settings_itemlist_language "Kuvamise keel"
-rls_string r_string_settings_itemlist_blocking "Show private messages"
+rls_string r_string_settings_itemlist_blocking "Allow private messages"
 rls_string r_string_settings_itemlist_blockingalwaysshow "From anyone"
 rls_string r_string_settings_itemlist_blockingfollowers "Followers only"
 rls_string r_string_settings_itemlist_accesspoint "Kasutatav ühendus"
@@ -234,13 +234,11 @@ rls_string r_string_settings_itemlist_off "Välja"
 
 // Communities
 rls_string r_string_settings_facebook_text "Sind suunatakse nüüd buddycloudi rakenduste lehele http://apps.facebook.com/buddycloud. Palun lisa rakendus, logisisse ja luba juurdepääsu sellel."
-rls_string r_string_settings_credentials_success "Uuendus õnnestus"
 rls_string r_string_settings_credentials_fail "Uuendus ei õnnestunud. Palun kontrollige oma õigused ja proovige uuesti"
 
 // Edit Place List
 rls_string r_string_newplace_title "Uus asukoht"
 rls_string r_string_editplace_title "Muuda asukohta"
-rls_string r_string_updatefailed_title "Uuendus ei õnnestunud"
 
 rls_string r_string_editplace_itemlist_name "Nimi"
 rls_string r_string_editplace_itemlist_name_hint "Näit. 'Kodu' või 'Bussijaam'"
@@ -316,7 +314,7 @@ rls_string r_string_dialog_setnextlocation "Määra järgmine asukoht:"
 rls_string r_string_dialog_newmessage "Write post:"
 rls_string r_string_dialog_newcomment "Write comment:"
 rls_string r_string_dialog_requestcomment "Request comment:"
-rls_string r_string_dialog_addcontact "Enter contact's Id (eg. test@gtalk.com):"
+rls_string r_string_dialog_addcontact "Enter contact (eg. 'test@gmail.com') or channel Id (eg. '#help'):"
 
 // Notes
 rls_string r_string_note_connecting "Ûhendan..."

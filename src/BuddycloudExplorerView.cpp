@@ -23,6 +23,12 @@
 
 void CBuddycloudExplorerView::ConstructL(CBuddycloudLogic* aBuddycloudLogic) {
 	BaseConstructL(R_EXPLORER_VIEW);
+	
+#ifdef __SERIES60_40__
+	if(Toolbar()) {
+		Toolbar()->SetToolbarObserver(this);
+	}
+#endif
 
 	iBuddycloudLogic = aBuddycloudLogic;
 }
@@ -55,6 +61,14 @@ void CBuddycloudExplorerView::HandleCommandL(TInt aCommand) {
 		iContainer->HandleCommandL(aCommand);
 	}
 }
+
+#ifdef __SERIES60_40__
+void CBuddycloudExplorerView::OfferToolbarEventL(TInt aCommandId) {
+	if(iContainer) {
+		iContainer->HandleCommandL(aCommandId);
+	}
+}
+#endif
 
 void CBuddycloudExplorerView::DoActivateL(const TVwsViewId& /*aPrevViewId*/, TUid /*aCustomMessageId*/, const TDesC8& aCustomMessage) {		
 	if (!iContainer) {

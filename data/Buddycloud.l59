@@ -32,8 +32,8 @@ rls_string r_string_next_menu "Selanjutnya"
 rls_string r_string_hide_menu "Sembunyi"
 
 // Item
-rls_string r_string_item_newchannel "Channel baru..."
-rls_string r_string_item_newplace "Tempat baru..."
+rls_string r_string_item_newchannel "Channel baru"
+rls_string r_string_item_newplace "Tempat baru"
 
 // Menu: Settings & Edit place
 rls_string r_string_options_edititem "Ubah"
@@ -41,11 +41,14 @@ rls_string r_string_options_searchplace "Mencari perincian"
 rls_string r_string_options_remove "Menghapus"
 rls_string r_string_options_delete "Hapus"
 
+// Notes
 rls_string r_string_note_noresultsfound "Tidak ada hasil ditemukan"
 rls_string r_string_note_requestsent "Permintaan terkirim"
 rls_string r_string_note_feedbacksent "Feedback terkirim"
 rls_string r_string_note_messagequeued "Pesan akan terkirim ketika anda online"
 rls_string r_string_note_offlinerequired "Anda harus offline untuk melakukan ini"
+rls_string r_string_note_updatesucessful "Memperbaharui berhasil"
+rls_string r_string_note_updatefailed "Memperbaharui gagal"
 
 // Positioning methods
 rls_string r_string_positioning_stationary "Sekarang anda bisa menandai dan menyimpan tempat ini"
@@ -73,9 +76,8 @@ rls_string r_string_options_done "Selesai"
 rls_string r_string_options_connect "Go online"
 rls_string r_string_options_disconnect "Go offline"
 rls_string r_string_options_settings "Pengaturan"
-rls_string r_string_item_viewmessages "Lihat pesan"
-rls_string r_string_item_viewchannelmessages "lihat channel"
-rls_string r_string_item_viewprivatemessages "Lihat pesan pribadi"
+rls_string r_string_item_viewchannelmessages "Lihat channel"
+rls_string r_string_item_viewprivatemessages "Tunjukan pesan2 pribadi"
 rls_string r_string_item_showplacedetails "Lihat detail tempat"
 rls_string r_string_item_showchanneldetails "Lihat details channel"
 rls_string r_string_item_sendplacebysms "Kirim tempat melalui SMS"
@@ -93,20 +95,19 @@ rls_string r_string_note_followinglistempty "Anda tidak mengikuti apapun. Gunaka
 
 // Menu: Messaging
 rls_string r_string_options_postrequest "Permintaan izin untuk menulis"
-rls_string r_string_options_postmessage "Tulis pesan baru"
-rls_string r_string_options_postmedia "Post Media"
 rls_string r_string_options_jumptounread "Loncat ke belum terbaca"
+rls_string r_string_options_addcomment "Tulis komentar"
+rls_string r_string_options_postmessage "Tulis topik"
+rls_string r_string_options_postmedia "Post Media"
 rls_string r_string_options_notificationon "Hidupkan getar"
 rls_string r_string_options_notificationoff "Matikan getar"
-
-rls_string r_string_item_addcomment "Tulis komentar"
 rls_string r_string_item_likepost "♥ pesan"
 rls_string r_string_item_copypost "Copy pesan"
 rls_string r_string_item_reportpost "Lapor pesan"
 rls_string r_string_item_removepost "Hapus pesan"
 
 rls_string r_string_options_itemchannel "Channel"
-rls_string r_string_channel_copychannelid "Copy #Id"
+rls_string r_string_channel_copychannelid "Copy #Channel Id"
 rls_string r_string_channel_markread "Tandai channel terbaca"
 rls_string r_string_options_reportchannel "Lapor channel"
 
@@ -160,9 +161,8 @@ rls_string r_string_list_nearbytoyou "Jelajahi Sekitar"
 rls_string r_string_list_featuredchannels "Channel Channel Utama"
 rls_string r_string_list_channelsyoumightlike "Channel Yg Mungkin Anda Suka"
 rls_string r_string_list_followersfavourites "Favorit Pengikut"
-rls_string r_string_list_mostpopularchannels "Channel Channel Paling Populer"
+rls_string r_string_list_mostpopularchannels "Channel Channel Populer"
 
-rls_string r_string_item_open "Buka"
 rls_string r_string_item_follow "Ikuti"
 rls_string r_string_item_unfollow "Berhenti mengikuti"
 
@@ -192,14 +192,14 @@ rls_string r_string_note_subscriptionrejected "Subskripsi anda terhadap channel 
 rls_string r_string_settings_account_title "Akun"
 rls_string r_string_settings_itemlist_fullname "Nama lengkap"
 rls_string r_string_settings_itemlist_username "Id"
-rls_string r_string_settings_itemlist_username_hint "e.g. 'name@gmail.com'"
+rls_string r_string_settings_itemlist_username_hint "Contoh. 'nama@gmail.com'"
 rls_string r_string_settings_itemlist_password "Kata sandi"
 rls_string r_string_settings_itemlist_password_hint "XMPP server kata sandi"
 rls_string r_string_settings_itemlist_server "XMPP server"
 
 // Preference settings
 rls_string r_string_settings_itemlist_language "Bahasa digunakan"
-rls_string r_string_settings_itemlist_blocking "Tunjukan pesan2 pribadi"
+rls_string r_string_settings_itemlist_blocking "Izinkan pesan2 pribadi"
 rls_string r_string_settings_itemlist_blockingalwaysshow "Dari siapapun"
 rls_string r_string_settings_itemlist_blockingfollowers "Hanya pengikut"
 rls_string r_string_settings_itemlist_accesspoint "Akses point akan digunakan"
@@ -225,7 +225,7 @@ rls_string r_string_settings_itemlist_tonedefault "Default tone"
 
 // Positioning settings
 rls_string r_string_settings_beacons_title "Penempatan"
-rls_string r_string_settings_itemlist_cell "Menara selular"
+rls_string r_string_settings_itemlist_cell "Menara Selular"
 rls_string r_string_settings_itemlist_wlan "WIFI"
 rls_string r_string_settings_itemlist_bt "Bluetooth"
 rls_string r_string_settings_itemlist_gps "GPS"
@@ -234,13 +234,11 @@ rls_string r_string_settings_itemlist_off "Off"
 
 // Communities
 rls_string r_string_settings_facebook_text "Kamu akan diarahkan ke http://apps.facebook.com/buddycloud halaman aplikasi dari buddycloud. Silahkan masukkan aplikasi,login,dan dapatkan aksesnya."
-rls_string r_string_settings_credentials_success "Memperbaharui berhasil"
 rls_string r_string_settings_credentials_fail "Memperbaharui gagal.\nPeriksa kembali dan coba ulangi lagi"
 
 // Edit Place List
 rls_string r_string_newplace_title "Tempat baru"
 rls_string r_string_editplace_title "Gubah tempat"
-rls_string r_string_updatefailed_title "Memperbaharui gagal"
 
 rls_string r_string_editplace_itemlist_name "Nama"
 rls_string r_string_editplace_itemlist_name_hint "e.g. 'Home' atau 'Starbucks'"
@@ -316,7 +314,7 @@ rls_string r_string_dialog_setnextlocation "Atur tujuan berikut:"
 rls_string r_string_dialog_newmessage "Tulis pesan:"
 rls_string r_string_dialog_newcomment "Tulis komentar:"
 rls_string r_string_dialog_requestcomment "Komentar permintaan:"
-rls_string r_string_dialog_addcontact "Masukan identitas kontak anda (contoh. test@gtalk.com):"
+rls_string r_string_dialog_addcontact "Masukan kontak (eg. ' test@gmail.com') atau channel Id (eg. '#help') :"
 
 // Notes
 rls_string r_string_note_connecting "Menghubungkan..."

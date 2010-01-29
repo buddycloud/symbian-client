@@ -32,20 +32,23 @@ rls_string r_string_next_menu "Suivant"
 rls_string r_string_hide_menu "Hide"
 
 // Item
-rls_string r_string_item_newchannel "Nouveau chaine..."
-rls_string r_string_item_newplace "Nouvelle place..."
+rls_string r_string_item_newchannel "Create channel"
+rls_string r_string_item_newplace "Create place"
 
 // Menu: Settings & Edit place
 rls_string r_string_options_edititem "Change"
-rls_string r_string_options_searchplace "Recherche de détails"
+rls_string r_string_options_searchplace "Search for address"
 rls_string r_string_options_remove "Supprimer"
 rls_string r_string_options_delete "Supprimer "
 
+// Notes
 rls_string r_string_note_noresultsfound "Aucun résultat trouvé"
 rls_string r_string_note_requestsent "Demande adressée"
 rls_string r_string_note_feedbacksent "Feedback sent"
 rls_string r_string_note_messagequeued "Message sera envoyé lorsque vous allez en ligne"
 rls_string r_string_note_offlinerequired "Vous devez être en mode hors connexion pour le faire"
+rls_string r_string_note_updatesucessful "Mise à jour réussie"
+rls_string r_string_note_updatefailed "Mise à jour a échoué"
 
 // Positioning methods
 rls_string r_string_positioning_stationary "Vous pouvez maintenant Bookmark ce lieu"
@@ -73,17 +76,16 @@ rls_string r_string_options_done "Fait"
 rls_string r_string_options_connect "Allez online"
 rls_string r_string_options_disconnect "Allez offline"
 rls_string r_string_options_settings "Paramètres"
-rls_string r_string_item_viewmessages "Voir les messages"
 rls_string r_string_item_viewchannelmessages "Voir la chaine"
-rls_string r_string_item_viewprivatemessages "Voir les messages privés"
-rls_string r_string_item_showplacedetails "See place details"
-rls_string r_string_item_showchanneldetails "Voir les détails du canal"
+rls_string r_string_item_viewprivatemessages "Afficher les messages privés"
+rls_string r_string_item_showplacedetails "Voir les détails de la place  "
+rls_string r_string_item_showchanneldetails "Show channel details"
 rls_string r_string_item_sendplacebysms "Envoyer via SMS"
 rls_string r_string_item_sendinvite "Inviter à buddycloud"
 rls_string r_string_item_noticeaccept "Accepter"
 rls_string r_string_item_noticeacceptandfollow "Accepter et Suivre"
 rls_string r_string_item_noticedecline "Refuser"
-rls_string r_string_update_setstatus "Mise à jour du statut"
+rls_string r_string_update_setstatus "Post status"
 rls_string r_string_options_invite "Suivre..."
 rls_string r_string_settings_usersettings "Préférences"
 rls_string r_string_settings_communitysettings "Partagez en ligne"
@@ -93,20 +95,19 @@ rls_string r_string_note_followinglistempty "You are not following anything.\n\n
 
 // Menu: Messaging
 rls_string r_string_options_postrequest "Request post privilege"
-rls_string r_string_options_postmessage "Ecrire nouveau message"
-rls_string r_string_options_postmedia "Post media"
 rls_string r_string_options_jumptounread "Aller aux non lus"
-rls_string r_string_options_notificationon "Allumez le buzz"
-rls_string r_string_options_notificationoff "Arrêtez le buzz"
-
-rls_string r_string_item_addcomment "Ecrire un commentaire"
+rls_string r_string_options_addcomment "Post comment"
+rls_string r_string_options_postmessage "Post topic"
+rls_string r_string_options_postmedia "Post media"
+rls_string r_string_options_notificationon "Enable buzz"
+rls_string r_string_options_notificationoff "Disable buzz"
 rls_string r_string_item_likepost "♥ message"
 rls_string r_string_item_copypost "Copier message"
 rls_string r_string_item_reportpost "Rapport message"
 rls_string r_string_item_removepost "Supprimer message"
 
 rls_string r_string_options_itemchannel "Chaine"
-rls_string r_string_channel_copychannelid "Copy #Id"
+rls_string r_string_channel_copychannelid "Copy #Channel Id"
 rls_string r_string_channel_markread "Mark channel read"
 rls_string r_string_options_reportchannel "Rapporter canal"
 
@@ -135,9 +136,9 @@ rls_string r_string_item_subscribe "Ajouter à mes lieux"
 // Menu: Explorer
 rls_string r_string_options_explore "Explorez"
 rls_string r_string_item_seefollowers "Voir les adeptes"
-rls_string r_string_item_seemoderators "See moderators"
+rls_string r_string_item_seemoderators "Show moderators"
 rls_string r_string_item_seefollowing "Voir les suivantes"
-rls_string r_string_item_seemoderating "See moderating"
+rls_string r_string_item_seemoderating "Show moderating"
 rls_string r_string_item_seeproducing "Voir la production"
 rls_string r_string_item_seenearby "Voir à proximité"
 
@@ -162,7 +163,6 @@ rls_string r_string_list_channelsyoumightlike "Chaînes vous pouvez aimer"
 rls_string r_string_list_followersfavourites "Favoris des adeptes"
 rls_string r_string_list_mostpopularchannels "Les Chaînes les plus populaires "
 
-rls_string r_string_item_open "Ouvert"
 rls_string r_string_item_follow "Suivre"
 rls_string r_string_item_unfollow "Ne suivez pas"
 
@@ -199,7 +199,7 @@ rls_string r_string_settings_itemlist_server "XMPP serveur"
 
 // Preference settings
 rls_string r_string_settings_itemlist_language "Langue "
-rls_string r_string_settings_itemlist_blocking "Afficher les messages privés"
+rls_string r_string_settings_itemlist_blocking "Allow private messages"
 rls_string r_string_settings_itemlist_blockingalwaysshow "De n'importe qui"
 rls_string r_string_settings_itemlist_blockingfollowers "Uniquement suiveurs "
 rls_string r_string_settings_itemlist_accesspoint "Point d'accès à utiliser"
@@ -234,13 +234,11 @@ rls_string r_string_settings_itemlist_off "Off"
 
 // Communities
 rls_string r_string_settings_facebook_text "Vous allez maintenant à être entroduit à l'application http://apps.facebook.com/buddycloud page de buddycloud. S'il vous plaît ajouter l'application, le login et accorder l'accès ."
-rls_string r_string_settings_credentials_success "Mise à jour réussie"
 rls_string r_string_settings_credentials_fail "Mise à jour a échoué.\nS'il vous plaît vérifier vos informations d'identification et essayez à nouveau"
 
 // Edit Place List
 rls_string r_string_newplace_title "Nouveau lieu"
 rls_string r_string_editplace_title "Modifier place"
-rls_string r_string_updatefailed_title "Mise à jour a échoué"
 
 rls_string r_string_editplace_itemlist_name "Nom"
 rls_string r_string_editplace_itemlist_name_hint "p. ex. 'Maison' ou 'Starbucks'"
@@ -316,7 +314,7 @@ rls_string r_string_dialog_setnextlocation "Définir la prochaine place:"
 rls_string r_string_dialog_newmessage "Ecriver message:"
 rls_string r_string_dialog_newcomment "Ecriver commentaire:"
 rls_string r_string_dialog_requestcomment "Demande de commentaires:"
-rls_string r_string_dialog_addcontact "Remplisser l'ID du contact (ex.test@gtalk.com):"
+rls_string r_string_dialog_addcontact "Enter contact (eg. 'test@gmail.com') or channel Id (eg. '#help'):"
 
 // Notes
 rls_string r_string_note_connecting "Connectant..."

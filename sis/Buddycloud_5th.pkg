@@ -10,7 +10,7 @@
 &EN
 ;
 ; standard SIS file header
-#{"Buddycloud"},(0x2000C4A4),0,5,29
+#{"Buddycloud"},(0x2000C4A4),0,5,36
 ;
 ;Localised Vendor name
 %{"buddycloud"}
@@ -62,6 +62,7 @@
 "$(EPOCROOT)Epoc32\data\z\resource\apps\Buddycloud_lang.r78"            -"!:\resource\apps\Buddycloud_lang.r78"
 "$(EPOCROOT)Epoc32\data\z\resource\apps\Buddycloud_lang.r512"           -"!:\resource\apps\Buddycloud_lang.r512"
 "$(EPOCROOT)Epoc32\data\z\resource\apps\Buddycloud_lang.r513"           -"!:\resource\apps\Buddycloud_lang.r513"
+"$(EPOCROOT)Epoc32\data\z\resource\apps\Buddycloud_lang.r514"           -"!:\resource\apps\Buddycloud_lang.r514"
 
 ;Images
 "..\data\IconRepository.xml"                                            -"!:\private\2000C4A4\IconRepository.xml"

@@ -32,20 +32,23 @@ rls_string r_string_next_menu "ถัดไป"
 rls_string r_string_hide_menu "ซ่อน"
 
 // Item
-rls_string r_string_item_newchannel "สถานีใหม่..."
-rls_string r_string_item_newplace "สถานที่ใหม่..."
+rls_string r_string_item_newchannel "Create channel"
+rls_string r_string_item_newplace "Create place"
 
 // Menu: Settings & Edit place
 rls_string r_string_options_edititem "เปลี่ยน"
-rls_string r_string_options_searchplace "ค้นหารายละเอียด"
+rls_string r_string_options_searchplace "Search for address"
 rls_string r_string_options_remove "ลบออก"
 rls_string r_string_options_delete "Delete"
 
+// Notes
 rls_string r_string_note_noresultsfound "ไม่พบข้อมูล"
 rls_string r_string_note_requestsent "คำขอถูกส่งแล้ว"
 rls_string r_string_note_feedbacksent "Feedback sent"
 rls_string r_string_note_messagequeued "ข้อความจะถูกส่งเมื่อคุณออนไลน์"
 rls_string r_string_note_offlinerequired "คุณต้องออกจากระบบก่อนจึงจะทำได้"
+rls_string r_string_note_updatesucessful "อัพเดทเสร็จเรียบร้อยแล้ว"
+rls_string r_string_note_updatefailed "การอัพเดตล้มเหลว"
 
 // Positioning methods
 rls_string r_string_positioning_stationary "คุณบุคมาร์คสถานที่นี้ได้"
@@ -73,17 +76,16 @@ rls_string r_string_options_done "ออนไลน์"
 rls_string r_string_options_connect "ออฟไลน์"
 rls_string r_string_options_disconnect "ติดต่อ"
 rls_string r_string_options_settings "ตั้งค่า"
-rls_string r_string_item_viewmessages "ดูข้อความ"
-rls_string r_string_item_viewchannelmessages "ดูช่อง"
-rls_string r_string_item_viewprivatemessages "ดูข้อความส่วนตัว"
-rls_string r_string_item_showplacedetails "See place details"
-rls_string r_string_item_showchanneldetails "See channel details"
+rls_string r_string_item_viewchannelmessages "Show channel"
+rls_string r_string_item_viewprivatemessages "Show private messages"
+rls_string r_string_item_showplacedetails "แสดงข้อมูลสถานที่"
+rls_string r_string_item_showchanneldetails "แสดงรายละเอียดของช่อง"
 rls_string r_string_item_sendplacebysms "ส่งสถานที่นี้ทาง sms"
 rls_string r_string_item_sendinvite "เชิญเข้าร่วม buddycloud"
 rls_string r_string_item_noticeaccept "ยอมรับ"
 rls_string r_string_item_noticeacceptandfollow "ยอมรับและติดตาม"
 rls_string r_string_item_noticedecline "ปฏิเสธ"
-rls_string r_string_update_setstatus "อัพเดทสถานะ"
+rls_string r_string_update_setstatus "Post status"
 rls_string r_string_options_invite "ติดตาม..."
 rls_string r_string_settings_usersettings "การตั้งค่า"
 rls_string r_string_settings_communitysettings "แชร์ออนไลน์"
@@ -93,20 +95,19 @@ rls_string r_string_note_followinglistempty "You are not following anything.\n\n
 
 // Menu: Messaging
 rls_string r_string_options_postrequest "Request post privilege"
-rls_string r_string_options_postmessage "Write new post"
-rls_string r_string_options_postmedia "โพสต์ภาพ,เสียง"
 rls_string r_string_options_jumptounread "ไปยังข้อความที่ยังไม่ได้อ่าน"
-rls_string r_string_options_notificationon "เปิดการสั่นเตือน"
-rls_string r_string_options_notificationoff "ปิดการสั่นเตือน"
-
-rls_string r_string_item_addcomment "Write comment"
+rls_string r_string_options_addcomment "Post comment"
+rls_string r_string_options_postmessage "Post topic"
+rls_string r_string_options_postmedia "โพสต์ภาพ,เสียง"
+rls_string r_string_options_notificationon "Enable buzz"
+rls_string r_string_options_notificationoff "Disable buzz"
 rls_string r_string_item_likepost "♥ post"
 rls_string r_string_item_copypost "Copy post"
 rls_string r_string_item_reportpost "Report post"
 rls_string r_string_item_removepost "Delete post"
 
 rls_string r_string_options_itemchannel "อัพเดท"
-rls_string r_string_channel_copychannelid "Copy #Id"
+rls_string r_string_channel_copychannelid "Copy #Channel Id"
 rls_string r_string_channel_markread "Mark channel read"
 rls_string r_string_options_reportchannel "Report channel"
 
@@ -134,12 +135,12 @@ rls_string r_string_item_subscribe "เพิ่มเข้าสู่ สถ�
 
 // Menu: Explorer
 rls_string r_string_options_explore "สำรวจ "
-rls_string r_string_item_seefollowers "ดูผู้ที่ติดตามคุณ"
-rls_string r_string_item_seemoderators "See moderators"
-rls_string r_string_item_seefollowing "ดูผู้ที่คุณติดตามอยู่"
-rls_string r_string_item_seemoderating "See moderating"
-rls_string r_string_item_seeproducing "ดูที่ประมวลผลอยู่"
-rls_string r_string_item_seenearby "ดูเพื่อนบ้านใกล้เคียงคุณ"
+rls_string r_string_item_seefollowers "Show followers"
+rls_string r_string_item_seemoderators "Show moderators"
+rls_string r_string_item_seefollowing "Show following"
+rls_string r_string_item_seemoderating "Show moderating"
+rls_string r_string_item_seeproducing "Show producing"
+rls_string r_string_item_seenearby "Show nearby"
 
 rls_string r_string_title_followedby "$OBJECT ผู้ที่ติดตาม"
 rls_string r_string_title_moderatedby "$OBJECT's moderators"
@@ -162,7 +163,6 @@ rls_string r_string_list_channelsyoumightlike "สถานีที่คุณ
 rls_string r_string_list_followersfavourites "ผู้ติดตามที่ฮอตที่สุด"
 rls_string r_string_list_mostpopularchannels "สถานีที่ฮอตที่สุด"
 
-rls_string r_string_item_open "เปิด"
 rls_string r_string_item_follow "ติดตาม"
 rls_string r_string_item_unfollow "ไม่ติดตาม"
 
@@ -199,7 +199,7 @@ rls_string r_string_settings_itemlist_server "XMPP server"
 
 // Preference settings
 rls_string r_string_settings_itemlist_language "ข้อความแจ้งเตือนจากทางสถานี"
-rls_string r_string_settings_itemlist_blocking "Show private messages"
+rls_string r_string_settings_itemlist_blocking "Allow private messages"
 rls_string r_string_settings_itemlist_blockingalwaysshow "From anyone"
 rls_string r_string_settings_itemlist_blockingfollowers "Followers only"
 rls_string r_string_settings_itemlist_accesspoint "จุดเชื่อมต่อที่ใช้ได้"
@@ -234,13 +234,11 @@ rls_string r_string_settings_itemlist_off "ปิด"
 
 // Communities
 rls_string r_string_settings_facebook_text "คุณกำลังเข้าสู่เว็บ http://apps.facebook.com/buddycloud ของ buddycloud กรุณาแอดไว้ ล็อกอินเพื่อเข้าถึง"
-rls_string r_string_settings_credentials_success "อัพเดทเสร็จเรียบร้อยแล้ว"
 rls_string r_string_settings_credentials_fail "อัพเดทไม่สำเร็จ\nโปรดตรวจเช็คและลองใหม่อีกครั้ง"
 
 // Edit Place List
 rls_string r_string_newplace_title "สถานที่ใหม่"
 rls_string r_string_editplace_title "แก้ไขสถานที่"
-rls_string r_string_updatefailed_title "การอัพเดตล้มเหลว"
 
 rls_string r_string_editplace_itemlist_name "ชื่อ"
 rls_string r_string_editplace_itemlist_name_hint "ตัวอย่างเช่น 'บ้าน' หรือ 'สตาร์บัคส์'"
@@ -316,7 +314,7 @@ rls_string r_string_dialog_setnextlocation "ตั้งค่าสถานท
 rls_string r_string_dialog_newmessage "Write post:"
 rls_string r_string_dialog_newcomment "Write comment:"
 rls_string r_string_dialog_requestcomment "Request comment:"
-rls_string r_string_dialog_addcontact "Enter contact's Id (eg. test@gtalk.com):"
+rls_string r_string_dialog_addcontact "Enter contact (eg. 'test@gmail.com') or channel Id (eg. '#help'):"
 
 // Notes
 rls_string r_string_note_connecting "กำลังเชื่อมต่อ.."

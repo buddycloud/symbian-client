@@ -18,6 +18,9 @@ CBuddycloudChannelInfoContainer::CBuddycloudChannelInfoContainer(CBuddycloudLogi
 		CBuddycloudListComponent(NULL, aBuddycloudLogic) {
 	
 	iXmppInterface = aBuddycloudLogic->GetXmppInterface();
+	
+	iChannelLatitude = 0.0;
+	iChannelLongitude = 0.0;
 }
 
 void CBuddycloudChannelInfoContainer::ConstructL(const TRect& aRect, TViewReference aQueryReference) {
@@ -47,7 +50,7 @@ void CBuddycloudChannelInfoContainer::ConstructL(const TRect& aRect, TViewRefere
 	pDiscoItemsStanza.Insert(95, aQuery.iData);
 	pDiscoItemsStanza.Insert(8, KBuddycloudPubsubServer);
 		
-	iXmppInterface->SendAndAcknowledgeXmppStanza(pDiscoItemsStanza, this, true);
+	iXmppInterface->SendAndAcknowledgeXmppStanza(pDiscoItemsStanza, this, true, EXmppPriorityHigh);
 	CleanupStack::PopAndDestroy(); // aDiscoItemsStanza
 	
 	SetRect(iRect);	
@@ -58,10 +61,6 @@ void CBuddycloudChannelInfoContainer::ConstructL(const TRect& aRect, TViewRefere
 CBuddycloudChannelInfoContainer::~CBuddycloudChannelInfoContainer() {
 	if(iBuddycloudLogic) {
 		iXmppInterface->CancelXmppStanzaAcknowledge(this);
-	}
-	
-	if(iGeoloc) {
-		delete iGeoloc;
 	}
 	
 	if(iChannelTitle) {
@@ -163,7 +162,7 @@ void CBuddycloudChannelInfoContainer::RenderListItems() {
 			iBufferGc->DrawText(iWrappedTextArray[i]->Des(), TPoint(iLeftBarSpacer + 5, aDrawPos));
 		}
 		
-		aDrawPos += iPrimaryBoldFont->FontMaxDescent();
+		aDrawPos += iPrimarySmallFont->DescentInPixels();
 		iBufferGc->DiscardFont();	
 		
 		// Description
@@ -178,11 +177,9 @@ void CBuddycloudChannelInfoContainer::RenderListItems() {
 		
 		// Statistics
 		if(iStatistics.Count() > 0) {
-			aDrawPos += iSecondaryItalicFont->FontMaxAscent();
+			aDrawPos += iSecondaryItalicFont->FontMaxDescent();
 			iBufferGc->SetPenStyle(CGraphicsContext::EDashedPen);
 			iBufferGc->DrawLine(TPoint(iLeftBarSpacer + 4, aDrawPos), TPoint((iRect.Width() - iRightBarSpacer - 5), aDrawPos));		
-			
-			aDrawPos += iSecondaryItalicFont->FontMaxDescent();
 			iBufferGc->SetPenStyle(CGraphicsContext::ESolidPen);		
 			iBufferGc->UseFont(iSecondaryFont);
 
@@ -219,13 +216,15 @@ void CBuddycloudChannelInfoContainer::RepositionItems(TBool aSnapToItem) {
 	}
 	
 	// Calculate page size
-	iTotalListSize += (iPrimaryBoldFont->HeightInPixels() * iWrappedTextArray.Count()) + iPrimaryBoldFont->FontMaxDescent();		
+	iTotalListSize += (iPrimaryBoldFont->HeightInPixels() * iWrappedTextArray.Count()) + iPrimarySmallFont->DescentInPixels();		
 	iTotalListSize += (iSecondaryItalicFont->HeightInPixels() * iWrappedDescription.Count());		
 	
 	if(iStatistics.Count() > 0) {
-		iTotalListSize += (iSecondaryItalicFont->FontMaxAscent() + iSecondaryItalicFont->FontMaxDescent());
+		iTotalListSize += iSecondaryItalicFont->FontMaxDescent();
 		iTotalListSize += (iSecondaryFont->FontMaxHeight() * iStatistics.Count());
 	}
+	
+	iTotalListSize += iSecondaryFont->FontMaxDescent() + 2;
 	
 	CBuddycloudListComponent::RepositionItems(aSnapToItem);
 }
@@ -280,7 +279,7 @@ void CBuddycloudChannelInfoContainer::DynInitMenuPaneL(TInt aResourceId, CEikMen
 			aMenuPane->SetItemDimmed(EMenuSeeFollowersCommand, false);
 			aMenuPane->SetItemDimmed(EMenuSeeModeratorsCommand, false);
 			
-			if(iGeoloc && (iGeoloc->GetReal(EGeolocLatitude) != 0.0 || iGeoloc->GetReal(EGeolocLongitude) != 0.0)) {				
+			if(iChannelLatitude != 0.0 || iChannelLongitude != 0.0) {				
 				aMenuPane->SetItemDimmed(EMenuSeeNearbyCommand, false);
 			}
 		}
@@ -357,7 +356,7 @@ void CBuddycloudChannelInfoContainer::HandleCommandL(TInt aCommand) {
 		aViewReference().iCallbackViewId = KChannelInfoViewId;
 		aViewReference().iOldViewData = iQueryReference.iNewViewData;
 			
-		CExplorerStanzaBuilder::FormatButlerXmppStanza(aViewReference().iNewViewData.iData, iBuddycloudLogic->GetNewIdStamp(), iGeoloc->GetReal(EGeolocLatitude), iGeoloc->GetReal(EGeolocLongitude));
+		CExplorerStanzaBuilder::FormatButlerXmppStanza(aViewReference().iNewViewData.iData, iBuddycloudLogic->GetNewIdStamp(), iChannelLatitude, iChannelLongitude);
 		CExplorerStanzaBuilder::BuildTitleFromResource(aViewReference().iNewViewData.iTitle, R_LOCALIZED_STRING_TITLE_NEARBYTO, _L("$OBJECT"), iQueryReference.iNewViewData.iTitle);
 			
 		iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KExplorerViewId), TUid::Uid(0), aViewReference);		
@@ -460,14 +459,14 @@ void CBuddycloudChannelInfoContainer::XmppStanzaAcknowledgedL(const TDesC8& aSta
 					else if(aAttributeVar.Compare(_L8("x-buddycloud#rank")) == 0) {
 						AddStatisticL(R_LOCALIZED_STRING_NOTE_CHANNELRANK, aEncDataValue);
 					}
-					else if(aAttributeVar.Compare(_L8("x-buddycloud#geoloc")) == 0) {
-						CXmppGeolocParser* aGeolocParser = CXmppGeolocParser::NewLC();			
-						iGeoloc = aGeolocParser->XmlToGeolocLC(aXmlParser->GetStringData());
-						
-						CleanupStack::Pop(); // iGeoloc
-						CleanupStack::PopAndDestroy(); // aGeolocParser
-						
-						AddStatisticL(R_LOCALIZED_STRING_NOTE_CHANNELLOCATION, iGeoloc->GetString(EGeolocText));
+					else if(aAttributeVar.Compare(_L8("x-buddycloud#geoloc-text")) == 0) {
+						AddStatisticL(R_LOCALIZED_STRING_NOTE_CHANNELLOCATION, aEncDataValue);
+					}
+					else if(aAttributeVar.Compare(_L8("x-buddycloud#geoloc-lat")) == 0) {
+						iChannelLatitude = aXmlParser->GetRealData(0.0);
+					}
+					else if(aAttributeVar.Compare(_L8("x-buddycloud#geoloc-lon")) == 0) {
+						iChannelLongitude = aXmlParser->GetRealData(0.0);
 					}
 				}
 			}
