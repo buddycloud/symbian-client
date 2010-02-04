@@ -33,7 +33,7 @@ class CXmlParser : public CBase {
 		TInt Locate(TChar aChar);
 		
 	private:
-		TBool EvaluateAsBool(const TDesC8& aText);
+		TBool EvaluateAsBool(const TDesC8& aText, TBool aDefault);
 		TReal EvaluateAsReal(const TDesC8& aText, TReal aDefault);
 		TInt EvaluateAsInt(const TDesC8& aText, TInt aDefault);
 
@@ -47,11 +47,11 @@ class CXmlParser : public CBase {
 		TPtrC8 GetElementName();
 		
 		TPtrC8 GetStringAttribute(const TDesC8& aAttribute);
-		TBool GetBoolAttribute(const TDesC8& aAttribute);
+		TBool GetBoolAttribute(const TDesC8& aAttribute, TBool aDefault = false);
 		TInt GetIntAttribute(const TDesC8& aAttribute, TInt aDefault = 0);
 		
 		TPtrC8 GetStringData();
-		TBool GetBoolData();
+		TBool GetBoolData(TBool aDefault = false);
 		TReal GetRealData(TReal aDefault = 0);
 		TInt GetIntData(TInt aDefault = 0);
 

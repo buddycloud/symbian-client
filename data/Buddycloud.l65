@@ -18,11 +18,11 @@ rls_string r_string_menuseperator "──────────"
 // DO NOT TRANSLATE
 
 rls_string r_string_langcode "kr"
-rls_string r_string_translatedby "Translated by: jontran"
+rls_string r_string_translatedby "Translated by: Hye young"
 
 rls_string r_string_followingtab_hint "따라다니는 중"
 rls_string r_string_placestab_hint "장소들"
-rls_string r_string_explorertab_hint "Explorer"
+rls_string r_string_explorertab_hint "탐험가"
 
 // CBA
 rls_string r_string_options_menu "선택사항들"
@@ -39,12 +39,12 @@ rls_string r_string_item_newplace "장소 만들기"
 rls_string r_string_options_edititem "변경하기"
 rls_string r_string_options_searchplace "주소 찾기"
 rls_string r_string_options_remove "삭제하기"
-rls_string r_string_options_delete "Delete"
+rls_string r_string_options_delete "제거하기"
 
 // Notes
 rls_string r_string_note_noresultsfound "결과 없음"
 rls_string r_string_note_requestsent "신청하기 전송됨"
-rls_string r_string_note_feedbacksent "Feedback sent"
+rls_string r_string_note_feedbacksent "피드백이 전송됨"
 rls_string r_string_note_messagequeued "온라인할때 메세지가 자동으로 보내집니다"
 rls_string r_string_note_offlinerequired "이 작업을 하기위해서는 오프라인 하는 것이 필요합니다"
 rls_string r_string_note_updatesucessful "성공적으로 업데이트 되었습니다"
@@ -91,10 +91,10 @@ rls_string r_string_settings_usersettings "환경"
 rls_string r_string_settings_communitysettings "온라인 쉐어하기"
 rls_string r_string_settings_clearconnection "인터넷 연결 변경하기"
 
-rls_string r_string_note_followinglistempty "You are not following anything.\n\nUse the Explorer tab to search for things to follow."
+rls_string r_string_note_followinglistempty "당신은 어떤것도 따라다니고 있지 않습니다. 따라다니기 위한 것들을 검색하기 위해 탐험탭을 사용하세요."
 
 // Menu: Messaging
-rls_string r_string_options_postrequest "Request post privilege"
+rls_string r_string_options_postrequest "포스트 특권 요청하기"
 rls_string r_string_options_jumptounread "읽지 않은 것들로 건너가기"
 rls_string r_string_options_addcomment "포스트 코멘트"
 rls_string r_string_options_postmessage "포스트 토픽"
@@ -109,7 +109,7 @@ rls_string r_string_item_removepost "포스트 삭제하기"
 rls_string r_string_options_itemchannel "채널"
 rls_string r_string_channel_copychannelid "#Channel 아이디 복사하기"
 rls_string r_string_channel_markread "읽은 채널 표시하기"
-rls_string r_string_options_reportchannel "Report channel"
+rls_string r_string_options_reportchannel "채널 보고하기"
 
 // Menu: Places
 rls_string r_string_options_setcurrent "새 장소를 즐겨찾기에 추가하기"
@@ -143,21 +143,21 @@ rls_string r_string_item_seeproducing "프로듀싱 보여주기"
 rls_string r_string_item_seenearby "근처에 있는 것들 보여주기"
 
 rls_string r_string_title_followedby "$OBJECT 님의 추종자들"
-rls_string r_string_title_moderatedby "$OBJECT's moderators"
+rls_string r_string_title_moderatedby "$OBJECT 의 관리자들"
 rls_string r_string_title_isfollowing "$USER 님이 따라다니고 있습니다"
-rls_string r_string_title_ismoderating "$USER is moderating"
+rls_string r_string_title_ismoderating "$USER 은 관리하고 있는 중입니다"
 rls_string r_string_title_isproducing "$USER 님이 프로듀싱하고 있습니다"
 rls_string r_string_title_nearbyto "$OBJECT 님의 근처"
 
 rls_string r_string_note_requesting "신청하는중..."
 rls_string r_string_note_channelrank "순위"
-rls_string r_string_note_channelsince "Days broadcasting"
-rls_string r_string_note_channelowner "Produced by"
+rls_string r_string_note_channelsince "오늘의 브로드캐스트"
+rls_string r_string_note_channelowner "Maker 가 제작함"
 rls_string r_string_note_channellocation "위치"
 rls_string r_string_note_channelfollowers "추종자들"
 
 // Menu: Channels
-rls_string r_string_list_nearbytoyou "Explore Nearby"
+rls_string r_string_list_nearbytoyou "근처 탐험하기"
 rls_string r_string_list_featuredchannels "특집채널들"
 rls_string r_string_list_channelsyoumightlike "좋아할 만한 채널들"
 rls_string r_string_list_followersfavourites "추종자들의 좋아하는 것들"
@@ -169,28 +169,28 @@ rls_string r_string_item_unfollow "따라다니지 않기"
 // Channel: Settings & Configuration
 rls_string r_string_note_mediauploadready "이제 $LINK 에 미디어파일을 업로드 할 수 있습니다"
 
-rls_string r_string_item_changerole "Change permission"
+rls_string r_string_item_changerole "허용 바꾸기"
 rls_string r_string_changerole_itemlist_outcast "채널에서 금지시키기"
 rls_string r_string_changerole_itemlist_follower "추종자들"
-rls_string r_string_changerole_itemlist_publisher "Follower + post"
+rls_string r_string_changerole_itemlist_publisher "추종자 + 포스트"
 rls_string r_string_changerole_itemlist_moderator "의장"
 
 rls_string r_string_note_affiliationrequest_title "요청 알리기"
 rls_string r_string_note_affiliationrequest_text "$USER 은 이채널에서 포스팅에 대한 허락을 요청한 상태입니다. 이요청을 허락하기 위해 '수락하기'나 '거절하기' 버튼을 눌러주십시오."
 
-rls_string r_string_note_affiliationoutcast "You have been banned from the channel. You now cannot read or post content in this channel."
-rls_string r_string_note_affiliationmember "You can now read, but not post content in this channel."
-rls_string r_string_note_affiliationpublisher "You can now read and post content in this channel."
-rls_string r_string_note_affiliationmoderator "You can now read, post, and moderate content in this channel."
+rls_string r_string_note_affiliationoutcast "이 채널에서 강퇴당하셨습니다. 이 채널에서 콘텐츠를 읽거나 포스팅을 이제 하실 수 없습니다"
+rls_string r_string_note_affiliationmember "이제 읽을 수 있지만 이 채널에서 콘텐츠를 포스트하실 수는 없습니다"
+rls_string r_string_note_affiliationpublisher "이제 이 채널에서 콘텐츠를 읽고 포스팅할 수 있습니다"
+rls_string r_string_note_affiliationmoderator "이제 이 채널에서 콘텐츠를 읽고 포스팅할 수 있지만 콘텐츠를 관리할 수 는 없습니다"
 
 rls_string r_string_note_subscriptionrequest_text "$USER는 이채널을 따라다니기를 요청한 상태입니다.  이요청을 허락하기 위해 '수락하기'나 '거절하기' 버튼을 눌러주십시오."
-rls_string r_string_note_subscriptionpending "Your subscription request has been sent to the channel's producer."
-rls_string r_string_note_subscriptionaccepted "Your subscription to this channel has been accepted."
-rls_string r_string_note_subscriptionrejected "Your subscription to this channel has been rejected."
+rls_string r_string_note_subscriptionpending "구독신청이 채널 프로듀서에게 보내진 상태입니다"
+rls_string r_string_note_subscriptionaccepted "이 채널에 대한 구독신청이 수락되어졌습니다."
+rls_string r_string_note_subscriptionrejected "이 채널에 대한 구독신청이 거절되었습니다."
 
 // Account settings
 rls_string r_string_settings_account_title "계정"
-rls_string r_string_settings_itemlist_fullname "Display name"
+rls_string r_string_settings_itemlist_fullname "이름 전시하기"
 rls_string r_string_settings_itemlist_username "아이디"
 rls_string r_string_settings_itemlist_username_hint "예) 'name@gmail.com'"
 rls_string r_string_settings_itemlist_password "비밀번호"
@@ -199,7 +199,7 @@ rls_string r_string_settings_itemlist_server "XMPP 서버"
 
 // Preference settings
 rls_string r_string_settings_itemlist_language "사용언어"
-rls_string r_string_settings_itemlist_blocking "Allow private messages"
+rls_string r_string_settings_itemlist_blocking "개인적인 메시지 허락하기"
 rls_string r_string_settings_itemlist_blockingalwaysshow "누구에게나"
 rls_string r_string_settings_itemlist_blockingfollowers "추종자들에게만"
 rls_string r_string_settings_itemlist_accesspoint "사용할 접속지점(AP)"
@@ -210,18 +210,18 @@ rls_string r_string_settings_itemlist_autostart "전화기가 켜질때 자동�
 // Notification settings
 rls_string r_string_settings_notifications_title "알림설정하기"
 rls_string r_string_settings_itemlist_notifyfollowing "내가 따라다니는 채널들"
-rls_string r_string_settings_itemlist_notifymoderating "내가 관장하는 채널들"
+rls_string r_string_settings_itemlist_notifymoderating "내가 관리하는 채널들"
 rls_string r_string_settings_itemlist_notifyreply "나의 포스트에 대한 답글들"
 
 rls_string r_string_settings_itemlist_groupnever "절대로 알려주지 말기"
 rls_string r_string_settings_itemlist_groupfirstonly "첫 포스트만"
 rls_string r_string_settings_itemlist_groupallmessages "모든 포스트들"
 
-rls_string r_string_settings_itemlist_privatemessagetone "개인적이 메세지 톤"
-rls_string r_string_settings_itemlist_channelposttone "Channel post tone"
+rls_string r_string_settings_itemlist_privatemessagetone "개인적인 메세지 톤"
+rls_string r_string_settings_itemlist_channelposttone "채널 포스트 톤"
 rls_string r_string_settings_itemlist_directreplytone "답글 달린 코멘트톤"
-rls_string r_string_settings_itemlist_tonenone "No tone"
-rls_string r_string_settings_itemlist_tonedefault "Default tone"
+rls_string r_string_settings_itemlist_tonenone "톤 사용하지 않음"
+rls_string r_string_settings_itemlist_tonedefault "톤 기본설정하기"
 
 // Positioning settings
 rls_string r_string_settings_beacons_title "위치찾기"
@@ -270,9 +270,9 @@ rls_string r_string_editchannel_itemlist_description_hint "채널 설명"
 rls_string r_string_editchannel_itemlist_access "접근"
 rls_string r_string_editchannel_itemlist_access_open "채널 열기"
 rls_string r_string_editchannel_itemlist_access_whitelist "회원들에게만"
-rls_string r_string_editchannel_itemlist_defaultaffiliation "New followers can"
-rls_string r_string_editchannel_itemlist_defaultaffiliation_member "Read only"
-rls_string r_string_editchannel_itemlist_defaultaffiliation_publisher "Read and post"
+rls_string r_string_editchannel_itemlist_defaultaffiliation "새로운 추종자들은 할 수 있습니다"
+rls_string r_string_editchannel_itemlist_defaultaffiliation_member "읽기 전용"
+rls_string r_string_editchannel_itemlist_defaultaffiliation_publisher "읽고 포스팅하기"
 
 rls_string r_string_note_channelexists "이 #channel_id 는 이미 존재합니다. 다른 아이디를 사용해주십시오."
 
@@ -285,17 +285,17 @@ rls_string r_string_exit_title "종료 확인 "
 rls_string r_string_exit_text "종료를 하실경우 버디클라우드에서 로그아웃하게됩니다.\n\n종료하시겠습니까?"
 
 // Authorization Error
-rls_string r_string_authorizationerror_title "Authorization failed"
-rls_string r_string_authorizationerror_text "Username already exists or password is incorrect. Please check your Account settings and try again."
+rls_string r_string_authorizationerror_title "인증 실패"
+rls_string r_string_authorizationerror_text "사용자명이 이미 존재하거나 비밀번호가 정확하지 않습니다. 계정의 설정을 확인하시고 다시 시도해주십시오."
 
 // Resolve Error
-rls_string r_string_serverresolveerror_title "Connection error"
-rls_string r_string_serverresolveerror_text "XMPP server could not be resolved. Please enter your XMPP server and try again."
+rls_string r_string_serverresolveerror_title "연결에러"
+rls_string r_string_serverresolveerror_text "XMPP서버에 연결되지 않았습니다. XMPP 서버를 입력하시고 다시 시도해주세요."
 
 // Delete Item Message
 rls_string r_string_deleteitem_title "삭제 확인"
 rls_string r_string_deleteitem_text "이것을 삭제하길 원하십니까?"
-rls_string r_string_deletechannel_text "Deleting this channel will also delete all content.\n\nAre you sure?"
+rls_string r_string_deletechannel_text "이 채널을 지우시면 모든 내용이 사라질 것입니다. 제거하시겠습니까?"
 
 // Sms/Email Messages
 rls_string r_string_invitemessage_title "버디클라우드에 가입하세요!"
@@ -313,8 +313,8 @@ rls_string r_string_dialog_setcurrentlocation "나의 장소 설정하기:"
 rls_string r_string_dialog_setnextlocation "다음 장소 설정하기:"
 rls_string r_string_dialog_newmessage "포스트 쓰기:"
 rls_string r_string_dialog_newcomment "코멘트 남기기:"
-rls_string r_string_dialog_requestcomment "Request comment:"
-rls_string r_string_dialog_addcontact "Enter contact (eg. 'test@gmail.com') or channel Id (eg. '#help'):"
+rls_string r_string_dialog_requestcomment "코멘트 요청하기:"
+rls_string r_string_dialog_addcontact "연락처( 예.'test@gmail.com)또는 채널 아이디( 예.'#help')를 입력하십시오  "
 
 // Notes
 rls_string r_string_note_connecting "연결중..."
@@ -329,17 +329,17 @@ rls_string r_string_note_offline "오프라인"
 rls_string r_string_step2_title "유명해지기!"
 rls_string r_string_step2_text "버디클라우드 채널들은 당신을 따라다니는 사람들에게 당신의 놀라움을 전할 새로운 길을 열어줍니다.\n\n버디클라우드 채널들은 당신이 알고있는 장소나 토픽에 대한 독특한 지식으로 당신을 유명해지게 만들어줄 수 있습니다. 또한 당신을 따라다니는 사람들과의 커뮤니티를 더욱 돈독하게 만들어줄 것입니다."
 
-rls_string r_string_step3_title "How do you want to log in?"
-rls_string r_string_step3_text "Recommended: Instantly sign-in using your Google/OVI account (or any Jabber account).\n\nAlternatively: Register for a buddycloud account."
-rls_string r_string_step3_label1 "Use existing account"
-rls_string r_string_step3_label2 "Register new account"
+rls_string r_string_step3_title "어떻게 로그인하기 원하십니까?"
+rls_string r_string_step3_text "권장: 즉시 Google/OVI계정으로 등록하십시오.\n다른 선택: 버디클라우드 계정으로 등록하십시오."
+rls_string r_string_step3_label1 "존재하는 계정 사용하기"
+rls_string r_string_step3_label2 "새 계정으로 등록하기"
 
-rls_string r_string_step4_title "Who are you?"
-rls_string r_string_step4_text1 "Enter your existing account details.\n\nThis looks like 'name@gmail.com' or 'name@ovi.com'."
-rls_string r_string_step4_text2 "Choose a new username and password to start using buddycloud.  If you have already registered for buddycloud on another phone, enter those details here."
+rls_string r_string_step4_title "누구십니까?"
+rls_string r_string_step4_text1 "존재하는 계정의 세부사항을 입력하십시오.  'name@gmail.com' 이나 'name@ovi.com'같은 것들입니다."
+rls_string r_string_step4_text2 "버디클라우드에 사용할 새 사용자명과 비밀번호를 선택하십시오. 이미 다른 폰으로 버디클라우드에 등록이 되어있다면 등록되어있는 사용자명과 비밀번호를 넣으시면 됩니다"
 
 rls_string r_string_step5_title "축하합니다!"
-rls_string r_string_step5_text "You are setup and ready to use buddycloud channels."
+rls_string r_string_step5_text "버디클라우드 채널들을 사용할 모든 준비가 되었습니다"
 rls_string r_string_step5_question "지금부터 전화기가 켜짐과 동시에 버디클라우드를 시작하기 원하십니까?"
 
 // End of File

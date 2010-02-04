@@ -620,16 +620,6 @@ RESOURCE MENU_PANE r_status_options_item_menu
 		},
 		MENU_ITEM
 		{ 
-			command = EMenuSendPlaceBySmsCommand; 
-			txt = r_string_item_sendplacebysms;
-		},
-		MENU_ITEM
-		{ 
-			command = EMenuInviteToBuddycloudCommand; 
-			txt = r_string_item_sendinvite;
-		},
-		MENU_ITEM
-		{ 
 			command = EMenuFollowCommand; 
 			txt = r_string_item_follow;
 		},
@@ -1866,7 +1856,6 @@ RESOURCE ARRAY r_editplace_item_visibility_texts
 //   
 RESOURCE AVKON_SETTING_ITEM_LIST r_editchannel_item_list
 {
-	flags = EAknSettingItemIncludeHiddenInOrdinal;
 	title = r_string_editchannel_itemlist_title;
 	items = 
 	{

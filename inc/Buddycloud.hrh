@@ -40,7 +40,7 @@ enum TSettingsTabs {
 #define EMenuSetNextPlaceCommand 207
 #define EMenuSetAsNextPlaceCommand 208
 //#define EMenuCallCommand 209
-#define EMenuSendPlaceBySmsCommand 210
+//#define EMenuSendPlaceBySmsCommand 210
 //#define EMenuMessagesCommand 211
 #define EMenuPrivateMessagesCommand 212
 #define EMenuChannelMessagesCommand 213
@@ -64,7 +64,7 @@ enum TSettingsTabs {
 #define EMenuChannelMembersCommand 231
 #define EMenuRequestToPostCommand 232
 #define EMenuEditItemCommand 233
-#define EMenuInviteToBuddycloudCommand 234
+//#define EMenuInviteToBuddycloudCommand 234
 #define EMenuFollowCommand 235
 #define EMenuFollowLinkCommand 236
 #define EMenuDeletePlaceCommand 237

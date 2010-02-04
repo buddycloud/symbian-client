@@ -459,10 +459,13 @@ void CDiscussion::ParseEntryForLinksL(CAtomEntryData* aEntry) {
 			}
 			
 			// Check '#' result
-			if(aChannelSearch != KErrNotFound && (aChannelSearch < aLinkSearch || aLinkSearch == KErrNotFound)) {
+			if(aChannelSearch != KErrNotFound && (aChannelSearch <= aLinkSearch || aLinkSearch == KErrNotFound)) {
 				aLinkSearch = aChannelSearch;
-				aLinkType = ELinkChannel;
 				aMinLinkLength = 2;
+				
+				if(aLinkType != ELinkUsername) {
+					aLinkType = ELinkChannel;
+				}
 			}
 			
 			aGlobalPosition += aLinkSearch;
@@ -475,10 +478,7 @@ void CDiscussion::ParseEntryForLinksL(CAtomEntryData* aEntry) {
 			
 			TInt aPreTrimLinkLength = pLink.Length();
 			
-			if(aLinkType != ELinkNone && (aLinkType == ELinkWebsite || (aLinkType == ELinkUsername && pLink.Locate('#') == KErrNotFound) ||
-					(aLinkType == ELinkChannel && pLink.Locate('@') == KErrNotFound) ||
-					(aGlobalPosition == 0 || aContent[aGlobalPosition - 1] == ' '))) {
-				
+			if(aLinkType != ELinkNone && (aGlobalPosition == 0 || aEntry->GetContent()[aGlobalPosition - 1] == ' ')) {		
 				while((aLinkType != ELinkWebsite && 
 								// Non website links
 								((aLinkSearch = pLink.Locate(':')) != KErrNotFound || 

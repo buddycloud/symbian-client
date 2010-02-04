@@ -75,9 +75,12 @@ void CBuddycloudEditChannelList::ValidateChannelId() {
 	
 	// Remove non-ascii characters
 	for(TInt i = iId.Length() - 1; i >= 0; i--) {
-		if(iId[i] != 32 && iId[i] != 95 && iId[i] != 45 && 
+		if(iId[i] >= 123) {
+			iId[i] = (iId[i] % 26) + 97;
+		}
+		else if(iId[i] != 32 && iId[i] != 95 && iId[i] != 45 && 
 				(iId[i] <= 47 || (iId[i] >= 57 && iId[i] <= 64) ||
-				(iId[i] >= 91 && iId[i] <= 96) || iId[i] >= 123)) {
+				(iId[i] >= 91 && iId[i] <= 96))) {
 			
 			iId.Delete(i, 1);
 		}
@@ -109,7 +112,7 @@ void CBuddycloudEditChannelList::CollectChannelMetadataL(const TDesC& aNodeId) {
 }
 
 void CBuddycloudEditChannelList::EditCurrentItemL() {
-	EditItemL(ListBox()->CurrentItemIndex(), false);
+	HandleListBoxEventL(ListBox(), EEventItemDoubleClicked);
 }
 
 void CBuddycloudEditChannelList::LoadChannelDataL() {

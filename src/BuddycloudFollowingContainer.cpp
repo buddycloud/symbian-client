@@ -844,8 +844,6 @@ void CBuddycloudFollowingContainer::DynInitMenuPaneL(TInt aResourceId, CEikMenuP
 		aMenuPane->SetItemDimmed(EMenuGetPlaceInfoCommand, true);
 		aMenuPane->SetItemDimmed(EMenuChannelInfoCommand, true);
 		aMenuPane->SetItemDimmed(EMenuFollowCommand, true);
-		aMenuPane->SetItemDimmed(EMenuSendPlaceBySmsCommand, true);
-		aMenuPane->SetItemDimmed(EMenuInviteToBuddycloudCommand, true);
 		aMenuPane->SetItemDimmed(EMenuUnfollowCommand, true);
 		aMenuPane->SetItemDimmed(EMenuAcceptCommand, true);
 		aMenuPane->SetItemDimmed(EMenuAcceptAndFollowCommand, true);
@@ -1005,12 +1003,6 @@ void CBuddycloudFollowingContainer::HandleCommandL(TInt aCommand) {
 			}
 		}
 	}
-	else if(aCommand == EMenuSendPlaceBySmsCommand) {
-		iBuddycloudLogic->SendPlaceL(iSelectedItem);
-	}
-	else if(aCommand == EMenuInviteToBuddycloudCommand) {
-		iBuddycloudLogic->SendInviteL(iSelectedItem);
-	}
 	else if(aCommand == EMenuAddContactCommand) {
 		TBuf<64> aFollow;
 
@@ -1018,19 +1010,25 @@ void CBuddycloudFollowingContainer::HandleCommandL(TInt aCommand) {
 		aDialog->SetPredictiveTextInputPermitted(true);
 
 		if(aDialog->ExecuteLD(R_ADDCONTACT_DIALOG) != 0) {
-			if(aFollow.Locate('@') != KErrNotFound) {
-				iBuddycloudLogic->FollowContactL(aFollow);
+			if(aFollow.Locate('@') != KErrNotFound || aFollow.Locate('.') != KErrNotFound) {
+				iBuddycloudLogic->FollowContactL(aFollow);			
 			}
-			else if(aFollow.Locate('#') != KErrNotFound) {
+			else {
+				TInt aLocate = aFollow.Locate('#');
+				
+				if(aLocate != KErrNotFound) {
+					aFollow.Delete(0, aLocate);
+				}
+				
 				TViewReferenceBuf aViewReference;	
 				aViewReference().iCallbackRequested = true;
 				aViewReference().iCallbackViewId = KFollowingViewId;
 				aViewReference().iOldViewData.iId = iSelectedItem;
 				aViewReference().iNewViewData.iTitle.Copy(aFollow);
 				aViewReference().iNewViewData.iData.Copy(_L8("/channel/"));
-				aViewReference().iNewViewData.iData.Append(aFollow.Mid(aFollow.Locate('#') + 1));
+				aViewReference().iNewViewData.iData.Append(aFollow);
 
-				iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KChannelInfoViewId), TUid::Uid(0), aViewReference);			
+				iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KChannelInfoViewId), TUid::Uid(0), aViewReference);					
 			}
 		}
 	}

@@ -245,19 +245,15 @@ void CBuddycloudChannelInfoContainer::DynInitMenuPaneL(TInt aResourceId, CEikMen
 		
 		if(iCollectionState == EChannelInfoCollected) {
 			if(iChannelItem) {
-				if((iChannelItem->GetItemType() == EItemChannel && iChannelItem->GetPubsubAffiliation() >= EPubsubAffiliationModerator) ||
-						(iChannelItem->GetItemType() == EItemRoster && iChannelItem->GetPubsubAffiliation() == EPubsubAffiliationOwner)) {
-					
+				if(iChannelItem->GetPubsubAffiliation() == EPubsubAffiliationOwner) {
 					aMenuPane->SetItemDimmed(EMenuEditChannelCommand, false);
-				}
-				
-				aMenuPane->SetItemDimmed(EMenuReportChannelCommand, false);
-				
-				if(iChannelItem->GetPubsubAffiliation() == EPubsubAffiliationOwner && 
-						iChannelItem->GetItemType() == EItemChannel) {
 					
-					aMenuPane->SetItemDimmed(EMenuDeleteCommand, false);
+					if(iChannelItem->GetItemType() == EItemChannel) {
+						aMenuPane->SetItemDimmed(EMenuDeleteCommand, false);
+					}
 				}		
+				
+				aMenuPane->SetItemDimmed(EMenuReportChannelCommand, false);				
 			}
 			else {
 				aMenuPane->SetItemDimmed(EMenuFollowCommand, false);

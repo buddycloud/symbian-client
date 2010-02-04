@@ -657,7 +657,7 @@ void CXmppEngine::HandleXmppStanzaL(const TDesC8& aStanza) {
 						
 						// Send Disco result
 						_LIT8(KNodeAttribute, " node=''");
-						_LIT8(KDiscoStanza, "<iq to='' type='result' id=''><query xmlns='http://jabber.org/protocol/disco#info'><identity category='client' type='mobile'/><feature var='http://jabber.org/protocol/pubsub'/><feature var='http://jabber.org/protocol/geoloc'/><feature var='http://jabber.org/protocol/mood'/><feature var='http://www.w3.org/2005/Atom'/></query></iq>\r\n");
+						_LIT8(KDiscoStanza, "<iq to='' type='result' id=''><query xmlns='http://jabber.org/protocol/disco#info'><identity category='client' type='mobile'/><feature var='http://jabber.org/protocol/pubsub'/><feature var='http://jabber.org/protocol/geoloc'/><feature var='http://jabber.org/protocol/mood'/><feature var='http://www.w3.org/2005/Atom'/><feature var='http://buddycloud.com/protocol/channels'/><feature var='http://buddycloud.com/protocol/place'/><feature var='urn:oslo:nearbyobjects'/></query></iq>\r\n");
 	
 						HBufC8* aDiscoStanza = HBufC8::NewLC(KDiscoStanza().Length() + KNodeAttribute().Length() + aAttributeNode.Length() + aAttributeFrom.Length() + aAttributeId.Length());
 						TPtr8 pDiscoStanza(aDiscoStanza->Des());

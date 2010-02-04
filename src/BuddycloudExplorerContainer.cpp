@@ -753,7 +753,11 @@ void CBuddycloudExplorerContainer::DynInitMenuPaneL(TInt aResourceId, CEikMenuPa
 							aMenuPane->SetItemDimmed(EMenuPrivateMessagesCommand, false);
 						}
 						else {
-							aMenuPane->SetItemDimmed(EMenuUnfollowCommand, false);
+							CFollowingChannelItem* aChannelItem = static_cast <CFollowingChannelItem*> (aItem);
+							
+							if(aChannelItem->GetPubsubAffiliation() < EPubsubAffiliationOwner) {
+								aMenuPane->SetItemDimmed(EMenuUnfollowCommand, false);
+							}
 						}
 						
 						if(aItem->GetId().Length() > 0) {
@@ -1405,17 +1409,26 @@ void CBuddycloudExplorerContainer::XmppStanzaAcknowledgedL(const TDesC8& aStanza
 									aResultItem->SetSubTitleL(pIdText);
 									CleanupStack::PopAndDestroy(); // aIdText	
 								}
+								else {
+									// TODO: Is an OG nearby channel workaround
+									aResultItem->SetIdL(KNullDesC);
+								}
 							}
 							
-							// Add item
-							if(aIdEnum == EXmppIdGetNearbyObjects) {
-								iExplorerLevels[aLevel]->AppendSortedItem(aResultItem, ESortByDistance);
+							if(aResultItem->GetId().Length() > 0) {
+								// Add item
+								if(aIdEnum == EXmppIdGetNearbyObjects) {
+									iExplorerLevels[aLevel]->AppendSortedItem(aResultItem, ESortByDistance);
+								}
+								else {
+									iExplorerLevels[aLevel]->AppendSortedItem(aResultItem);							
+								}
+								
+								CleanupStack::Pop(); // aResultItem
 							}
 							else {
-								iExplorerLevels[aLevel]->AppendSortedItem(aResultItem);							
+								CleanupStack::PopAndDestroy(); // aResultItem	
 							}
-							
-							CleanupStack::Pop(); // aResultItem
 						}
 					}					
 				}

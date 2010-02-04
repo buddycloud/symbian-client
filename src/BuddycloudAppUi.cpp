@@ -404,7 +404,7 @@ void CBuddycloudAppUi::HandleWsEventL(const TWsEvent &aEvent, CCoeControl *aDest
 }
 
 void CBuddycloudAppUi::NotificationEvent(TBuddycloudLogicNotificationType aEvent, TInt aId) {
-	if(aEvent == ENotificationMessageNotifiedEvent) {
+	if(aEvent == ENotificationNotifiedMessageEvent) {
 		User::ResetInactivityTime();
 	}
 	else if(aEvent == ENotificationEditPlaceRequested) {

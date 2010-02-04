@@ -1,6 +1,25 @@
 Change Log
 ==========
 
+1.00.02
+
+- [bug] Fix a parser error in CDiscussion::ParseEntryForLinksL
+- Improve parsing of 'Follow...' result so '#' is not needed (but it helps)
+
+1.00.01
+
+- Split up roster/channel affiliations sync into smaller packets 
+- [bug] In CBuddycloudEditChannelList selecting 'Change' on Description opens ID
+- [bug] Don't jump to unread posts when the menu is open in CBuddycloudMessagingContainer
+- [bug] Channel owner is allowed to 'Unfollow' channel in CBuddycloudExplorerContainer
+- [bug] Selected item changing in CBuddycloudMessagingContainer when post above selected item
+- Only allow owners to edit channel details in CBuddycloudChannelInfoContainer
+- Update Dutch translation
+
+1.00.00
+
+* Symbian Signed
+
 0.05.36
 
 - Improve notification logic for pubsub events in CBuddycloudLogic

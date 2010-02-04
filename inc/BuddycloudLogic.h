@@ -61,12 +61,10 @@ enum TBuddycloudLogicState {
 };
 
 enum TBuddycloudLogicNotificationType {
-	ENotificationLogicEngineStarted, ENotificationLogicEngineDestroyed, 
-	ENotificationFollowingItemsUpdated, ENotificationFollowingItemsReconfigured, ENotificationFollowingItemDeleted, 
-	ENotificationPlaceItemsUpdated, ENotificationLocationUpdated, 
-	ENotificationMessageNotifiedEvent, ENotificationMessageSilentEvent, 
-	ENotificationEditPlaceRequested, ENotificationEditPlaceCompleted, 
-	ENotificationActivityChanged, ENotificationConnectivityChanged, 
+	ENotificationLogicEngineStarted, ENotificationLogicEngineDestroyed, ENotificationFollowingItemsUpdated, 
+	ENotificationFollowingItemsReconfigured, ENotificationFollowingItemDeleted, ENotificationPlaceItemsUpdated, 
+	ENotificationLocationUpdated, ENotificationNotifiedMessageEvent, ENotificationEditPlaceRequested, 
+	ENotificationEditPlaceCompleted, ENotificationActivityChanged, ENotificationConnectivityChanged, 
 	ENotificationAuthenticationFailed, ENotificationServerResolveFailed
 };
 
@@ -185,11 +183,11 @@ class CBuddycloudLogic : public CBase, MLocationEngineNotification, MTimeInterfa
 		TInt DisplaySingleLinePopupMenuL(RPointerArray<HBufC>& aMenuItems);
 		TInt DisplayDoubleLinePopupMenuL(RPointerArray<HBufC>& aMenuItems);
 		
-		void SendSmsOrEmailL(TDesC& aAddress, TDesC& aSubject, TDesC& aBody);
-		
-	public: // Sending to external
-		void SendInviteL(TInt aFollowerId);
-		void SendPlaceL(TInt aFollowerId);
+//		void SendSmsOrEmailL(TDesC& aAddress, TDesC& aSubject, TDesC& aBody);
+//		
+//	public: // Sending to external
+//		void SendInviteL(TInt aFollowerId);
+//		void SendPlaceL(TInt aFollowerId);
 		
 	public: // Follow contact
 		void FollowContactL(const TDesC& aContact);
@@ -212,9 +210,11 @@ class CBuddycloudLogic : public CBase, MLocationEngineNotification, MTimeInterfa
 		
 	public: // Pubsub
 		void SetPubsubNodeAffiliationL(const TDesC& aJid, const TDesC& aNode, TXmppPubsubAffiliation aAffiliation, TBool aNotifyResult = false);
-		void SetPubsubNodeSubscriptionL(const TDesC& aJid, const TDesC& aNode, TXmppPubsubSubscription aSubscription);
+		void SetPubsubNodeAffiliationsL(const TDesC8& aNode, const TDesC8& aAffiliations);
     	
 		void RequestPubsubNodeAffiliationL(const TDesC& aNode, TXmppPubsubAffiliation aAffiliation, const TDesC& aText);
+		
+		void SetPubsubNodeSubscriptionL(const TDesC& aJid, const TDesC& aNode, TXmppPubsubSubscription aSubscription);
 		
 		void RetractPubsubNodeItemL(const TDesC& aNode, const TDesC8& aNodeItemId);
 		

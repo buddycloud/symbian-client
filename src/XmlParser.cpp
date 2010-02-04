@@ -51,12 +51,16 @@ TInt CXmlParser::Locate(TChar aChar) {
 	return Locate(aChar, iCurrentElementLocation);
 }
 
-TBool CXmlParser::EvaluateAsBool(const TDesC8& aText) {
-	if(aText.Compare(_L8("1")) == 0 || aText.Compare(_L8("true")) == 0) {
-		return true;
+TBool CXmlParser::EvaluateAsBool(const TDesC8& aText, TBool aDefault) {
+	if(aText.Length() > 0) {
+		if(aText.Compare(_L8("1")) == 0 || aText.Compare(_L8("true")) == 0) {
+			return true;
+		}
+		
+		return false;
 	}
 	
-	return false;
+	return aDefault;
 }
 
 TReal CXmlParser::EvaluateAsReal(const TDesC8& aText, TReal aDefault) {
@@ -191,8 +195,8 @@ TPtrC8 CXmlParser::GetStringAttribute(const TDesC8& aAttribute) {
 	return pXml.Mid(0, 0);
 }
 
-TBool CXmlParser::GetBoolAttribute(const TDesC8& aAttribute) {
-	return EvaluateAsBool(GetStringAttribute(aAttribute));
+TBool CXmlParser::GetBoolAttribute(const TDesC8& aAttribute, TBool aDefault) {
+	return EvaluateAsBool(GetStringAttribute(aAttribute), aDefault);
 }
 
 TInt CXmlParser::GetIntAttribute(const TDesC8& aAttribute, TInt aDefault) {
@@ -225,8 +229,8 @@ TPtrC8 CXmlParser::GetStringData() {
 	return pXml.Mid(0, 0);
 }
 
-TBool CXmlParser::GetBoolData() {
-	return EvaluateAsBool(GetStringData());
+TBool CXmlParser::GetBoolData(TBool aDefault) {
+	return EvaluateAsBool(GetStringData(), aDefault);
 }
 
 TReal CXmlParser::GetRealData(TReal aDefault) {

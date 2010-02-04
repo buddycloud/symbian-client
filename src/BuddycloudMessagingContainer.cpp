@@ -232,12 +232,6 @@ void CBuddycloudMessagingContainer::NotificationEvent(TBuddycloudLogicNotificati
 			}
 		}
 	}
-	else if(aEvent == ENotificationMessageNotifiedEvent || aEvent == ENotificationMessageSilentEvent) {
-		if(aId == iMessagingObject.iId) {
-			RepositionItems(iSnapToItem);
-			RenderScreen();
-		}
-	}
 	else {
 		CBuddycloudListComponent::NotificationEvent(aEvent, aId);
 	}
@@ -256,8 +250,6 @@ void CBuddycloudMessagingContainer::EntryAdded(CAtomEntryData* aAtomEntry) {
 			iEntries.Insert(CTextWrappedEntry::NewLC(aAtomEntry, false), aIndex);
 			CleanupStack::Pop();
 			
-			TextWrapEntry(aIndex);
-			
 			aAdded = true;
 			break;
 		}
@@ -269,8 +261,6 @@ void CBuddycloudMessagingContainer::EntryAdded(CAtomEntryData* aAtomEntry) {
 					iEntries.Insert(CTextWrappedEntry::NewLC(aAtomEntry, true), aIndex);
 					CleanupStack::Pop();
 					
-					TextWrapEntry(aIndex);
-					
 					aAdded = true;
 					break;
 				}
@@ -280,12 +270,20 @@ void CBuddycloudMessagingContainer::EntryAdded(CAtomEntryData* aAtomEntry) {
 	
 	// Move selection or redraw
 	if(aAdded) {
+		TextWrapEntry(aIndex);
+		
 		if(iJumpToUnreadPost) {
 			HandleItemSelection(aIndex);
 		}
 		else {
-			RepositionItems(false);
+			if(aIndex <= iSelectedItem) {
+				iSelectedItem++;
+			}
+			
+			RepositionItems(iSnapToItem);
 		}
+		
+		RenderScreen();
 	}
 }
 
@@ -301,9 +299,10 @@ void CBuddycloudMessagingContainer::EntryDeleted(CAtomEntryData* aAtomEntry) {
 				HandleItemSelection(iSelectedItem - 1);
 			}
 			else {
-				RepositionItems(false);
+				RepositionItems(iSnapToItem);
 			}
 			
+			RenderScreen();	
 			break;
 		}
 	}
@@ -1135,6 +1134,8 @@ void CBuddycloudMessagingContainer::DynInitToolbarL(TInt aResourceId, CAknToolba
 #endif
 
 void CBuddycloudMessagingContainer::DynInitMenuPaneL(TInt aResourceId, CEikMenuPane* aMenuPane) {
+	iJumpToUnreadPost = false;
+	
 	if(aResourceId == R_MESSAGING_OPTIONS_MENU) {
 		aMenuPane->SetItemDimmed(EMenuJumpToUnreadCommand, true);
 		aMenuPane->SetItemDimmed(EMenuRequestToPostCommand, true);				
@@ -1316,13 +1317,15 @@ void CBuddycloudMessagingContainer::DynInitMenuPaneL(TInt aResourceId, CEikMenuP
 						HBufC* aLinkId = HBufC::NewLC(aLinkPosition.iLength + KRootNode().Length());
 						TPtr pLinkId(aLinkId->Des());
 						pLinkId.Append(aEntry->GetContent().Mid(aLinkPosition.iStart, aLinkPosition.iLength));
+						
+						// Remove '#'
+						if(pLinkId[0] == '#') {
+							pLinkId.Delete(0, 1);
+						}
 							
-						if(aLinkPosition.iType == ELinkChannel) {
-							pLinkId = pLinkId.Mid(1);
-							
-							if(pLinkId.Find(KRootNode) != 0) {
-								pLinkId.Insert(0, KRootNode);
-							}
+						// Add '/channel/'
+						if(aLinkPosition.iType == ELinkChannel && pLinkId.Find(KRootNode) != 0) {
+							pLinkId.Insert(0, KRootNode);
 						}
 						
 						TInt aItemId = iBuddycloudLogic->IsSubscribedTo(pLinkId, EItemRoster|EItemChannel);
@@ -1529,6 +1532,10 @@ void CBuddycloudMessagingContainer::HandleCommandL(TInt aCommand) {
 			
 			if(aLinkPosition.iType != ELinkWebsite) {
 				TPtrC aLinkText(aEntry->GetContent().Mid(aLinkPosition.iStart, aLinkPosition.iLength));
+				
+				if(aLinkText[0] == '#') {
+					aLinkText.Set(aLinkText.Mid(1));
+				}
 
 				if(aCommand == EMenuFollowLinkCommand) {
 					// Follow contact
@@ -1541,13 +1548,12 @@ void CBuddycloudMessagingContainer::HandleCommandL(TInt aCommand) {
 					aViewReference().iCallbackViewId = KMessagingViewId;
 					aViewReference().iOldViewData.iId = iItem->GetItemId();
 					aViewReference().iNewViewData.iTitle.Copy(aLinkText);
+					aViewReference().iNewViewData.iData.Copy(aLinkText);
 					
 					if(aLinkPosition.iType == ELinkChannel) {
-						aViewReference().iNewViewData.iData.Copy(aLinkText.Mid(1));
 						aViewReference().iNewViewData.iData.Insert(0, _L8("/channel/"));
 					}
 					else {
-						aViewReference().iNewViewData.iData.Copy(aLinkText);
 						aViewReference().iNewViewData.iData.Insert(0, _L8("/user/"));
 						aViewReference().iNewViewData.iData.Append(_L8("/channel"));
 					}
@@ -1562,8 +1568,7 @@ void CBuddycloudMessagingContainer::HandleCommandL(TInt aCommand) {
 					pLinkId.Append(aLinkText);
 						
 					if(aLinkPosition.iType == ELinkChannel) {
-						// Replace '#' with '/channel/'
-						pLinkId.Replace(0, 1, KRootNode);
+						pLinkId.Insert(0, KRootNode);
 					}
 						
 					CBuddycloudFollowingStore* aItemStore = iBuddycloudLogic->GetFollowingStore();

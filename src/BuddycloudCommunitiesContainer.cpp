@@ -40,9 +40,7 @@ void CBuddycloudCommunitiesContainer::DynInitMenuPaneL(TInt aResourceId, CEikMen
 		aMenuPane->SetItemDimmed(EMenuDeleteCommand, true);
 		
 		if(iList->CurrentItemIndex() == ECommunityTwitter) {
-			if(iBuddycloudLogic->GetDescSetting(ESettingItemTwitterUsername).Length() > 0) {
-				aMenuPane->SetItemDimmed(EMenuDeleteCommand, false);
-			}
+			aMenuPane->SetItemDimmed(EMenuDeleteCommand, false);
 		}
 	}
 }
