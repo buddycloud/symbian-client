@@ -690,46 +690,67 @@ void CBuddycloudLogic::ShowInformationDialogL(TInt aResourceId) {
 	CleanupStack::PopAndDestroy(); // aMessage
 }
 
-TXmppPubsubAffiliation CBuddycloudLogic::ShowAffiliationDialogL(const TDesC& aJid, const TDesC& aNode, TXmppPubsubAffiliation aAffiliation, TBool aNotifyResult) {
+TXmppPubsubAffiliation CBuddycloudLogic::ShowAffiliationDialogL(const TDesC& aNode, const TDesC& aJid, TXmppPubsubAffiliation aAffiliation, TBool aNotifyResult) {
 #ifdef _DEBUG
 	WriteToLog(_L8("BL    CBuddycloudLogic::ShowAffiliationDialogL"));
 #endif
 	
-	TInt aSelectedIndex = 0;
-	TInt aCurrentIndex = 0;
+	CFollowingChannelItem* aChannelItem = static_cast <CFollowingChannelItem*> (iFollowingList->GetItemById(IsSubscribedTo(aNode, EItemChannel)));
 	
-	if(aAffiliation == EPubsubAffiliationMember) {
-		aCurrentIndex = 1;
-	}
-	else if(aAffiliation == EPubsubAffiliationPublisher) {
-		aCurrentIndex = 2;
-	}
-	else if(aAffiliation == EPubsubAffiliationModerator) {
-		aCurrentIndex = 3;
-	}
-	
-	// Show list dialog
-	CAknListQueryDialog* aDialog = new (ELeave) CAknListQueryDialog(&aSelectedIndex);
-	aDialog->PrepareLC(R_LIST_CHANGEPERMISSION);
-	aDialog->ListBox()->SetCurrentItemIndex(aCurrentIndex);
-
-	if(aDialog->RunLD()) {
-		switch(aSelectedIndex) {
-			case 0: // Remove
-				aAffiliation = EPubsubAffiliationOutcast;
-				break;
-			case 2: // Publisher
-				aAffiliation = EPubsubAffiliationPublisher;
-				break;
-			case 3: // Moderator
-				aAffiliation = EPubsubAffiliationModerator;
-				break;
-			default: // Follower
-				aAffiliation = EPubsubAffiliationMember;
-				break;					
+	if(aChannelItem && aChannelItem->GetPubsubAffiliation() >= EPubsubAffiliationModerator && 
+			aChannelItem->GetPubsubAffiliation() > aAffiliation) {
+		
+		TInt aSelectedIndex = 0;
+		TInt aCurrentIndex = 0;
+		
+		if(aAffiliation == EPubsubAffiliationMember) {
+			aCurrentIndex = 1;
+		}
+		else if(aAffiliation == EPubsubAffiliationPublisher) {
+			aCurrentIndex = 2;
+		}
+		else if(aAffiliation == EPubsubAffiliationModerator) {				
+			aCurrentIndex = 3;
 		}
 		
-		SetPubsubNodeAffiliationL(aJid, aNode, aAffiliation, aNotifyResult);	
+		// Initialize dialog
+		CAknListQueryDialog* aDialog = new (ELeave) CAknListQueryDialog(&aSelectedIndex);
+		aDialog->PrepareLC(R_LIST_CHANGEPERMISSION);
+		
+		// Configure options
+		CDesCArrayFlat* aOptionsList = CCoeEnv::Static()->ReadDesCArrayResourceL(R_ARRAY_CHANGEPERMISSION);
+		CleanupStack::PushL(aOptionsList);
+		
+		if(aChannelItem->GetPubsubAffiliation() == EPubsubAffiliationModerator) {
+			// Remove moderator option
+			aOptionsList->Delete(3);
+		}
+	
+		aDialog->SetItemTextArray(aOptionsList);
+		aDialog->SetOwnershipType(ELbmOwnsItemArray);
+		CleanupStack::Pop(); // aOptionsList
+		
+		// Select item & show dialog
+		aDialog->ListBox()->SetCurrentItemIndex(aCurrentIndex);		
+		
+		if(aDialog->RunLD()) {
+			switch(aSelectedIndex) {
+				case 0: // Remove
+					aAffiliation = EPubsubAffiliationOutcast;
+					break;
+				case 2: // Publisher
+					aAffiliation = EPubsubAffiliationPublisher;
+					break;
+				case 3: // Moderator
+					aAffiliation = EPubsubAffiliationModerator;
+					break;
+				default: // Follower
+					aAffiliation = EPubsubAffiliationMember;
+					break;					
+			}
+			
+			SetPubsubNodeAffiliationL(aJid, aNode, aAffiliation, aNotifyResult);	
+		}		
 	}
 	
 	return aAffiliation;
@@ -1841,7 +1862,7 @@ void CBuddycloudLogic::HandlePubsubEventL(const TDesC8& aStanza) {
 										}
 									}
 								}
-								else if(aNodeParser->GetNode(2).Compare(_L8("channel")) == 0 || aNodeParser->GetNode(0).Compare(_L8("channel")) == 0) {
+								else if(aAttributeNode.Find(_L8("/channel")) != KErrNotFound) {
 									CFollowingChannelItem* aChannelItem = static_cast <CFollowingChannelItem*> (aItem);
 									CDiscussion* aDiscussion = iDiscussionManager->GetDiscussionL(aChannelItem->GetId());
 									
@@ -1918,7 +1939,7 @@ void CBuddycloudLogic::HandlePubsubEventL(const TDesC8& aStanza) {
 								}
 							}
 						}
-						else if(aNodeParser->GetNode(2).Compare(_L8("channel")) == 0 || aNodeParser->GetNode(0).Compare(_L8("channel")) == 0) {
+						else if(aAttributeNode.Find(_L8("/channel")) != KErrNotFound) {
 							// Handle other event types for channels
 							CFollowingChannelItem* aChannelItem = static_cast <CFollowingChannelItem*> (aItem);
 							CDiscussion* aDiscussion = iDiscussionManager->GetDiscussionL(aChannelItem->GetId());
@@ -5255,7 +5276,7 @@ void CBuddycloudLogic::XmppStanzaAcknowledgedL(const TDesC8& aStanza, const TDes
 				if(aIdEnum == EXmppIdRegistration) {
 					// Registration success
 					iXmppEngine->SetAccountDetailsL(iSettingUsername, iSettingPassword);
-					iXmppEngine->SendAuthorization();
+					iXmppEngine->HandlePlainAuthorizationL();
 					
 					// Save settings
 					SaveSettingsAndItemsL();

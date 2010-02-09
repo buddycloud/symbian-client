@@ -2673,7 +2673,6 @@ RESOURCE DIALOG r_list_changepermission
 					flags = EAknListBoxMenuList;
 					height = 4;
 					width = 10;
-					array_id = r_array_changepermission;
 				};
 			};
 		}

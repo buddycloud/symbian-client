@@ -55,7 +55,7 @@ LIBRARY           eikctl.lib commonengine.lib efsrv.lib estor.lib gdi.lib cntmod
 LIBRARY           bafl.lib fbscli.lib imut.lib etel3rdparty.lib bluetooth.lib connmon.lib lbs.lib ecom.lib
 LIBRARY           apgrfx.lib commdb.lib bitgdi.lib imageconversion.lib aknskins.lib aknicon.lib etext.lib
 LIBRARY           form.lib hwrmvibraclient.lib mediaclientaudio.lib centralrepository.lib charconv.lib
-LIBRARY           flogger.lib sendui.lib esock.lib insock.lib ezlib.lib securesocket.lib
+LIBRARY           flogger.lib sendui.lib esock.lib insock.lib ezlib.lib securesocket.lib hash.lib
 
 #ifndef __3_2_ONWARDS__
 LIBRARY           bteng.lib
@@ -88,6 +88,6 @@ SOURCE            BuddycloudPreferencesSettingsView.cpp BuddycloudPreferencesSet
 SOURCE            BuddycloudCommunitiesView.cpp BuddycloudCommunitiesContainer.cpp BuddycloudFollowing.cpp 
 SOURCE            XmppOutbox.cpp BuddycloudNotificationsSettingsView.cpp BuddycloudNotificationsSettingsList.cpp 
 SOURCE            XmppUtilities.cpp GeolocData.cpp BuddycloudList.cpp DiscussionManager.cpp AtomEntryData.cpp 
-SOURCE            BuddycloudChannelInfoView.cpp BuddycloudChannelInfoContainer.cpp
+SOURCE            BuddycloudChannelInfoView.cpp BuddycloudChannelInfoContainer.cpp Md5Wrapper.cpp
 
 // End of File

@@ -1600,7 +1600,7 @@ void CBuddycloudMessagingContainer::HandleCommandL(TInt aCommand) {
 		CAtomEntryData* aEntry = iEntries[iSelectedItem]->GetEntry();
 		
 		if(aEntry && aEntry->GetAuthorJid().Length() > 0) {
-			iBuddycloudLogic->ShowAffiliationDialogL(aEntry->GetAuthorJid(), *iMessagingId, aEntry->GetAuthorAffiliation(), true);		
+			iBuddycloudLogic->ShowAffiliationDialogL(*iMessagingId, aEntry->GetAuthorJid(), aEntry->GetAuthorAffiliation(), true);		
 		}
 	}
 	else if(aCommand == EAknSoftkeyBack) {		

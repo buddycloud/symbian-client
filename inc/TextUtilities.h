@@ -41,9 +41,6 @@ class CTextUtilities : public CBase {
 		TDesC& Utf8ToUnicodeL(const TDesC8& aUtf8);
 		TDesC8& UnicodeToUtf8L(const TDesC& aUnicode);
 		
-	public: // Base64 encoding
-		void Base64Encode(const TDesC8& aSrc, TDes8& aDest);
-		
 	public: // Bidi coding
 		TPtrC BidiLogicalToVisualL(const TDesC& aText);
 

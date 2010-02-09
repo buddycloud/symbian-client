@@ -58,17 +58,20 @@ enum TXmppMessagePriority {
 	EXmppPriorityNormal, EXmppPriorityHigh
 };
 
+// Stream features
+
+enum TXmppStreamFeatures {
+	EStreamFeatureNone = 0, EStreamFeatureBind = 2, 
+	EStreamFeaturePlain = 4, EStreamFeatureDigestMd5 = 8, EStreamFeatureAnonymous = 16,
+	EStreamFeatureTls = 32, EStreamFeatureTlsRequired = 64, 
+	EStreamFeatureCompression = 128, EStreamFeatureRegistration = 256
+};
+
 // Presence subscription enumerations
 
 enum TPresenceSubscription {
 	EPresenceSubscriptionUnknown, EPresenceSubscriptionRemove, EPresenceSubscriptionNone, 
 	EPresenceSubscriptionTo, EPresenceSubscriptionFrom, EPresenceSubscriptionBoth
-};
-
-// Chat state enumerations
-
-enum TMessageChatState {
-	EChatInactive, EChatActive, EChatComposing, EChatPaused, EChatGone
 };
 
 // Pubsub enumerations

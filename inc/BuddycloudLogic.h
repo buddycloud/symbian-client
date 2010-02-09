@@ -177,7 +177,7 @@ class CBuddycloudLogic : public CBase, MLocationEngineNotification, MTimeInterfa
 		void ShowInformationDialogL(TInt aResourceId);
 		
 	public:
-		TXmppPubsubAffiliation ShowAffiliationDialogL(const TDesC& aJid, const TDesC& aNode, TXmppPubsubAffiliation aAffiliation, TBool aNotifyResult = false);
+		TXmppPubsubAffiliation ShowAffiliationDialogL(const TDesC& aNode, const TDesC& aJid, TXmppPubsubAffiliation aAffiliation, TBool aNotifyResult = false);
 
 	private:
 		TInt DisplaySingleLinePopupMenuL(RPointerArray<HBufC>& aMenuItems);

@@ -13,7 +13,6 @@
 #include <bidi.h>
 #include <biditext.h>
 #include <e32std.h>
-#include <imcvcodc.h>
 #include <utf.h>
 #include "TextUtilities.h"
 
@@ -185,13 +184,6 @@ TDesC& CTextUtilities::Utf8ToUnicodeL(const TDesC8& aUtf8) {
 	}
 	
 	return *iUnicode;
-}
-
-void CTextUtilities::Base64Encode(const TDesC8& aSrc, TDes8& aDest) {
-	TImCodecB64 aBase64Encoder;
-	
-	aBase64Encoder.Initialise();
-	aBase64Encoder.Encode(aSrc, aDest);
 }
 
 TPtrC CTextUtilities::BidiLogicalToVisualL(const TDesC& aText) {

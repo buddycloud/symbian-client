@@ -142,16 +142,16 @@ class CXmppEngine : public CBase, MTcpIpEngineNotification, MConnectionMonitorNo
 		
 		void SetResourceL(const TDesC8& aResource);
 
+	public:
 		void ConnectL();
-		void SendAuthorization();
 		void Disconnect();
+		void PrepareShutdown();
 		
+	public:
 		void GetConnectionMode(TInt& aMode, TInt& aId);
 		void SetConnectionMode(TInt aMode, TInt aId, const TDesC& aName);
 		TDesC& GetConnectionName();
 		void GetConnectionStatistics(TInt& aDataSent, TInt& aDataReceived);
-
-		void PrepareShutdown();
 		
 	private:
 		void SetXmppServerL(const TDesC8& aXmppServer);
@@ -167,7 +167,11 @@ class CXmppEngine : public CBase, MTcpIpEngineNotification, MConnectionMonitorNo
 	private:
 		void AddStanzaObserverL(const TDesC8& aStanzaId, MXmppStanzaObserver* aObserver);
 
-	private:
+	public: // Authorization mechanisms
+		void HandlePlainAuthorizationL();
+		void HandleDigestMd5AuthorizationL(const TDesC8& aChallenge);
+
+	private: // Stream handling
 		void OpenStream();
 		void QueryServerTimeL();
 		void WriteToStreamL(const TDesC8& aData);
@@ -214,6 +218,7 @@ class CXmppEngine : public CBase, MTcpIpEngineNotification, MConnectionMonitorNo
 
 		TXmppEngineState iEngineState;
 		TXmppEngineError iLastError;
+		TInt iStreamFeatures;
 
 		CCustomTimer* iStateTimer;
 		CCustomTimer* iReadTimer;

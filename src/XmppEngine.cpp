@@ -13,10 +13,13 @@
 // INCLUDE FILES
 #include <aknquerydialog.h>
 #include <aknmessagequerydialog.h>
+#include <e32math.h>
+#include <imcvcodc.h>
 #include <Buddycloud.rsg>
-#include "XmppEngine.h"
-#include "TextUtilities.h"
+#include "Md5Wrapper.h"
 #include "PhoneUtilities.h"
+#include "TextUtilities.h"
+#include "XmppEngine.h"
 
 /*
 ----------------------------------------------------------------------------
@@ -323,6 +326,20 @@ void CXmppEngine::Disconnect() {
 	iTcpIpEngine->Disconnect();
 }
 
+void CXmppEngine::PrepareShutdown() {
+#ifdef _DEBUG
+	iEngineObserver->XmppDebug(_L8("XMPP  CXmppEngine::PrepareShutdown"));
+#endif
+
+	if(iEngineState >= EXmppLoggingIn) {
+		WriteToStreamL(_L8("</stream:stream>\r\n"));
+	}
+
+	iEngineState = EXmppShutdown;
+
+	iTcpIpEngine->Disconnect();
+}
+
 void CXmppEngine::GetConnectionMode(TInt& aMode, TInt& aId) {
 	iTcpIpEngine->GetConnectionMode(aMode, aId);
 }
@@ -345,20 +362,6 @@ TDesC& CXmppEngine::GetConnectionName() {
 void CXmppEngine::GetConnectionStatistics(TInt& aDataSent, TInt& aDataReceived) {
 	aDataSent = iDataSent;
 	aDataReceived = iDataReceived;
-}
-
-void CXmppEngine::PrepareShutdown() {
-#ifdef _DEBUG
-	iEngineObserver->XmppDebug(_L8("XMPP  CXmppEngine::PrepareShutdown"));
-#endif
-
-	if(iEngineState >= EXmppLoggingIn) {
-		WriteToStreamL(_L8("</stream:stream>\r\n"));
-	}
-
-	iEngineState = EXmppShutdown;
-
-	iTcpIpEngine->Disconnect();
 }
 
 void CXmppEngine::SetXmppServerL(const TDesC8& aXmppServer) {
@@ -416,21 +419,7 @@ void CXmppEngine::AddStanzaObserverL(const TDesC8& aStanzaId, MXmppStanzaObserve
 	}	
 }
 
-void CXmppEngine::OpenStream() {
-	// Open stream
-	TPtr8 pXmppServer(iXmppServer->Des());
-	_LIT8(KStreamStanza, "<?xml version='1.0'?><stream:stream xmlns='jabber:client' xmlns:stream='http://etherx.jabber.org/streams' to='' version='1.0'>");
-
-	HBufC8* aStreamStanza = HBufC8::NewLC(KStreamStanza().Length() + pXmppServer.Length());
-	TPtr8 pStreamStanza(aStreamStanza->Des());
-	pStreamStanza.Copy(KStreamStanza);
-	pStreamStanza.Insert(110, pXmppServer);
-
-	WriteToStreamL(pStreamStanza);
-	CleanupStack::PopAndDestroy();
-}
-
-void CXmppEngine::SendAuthorization() {
+void CXmppEngine::HandlePlainAuthorizationL() {
 	TPtr8 pUsername(iUsername->Des());
 	TPtr8 pPassword(iPassword->Des());
 	TPtr8 pXmppServer(iXmppServer->Des());
@@ -448,9 +437,9 @@ void CXmppEngine::SendAuthorization() {
 	TPtr8 pDest(aDest->Des());
 
 	// Encode to Base64
-	CTextUtilities* aTextUtilities = CTextUtilities::NewLC();
-	aTextUtilities->Base64Encode(pSrc, pDest);
-	CleanupStack::PopAndDestroy(); // aTextUtilities
+	TImCodecB64 aBase64Encoder;	
+	aBase64Encoder.Initialise();
+	aBase64Encoder.Encode(pSrc, pDest);
 
 	// Send auth
 	_LIT8(KAuthStanza, "<auth xmlns='urn:ietf:params:xml:ns:xmpp-sasl' mechanism='PLAIN'></auth>");
@@ -463,18 +452,142 @@ void CXmppEngine::SendAuthorization() {
 	CleanupStack::PopAndDestroy(3); // aAuthStanza, aDest, aSrc
 }
 
-void CXmppEngine::QueryServerTimeL() {
-//	TPtr8 pXmppServer(iXmppServer->Des());
-//	_LIT8(KPingStanza, "<iq to='' type='get' id='time1'><time xmlns='urn:xmpp:time'/></iq>\r\n");
-//
-//	HBufC8* aPingStanza = HBufC8::NewLC(KPingStanza().Length() + pXmppServer.Length());
-//	TPtr8 pPingStanza(aPingStanza->Des());
-//	pPingStanza.Copy(KPingStanza);
-//	pPingStanza.Insert(8, pXmppServer);
-//
-//	WriteToStreamL(pPingStanza);
-//	CleanupStack::PopAndDestroy();
+void CXmppEngine::HandleDigestMd5AuthorizationL(const TDesC8& aChallenge) {
+	HBufC8* aDecodedChallenge = HBufC8::NewLC(aChallenge.Length());
+	TPtr8 pDecodedChallenge(aDecodedChallenge->Des());
 	
+	TImCodecB64 aBase64Encoder;		
+	aBase64Encoder.Initialise();
+	aBase64Encoder.Decode(aChallenge, pDecodedChallenge);
+	
+	TInt aFind = pDecodedChallenge.Find(_L8("rspauth="));
+	
+	if(aFind != KErrNotFound) {
+		// Challenge successful
+		WriteToStreamL(_L8("<response xmlns='urn:ietf:params:xml:ns:xmpp-sasl'/>"));
+	}
+	else {
+		TPtrC8 aRealm, aNonce, aQop;
+		
+		// Realm
+		if((aFind = pDecodedChallenge.Find(_L8("realm="))) != KErrNotFound) {
+			aRealm.Set(pDecodedChallenge.Mid(aFind + 7));
+			aRealm.Set(aRealm.Left(aRealm.Locate('\"')));
+		}
+		
+		// Nonce
+		if((aFind = pDecodedChallenge.Find(_L8("nonce="))) != KErrNotFound) {
+			aNonce.Set(pDecodedChallenge.Mid(aFind + 7));
+			aNonce.Set(aNonce.Left(aNonce.Locate('\"')));
+		}
+		
+		// Qop
+		if((aFind = pDecodedChallenge.Find(_L8("qop="))) != KErrNotFound) {
+			aQop.Set(pDecodedChallenge.Mid(aFind + 5));
+			aQop.Set(aQop.Left(aQop.Locate('\"')));
+		}
+		
+		if(aNonce.Length() > 0 && aQop.Length() > 0) {
+			_LIT8(KDigestDelimiter, ":");
+			
+			TBuf8<16> aNonceCount;
+			aNonceCount.Format(_L8("%08X"), (iConnectionAttempts + 1));
+			aNonceCount.LowerCase();
+			
+			TBuf8<32> aClientNonce;
+			aClientNonce.Format(_L8("%X%X%X"), Math::Random(), Math::Random(), Math::Random());
+			aClientNonce.LowerCase();
+					
+			// Begin hashing
+			CMD5Wrapper* aHashDigestA1H = CMD5Wrapper::NewLC();
+			aHashDigestA1H->Update(*iUsername);
+			aHashDigestA1H->Update(KDigestDelimiter);
+			aHashDigestA1H->Update(aRealm);
+			aHashDigestA1H->Update(KDigestDelimiter);
+			aHashDigestA1H->Update(*iPassword);
+			
+			CMD5Wrapper* aHashDigestA1 = CMD5Wrapper::NewLC();						
+			aHashDigestA1->Update(aHashDigestA1H->Final());
+			aHashDigestA1->Update(KDigestDelimiter);
+			aHashDigestA1->Update(aNonce);
+			aHashDigestA1->Update(KDigestDelimiter);
+			aHashDigestA1->Update(aClientNonce);
+			
+			CMD5Wrapper* aHashDigestA2 = CMD5Wrapper::NewLC();
+			aHashDigestA2->Update(_L8("AUTHENTICATE:xmpp/"));
+			aHashDigestA2->Update(*iXmppServer);
+
+			CMD5Wrapper* aFinalDigest = CMD5Wrapper::NewLC();		
+			aFinalDigest->Update(aHashDigestA1->FinalHex());
+			aFinalDigest->Update(KDigestDelimiter);
+			aFinalDigest->Update(aNonce);
+			aFinalDigest->Update(KDigestDelimiter);
+			aFinalDigest->Update(aNonceCount);
+			aFinalDigest->Update(KDigestDelimiter);
+			aFinalDigest->Update(aClientNonce);
+			aFinalDigest->Update(KDigestDelimiter);
+			aFinalDigest->Update(aQop);
+			aFinalDigest->Update(KDigestDelimiter);
+			aFinalDigest->Update(aHashDigestA2->FinalHex());
+			
+			TPtrC8 aDigest(aFinalDigest->FinalHex());
+			
+			// Format response data
+			_LIT8(KRealm, "realm=\"\",");
+			_LIT8(KFormattedResponse, "username=\"\",nonce=\"\",cnonce=\"\",nc=,qop=,digest-uri=\"xmpp/\",response=,charset=utf-8");
+			HBufC8* aResponseData = HBufC8::NewLC(KFormattedResponse().Length() + iUsername->Des().Length() + KRealm().Length() + aRealm.Length() + aNonce.Length() + aClientNonce.Length() + aNonceCount.Length() + aQop.Length() + iXmppServer->Des().Length() + aDigest.Length());
+			TPtr8 pResponseData(aResponseData->Des());
+			pResponseData.Append(KFormattedResponse);
+			pResponseData.Insert(68, aDigest);
+			pResponseData.Insert(57, *iXmppServer);
+			pResponseData.Insert(39, aQop);
+			pResponseData.Insert(34, aNonceCount);
+			pResponseData.Insert(29, aClientNonce);
+			pResponseData.Insert(19, aNonce);
+			
+			if(aRealm.Length() > 0) {
+				pResponseData.Insert(12, KRealm);
+				pResponseData.Insert(19, aRealm);
+			}
+			
+			pResponseData.Insert(10, *iUsername);
+			
+			// Base64 encode response
+			HBufC8* aEncodedResponse = HBufC8::NewLC(pResponseData.Length() * 2);
+			TPtr8 pEncodedResponse(aEncodedResponse->Des());
+			aBase64Encoder.Encode(pResponseData, pEncodedResponse);			
+			
+			// Send response stanza
+			_LIT8(KResponseStanza, "<response xmlns='urn:ietf:params:xml:ns:xmpp-sasl'></response>");
+			HBufC8* aResponseStanza = HBufC8::NewLC(KResponseStanza().Length() + aEncodedResponse->Des().Length());
+			TPtr8 pResponseStanza(aResponseStanza->Des());
+			pResponseStanza.Append(KResponseStanza);
+			pResponseStanza.Insert(51, *aEncodedResponse);
+			
+			WriteToStreamL(pResponseStanza);
+			
+			CleanupStack::PopAndDestroy(7); // aResponseStanza, aEncodedResponse, aResponseData, aHashDigestA2, aHashDigestA1H, aHashDigestA1, aFinalDigest
+		}
+	}
+	
+	CleanupStack::PopAndDestroy(); // aDecodedChallenge
+}
+
+void CXmppEngine::OpenStream() {
+	// Open stream
+	TPtr8 pXmppServer(iXmppServer->Des());
+	_LIT8(KStreamStanza, "<?xml version='1.0'?><stream:stream xmlns='jabber:client' xmlns:stream='http://etherx.jabber.org/streams' to='' version='1.0'>");
+
+	HBufC8* aStreamStanza = HBufC8::NewLC(KStreamStanza().Length() + pXmppServer.Length());
+	TPtr8 pStreamStanza(aStreamStanza->Des());
+	pStreamStanza.Copy(KStreamStanza);
+	pStreamStanza.Insert(110, pXmppServer);
+
+	WriteToStreamL(pStreamStanza);
+	CleanupStack::PopAndDestroy();
+}
+
+void CXmppEngine::QueryServerTimeL() {
 	WriteToStreamL(_L8("<iq to='buddycloud.com' type='get' id='time1'><time xmlns='urn:xmpp:time'/></iq>\r\n"));
 }
 
@@ -531,60 +644,84 @@ void CXmppEngine::HandleXmppStanzaL(const TDesC8& aStanza) {
 			aStanzaIsProcessed = true;
 		}
 		else if(aElement.Compare(_L8("stream:features")) == 0) {
-			iNegotiatingSecureConnection = false;
-
-			if(aXmlParser->MoveToElement(_L8("starttls"))) {
-				// Should TLS be negotiated
-				if(aXmlParser->GetStringData().Compare(_L8("<required/>")) == 0) {
-					iNegotiatingSecureConnection = true;
-				}				
-			}
+			iStreamFeatures = EStreamFeatureNone;
 			
-			if(iNegotiatingSecureConnection) {
-				// Start TLS negotiation
-				WriteToStreamL(_L8("<starttls xmlns='urn:ietf:params:xml:ns:xmpp-tls'/>"));
-			}
-			else if(!iStreamCompressed && aXmlParser->MoveToElement(_L8("compression"))) {
-				// Compress
-				TBool aCompressionStarted = false;
-	
-				while(!aCompressionStarted && aXmlParser->MoveToElement(_L8("method"))) {
-					TPtrC8 pDataMethod = aXmlParser->GetStringData();
-	
-					if(pDataMethod.Compare(_L8("zlib")) == 0) {
-						// Request compression
-						_LIT8(KCompressStanza, "<compress xmlns='http://jabber.org/protocol/compress'><method></method></compress>\r\n");
-	
-						HBufC8* aCompressStanza = HBufC8::NewLC(KCompressStanza().Length() + pDataMethod.Length());
-						TPtr8 pCompressStanza(aCompressStanza->Des());
-						pCompressStanza.Copy(KCompressStanza);
-						pCompressStanza.Insert(62, pDataMethod);
-	
-						WriteToStreamL(pCompressStanza);
-						CleanupStack::PopAndDestroy();
-	
-						aCompressionStarted = true;
+			// Get stream features
+			while(aXmlParser->MoveToNextElement()) {
+				TPtrC8 aFeatureName = aXmlParser->GetElementName();
+				
+				if(aFeatureName.Compare(_L8("starttls")) == 0) {
+					iStreamFeatures |= EStreamFeatureTls;
+					
+					if(aXmlParser->GetStringData().Compare(_L8("<required/>")) == 0) {
+						iStreamFeatures |= EStreamFeatureTlsRequired;
 					}
 				}
-	
-				if(!aCompressionStarted) {
-					// Authenticate
-					SendAuthorization();
+				else if(aXmlParser->MoveToElement(_L8("compression"))) {
+					while(aXmlParser->MoveToElement(_L8("method"))) {
+						TPtrC8 aDataMethod(aXmlParser->GetStringData());
+		
+						if(aDataMethod.Compare(_L8("zlib")) == 0) {
+							iStreamFeatures |= EStreamFeatureCompression;
+							break;
+						}
+					}
+				}
+				else if(aXmlParser->MoveToElement(_L8("mechanisms"))) {
+					while(aXmlParser->MoveToElement(_L8("mechanism"))) {
+						TPtrC8 aDataMechanism(aXmlParser->GetStringData());
+		
+						if(aDataMechanism.Compare(_L8("DIGEST-MD5")) == 0) {
+							iStreamFeatures |= EStreamFeatureDigestMd5;
+						}
+						else if(aDataMechanism.Compare(_L8("PLAIN")) == 0) {
+							iStreamFeatures |= EStreamFeaturePlain;
+						}
+						else if(aDataMechanism.Compare(_L8("ANONYMOUS")) == 0) {
+							iStreamFeatures |= EStreamFeatureAnonymous;
+						}
+					}
+				}
+				else if(aXmlParser->MoveToElement(_L8("bind"))) {
+					iStreamFeatures |= EStreamFeatureBind;
+				}
+				else if(aXmlParser->MoveToElement(_L8("register"))) {
+					iStreamFeatures |= EStreamFeatureRegistration;
 				}
 			}
-			else if(aXmlParser->MoveToElement(_L8("mechanism"))) {
-				// Authenticate
-				SendAuthorization();
+			
+			// Process stream features
+			if(iStreamFeatures & EStreamFeatureTlsRequired) {
+				// TLS negotiation required
+				iNegotiatingSecureConnection = false;
+				WriteToStreamL(_L8("<starttls xmlns='urn:ietf:params:xml:ns:xmpp-tls'/>"));
 			}
-			else {
-				// Bind
-				TPtr8 pResource(iResource->Des());
+			else if(iStreamFeatures & EStreamFeatureCompression) {
+				// Request compression
+				WriteToStreamL(_L8("<compress xmlns='http://jabber.org/protocol/compress'><method>zlib</method></compress>\r\n"));
+			}
+			else if(iStreamFeatures & EStreamFeatureDigestMd5) {
+				// Select DIGEST-MD5 authorization
+				WriteToStreamL(_L8("<auth xmlns='urn:ietf:params:xml:ns:xmpp-sasl' mechanism='DIGEST-MD5'/>\r\n"));
+			}
+			else if(iStreamFeatures & EStreamFeaturePlain) {
+				// Select PLAIN authorization
+				HandlePlainAuthorizationL();
+			}
+			else if(iStreamFeatures & EStreamFeatureTls) {
+				// Start TLS negotiation
+				iNegotiatingSecureConnection = false;
+				WriteToStreamL(_L8("<starttls xmlns='urn:ietf:params:xml:ns:xmpp-tls'/>"));
+			}
+			else if(iStreamFeatures & EStreamFeatureBind) {
+				// Bind resource
+				TPtr8 aResource(iResource->Des());
 				_LIT8(KBindStanza, "<iq type='set' id='bind1'><bind xmlns='urn:ietf:params:xml:ns:xmpp-bind'><resource></resource></bind></iq>\r\n");
 	
-				HBufC8* aBindStanza = HBufC8::NewLC(KBindStanza().Length() + pResource.Length());
+				HBufC8* aBindStanza = HBufC8::NewLC(KBindStanza().Length() + aResource.Length());
 				TPtr8 pBindStanza(aBindStanza->Des());
 				pBindStanza.Copy(KBindStanza);
-				pBindStanza.Insert(83, pResource);
+				pBindStanza.Insert(83, aResource);
 	
 				AddStanzaObserverL(_L8("bind1"), this);
 				WriteToStreamL(pBindStanza);
@@ -607,6 +744,12 @@ void CXmppEngine::HandleXmppStanzaL(const TDesC8& aStanza) {
 			
 			aStanzaIsProcessed = true;
 		}
+		else if(aElement.Compare(_L8("challenge")) == 0) {
+			// Handle authorization challenge
+			HandleDigestMd5AuthorizationL(aXmlParser->GetStringData());
+			
+			aStanzaIsProcessed = true;
+		}
 		else if(aElement.Compare(_L8("success")) == 0) {
 			// Authorization success
 			iLastError = EXmppNone;
@@ -619,13 +762,13 @@ void CXmppEngine::HandleXmppStanzaL(const TDesC8& aStanza) {
 			TPtr8 aUsername(iUsername->Des());
 			TInt aLocate = aUsername.Locate('@');
 			
-			if(aLocate == KErrNotFound) {
+			if(aLocate == KErrNotFound && iStreamFeatures & EStreamFeaturePlain) {
 				// Add xmpp server to username
 				aUsername.Append(_L8("@"));
 				aUsername.Append(*iXmppServer);
-				
-				// Re-authenticate
-				SendAuthorization();
+
+				// Select PLAIN authorization
+				HandlePlainAuthorizationL();
 			}
 			else {		
 				TPtrC8 aAttributeXmlns = aXmlParser->GetStringAttribute(_L8("xmlns"));

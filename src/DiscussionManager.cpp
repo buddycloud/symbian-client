@@ -66,17 +66,20 @@ TInt CThreadedEntry::CommentCount() {
 TBool CThreadedEntry::AddCommentLD(CAtomEntryData* aComment) {
 	TInt aInsertIndex = iComments.Count();
 	
-	for(TInt i = 0; i < iComments.Count(); i++) {
-		// Find insert point
-		if(aComment->GetPublishTime() < iComments[i]->GetPublishTime()) {
-			aInsertIndex = i;
-		}
-
+	for(TInt i = (iComments.Count() - 1); i >= 0; i--) {
 		// Compare id's
 		if(iComments[i]->GetId().Compare(aComment->GetId()) == 0) {
 			CleanupStack::PopAndDestroy(); // aComment
 			
 			return false;
+		}
+		
+		if(iComments[i]->GetPublishTime() > aComment->GetPublishTime()) {
+			// Update insertion point
+			aInsertIndex = i;
+		}
+		else {
+			break;
 		}
 	}
 	
@@ -376,12 +379,7 @@ TBool CDiscussion::AddEntryOrCommentLD(CAtomEntryData* aEntry, const TDesC8& aEn
 			return true;
 		}
 		else {
-			for(TInt i = 0; i < iEntries.Count(); i++) {
-				// Find insert point
-				if(aEntry->GetPublishTime() < iEntries[i]->GetEntry()->GetPublishTime()) {
-					aInsertIndex = i;
-				}
-				
+			for(TInt i = (iEntries.Count() - 1); i >= 0; i--) {
 				// Compare references
 				if(aEntryReference.Length() > 0) {
 					// Find entry reference
@@ -390,11 +388,21 @@ TBool CDiscussion::AddEntryOrCommentLD(CAtomEntryData* aEntry, const TDesC8& aEn
 						return iEntries[i]->AddCommentLD(aEntry);
 					}
 				}
-				else if(aEntry->GetId().Compare(iEntries[i]->GetEntry()->GetId()) == 0) {
-					// Repeated entry
-					CleanupStack::PopAndDestroy(); // aEntry
+				else {
+					if(aEntry->GetId().Compare(iEntries[i]->GetEntry()->GetId()) == 0) {			
+						// Repeated entry
+						CleanupStack::PopAndDestroy(); // aEntry
+						
+						return false;
+					}
 					
-					return false;
+					if(iEntries[i]->GetEntry()->GetPublishTime() > aEntry->GetPublishTime()) {
+						// Update insertion point
+						aInsertIndex = i;
+					}
+					else {
+						break;
+					}
 				}
 			}			
 		}

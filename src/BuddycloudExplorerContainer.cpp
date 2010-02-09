@@ -730,7 +730,7 @@ void CBuddycloudExplorerContainer::DynInitMenuPaneL(TInt aResourceId, CEikMenuPa
 				if(aResultItem->GetResultType() == EExplorerItemPerson) {
 					CFollowingChannelItem* aChannelItem = iExplorerLevels[aLevel]->GetQueriedChannel();
 					
-					if(aChannelItem != NULL && aChannelItem->GetPubsubAffiliation() >= EPubsubAffiliationModerator && 
+					if(aChannelItem && aChannelItem->GetPubsubAffiliation() >= EPubsubAffiliationModerator && 
 							aResultItem->GetChannelAffiliation() < aChannelItem->GetPubsubAffiliation()) {
 						
 						// Allow channel moderation
@@ -972,7 +972,7 @@ void CBuddycloudExplorerContainer::HandleCommandL(TInt aCommand) {
 		CFollowingChannelItem* aChannelItem = iExplorerLevels[aLevel]->GetQueriedChannel();
 		
 		if(aChannelItem && aResultItem->GetResultType() == EExplorerItemPerson) {
-			aResultItem->SetChannelAffiliation(iBuddycloudLogic->ShowAffiliationDialogL(aResultItem->GetId(), aChannelItem->GetId(), aResultItem->GetChannelAffiliation()));		
+			aResultItem->SetChannelAffiliation(iBuddycloudLogic->ShowAffiliationDialogL(aChannelItem->GetId(), aResultItem->GetId(), aResultItem->GetChannelAffiliation()));		
 			aResultItem->SetOverlayId(aResultItem->GetChannelAffiliation() != EPubsubAffiliationOutcast ? 0 : KOverlayLocked);
 			
 			RenderScreen();
