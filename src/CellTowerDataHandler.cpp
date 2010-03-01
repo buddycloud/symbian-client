@@ -2,7 +2,7 @@
 ============================================================================
  Name        : 	CellTowerDataHandler.h
  Author      : 	Ross Savage
- Copyright   : 	Buddycloud 2007
+ Copyright   : 	2007 Buddycloud
  Description : 	Handle data for Cell Tower Identification
  History     : 	1.0
 

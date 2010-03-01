@@ -2,7 +2,7 @@
 ============================================================================
  Name        : 	XmppEngine.h
  Author      : 	Ross Savage
- Copyright   : 	Buddycloud 2007
+ Copyright   : 	2007 Buddycloud
  Description : 	XMPP Engine for talking to an XMPP protocol server
  History     : 	1.0
 

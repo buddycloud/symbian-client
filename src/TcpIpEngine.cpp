@@ -2,7 +2,7 @@
 ============================================================================
  Name        : 	TcpIpEngine.cpp
  Author      : 	Ross Savage
- Copyright   : 	Buddycloud 2007
+ Copyright   : 	2007 Buddycloud
  Description : 	TCP/IP Engine for Asynchronous Reading and Writing from/to
  		a TCP/IP Socket.
  History     : 	1.0

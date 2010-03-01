@@ -2,7 +2,7 @@
 ============================================================================
  Name        : BuddycloudPreferencesSettingsList.h
  Author      : Ross Savage
- Copyright   : Buddycloud 2008
+ Copyright   : 2008 Buddycloud
  Description : Declares Settings List
 ============================================================================
 */
@@ -82,7 +82,6 @@ TKeyResponse CBuddycloudPreferencesSettingsList::OfferKeyEventL(const TKeyEvent&
 
 void CBuddycloudPreferencesSettingsList::EditItemL(TInt aIndex, TBool aCalledFromMenu) {
 	CAknSettingItemArray* aItemArray = SettingItemArray();
-	TInt aIdentifier = ((*aItemArray)[aIndex])->Identifier();
 	
 	CAknSettingItemList::EditItemL(aIndex, aCalledFromMenu);
 	

@@ -2,7 +2,7 @@
  ============================================================================
  Name		 : AudioPlayer.h
  Author	     : Ross Savage
- Copyright   : Buddycloud 2009
+ Copyright   : 2009 Buddycloud
  Description : Loads & plays an audio clip
  ============================================================================
  */

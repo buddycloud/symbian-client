@@ -2,7 +2,7 @@
 ============================================================================
  Name        : 	NotificationEngine.cpp
  Author      : 	Ross Savage
- Copyright   : 	Buddycloud 2008
+ Copyright   : 	2008 Buddycloud
  Description : 	Notification Engine to alert the user via vibration
  History     : 	1.0
 

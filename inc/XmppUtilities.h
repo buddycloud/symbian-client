@@ -2,7 +2,7 @@
 ============================================================================
  Name        : 	XmppUtilities.h
  Author      : 	Ross Savage
- Copyright   : 	Buddycloud 2009
+ Copyright   : 	2009 Buddycloud
  Description : 	XMPP Pubsub utilities
  History     : 	1.0
 

@@ -2,7 +2,7 @@
 ============================================================================
  Name        : 	BuddycloudNearby.cpp
  Author      : 	Ross Savage
- Copyright   : 	Buddycloud 2008
+ Copyright   : 	2008 Buddycloud
  Description : 	Storage of Buddycloud nearby data
  History     : 	1.0
 

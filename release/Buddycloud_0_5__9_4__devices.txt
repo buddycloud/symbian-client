@@ -1,0 +1,13 @@
+========================================
+=             SYMBIAN SIGNED           =
+========================================
+
+RELEASE NOTES
+=============
+
+Application version:	1.00.00
+
+Phone(s) Tested On:	Nokia 5530, 5800, N97, N97 mini, X6
+
+Phone(s) concerned:	All
+Release note:		This application is designed to be run on Symbian Series60 5th Edition phones.

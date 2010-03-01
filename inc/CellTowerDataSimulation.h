@@ -2,7 +2,7 @@
 ============================================================================
  Name        : 	CellTowerDataSimulation.h
  Author      : 	Ross Savage
- Copyright   : 	Buddycloud 2008
+ Copyright   : 	2008 Buddycloud
  Description : 	Simulation of data from Cell Towers
  History     : 	1.0
 

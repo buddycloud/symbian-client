@@ -2,7 +2,7 @@
 ============================================================================
  Name        : 	CompressionEngine.cpp
  Author      : 	Ross Savage
- Copyright   : 	Buddycloud 2007
+ Copyright   : 	2007 Buddycloud
  Description : 	Compression Engine for inflating & deflating zlib streams
  History     : 	1.0
 

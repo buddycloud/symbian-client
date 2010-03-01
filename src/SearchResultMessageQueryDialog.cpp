@@ -2,7 +2,7 @@
 ============================================================================
  Name        : 	SearchResultMessageQueryDialog.cpp
  Author      : 	Ross Savage
- Copyright   : 	Buddycloud 2008
+ Copyright   : 	2008 Buddycloud
  Description : 	Message Query Dialog for Search Results
  History     : 	1.0
 

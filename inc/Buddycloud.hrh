@@ -2,7 +2,7 @@
 ============================================================================
  Name        : Buddycloud.hrh
  Author      : Ross Savage
- Copyright   : Buddycloud 2007
+ Copyright   : 2007 Buddycloud
  Description : This file contains declarations for constants of Buddycloud.
                The file can be included in C++ or resource file.
 ============================================================================

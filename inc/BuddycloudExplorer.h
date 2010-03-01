@@ -2,7 +2,7 @@
 ============================================================================
  Name        : 	BuddycloudExplorer.h
  Author      : 	Ross Savage
- Copyright   : 	Buddycloud 2009
+ Copyright   : 	2009 Buddycloud
  Description : 	Storage types for Buddycloud explorer data
  History     : 	1.0
 
@@ -54,7 +54,7 @@ class CExplorerStanzaBuilder {
 		static void FormatBroadcasterXmppStanza(TDes8& aString, TInt aStampId, const TDesC8& aNodeId, TInt aRsmMax = 30);
 		
 		// Maitred stanza
-		static void AppendMaitredXmppStanza(TDes8& aString, TInt aStampId, const TDesC8& aId,  const TDesC8& aVar);
+		static void AppendMaitredXmppStanza(TDes8& aString, TInt aStampId, const TDesC8& aId,  const TDesC8& aVar, TInt aRsmMax = 30);
 	
 	public:
 		static void AppendXmlLangToStanza(TDes8& aString, const TDesC8& aLang);

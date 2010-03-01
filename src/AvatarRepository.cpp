@@ -2,7 +2,7 @@
 ============================================================================
  Name        : 	AvatarRepository.cpp
  Author      : 	Ross Savage
- Copyright   : 	Buddycloud 2008
+ Copyright   : 	2008 Buddycloud
  Description : 	Management of Avatar Images
  History     : 	1.0
 

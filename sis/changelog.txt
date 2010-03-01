@@ -5,11 +5,28 @@ Any problems please send 'C:\logs\Buddycloud\LogicLog.txt' to ross@buddycloud.co
 
 ----------
 
+1.00.08
+
+- Add rsm element into maitred calls in CBuddycloudExplorerContainer
+
+1.00.07
+
+- Added RAM heap monitoring in CDiscussionManager to determine forced discussion caching
+
+1.00.06
+
+- Enable google's special 'google:queue' presence queuing feature for google servers
+- Update German translation
+
+1.00.05
+
+- During <stream:features/> handling <bind/> takes higher priority over <starttls/>
+
 1.00.04
 
-- Rework of stream:features handling in CXmppEngine (also fixes a parsing bug)
+- Rework of <stream:features/> handling in CXmppEngine (also fixes a parsing bug)
 - Now picking authorization TLS-REQUIRED > DIGEST-MD5 > PLAIN > TLS and COMPRESSION when possible
-- Implementatio of HandleDigestMd5AuthorizationL in CXmppEngine to process DIGEST-MD5 authorization
+- Implementation of HandleDigestMd5AuthorizationL in CXmppEngine to process DIGEST-MD5 authorization
 
 1.00.03
 

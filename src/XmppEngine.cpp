@@ -2,7 +2,7 @@
 ============================================================================
  Name        : 	XmppEngine.cpp
  Author      : 	Ross Savage
- Copyright   : 	Buddycloud 2007
+ Copyright   : 	2007 Buddycloud
  Description : 	XMPP Engine for talking to an XMPP protocol server
  History     : 	1.0
 
@@ -708,11 +708,6 @@ void CXmppEngine::HandleXmppStanzaL(const TDesC8& aStanza) {
 				// Select PLAIN authorization
 				HandlePlainAuthorizationL();
 			}
-			else if(iStreamFeatures & EStreamFeatureTls) {
-				// Start TLS negotiation
-				iNegotiatingSecureConnection = false;
-				WriteToStreamL(_L8("<starttls xmlns='urn:ietf:params:xml:ns:xmpp-tls'/>"));
-			}
 			else if(iStreamFeatures & EStreamFeatureBind) {
 				// Bind resource
 				TPtr8 aResource(iResource->Des());
@@ -726,6 +721,11 @@ void CXmppEngine::HandleXmppStanzaL(const TDesC8& aStanza) {
 				AddStanzaObserverL(_L8("bind1"), this);
 				WriteToStreamL(pBindStanza);
 				CleanupStack::PopAndDestroy();
+			}
+			else if(iStreamFeatures & EStreamFeatureTls) {
+				// Start TLS negotiation
+				iNegotiatingSecureConnection = false;
+				WriteToStreamL(_L8("<starttls xmlns='urn:ietf:params:xml:ns:xmpp-tls'/>"));
 			}
 			
 			aStanzaIsProcessed = true;

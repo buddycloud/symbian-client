@@ -2,7 +2,7 @@
 ============================================================================
  Name        : BuddycloudEditPlaceList.h
  Author      : Ross Savage
- Copyright   : Buddycloud 2008
+ Copyright   : 2008 Buddycloud
  Description : Declares Edit Place List
 ============================================================================
 */

@@ -2,7 +2,7 @@
 ============================================================================
  Name        : BuddycloudMessagingContainer.cpp
  Author      : Ross Savage
- Copyright   : Buddycloud 2008
+ Copyright   : 2008 Buddycloud
  Description : Declares Messaging Container
 ============================================================================
 */
@@ -325,11 +325,12 @@ void CBuddycloudMessagingContainer::TimerExpired(TInt aExpiryId) {
 #endif
 	}
 	else if(aExpiryId == KTimeTimerId) {
+		TTime aTime;
+		aTime.HomeTime();
+
 #ifdef __3_2_ONWARDS__
 		SetTitleL(iMessagingObject.iTitle);
 #else
-		TTime aTime;
-		aTime.HomeTime();
 		TBuf<32> aTextTime;
 		aTime.FormatL(aTextTime, _L("%J%:1%T%B"));
 	
@@ -342,13 +343,18 @@ void CBuddycloudMessagingContainer::TimerExpired(TInt aExpiryId) {
 			pTextTimeTopic.Append(iMessagingObject.iTitle);
 		}
 	
-		SetTitleL(pTextTimeTopic);
-	
-		TDateTime aDateTime = aTime.DateTime();
-		iTimer->After((60 - aDateTime.Second() + 1) * 1000);
-	
+		SetTitleL(pTextTimeTopic);	
 		CleanupStack::PopAndDestroy(); // aTextTimeTopic
 #endif
+	
+		// Rewrap 
+		if(iEntries.Count() > 0) {
+			RenderWrappedText(iSelectedItem);
+			RenderScreen();
+		}
+		
+		TDateTime aDateTime = aTime.DateTime();
+		iTimer->After((60 - aDateTime.Second() + 1) * 1000000);
 	}
 }
 
@@ -742,19 +748,24 @@ void CBuddycloudMessagingContainer::RenderWrappedText(TInt aIndex) {
 				
 				// Time & date
 				TTime aTimeReceived = aEntry->GetPublishTime();
-				TTime aTimeNow;
+				TTime aTimeNow = iBuddycloudLogic->GetTime();
 				
-				aTimeReceived += User::UTCOffset();
-				aTimeNow.HomeTime();
-	
-				if(aTimeReceived.DayNoInYear() == aTimeNow.DayNoInYear()) {
-					aTimeReceived.FormatL(aBuf, _L("%J%:1%T%B"));
+				if(aTimeNow < aTimeReceived || aTimeReceived > (aTimeNow - TTimeIntervalMinutes(1))) {
+					aBuf.Append(_L("Seconds ago"));
 				}
-				else if(aTimeReceived > aTimeNow - TTimeIntervalDays(6)) {
-					aTimeReceived.FormatL(aBuf, _L("%E at %J%:1%T%B"));
+				else if(aTimeReceived >= (aTimeNow - TTimeIntervalHours(1))) {
+					TTimeIntervalMinutes aAfter;
+					aTimeNow.MinutesFrom(aTimeReceived, aAfter);
+					aBuf.Format(_L("%dm ago"), aAfter.Int());
+				}
+				else if(aTimeReceived >= (aTimeNow - TTimeIntervalDays(1))) {
+					TTimeIntervalHours aAfter;
+					aTimeNow.HoursFrom(aTimeReceived, aAfter);
+					aBuf.Format(_L("%dh ago"), aAfter.Int());
 				}
 				else {
-					aTimeReceived.FormatL(aBuf, _L("%J%:1%T%B on %F%N %*D%X"));
+					TTimeIntervalDays aAfter = aTimeNow.DaysFrom(aTimeReceived);
+					aBuf.Format(_L("%dd ago"), aAfter.Int());
 				}
 				
 				TPtrC aLocation(aEntry->GetLocation()->GetString(EGeolocText));
@@ -962,7 +973,7 @@ void CBuddycloudMessagingContainer::RenderListItems() {
 	}
 	else {
 		// No messages
-		_LIT(KNoMessages, "(No Messages)");
+		_LIT(KNoMessages, "No posts");
 		iBufferGc->SetPenColor(iColourText);
 		iBufferGc->UseFont(iSecondaryBoldFont);
 		iBufferGc->DrawText(KNoMessages, TPoint(iLeftBarSpacer + ((iRect.Width() - iLeftBarSpacer - iRightBarSpacer) / 2) - (iSecondaryBoldFont->TextWidthInPixels(KNoMessages) / 2), (iRect.Height() / 2) + (iSecondaryBoldFont->HeightInPixels() / 2)));

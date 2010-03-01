@@ -2,7 +2,7 @@
 ============================================================================
  Name        : 	ConnectionMonitor.h
  Author      : 	Ross Savage
- Copyright   : 	Buddycloud 2007
+ Copyright   : 	2007 Buddycloud
  Description : 	Monitor when data connections go up & down
  History     : 	1.0
 

@@ -2,7 +2,7 @@
 ============================================================================
  Name        : 	XmlParser.cpp
  Author      : 	Ross Savage
- Copyright   : 	Buddycloud 2007
+ Copyright   : 	2007 Buddycloud
  Description : 	XML Stream & Stanza Parser customized for XMPP
  History     : 	1.0
 

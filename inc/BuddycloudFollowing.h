@@ -2,7 +2,7 @@
 ============================================================================
  Name        : 	BuddycloudFollowing.h
  Author      : 	Ross Savage
- Copyright   : 	Buddycloud 2008
+ Copyright   : 	2008 Buddycloud
  Description : 	Storage of Buddycloud following based data
  History     : 	1.0
 

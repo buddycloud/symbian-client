@@ -2,7 +2,7 @@
 ============================================================================
  Name        : 	LocationInterfaces.h
  Author      : 	Ross Savage
- Copyright   : 	Buddycloud 2010
+ Copyright   : 	2010 Buddycloud
  Description : 	Location interfaces for access to location engine data
  History     : 	1.0
 

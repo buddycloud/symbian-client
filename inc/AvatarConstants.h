@@ -2,7 +2,7 @@
 ============================================================================
  Name        : 	AvatarConstants.h
  Author      : 	Ross Savage
- Copyright   : 	Buddycloud 2009
+ Copyright   : 	2009 Buddycloud
  Description : 	Avatar Constants
  History     : 	1.0
 

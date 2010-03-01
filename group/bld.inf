@@ -2,7 +2,7 @@
 ============================================================================
  Name        : bld.inf
  Author      : Ross Savage
- Copyright   : Buddycloud 2007
+ Copyright   : 2007 Buddycloud
  Description : This file provides the information required for building the
                whole of a Buddycloud.
 ============================================================================

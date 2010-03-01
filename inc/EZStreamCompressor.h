@@ -2,7 +2,7 @@
 ============================================================================
  Name        : 	EZStreamCompressor.h
  Author      : 	Ross Savage
- Copyright   : 	Buddycloud 2007
+ Copyright   : 	2007 Buddycloud
  Description : 	Compression Engine for deflating streams
  History     : 	1.0
 

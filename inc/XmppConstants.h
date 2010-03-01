@@ -2,7 +2,7 @@
 ============================================================================
  Name        : 	XmppConstants.h
  Author      : 	Ross Savage
- Copyright   : 	Buddycloud 2009
+ Copyright   : 	2009 Buddycloud
  Description : 	XMPP Constants & Enumerations
  History     : 	1.0
 

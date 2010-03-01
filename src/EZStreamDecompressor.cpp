@@ -2,7 +2,7 @@
 ============================================================================
  Name        : 	EZStreamDecompressor.cpp
  Author      : 	Ross Savage
- Copyright   : 	Buddycloud 2007
+ Copyright   : 	2007 Buddycloud
  Description : 	Compression Engine for inflating streams
  History     : 	1.0
 

@@ -2,7 +2,7 @@
 ============================================================================
  Name        : BuddycloudApplication.h
  Author      : Ross Savage
- Copyright   : Buddycloud 2007
+ Copyright   : 2007 Buddycloud
  Description : Declares main application class.
 ============================================================================
 */

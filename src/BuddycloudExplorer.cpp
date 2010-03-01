@@ -2,7 +2,7 @@
 ============================================================================
  Name        : 	BuddycloudExplorer.h
  Author      : 	Ross Savage
- Copyright   : 	Buddycloud 2009
+ Copyright   : 	2009 Buddycloud
  Description : 	Storage types for Buddycloud explorer data
  History     : 	1.0
 
@@ -41,11 +41,11 @@ void CExplorerStanzaBuilder::FormatBroadcasterXmppStanza(TDes8& aString, TInt aS
 	aString.Insert(8, KBuddycloudPubsubServer);
 }	
 
-void CExplorerStanzaBuilder::AppendMaitredXmppStanza(TDes8& aString, TInt aStampId, const TDesC8& aItemId,  const TDesC8& aItemVar) {
-	_LIT8(KMaitredStanza, "<iq to='maitred.buddycloud.com' type='get' id='%02d:%02d'><query xmlns='http://buddycloud.com/protocol/channels'><items id='' var=''/></query></iq>\r\n");
-	aString.AppendFormat(KMaitredStanza, EXmppIdGetMaitredList, aStampId);
-	aString.Insert(aString.Length() - 25, aItemId);
-	aString.Insert(aString.Length() - 18, aItemVar);
+void CExplorerStanzaBuilder::AppendMaitredXmppStanza(TDes8& aString, TInt aStampId, const TDesC8& aItemId,  const TDesC8& aItemVar, TInt aRsmMax) {
+	_LIT8(KMaitredStanza, "<iq to='maitred.buddycloud.com' type='get' id='%02d:%02d'><query xmlns='http://buddycloud.com/protocol/channels'><items id='$ID' var='$VAR'/><set xmlns='http://jabber.org/protocol/rsm'><max>%d</max></set></query></iq>\r\n");
+	aString.Format(KMaitredStanza, EXmppIdGetMaitredList, aStampId, aRsmMax);
+	aString.Replace(aString.Find(_L8("$ID")), 3, aItemId);
+	aString.Replace(aString.Find(_L8("$VAR")), 4, aItemVar);
 }
 
 void CExplorerStanzaBuilder::AppendXmlLangToStanza(TDes8& aString, const TDesC8& aLang) {

@@ -2,7 +2,7 @@
 ============================================================================
  Name        : 	BuddycloudLogic.h
  Author      : 	Ross Savage
- Copyright   : 	Buddycloud 2007
+ Copyright   : 	2007 Buddycloud
  Description : 	Access for Buddycloud Client UI to Buddycloud low level
  				operations
  History     : 	1.0
@@ -246,6 +246,9 @@ class CBuddycloudLogic : public CBase, MLocationEngineNotification, MTimeInterfa
 
 	public: // From MDiscussionReadObserver
 		void DiscussionRead(TDesC& aDiscussionId, TInt aItemId);
+#ifdef _DEBUG
+		void DiscussionDebug(const TDesC8& aMessage);
+#endif
 
 	private: // Reading/Writing state to file
 		void LoadSettingsAndItems();
@@ -424,7 +427,7 @@ class CBuddycloudLogic : public CBase, MLocationEngineNotification, MTimeInterfa
        
         // Account settings
         TBuf<32> iSettingFullName;
-         TBuf<64> iSettingUsername;
+        TBuf<64> iSettingUsername;
         TBuf<32> iSettingPassword;
         TBuf<64> iSettingXmppServer;
         

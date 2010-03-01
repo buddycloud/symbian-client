@@ -2,7 +2,7 @@
 ============================================================================
  Name        : 	GeolocData.h
  Author      : 	Ross Savage
- Copyright   : 	Buddycloud 2009
+ Copyright   : 	2009 Buddycloud
  Description : 	Geoloc data store
  History     : 	1.0
 ============================================================================

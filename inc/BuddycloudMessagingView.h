@@ -2,7 +2,7 @@
 ============================================================================
  Name        : BuddycloudMessagingView.h
  Author      : Ross Savage
- Copyright   : Buddycloud 2008
+ Copyright   : 2008 Buddycloud
  Description : Declares Messaging View
 ============================================================================
 */

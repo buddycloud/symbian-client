@@ -2,7 +2,7 @@
 ============================================================================
  Name        : 	PhoneUtilities.h
  Author      : 	Ross Savage
- Copyright   : 	Buddycloud 2008
+ Copyright   : 	2008 Buddycloud
  Description : 	Get Phone Model and Firmware versions
  History     : 	1.0
 

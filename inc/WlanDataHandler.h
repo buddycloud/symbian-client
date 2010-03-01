@@ -2,7 +2,7 @@
 ============================================================================
  Name        : 	WlanDataHandler.h
  Author      : 	Ross Savage
- Copyright   : 	Buddycloud 2007
+ Copyright   : 	2007 Buddycloud
  Description : 	Handle data for Wlan resource
  History     : 	1.0
 

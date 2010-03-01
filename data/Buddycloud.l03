@@ -2,7 +2,7 @@
 ============================================================================
  Name        : Buddycloud.r01
  Author      : Ross Savage
- Copyright   : Buddycloud 2008
+ Copyright   : 2008 Buddycloud
  Description : Localisation File : English
  
                Please only translate text between quotations e.g. "Test"
@@ -36,7 +36,7 @@ rls_string r_string_item_newchannel "Neuer Channel"
 rls_string r_string_item_newplace "Neuer Platz"
 
 // Menu: Settings & Edit place
-rls_string r_string_options_edititem "Wechseln"
+rls_string r_string_options_edititem "Ändern"
 rls_string r_string_options_searchplace "Nach Details suchen"
 rls_string r_string_options_remove "Entfernen"
 rls_string r_string_options_delete "Löschen"
@@ -138,7 +138,7 @@ rls_string r_string_options_explore "Erkunden"
 rls_string r_string_item_seefollowers "Follower anzeigen"
 rls_string r_string_item_seemoderators "Wer moderiert?"
 rls_string r_string_item_seefollowing "Channel Mitgliedschaft"
-rls_string r_string_item_seemoderating "Moderatoren sehen"
+rls_string r_string_item_seemoderating "Moderierte Channel"
 rls_string r_string_item_seeproducing "Erstellte Channel"
 rls_string r_string_item_seenearby "Wer ist in der Nähe"
 
@@ -151,10 +151,10 @@ rls_string r_string_title_nearbyto "In der Nähe von $OBJECT"
 
 rls_string r_string_note_requesting "Daten werden geladen..."
 rls_string r_string_note_channelrank "Platz"
-rls_string r_string_note_channelsince "Tag im Netz"
+rls_string r_string_note_channelsince "Tage im Netz"
 rls_string r_string_note_channelowner "Erstellt von"
 rls_string r_string_note_channellocation "Standort"
-rls_string r_string_note_channelfollowers "Followern"
+rls_string r_string_note_channelfollowers "Follower"
 
 // Menu: Channels
 rls_string r_string_list_nearbytoyou "Umgebung erkunden"
@@ -217,8 +217,8 @@ rls_string r_string_settings_itemlist_groupnever "Nie benachrichtigen"
 rls_string r_string_settings_itemlist_groupfirstonly "Erste ungelesene Mitteilung"
 rls_string r_string_settings_itemlist_groupallmessages "Alle Nachrichten"
 
-rls_string r_string_settings_itemlist_privatemessagetone "Benachrichtigung für private Mitteilungen"
-rls_string r_string_settings_itemlist_channelposttone "Benachrichtigung für Channel"
+rls_string r_string_settings_itemlist_privatemessagetone "Ton für private Mitteilungen"
+rls_string r_string_settings_itemlist_channelposttone "Ton für neuen Beitrag"
 rls_string r_string_settings_itemlist_directreplytone "Antwortton"
 rls_string r_string_settings_itemlist_tonenone "Stumm"
 rls_string r_string_settings_itemlist_tonedefault "Standard Sound"

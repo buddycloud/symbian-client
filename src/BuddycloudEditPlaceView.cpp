@@ -2,7 +2,7 @@
 ============================================================================
  Name        : BuddycloudEditPlaceView.cpp
  Author      : Ross Savage
- Copyright   : Buddycloud 2007
+ Copyright   : 2007 Buddycloud
  Description : Declares Edit Place View
 ============================================================================
 */

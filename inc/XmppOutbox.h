@@ -2,7 +2,7 @@
 ============================================================================
  Name        : 	XmppOutbox.h
  Author      : 	Ross Savage
- Copyright   : 	Buddycloud 2009
+ Copyright   : 	2009 Buddycloud
  Description : 	XMPP Outbox for storage & management of outgoing messages
  History     : 	1.0
 

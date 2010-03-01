@@ -2,7 +2,7 @@
 ============================================================================
  Name        : Buddycloud.pan
  Author      : Ross Savage
- Copyright   : Buddycloud 2007
+ Copyright   : 2007 Buddycloud
  Description : Buddycloud Panic
 ============================================================================
 */

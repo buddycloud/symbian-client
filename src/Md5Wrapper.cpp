@@ -2,7 +2,7 @@
 ============================================================================
  Name        : 	Md5Wrapper.cpp
  Author      : 	Ross Savage
- Copyright   : 	Buddycloud 2010
+ Copyright   : 	2010 Buddycloud
  Description : 	Wrapper class for CMD5
  History     : 	1.0
 

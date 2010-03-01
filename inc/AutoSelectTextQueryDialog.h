@@ -2,7 +2,7 @@
 ============================================================================
  Name        : 	AutoSelectTextQueryDialog.h
  Author      : 	Ross Savage
- Copyright   : 	Buddycloud 2008
+ Copyright   : 	2008 Buddycloud
  Description : 	Text Query Dialog for Auto Selection of existing values
  History     : 	1.0
 

@@ -2,7 +2,7 @@
 ============================================================================
  Name        : 	LocationEngine.cpp
  Author      : 	Ross Savage
- Copyright   : 	Buddycloud 2007
+ Copyright   : 	2007 Buddycloud
  Description : 	Location Engine for determining the clients location
                 through multiple resources
 ============================================================================

@@ -2,7 +2,7 @@
 ============================================================================
  Name        : 	DiscussionManager.h
  Author      : 	Ross Savage
- Copyright   : 	Buddycloud 2009
+ Copyright   : 	2009 Buddycloud
  Description : 	Definition & management of discussions
  History     : 	1.0
 
@@ -79,7 +79,10 @@ class CThreadedEntry : public CBase {
 
 class MDiscussionReadObserver {
 	public:
-		virtual void DiscussionRead(TDesC& aDiscussionId, TInt aItemId) = 0;
+		virtual void DiscussionRead(TDesC& aDiscussionId, TInt aItemId) = 0;		
+#ifdef _DEBUG
+		virtual void DiscussionDebug(const TDesC8& aMessage) = 0;
+#endif
 };
 
 class MDiscussionUpdateObserver {
@@ -211,6 +214,9 @@ class CDiscussionManager : public CBase, MTimeoutNotification {
 		
 	public: // From MTimeoutNotification
 		void TimerExpired(TInt aExpiryId);
+		
+	private:
+		TBool CompressionNeeded();
 		
 	protected:
 		RPointerArray<CDiscussion> iDiscussions;

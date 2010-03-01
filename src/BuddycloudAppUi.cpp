@@ -2,7 +2,7 @@
 ============================================================================
  Name        : BuddycloudAppUi.cpp
  Author      : Ross Savage
- Copyright   : Buddycloud 2007
+ Copyright   : 2007 Buddycloud
  Description : CBuddycloudAppUi implementation
 ============================================================================
 */

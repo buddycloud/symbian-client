@@ -2,7 +2,7 @@
 ============================================================================
  Name        : 	TextUtilities.h
  Author      : 	Ross Savage
- Copyright   : 	Buddycloud 2008
+ Copyright   : 	2008 Buddycloud
  Description : 	Text Utilities for wrapping & characher coding
  History     : 	1.0
 

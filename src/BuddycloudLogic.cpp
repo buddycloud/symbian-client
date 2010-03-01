@@ -2,7 +2,7 @@
 ============================================================================
  Name        : 	BuddycloudLogic.cpp
  Author      : 	Ross Savage
- Copyright   : 	Buddycloud 2007
+ Copyright   : 	2007 Buddycloud
  Description : 	Access for Buddycloud Client UI to Buddycloud low level
  				operations
  History     : 	1.0
@@ -1304,6 +1304,11 @@ void CBuddycloudLogic::ProcessPubsubSubscriptionsL() {
 	
 	// TODO: Workaround for google
 	SendPresenceToPubsubL(KNullDesC8);
+	
+	// Enable google presence queuing
+	if(iSettingXmppServer.Match(_L("*google.com*")) != KErrNotFound) {
+		iXmppEngine->SendAndForgetXmppStanza(_L8("<iq type='set'><query xmlns='google:queue'><enable/></query></iq>"), false);
+	}
 }
 
 void CBuddycloudLogic::CollectUsersPubsubNodeAffiliationsL(const TDesC8& aAfter) {
@@ -2746,6 +2751,12 @@ void CBuddycloudLogic::DiscussionRead(TDesC& /*aDiscussionId*/, TInt aItemId) {
 		}
 	}
 }
+
+#ifdef _DEBUG
+void CBuddycloudLogic::DiscussionDebug(const TDesC8& aMessage) {
+	WriteToLog(aMessage);
+}
+#endif
 
 /*
 ----------------------------------------------------------------------------
@@ -4647,6 +4658,11 @@ void CBuddycloudLogic::XmppStateChanged(TXmppEngineState aState) {
 			
 			// TODO: Workaround for google
 			SendPresenceToPubsubL(KNullDesC8);
+						
+			// Enable google presence queuing
+			if(iSettingXmppServer.Match(_L("*google.com*")) != KErrNotFound) {
+				iXmppEngine->SendAndForgetXmppStanza(_L8("<iq type='set'><query xmlns='google:queue'><enable/></query></iq>"), false);
+			}
 		}
 		
 		// Set timer

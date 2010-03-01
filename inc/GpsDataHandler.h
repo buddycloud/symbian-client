@@ -2,7 +2,7 @@
 ============================================================================
  Name        : 	GpsDataHandler.h
  Author      : 	Ross Savage
- Copyright   : 	Buddycloud 2007
+ Copyright   : 	2007 Buddycloud
  Description : 	Handle data for Gps resource
  History     : 	1.0
 

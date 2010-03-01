@@ -2,7 +2,7 @@
 ============================================================================
  Name        : 	DiscussionManager.cpp
  Author      : 	Ross Savage
- Copyright   : 	Buddycloud 2009
+ Copyright   : 	2009 Buddycloud
  Description : 	Definition & management of discussions
  History     : 	1.0
 
@@ -273,6 +273,14 @@ void CDiscussion::CompressL(TBool aForced) {
 
 				iDiscussionInMemory = false;
 				iDiscussionIndexer = 0;
+				
+#ifdef _DEBUG
+				if(iDiscussionReadObserver) {
+					TBuf8<256> aBuf;
+					aBuf.Format(_L8("DISC  Discussion %d (%d) saved to file and uncached"), iItemId, aForced);
+					iDiscussionReadObserver->DiscussionDebug(aBuf);
+				}
+#endif
 			}
 		}
 	}
@@ -621,6 +629,14 @@ void CDiscussion::ReadDiscussionToMemoryL() {
 
 			CleanupStack::PopAndDestroy(2); // aXmlParser, aBuf
 			CleanupStack::PopAndDestroy(&aFile);
+			
+#ifdef _DEBUG
+			if(iDiscussionReadObserver) {
+				TBuf8<256> aBuf;
+				aBuf.Format(_L8("DISC  Discussion %d cached to memory: %d bytes"), iItemId, aFileSize);
+				iDiscussionReadObserver->DiscussionDebug(aBuf);
+			}
+#endif
 		}
 	}
 }
@@ -730,6 +746,7 @@ void CDiscussionManager::ConstructL() {
 }
 
 CDiscussion* CDiscussionManager::GetDiscussionL(const TDesC& aId) {
+	TBool aCompressionNeeded = CompressionNeeded();
 	CDiscussion* aDiscussion;
 	
 	// Find discussion from cache
@@ -742,6 +759,11 @@ CDiscussion* CDiscussionManager::GetDiscussionL(const TDesC& aId) {
 			
 			return aDiscussion;
 		}
+		else if(aCompressionNeeded) {
+			iDiscussions[i]->CompressL(true);
+			
+			aCompressionNeeded = CompressionNeeded();
+		}		
 	}
 	
 	aDiscussion = CDiscussion::NewLC(aId);
@@ -774,5 +796,17 @@ void CDiscussionManager::CompressDiscussionL(TBool aForced) {
 }
 
 void CDiscussionManager::TimerExpired(TInt /*aExpiryId*/) {
-	CompressDiscussionL();	
+	CompressDiscussionL(CompressionNeeded());	
+}
+
+TBool CDiscussionManager::CompressionNeeded() {
+	RHeap aHeap = User::Heap();
+	TReal aMaxHeapSize(aHeap.MaxLength());
+	TReal aHeapSize(aHeap.Size());
+	
+	if(((100.0 / aMaxHeapSize) * aHeapSize) > 85.0) {
+		return true;
+	}
+	
+	return false;
 }

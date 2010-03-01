@@ -2,7 +2,7 @@
 ============================================================================
  Name        : BuddycloudChannelInfoContainer.cpp
  Author      : Ross Savage
- Copyright   : Buddycloud 2010
+ Copyright   : 2010 Buddycloud
  Description : Declares Channel Info Container
 ============================================================================
 */

@@ -2,7 +2,7 @@
 ============================================================================
  Name        : 	Timer.cpp
  Author      : 	Ross Savage
- Copyright   : 	Buddycloud 2007
+ Copyright   : 	2007 Buddycloud
  Description : 	Custom timer & periodic classes with observers
  History     : 	1.0
  		

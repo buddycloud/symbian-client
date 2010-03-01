@@ -2,7 +2,7 @@
 ============================================================================
  Name        : 	BtDataHandler.h
  Author      : 	Ross Savage
- Copyright   : 	Buddycloud 2008
+ Copyright   : 	2008 Buddycloud
  Description : 	Handle data for Bluetooth resource
  History     : 	1.0
 

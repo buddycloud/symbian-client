@@ -2,7 +2,7 @@
 ============================================================================
  Name        : 	TimeUtilities.h
  Author      : 	Ross Savage
- Copyright   : 	Buddycloud 2008
+ Copyright   : 	2008 Buddycloud
  Description : 	Encode and Decode formatted time
  History     : 	1.0
 

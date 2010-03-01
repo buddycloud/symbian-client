@@ -2,7 +2,7 @@
 ============================================================================
  Name        : BuddycloudListComponent.cpp
  Author      : Ross Savage
- Copyright   : Buddycloud 2008
+ Copyright   : 2008 Buddycloud
  Description : Declares Nearby Container
 ============================================================================
 */
@@ -209,7 +209,7 @@ void CBuddycloudListComponent::TimerExpired(TInt aExpiryId) {
 		SetTitleL(aTextTime);
 	
 		TDateTime aDateTime = aTime.DateTime();
-		iTimer->After((60-aDateTime.Second()+1)*1000);
+		iTimer->After((60 - aDateTime.Second() + 1) * 1000000);
 #endif
 	}
 }

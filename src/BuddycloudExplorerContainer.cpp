@@ -2,7 +2,7 @@
 ============================================================================
  Name        : BuddycloudExplorerContainer.cpp
  Author      : Ross Savage
- Copyright   : Buddycloud 2008
+ Copyright   : 2008 Buddycloud
  Description : Declares Explorer Container
 ============================================================================
 */
@@ -259,10 +259,14 @@ void CBuddycloudExplorerContainer::RequestMoreResultsL() {
 			TPtrC8 aEncId(iTextUtilities->UnicodeToUtf8L(aResultItem->GetId()));
 			
 			// Build query
+			TBuf8<32> aRsmIndexElement;
+			aRsmIndexElement.Format(_L8("<index>%d</index>"), iExplorerLevels[aLevel]->iResultItems.Count());
+			
 			_LIT8(KRsmAfterElement, "<after></after>");
-			HBufC8* aNextResultsStanza = HBufC8::NewLC(iExplorerLevels[aLevel]->GetQueriedStanza().Length() + KRsmAfterElement().Length() + aEncId.Length());
+			HBufC8* aNextResultsStanza = HBufC8::NewLC(iExplorerLevels[aLevel]->GetQueriedStanza().Length() + aRsmIndexElement.Length() + KRsmAfterElement().Length() + aEncId.Length());
 			TPtr8 pNextResultsStanza(aNextResultsStanza->Des());
 			pNextResultsStanza.Append(iExplorerLevels[aLevel]->GetQueriedStanza());
+			pNextResultsStanza.Insert(aLocate, aRsmIndexElement);
 			pNextResultsStanza.Insert(aLocate, KRsmAfterElement);
 			pNextResultsStanza.Insert(aLocate + 7, aEncId);
 			

@@ -2,7 +2,7 @@
 ============================================================================
  Name        : ViewReference.h
  Author      : Ross Savage
- Copyright   : Buddycloud 2010
+ Copyright   : 2010 Buddycloud
  Description : Packaging buffer for view-to-view referencing
 ============================================================================
 */

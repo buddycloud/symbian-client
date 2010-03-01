@@ -2,7 +2,7 @@
 ============================================================================
  Name        : ViewAccessorObserver.h
  Author      : Ross Savage
- Copyright   : Buddycloud 2007
+ Copyright   : 2007 Buddycloud
  Description : Provides access from a Container to its View
 ============================================================================
 */

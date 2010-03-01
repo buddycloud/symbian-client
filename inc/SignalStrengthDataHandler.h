@@ -2,7 +2,7 @@
 ============================================================================
  Name        : 	SignalStrengthDataHandler.h
  Author      : 	Ross Savage
- Copyright   : 	Buddycloud 2007
+ Copyright   : 	2007 Buddycloud
  Description : 	Handle data for Signal Strength Information
  History     : 	1.0
 

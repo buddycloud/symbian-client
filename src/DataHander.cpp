@@ -2,7 +2,7 @@
 ============================================================================
  Name        : 	DataHandler.h
  Author      : 	Ross Savage
- Copyright   : 	Buddycloud 2007
+ Copyright   : 	2007 Buddycloud
  Description : 	Handle data for a Resource
  History     : 	1.0
 

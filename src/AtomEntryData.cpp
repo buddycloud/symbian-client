@@ -2,7 +2,7 @@
 ============================================================================
  Name        : 	AtomEntryData.cpp
  Author      : 	Ross Savage
- Copyright   : 	Buddycloud 2009
+ Copyright   : 	2009 Buddycloud
  Description : 	Atom Entry data store
  History     : 	1.0
 ============================================================================
