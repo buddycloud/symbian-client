@@ -1,0 +1,352 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?fileVersion 4.0.0?>
+
+<cproject>
+<storageModule buildFromInf="true" buildingTestComps="true" cleanLevel="1" concurrentBuildJobs="4" defaultMMPChangedAction="2" infBuildComponents="" infFileLocation="group\bld.inf" macrosFile="" makeEngineToUse="make" manageDependencies="true" moduleId="com.nokia.carbide.cdt.builder.carbideCPPBuilder" overrideMakeEngine="false" overrideWorkspaceSettings="true" promptForMMPChangedAction="false" useConcurrentBuilding="true" useDebugMode="false" useIncrementalBuilder="false" useKeepGoing="false" useMMPMacros="true"/>
+<storageModule moduleId="org.eclipse.cdt.core.settings">
+
+<cconfiguration id="Emulator Debug (WINSCW) [S60_3rd_FP2_SDK]">
+<storageModule buildSystemId="com.nokia.carbide.cdt.builder.CarbideConfigurationDataProvider" id="Emulator Debug (WINSCW) [S60_3rd_FP2_SDK]" moduleId="org.eclipse.cdt.core.settings" name="Emulator Debug (WINSCW) [S60_3rd_FP2_SDK]">
+<externalSettings/>
+<extensions>
+<extension id="org.eclipse.cdt.core.PE" point="org.eclipse.cdt.core.BinaryParser"/>
+<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
+<extension id="com.nokia.cdt.debug.cw.symbian.SymbianE32" point="org.eclipse.cdt.core.BinaryParser"/>
+<extension id="com.nokia.carbide.cdt.builder.MakeDefErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+<extension id="com.nokia.carbide.cdt.builder.SBSv2ErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+<extension id="com.nokia.carbide.cdt.builder.GCCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+<extension id="com.nokia.carbide.cdt.builder.MWLDErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+<extension id="com.nokia.carbide.cdt.builder.MWCCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+<extension id="com.nokia.carbide.cdt.builder.CarbideMakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+<extension id="com.nokia.carbide.cdt.builder.RCOMPErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+<extension id="com.nokia.carbide.cdt.builder.MakmakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+</extensions>
+</storageModule>
+<storageModule moduleId="CarbideConfigurationDataProvider">
+<ENV_VAR_DATA_ID/>
+<ARGUMENTS_DATA_ID ABLDBUILDARGSSTORAGE="-v" ABLDCLEANARGSSTORAGE="-v -really" ABLDFREEZEARGSSTORAGE="-v"/>
+<ROM_BUILDER_DATA_ID ROMBUILDWORKINGDIRECTORYSTORAGE="C:\"/>
+</storageModule>
+<storageModule filesCache="C:\Symbian\Code\Buddycloud\group\Buddycloud.mmp;C:\Symbian\Code\Buddycloud\group\bld.inf;C:\Symbian\SDKs\S60\S60_3rd_FP2_SDK\epoc32\include\blddef.h;" includesCache="C:/Symbian/Code/Buddycloud/inc[LOCAL];C:/Symbian/SDKs/S60/S60_3rd_FP2_SDK/epoc32/include;C:/Symbian/SDKs/S60/S60_3rd_FP2_SDK/epoc32/include/mmf/plugin;" macrosCache="__EXE__;__WINSCW__;__SUPPORT_CPP_EXCEPTIONS__;__SYMBIAN32__;__S60_3X__;_UNICODE;__SERIES60_3X__;_DEBUG;__S60_32__;__WINS__;__CW32__;" moduleId="configDataCache" sourcesCache="/Buddycloud/data;/Buddycloud/inc;/Buddycloud/src;" timestampCache="1267536449015" useMmpMacrosCache="true"/>
+<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
+<storageModule moduleId="org.eclipse.cdt.core.language.mapping"/>
+<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
+</cconfiguration>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<cconfiguration id="Phone Debug (GCCE) [S60_5th_Edition_SDK_v0.9]">
+<storageModule buildSystemId="com.nokia.carbide.cdt.builder.CarbideConfigurationDataProvider" id="Phone Debug (GCCE) [S60_5th_Edition_SDK_v0.9]" moduleId="org.eclipse.cdt.core.settings" name="Phone Debug (GCCE) [S60_5th_Edition_SDK_v0.9]">
+<externalSettings/>
+<extensions>
+<extension id="org.eclipse.cdt.core.PE" point="org.eclipse.cdt.core.BinaryParser"/>
+<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
+<extension id="com.nokia.cdt.debug.cw.symbian.SymbianE32" point="org.eclipse.cdt.core.BinaryParser"/>
+<extension id="com.nokia.carbide.cdt.builder.MakeDefErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+<extension id="com.nokia.carbide.cdt.builder.SBSv2ErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+<extension id="com.nokia.carbide.cdt.builder.GCCEErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+<extension id="com.nokia.carbide.cdt.builder.CarbideMakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+<extension id="com.nokia.carbide.cdt.builder.RCOMPErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+<extension id="com.nokia.carbide.cdt.builder.Elf2E32ErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+<extension id="com.nokia.carbide.cdt.builder.MakmakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+</extensions>
+</storageModule>
+<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
+<storageModule moduleId="org.eclipse.cdt.core.language.mapping"/>
+<storageModule moduleId="CarbideConfigurationDataProvider">
+<SIS_BUILDER_DATA_ID CERTIFICATESTORAGE="C:\Symbian\Source\S60\Buddycloud\sign\Buddycloud.cer" CREATESTUBSTORAGE="false" ENABLEDSTORAGE="true" KEYSTORAGE="C:\Symbian\Source\S60\Buddycloud\sign\TCTrustCenter.key" PARTIALUPGRADESTORAGE="false" PASSWORDSTORAGE="cstapny" PKGFILESTORAGE="sis\Buddycloud_5th.pkg" SIGNEDSISFILENAMESTORAGE="dev_9_4.sisx" SIGNINGTYPESTORAGE="2"/>
+<ENV_VAR_DATA_ID/>
+<ARGUMENTS_DATA_ID ABLDFREEZEARGSSTORAGE="-r"/>
+<ROM_BUILDER_DATA_ID ROMBUILDWORKINGDIRECTORYSTORAGE="C:\"/>
+</storageModule>
+<storageModule filesCache="C:\Symbian\Source\S60\Buddycloud\group\bld.inf;C:\Symbian\Source\S60\Buddycloud\group\Buddycloud.mmp;C:\Symbian\SDKs\S60\S60_5th_Edition_SDK_v0.9\epoc32\include\blddef.h;" includesCache="C:/Symbian/Source/S60/Buddycloud/inc[LOCAL];C:/Symbian/SDKs/S60/S60_5th_Edition_SDK_v0.9/epoc32/include;" macrosCache="__GENERIC_MARM__;__EXE__;__SYMBIAN32__;__SUPPORT_CPP_EXCEPTIONS__;__EPOC32__;__EABI__;__GCCE__;__MARM__;__S60_50__;_UNICODE;__S60_3X__;__S60_5X__;_DEBUG;__SERIES60_3X__;__MARM_ARMV5__;" moduleId="configDataCache" sourcesCache="/Buddycloud/data;/Buddycloud/help;/Buddycloud/inc;/Buddycloud/src;" timestampCache="1246955678526" useMmpMacrosCache="true"/>
+<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
+</cconfiguration>
+
+
+<cconfiguration id="Emulator Debug (WINSCW) [S60_5th_Edition_SDK_v1.0]">
+<storageModule buildSystemId="com.nokia.carbide.cdt.builder.CarbideConfigurationDataProvider" id="Emulator Debug (WINSCW) [S60_5th_Edition_SDK_v1.0]" moduleId="org.eclipse.cdt.core.settings" name="Emulator Debug (WINSCW) [S60_5th_Edition_SDK_v1.0]">
+<externalSettings/>
+<extensions>
+<extension id="org.eclipse.cdt.core.PE" point="org.eclipse.cdt.core.BinaryParser"/>
+<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
+<extension id="com.nokia.cdt.debug.cw.symbian.SymbianE32" point="org.eclipse.cdt.core.BinaryParser"/>
+<extension id="com.nokia.carbide.cdt.builder.MakeDefErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+<extension id="com.nokia.carbide.cdt.builder.SBSv2ErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+<extension id="com.nokia.carbide.cdt.builder.GCCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+<extension id="com.nokia.carbide.cdt.builder.MWLDErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+<extension id="com.nokia.carbide.cdt.builder.MWCCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+<extension id="com.nokia.carbide.cdt.builder.CarbideMakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+<extension id="com.nokia.carbide.cdt.builder.RCOMPErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+<extension id="com.nokia.carbide.cdt.builder.MakmakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+</extensions>
+</storageModule>
+<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
+<storageModule moduleId="org.eclipse.cdt.core.language.mapping"/>
+<storageModule moduleId="CarbideConfigurationDataProvider">
+<ENV_VAR_DATA_ID/>
+<ARGUMENTS_DATA_ID ABLDFREEZEARGSSTORAGE="-r"/>
+<ROM_BUILDER_DATA_ID ROMBUILDWORKINGDIRECTORYSTORAGE="C:\"/>
+</storageModule>
+<storageModule filesCache="C:\Symbian\SDKs\S60\S60_5th_Edition_SDK_v1.0\epoc32\include\blddef.h;C:\Symbian\Code\Buddycloud\group\Buddycloud.mmp;C:\Symbian\Code\Buddycloud\group\bld.inf;" includesCache="C:/Symbian/Code/Buddycloud/inc[LOCAL];C:/Symbian/SDKs/S60/S60_5th_Edition_SDK_v1.0/epoc32/include;C:/Symbian/SDKs/S60/S60_5th_Edition_SDK_v1.0/epoc32/include/mmf/plugin;" macrosCache="__S60_50__;__EXE__;__WINSCW__;__SUPPORT_CPP_EXCEPTIONS__;__SYMBIAN32__;__S60_3X__;_UNICODE;__S60_5X__;__SERIES60_3X__;_DEBUG;__WINS__;__CW32__;" moduleId="configDataCache" sourcesCache="/Buddycloud/data;/Buddycloud/inc;/Buddycloud/src;" timestampCache="1267536449046" useMmpMacrosCache="true"/>
+<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
+</cconfiguration>
+
+<cconfiguration id="Phone Debug (GCCE) [dummy_ID]">
+<storageModule moduleId="CarbideConfigurationDataProvider">
+<SIS_BUILDER_DATA_ID CERTIFICATESTORAGE="C:\Symbian\Source\S60\Buddycloud\sign\Buddycloud.cer" CREATESTUBSTORAGE="false" ENABLEDSTORAGE="true" KEYSTORAGE="C:\Symbian\Source\S60\Buddycloud\sign\TCTrustCenter.key" PARTIALUPGRADESTORAGE="false" PASSWORDSTORAGE="cstapny" PKGFILESTORAGE="sis\Buddycloud_5th.pkg" SIGNEDSISFILENAMESTORAGE="dev_9_4.sisx" SIGNINGTYPESTORAGE="2"/>
+<ENV_VAR_DATA_ID/>
+<ARGUMENTS_DATA_ID ABLDFREEZEARGSSTORAGE="-r"/>
+<ROM_BUILDER_DATA_ID ROMBUILDWORKINGDIRECTORYSTORAGE="C:\"/>
+</storageModule>
+<storageModule buildSystemId="com.nokia.carbide.cdt.builder.CarbideConfigurationDataProvider" id="Phone Debug (GCCE) [dummy_ID]" moduleId="org.eclipse.cdt.core.settings" name="Phone Debug (GCCE) [dummy_ID]">
+<externalSettings/>
+<extensions>
+<extension id="org.eclipse.cdt.core.PE" point="org.eclipse.cdt.core.BinaryParser"/>
+<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
+<extension id="com.nokia.cdt.debug.cw.symbian.SymbianE32" point="org.eclipse.cdt.core.BinaryParser"/>
+<extension id="com.nokia.carbide.cdt.builder.MakeDefErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+<extension id="com.nokia.carbide.cdt.builder.SBSv2ErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+<extension id="com.nokia.carbide.cdt.builder.GCCEErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+<extension id="com.nokia.carbide.cdt.builder.CarbideMakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+<extension id="com.nokia.carbide.cdt.builder.RCOMPErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+<extension id="com.nokia.carbide.cdt.builder.Elf2E32ErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+<extension id="com.nokia.carbide.cdt.builder.MakmakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+</extensions>
+</storageModule>
+<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
+<storageModule filesCache="C:\Symbian\Code\Buddycloud\group\Buddycloud.mmp;C:\Symbian\Code\Buddycloud\group\bld.inf;" includesCache="C:/Symbian/Code/Buddycloud/inc[LOCAL];C:/epoc32/include;C:/epoc32/include/mmf/plugin;" macrosCache="__EXE__;__SYMBIAN32__;_UNICODE;_DEBUG;" moduleId="configDataCache" sourcesCache="/Buddycloud/data;/Buddycloud/inc;/Buddycloud/src;" timestampCache="1267526715828" useMmpMacrosCache="true"/>
+<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
+<storageModule moduleId="org.eclipse.cdt.core.language.mapping"/>
+</cconfiguration>
+<cconfiguration id="Phone Release (GCCE) [S60_5th_Edition_SDK_v1.0]">
+<storageModule buildSystemId="com.nokia.carbide.cdt.builder.CarbideConfigurationDataProvider" id="Phone Release (GCCE) [S60_5th_Edition_SDK_v1.0]" moduleId="org.eclipse.cdt.core.settings" name="Phone Release (GCCE) [S60_5th_Edition_SDK_v1.0]">
+<externalSettings/>
+<extensions>
+<extension id="org.eclipse.cdt.core.PE" point="org.eclipse.cdt.core.BinaryParser"/>
+<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
+<extension id="com.nokia.cdt.debug.cw.symbian.SymbianE32" point="org.eclipse.cdt.core.BinaryParser"/>
+<extension id="com.nokia.carbide.cdt.builder.MakeDefErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+<extension id="com.nokia.carbide.cdt.builder.SBSv2ErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+<extension id="com.nokia.carbide.cdt.builder.GCCEErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+<extension id="com.nokia.carbide.cdt.builder.CarbideMakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+<extension id="com.nokia.carbide.cdt.builder.RCOMPErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+<extension id="com.nokia.carbide.cdt.builder.Elf2E32ErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+<extension id="com.nokia.carbide.cdt.builder.MakmakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+</extensions>
+</storageModule>
+<storageModule moduleId="CarbideConfigurationDataProvider">
+<SIS_BUILDER_DATA_ID CERTIFICATESTORAGE="C:\Symbian\Source\S60\Buddycloud\sign\TCTrustCenter.cer" CREATESTUBSTORAGE="false" ENABLEDSTORAGE="true" KEYSTORAGE="C:\Symbian\Source\S60\Buddycloud\sign\TCTrustCenter.key" PARTIALUPGRADESTORAGE="false" PASSWORDSTORAGE="dangtrus1" PKGFILESTORAGE="sis\Buddycloud_5th.pkg" SIGNEDSISFILENAMESTORAGE="buddycloud_9_4_presign.sis" SIGNINGTYPESTORAGE="2"/>
+<ENV_VAR_DATA_ID/>
+<ARGUMENTS_DATA_ID ABLDFREEZEARGSSTORAGE="-r"/>
+<ROM_BUILDER_DATA_ID ROMBUILDWORKINGDIRECTORYSTORAGE="C:\"/>
+</storageModule>
+<storageModule filesCache="C:\Symbian\SDKs\S60\S60_5th_Edition_SDK_v1.0\epoc32\include\blddef.h;C:\Symbian\Code\Buddycloud\group\Buddycloud.mmp;C:\Symbian\Code\Buddycloud\group\bld.inf;" includesCache="C:/Symbian/Code/Buddycloud/inc[LOCAL];C:/Symbian/SDKs/S60/S60_5th_Edition_SDK_v1.0/epoc32/include;C:/Symbian/SDKs/S60/S60_5th_Edition_SDK_v1.0/epoc32/include/mmf/plugin;" macrosCache="__GENERIC_MARM__;__EXE__;__SYMBIAN32__;__SUPPORT_CPP_EXCEPTIONS__;__EPOC32__;__EABI__;__GCCE__;NDEBUG;__MARM__;__S60_50__;_UNICODE;__S60_3X__;__S60_5X__;__SERIES60_3X__;__MARM_ARMV5__;" moduleId="configDataCache" sourcesCache="/Buddycloud/data;/Buddycloud/inc;/Buddycloud/src;" timestampCache="1267536449062" useMmpMacrosCache="true"/>
+<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
+<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
+<storageModule moduleId="org.eclipse.cdt.core.language.mapping"/>
+</cconfiguration>
+<cconfiguration id="Phone Release (GCCE) [S60_3rd_FP2_SDK]">
+<storageModule buildSystemId="com.nokia.carbide.cdt.builder.CarbideConfigurationDataProvider" id="Phone Release (GCCE) [S60_3rd_FP2_SDK]" moduleId="org.eclipse.cdt.core.settings" name="Phone Release (GCCE) [S60_3rd_FP2_SDK]">
+<externalSettings/>
+<extensions>
+<extension id="org.eclipse.cdt.core.PE" point="org.eclipse.cdt.core.BinaryParser"/>
+<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
+<extension id="com.nokia.cdt.debug.cw.symbian.SymbianE32" point="org.eclipse.cdt.core.BinaryParser"/>
+<extension id="com.nokia.carbide.cdt.builder.MakeDefErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+<extension id="com.nokia.carbide.cdt.builder.SBSv2ErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+<extension id="com.nokia.carbide.cdt.builder.GCCEErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+<extension id="com.nokia.carbide.cdt.builder.CarbideMakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+<extension id="com.nokia.carbide.cdt.builder.RCOMPErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+<extension id="com.nokia.carbide.cdt.builder.Elf2E32ErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+<extension id="com.nokia.carbide.cdt.builder.MakmakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+</extensions>
+</storageModule>
+<storageModule moduleId="CarbideConfigurationDataProvider">
+<SIS_BUILDER_DATA_ID CERTIFICATESTORAGE="C:\Symbian\Source\S60\Buddycloud\sign\TCTrustCenter.cer" CREATESTUBSTORAGE="false" ENABLEDSTORAGE="true" KEYSTORAGE="C:\Symbian\Source\S60\Buddycloud\sign\TCTrustCenter.key" PARTIALUPGRADESTORAGE="false" PASSWORDSTORAGE="dangtrus1" PKGFILESTORAGE="sis\Buddycloud_3rd_FP2.pkg" SIGNEDSISFILENAMESTORAGE="buddycloud_9_3_presign.sis" SIGNINGTYPESTORAGE="2"/>
+<ENV_VAR_DATA_ID/>
+<ARGUMENTS_DATA_ID ABLDFREEZEARGSSTORAGE="-r"/>
+<ROM_BUILDER_DATA_ID ROMBUILDWORKINGDIRECTORYSTORAGE="C:\"/>
+</storageModule>
+<storageModule filesCache="C:\Symbian\Code\Buddycloud\group\Buddycloud.mmp;C:\Symbian\Code\Buddycloud\group\bld.inf;C:\Symbian\SDKs\S60\S60_3rd_FP2_SDK\epoc32\include\blddef.h;" includesCache="C:/Symbian/Code/Buddycloud/inc[LOCAL];C:/Symbian/SDKs/S60/S60_3rd_FP2_SDK/epoc32/include;C:/Symbian/SDKs/S60/S60_3rd_FP2_SDK/epoc32/include/mmf/plugin;" macrosCache="__GENERIC_MARM__;__EXE__;__SYMBIAN32__;__SUPPORT_CPP_EXCEPTIONS__;__EPOC32__;__EABI__;__GCCE__;NDEBUG;__MARM__;_UNICODE;__S60_3X__;__SERIES60_3X__;__MARM_ARMV5__;__S60_32__;" moduleId="configDataCache" sourcesCache="/Buddycloud/data;/Buddycloud/inc;/Buddycloud/src;" timestampCache="1267536449078" useMmpMacrosCache="true"/>
+<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
+<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
+<storageModule moduleId="org.eclipse.cdt.core.language.mapping"/>
+</cconfiguration>
+<cconfiguration id="Phone Release (GCCE) [S60_3rd_MR]">
+<storageModule buildSystemId="com.nokia.carbide.cdt.builder.CarbideConfigurationDataProvider" id="Phone Release (GCCE) [S60_3rd_MR]" moduleId="org.eclipse.cdt.core.settings" name="Phone Release (GCCE) [S60_3rd_MR]">
+<externalSettings/>
+<extensions>
+<extension id="org.eclipse.cdt.core.PE" point="org.eclipse.cdt.core.BinaryParser"/>
+<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
+<extension id="com.nokia.cdt.debug.cw.symbian.SymbianE32" point="org.eclipse.cdt.core.BinaryParser"/>
+<extension id="com.nokia.carbide.cdt.builder.MakeDefErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+<extension id="com.nokia.carbide.cdt.builder.SBSv2ErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+<extension id="com.nokia.carbide.cdt.builder.GCCEErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+<extension id="com.nokia.carbide.cdt.builder.CarbideMakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+<extension id="com.nokia.carbide.cdt.builder.RCOMPErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+<extension id="com.nokia.carbide.cdt.builder.Elf2E32ErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+<extension id="com.nokia.carbide.cdt.builder.MakmakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+</extensions>
+</storageModule>
+<storageModule moduleId="CarbideConfigurationDataProvider">
+<SIS_BUILDER_DATA_ID CERTIFICATESTORAGE="C:\Symbian\Source\S60\Buddycloud\sign\TCTrustCenter.cer" CREATESTUBSTORAGE="false" ENABLEDSTORAGE="true" KEYSTORAGE="C:\Symbian\Source\S60\Buddycloud\sign\TCTrustCenter.key" PARTIALUPGRADESTORAGE="false" PASSWORDSTORAGE="dangtrus1" PKGFILESTORAGE="sis\Buddycloud_3rd.pkg" SIGNEDSISFILENAMESTORAGE="buddycloud_9_1_presign.sis" SIGNINGTYPESTORAGE="2"/>
+<ENV_VAR_DATA_ID/>
+<ARGUMENTS_DATA_ID ABLDFREEZEARGSSTORAGE="-r"/>
+<ROM_BUILDER_DATA_ID ROMBUILDWORKINGDIRECTORYSTORAGE="C:\"/>
+</storageModule>
+<storageModule filesCache="C:\Symbian\SDKs\S60\S60_3rd_MR\Epoc32\include\blddef.h;C:\Symbian\Code\Buddycloud\group\Buddycloud.mmp;C:\Symbian\Code\Buddycloud\group\bld.inf;" includesCache="C:/Symbian/Code/Buddycloud/inc[LOCAL];C:/Symbian/SDKs/S60/S60_3rd_MR/Epoc32/include;C:/Symbian/SDKs/S60/S60_3rd_MR/Epoc32/include/mmf/plugin;" macrosCache="__GENERIC_MARM__;__SERIES60_30__;__EXE__;__SYMBIAN32__;__SUPPORT_CPP_EXCEPTIONS__;__EPOC32__;__EABI__;__GCCE__;NDEBUG;__MARM__;_UNICODE;__SERIES60_3X__;__MARM_ARMV5__;" moduleId="configDataCache" sourcesCache="/Buddycloud/data;/Buddycloud/inc;/Buddycloud/src;" timestampCache="1267536449093" useMmpMacrosCache="true"/>
+<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
+<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
+<storageModule moduleId="org.eclipse.cdt.core.language.mapping"/>
+</cconfiguration>
+<cconfiguration id="Phone Release (GCCE) [S60_3rd_FP1]">
+<storageModule buildSystemId="com.nokia.carbide.cdt.builder.CarbideConfigurationDataProvider" id="Phone Release (GCCE) [S60_3rd_FP1]" moduleId="org.eclipse.cdt.core.settings" name="Phone Release (GCCE) [S60_3rd_FP1]">
+<externalSettings/>
+<extensions>
+<extension id="org.eclipse.cdt.core.PE" point="org.eclipse.cdt.core.BinaryParser"/>
+<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
+<extension id="com.nokia.cdt.debug.cw.symbian.SymbianE32" point="org.eclipse.cdt.core.BinaryParser"/>
+<extension id="com.nokia.carbide.cdt.builder.MakeDefErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+<extension id="com.nokia.carbide.cdt.builder.SBSv2ErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+<extension id="com.nokia.carbide.cdt.builder.GCCEErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+<extension id="com.nokia.carbide.cdt.builder.CarbideMakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+<extension id="com.nokia.carbide.cdt.builder.RCOMPErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+<extension id="com.nokia.carbide.cdt.builder.Elf2E32ErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+<extension id="com.nokia.carbide.cdt.builder.MakmakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+</extensions>
+</storageModule>
+<storageModule moduleId="CarbideConfigurationDataProvider">
+<SIS_BUILDER_DATA_ID CERTIFICATESTORAGE="C:\Symbian\Source\S60\Buddycloud\sign\TCTrustCenter.cer" CREATESTUBSTORAGE="false" ENABLEDSTORAGE="true" KEYSTORAGE="C:\Symbian\Source\S60\Buddycloud\sign\TCTrustCenter.key" PARTIALUPGRADESTORAGE="false" PASSWORDSTORAGE="dangtrus1" PKGFILESTORAGE="sis\Buddycloud_3rd_FP1.pkg" SIGNEDSISFILENAMESTORAGE="buddycloud_9_2_presign.sis" SIGNINGTYPESTORAGE="2"/>
+<ENV_VAR_DATA_ID/>
+<ARGUMENTS_DATA_ID ABLDFREEZEARGSSTORAGE="-r"/>
+<ROM_BUILDER_DATA_ID ROMBUILDWORKINGDIRECTORYSTORAGE="C:\"/>
+</storageModule>
+<storageModule filesCache="C:\Symbian\SDKs\S60\S60_3rd_FP1\Epoc32\include\blddef.h;C:\Symbian\Code\Buddycloud\group\Buddycloud.mmp;C:\Symbian\Code\Buddycloud\group\bld.inf;" includesCache="C:/Symbian/Code/Buddycloud/inc[LOCAL];C:/Symbian/SDKs/S60/S60_3rd_FP1/Epoc32/include;C:/Symbian/SDKs/S60/S60_3rd_FP1/Epoc32/include/mmf/plugin;" macrosCache="__GENERIC_MARM__;__EXE__;__SYMBIAN32__;__SUPPORT_CPP_EXCEPTIONS__;__EPOC32__;__EABI__;__GCCE__;NDEBUG;__SERIES60_31__;__MARM__;_UNICODE;__SERIES60_3X__;__MARM_ARMV5__;" moduleId="configDataCache" sourcesCache="/Buddycloud/data;/Buddycloud/inc;/Buddycloud/src;" timestampCache="1267536449109" useMmpMacrosCache="true"/>
+<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
+<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
+<storageModule moduleId="org.eclipse.cdt.core.language.mapping"/>
+</cconfiguration>
+<cconfiguration id="Phone Debug (GCCE) [S60_3rd_MR]">
+<storageModule buildSystemId="com.nokia.carbide.cdt.builder.CarbideConfigurationDataProvider" id="Phone Debug (GCCE) [S60_3rd_MR]" moduleId="org.eclipse.cdt.core.settings" name="Phone Debug (GCCE) [S60_3rd_MR]">
+<externalSettings/>
+<extensions>
+<extension id="org.eclipse.cdt.core.PE" point="org.eclipse.cdt.core.BinaryParser"/>
+<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
+<extension id="com.nokia.cdt.debug.cw.symbian.SymbianE32" point="org.eclipse.cdt.core.BinaryParser"/>
+<extension id="com.nokia.carbide.cdt.builder.MakeDefErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+<extension id="com.nokia.carbide.cdt.builder.SBSv2ErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+<extension id="com.nokia.carbide.cdt.builder.GCCEErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+<extension id="com.nokia.carbide.cdt.builder.CarbideMakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+<extension id="com.nokia.carbide.cdt.builder.RCOMPErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+<extension id="com.nokia.carbide.cdt.builder.Elf2E32ErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+<extension id="com.nokia.carbide.cdt.builder.MakmakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+</extensions>
+</storageModule>
+<storageModule moduleId="CarbideConfigurationDataProvider">
+<SIS_BUILDER_DATA_ID CERTIFICATESTORAGE="C:\Symbian\Code\Buddycloud\sign\Buddycloud.cer" CREATESTUBSTORAGE="false" ENABLEDSTORAGE="true" KEYSTORAGE="C:\Symbian\Code\Buddycloud\sign\TCTrustCenter.key" OUTPUTFILENAMESTORAGE="dev_9_1_unsigned.sis" PARTIALUPGRADESTORAGE="false" PASSWORDSTORAGE="dangtrus1" PKGFILESTORAGE="sis\Buddycloud_3rd.pkg" SIGNEDSISFILENAMESTORAGE="dev_9_1.sisx" SIGNINGTYPESTORAGE="2"/>
+<ENV_VAR_DATA_ID/>
+<ARGUMENTS_DATA_ID ABLDFREEZEARGSSTORAGE="-r"/>
+<ROM_BUILDER_DATA_ID ROMBUILDWORKINGDIRECTORYSTORAGE="C:\"/>
+</storageModule>
+<storageModule filesCache="C:\Symbian\SDKs\S60\S60_3rd_MR\Epoc32\include\blddef.h;C:\Symbian\Code\Buddycloud\group\Buddycloud.mmp;C:\Symbian\Code\Buddycloud\group\bld.inf;" includesCache="C:/Symbian/Code/Buddycloud/inc[LOCAL];C:/Symbian/SDKs/S60/S60_3rd_MR/Epoc32/include;C:/Symbian/SDKs/S60/S60_3rd_MR/Epoc32/include/mmf/plugin;" macrosCache="__GENERIC_MARM__;__SERIES60_30__;__EXE__;__SYMBIAN32__;__SUPPORT_CPP_EXCEPTIONS__;__EPOC32__;__EABI__;__GCCE__;__MARM__;_UNICODE;_DEBUG;__SERIES60_3X__;__MARM_ARMV5__;" moduleId="configDataCache" sourcesCache="/Buddycloud/data;/Buddycloud/inc;/Buddycloud/src;" timestampCache="1267536449140" useMmpMacrosCache="true"/>
+<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
+<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
+<storageModule moduleId="org.eclipse.cdt.core.language.mapping"/>
+</cconfiguration>
+<cconfiguration id="Phone Debug (GCCE) [S60_5th_Edition_SDK_v1.0]">
+<storageModule buildSystemId="com.nokia.carbide.cdt.builder.CarbideConfigurationDataProvider" id="Phone Debug (GCCE) [S60_5th_Edition_SDK_v1.0]" moduleId="org.eclipse.cdt.core.settings" name="Phone Debug (GCCE) [S60_5th_Edition_SDK_v1.0]">
+<externalSettings/>
+<extensions>
+<extension id="org.eclipse.cdt.core.PE" point="org.eclipse.cdt.core.BinaryParser"/>
+<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
+<extension id="com.nokia.cdt.debug.cw.symbian.SymbianE32" point="org.eclipse.cdt.core.BinaryParser"/>
+<extension id="com.nokia.carbide.cdt.builder.MakeDefErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+<extension id="com.nokia.carbide.cdt.builder.SBSv2ErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+<extension id="com.nokia.carbide.cdt.builder.GCCEErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+<extension id="com.nokia.carbide.cdt.builder.CarbideMakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+<extension id="com.nokia.carbide.cdt.builder.RCOMPErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+<extension id="com.nokia.carbide.cdt.builder.Elf2E32ErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+<extension id="com.nokia.carbide.cdt.builder.MakmakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+</extensions>
+</storageModule>
+<storageModule moduleId="CarbideConfigurationDataProvider">
+<SIS_BUILDER_DATA_ID CERTIFICATESTORAGE="C:\Symbian\Code\Buddycloud\sign\Buddycloud.cer" CREATESTUBSTORAGE="false" ENABLEDSTORAGE="true" KEYSTORAGE="C:\Symbian\Code\Buddycloud\sign\TCTrustCenter.key" OUTPUTFILENAMESTORAGE="dev_9_4_unsigned.sis" PARTIALUPGRADESTORAGE="false" PASSWORDSTORAGE="dangtrus1" PKGFILESTORAGE="sis\Buddycloud_5th.pkg" SIGNEDSISFILENAMESTORAGE="dev_9_4.sisx" SIGNINGTYPESTORAGE="2"/>
+<ENV_VAR_DATA_ID/>
+<ARGUMENTS_DATA_ID ABLDFREEZEARGSSTORAGE="-r"/>
+<ROM_BUILDER_DATA_ID ROMBUILDWORKINGDIRECTORYSTORAGE="C:\"/>
+</storageModule>
+<storageModule filesCache="C:\Symbian\SDKs\S60\S60_5th_Edition_SDK_v1.0\epoc32\include\blddef.h;C:\Symbian\Code\Buddycloud\group\Buddycloud.mmp;C:\Symbian\Code\Buddycloud\group\bld.inf;" includesCache="C:/Symbian/Code/Buddycloud/inc[LOCAL];C:/Symbian/SDKs/S60/S60_5th_Edition_SDK_v1.0/epoc32/include;C:/Symbian/SDKs/S60/S60_5th_Edition_SDK_v1.0/epoc32/include/mmf/plugin;" macrosCache="__GENERIC_MARM__;__EXE__;__SYMBIAN32__;__SUPPORT_CPP_EXCEPTIONS__;__EPOC32__;__EABI__;__GCCE__;__MARM__;__S60_50__;_UNICODE;__S60_3X__;__S60_5X__;_DEBUG;__SERIES60_3X__;__MARM_ARMV5__;" moduleId="configDataCache" sourcesCache="/Buddycloud/data;/Buddycloud/inc;/Buddycloud/src;" timestampCache="1267536449140" useMmpMacrosCache="true"/>
+<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
+<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
+<storageModule moduleId="org.eclipse.cdt.core.language.mapping"/>
+</cconfiguration>
+<cconfiguration id="Phone Debug (GCCE) [S60_3rd_FP2_SDK]">
+<storageModule buildSystemId="com.nokia.carbide.cdt.builder.CarbideConfigurationDataProvider" id="Phone Debug (GCCE) [S60_3rd_FP2_SDK]" moduleId="org.eclipse.cdt.core.settings" name="Phone Debug (GCCE) [S60_3rd_FP2_SDK]">
+<externalSettings/>
+<extensions>
+<extension id="org.eclipse.cdt.core.PE" point="org.eclipse.cdt.core.BinaryParser"/>
+<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
+<extension id="com.nokia.cdt.debug.cw.symbian.SymbianE32" point="org.eclipse.cdt.core.BinaryParser"/>
+<extension id="com.nokia.carbide.cdt.builder.MakeDefErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+<extension id="com.nokia.carbide.cdt.builder.SBSv2ErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+<extension id="com.nokia.carbide.cdt.builder.GCCEErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+<extension id="com.nokia.carbide.cdt.builder.CarbideMakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+<extension id="com.nokia.carbide.cdt.builder.RCOMPErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+<extension id="com.nokia.carbide.cdt.builder.Elf2E32ErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+<extension id="com.nokia.carbide.cdt.builder.MakmakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+</extensions>
+</storageModule>
+<storageModule moduleId="CarbideConfigurationDataProvider">
+<SIS_BUILDER_DATA_ID CERTIFICATESTORAGE="C:\Symbian\Code\Buddycloud\sign\Buddycloud.cer" CREATESTUBSTORAGE="false" ENABLEDSTORAGE="true" KEYSTORAGE="C:\Symbian\Code\Buddycloud\sign\TCTrustCenter.key" OUTPUTFILENAMESTORAGE="dev_9_3_unsigned.sis" PARTIALUPGRADESTORAGE="false" PASSWORDSTORAGE="dangtrus1" PKGFILESTORAGE="sis\Buddycloud_3rd_FP2.pkg" SIGNEDSISFILENAMESTORAGE="dev_9_3.sisx" SIGNINGTYPESTORAGE="2"/>
+<ENV_VAR_DATA_ID/>
+<ARGUMENTS_DATA_ID ABLDFREEZEARGSSTORAGE="-r"/>
+<ROM_BUILDER_DATA_ID ROMBUILDWORKINGDIRECTORYSTORAGE="C:\"/>
+</storageModule>
+<storageModule filesCache="C:\Symbian\Code\Buddycloud\group\Buddycloud.mmp;C:\Symbian\Code\Buddycloud\group\bld.inf;C:\Symbian\SDKs\S60\S60_3rd_FP2_SDK\epoc32\include\blddef.h;" includesCache="C:/Symbian/Code/Buddycloud/inc[LOCAL];C:/Symbian/SDKs/S60/S60_3rd_FP2_SDK/epoc32/include;C:/Symbian/SDKs/S60/S60_3rd_FP2_SDK/epoc32/include/mmf/plugin;" macrosCache="__GENERIC_MARM__;__EXE__;__SYMBIAN32__;__SUPPORT_CPP_EXCEPTIONS__;__EPOC32__;__EABI__;__GCCE__;__MARM__;_UNICODE;__S60_3X__;_DEBUG;__SERIES60_3X__;__MARM_ARMV5__;__S60_32__;" moduleId="configDataCache" sourcesCache="/Buddycloud/data;/Buddycloud/inc;/Buddycloud/src;" timestampCache="1267536449156" useMmpMacrosCache="true"/>
+<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
+<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
+<storageModule moduleId="org.eclipse.cdt.core.language.mapping"/>
+</cconfiguration>
+<cconfiguration id="Phone Debug (GCCE) [S60_3rd_FP1]">
+<storageModule buildSystemId="com.nokia.carbide.cdt.builder.CarbideConfigurationDataProvider" id="Phone Debug (GCCE) [S60_3rd_FP1]" moduleId="org.eclipse.cdt.core.settings" name="Phone Debug (GCCE) [S60_3rd_FP1]">
+<externalSettings/>
+<extensions>
+<extension id="org.eclipse.cdt.core.PE" point="org.eclipse.cdt.core.BinaryParser"/>
+<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
+<extension id="com.nokia.cdt.debug.cw.symbian.SymbianE32" point="org.eclipse.cdt.core.BinaryParser"/>
+<extension id="com.nokia.carbide.cdt.builder.MakeDefErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+<extension id="com.nokia.carbide.cdt.builder.SBSv2ErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+<extension id="com.nokia.carbide.cdt.builder.GCCEErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+<extension id="com.nokia.carbide.cdt.builder.CarbideMakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+<extension id="com.nokia.carbide.cdt.builder.RCOMPErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+<extension id="com.nokia.carbide.cdt.builder.Elf2E32ErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+<extension id="com.nokia.carbide.cdt.builder.MakmakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+</extensions>
+</storageModule>
+<storageModule moduleId="CarbideConfigurationDataProvider">
+<SIS_BUILDER_DATA_ID CERTIFICATESTORAGE="C:\Symbian\Code\Buddycloud\sign\Buddycloud.cer" CREATESTUBSTORAGE="false" ENABLEDSTORAGE="true" KEYSTORAGE="C:\Symbian\Code\Buddycloud\sign\TCTrustCenter.key" OUTPUTFILENAMESTORAGE="dev_9_2_unsigned.sis" PARTIALUPGRADESTORAGE="false" PASSWORDSTORAGE="dangtrus1" PKGFILESTORAGE="sis\Buddycloud_3rd_FP1.pkg" SIGNEDSISFILENAMESTORAGE="dev_9_2.sisx" SIGNINGTYPESTORAGE="2"/>
+<ENV_VAR_DATA_ID/>
+<ARGUMENTS_DATA_ID ABLDFREEZEARGSSTORAGE="-r"/>
+<ROM_BUILDER_DATA_ID ROMBUILDWORKINGDIRECTORYSTORAGE="C:\"/>
+</storageModule>
+<storageModule filesCache="C:\Symbian\SDKs\S60\S60_3rd_FP1\Epoc32\include\blddef.h;C:\Symbian\Code\Buddycloud\group\Buddycloud.mmp;C:\Symbian\Code\Buddycloud\group\bld.inf;" includesCache="C:/Symbian/Code/Buddycloud/inc[LOCAL];C:/Symbian/SDKs/S60/S60_3rd_FP1/Epoc32/include;C:/Symbian/SDKs/S60/S60_3rd_FP1/Epoc32/include/mmf/plugin;" macrosCache="__GENERIC_MARM__;__EXE__;__SYMBIAN32__;__SUPPORT_CPP_EXCEPTIONS__;__EPOC32__;__EABI__;__GCCE__;__SERIES60_31__;__MARM__;_UNICODE;_DEBUG;__SERIES60_3X__;__MARM_ARMV5__;" moduleId="configDataCache" sourcesCache="/Buddycloud/data;/Buddycloud/inc;/Buddycloud/src;" timestampCache="1267536449187" useMmpMacrosCache="true"/>
+<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
+<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
+<storageModule moduleId="org.eclipse.cdt.core.language.mapping"/>
+</cconfiguration>
+</storageModule>
+<storageModule moduleId="com.nokia.carbide.cdt.rombuilder" rombuildcommandline="" rombuildworkingdir="c:\"/>
+</cproject>

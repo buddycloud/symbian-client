@@ -51,13 +51,14 @@ class CExplorerStanzaBuilder {
 		static void FormatButlerXmppStanza(TDes8& aString, TInt aStampId, TReal aPointLatitude, TReal aPointLongitude, TInt aOptionsLimit = 10);
 			
 		// Broadcaster stanza
-		static void FormatBroadcasterXmppStanza(TDes8& aString, TInt aStampId, const TDesC8& aNodeId, TInt aRsmMax = 30);
+		static void FormatBroadcasterXmppStanza(TDes8& aString, TInt aStampId, const TDesC8& aNodeId);
 		
 		// Maitred stanza
-		static void AppendMaitredXmppStanza(TDes8& aString, TInt aStampId, const TDesC8& aId,  const TDesC8& aVar, TInt aRsmMax = 30);
+		static void AppendMaitredXmppStanza(TDes8& aString, TInt aStampId, const TDesC8& aId,  const TDesC8& aVar);
 	
 	public:
-		static void AppendXmlLangToStanza(TDes8& aString, const TDesC8& aLang);
+		static void InsertXmlLanguageIntoStanza(TDes8& aString, const TDesC8& aLang);
+		static void InsertResultSetIntoStanza(TDes8& aString, const TDesC8& aRsmMax);
 		
 	public:	
 		// Title editor

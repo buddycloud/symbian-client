@@ -26,6 +26,7 @@
 #include "BuddycloudExplorer.h"
 #include "BuddycloudFollowingContainer.h"
 #include "ViewReference.h"
+#include "XmppUtilities.h"
 
 // ================= MEMBER FUNCTIONS =======================
 
@@ -1020,15 +1021,19 @@ void CBuddycloudFollowingContainer::HandleCommandL(TInt aCommand) {
 					aFollow.Delete(0, aLocate);
 				}
 				
-				TViewReferenceBuf aViewReference;	
-				aViewReference().iCallbackRequested = true;
-				aViewReference().iCallbackViewId = KFollowingViewId;
-				aViewReference().iOldViewData.iId = iSelectedItem;
-				aViewReference().iNewViewData.iTitle.Copy(aFollow);
-				aViewReference().iNewViewData.iData.Copy(_L8("/channel/"));
-				aViewReference().iNewViewData.iData.Append(aFollow);
-
-				iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KChannelInfoViewId), TUid::Uid(0), aViewReference);					
+				CXmppChannelIdUtilities::ValidateId(aFollow);
+				
+				if(aFollow.Length() > 0) {				
+                    TViewReferenceBuf aViewReference;	
+                    aViewReference().iCallbackRequested = true;
+                    aViewReference().iCallbackViewId = KFollowingViewId;
+                    aViewReference().iOldViewData.iId = iSelectedItem;
+                    aViewReference().iNewViewData.iTitle.Copy(aFollow);
+                    aViewReference().iNewViewData.iData.Copy(_L8("/channel/"));
+                    aViewReference().iNewViewData.iData.Append(aFollow);
+    
+                    iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KChannelInfoViewId), TUid::Uid(0), aViewReference);					
+				}
 			}
 		}
 	}
@@ -1152,6 +1157,7 @@ void CBuddycloudFollowingContainer::HandleCommandL(TInt aCommand) {
 				}
 				else {
 					CExplorerStanzaBuilder::FormatBroadcasterXmppStanza(aViewReference().iNewViewData.iData, iBuddycloudLogic->GetNewIdStamp(), aEncId);
+		            CExplorerStanzaBuilder::InsertResultSetIntoStanza(aViewReference().iNewViewData.iData, _L8("30"));
 					aResourceId = R_LOCALIZED_STRING_TITLE_FOLLOWEDBY;
 				}
 				

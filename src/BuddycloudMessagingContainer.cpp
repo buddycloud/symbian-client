@@ -20,6 +20,7 @@
 #include "BuddycloudExplorer.h"
 #include "BuddycloudMessagingContainer.h"
 #include "ViewReference.h"
+#include "XmppUtilities.h"
 
 /*
 ----------------------------------------------------------------------------
@@ -758,14 +759,13 @@ void CBuddycloudMessagingContainer::RenderWrappedText(TInt aIndex) {
 					aTimeNow.MinutesFrom(aTimeReceived, aAfter);
 					aBuf.Format(_L("%dm ago"), aAfter.Int());
 				}
-				else if(aTimeReceived >= (aTimeNow - TTimeIntervalDays(1))) {
-					TTimeIntervalHours aAfter;
-					aTimeNow.HoursFrom(aTimeReceived, aAfter);
-					aBuf.Format(_L("%dh ago"), aAfter.Int());
-				}
 				else {
-					TTimeIntervalDays aAfter = aTimeNow.DaysFrom(aTimeReceived);
-					aBuf.Format(_L("%dd ago"), aAfter.Int());
+					aTimeReceived.FormatL(aBuf, _L("%J%:1%T%B"));
+					
+					if(aTimeReceived < (aTimeNow - TTimeIntervalDays(1))) {
+	                    TTimeIntervalDays aAfter = aTimeNow.DaysFrom(aTimeReceived);
+					    aBuf.AppendFormat(_L(" %dd ago"), aAfter.Int());
+					}
 				}
 				
 				TPtrC aLocation(aEntry->GetLocation()->GetString(EGeolocText));
@@ -1483,6 +1483,7 @@ void CBuddycloudMessagingContainer::HandleCommandL(TInt aCommand) {
 		}
 		else {
 			CExplorerStanzaBuilder::FormatBroadcasterXmppStanza(aViewReference().iNewViewData.iData, iBuddycloudLogic->GetNewIdStamp(), aEncId);
+			CExplorerStanzaBuilder::InsertResultSetIntoStanza(aViewReference().iNewViewData.iData, _L8("30"));
 			aResourceId = R_LOCALIZED_STRING_TITLE_FOLLOWEDBY;
 		}
 		
@@ -1559,12 +1560,16 @@ void CBuddycloudMessagingContainer::HandleCommandL(TInt aCommand) {
 					aViewReference().iCallbackViewId = KMessagingViewId;
 					aViewReference().iOldViewData.iId = iItem->GetItemId();
 					aViewReference().iNewViewData.iTitle.Copy(aLinkText);
-					aViewReference().iNewViewData.iData.Copy(aLinkText);
 					
 					if(aLinkPosition.iType == ELinkChannel) {
+	                    CXmppChannelIdUtilities::ValidateId(aViewReference().iNewViewData.iTitle);
+	                    
+	                    aViewReference().iNewViewData.iData.Copy(aViewReference().iNewViewData.iTitle);
 						aViewReference().iNewViewData.iData.Insert(0, _L8("/channel/"));
+                        aViewReference().iNewViewData.iTitle.Insert(0, _L("#"));
 					}
 					else {
+                        aViewReference().iNewViewData.iData.Copy(aLinkText);
 						aViewReference().iNewViewData.iData.Insert(0, _L8("/user/"));
 						aViewReference().iNewViewData.iData.Append(_L8("/channel"));
 					}

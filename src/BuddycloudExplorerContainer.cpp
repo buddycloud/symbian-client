@@ -81,7 +81,7 @@ void CBuddycloudExplorerContainer::ConstructL(const TRect& aRect, TViewReference
 		HBufC* aLangCode = iCoeEnv->AllocReadResourceLC(R_LOCALIZED_STRING_LANGCODE);
 		TPtrC8 aEncLangCode(iTextUtilities->UnicodeToUtf8L(*aLangCode));
 		
-		CExplorerStanzaBuilder::AppendXmlLangToStanza(aQuery.iData, aEncLangCode);
+		CExplorerStanzaBuilder::InsertXmlLanguageIntoStanza(aQuery.iData, aEncLangCode);
 		CleanupStack::PopAndDestroy(); // aLangCode
 	}
 
@@ -833,6 +833,7 @@ void CBuddycloudExplorerContainer::HandleCommandL(TInt aCommand) {
 				}
 				else {
 					CExplorerStanzaBuilder::AppendMaitredXmppStanza(aQuery.iData, iBuddycloudLogic->GetNewIdStamp(), iTextUtilities->UnicodeToUtf8L(aResultItem->GetId()), _L8("directory"));
+					CExplorerStanzaBuilder::InsertResultSetIntoStanza(aQuery.iData, _L8("30"));
 				}
 				
 				if(aQuery.iData.Length() > 0) {
@@ -840,7 +841,7 @@ void CBuddycloudExplorerContainer::HandleCommandL(TInt aCommand) {
 					HBufC* aLangCode = iCoeEnv->AllocReadResourceLC(R_LOCALIZED_STRING_LANGCODE);
 					TPtrC8 aEncLangCode(iTextUtilities->UnicodeToUtf8L(*aLangCode));
 					
-					CExplorerStanzaBuilder::AppendXmlLangToStanza(aQuery.iData, aEncLangCode);
+					CExplorerStanzaBuilder::InsertXmlLanguageIntoStanza(aQuery.iData, aEncLangCode);
 					CleanupStack::PopAndDestroy(); // aLangCode
 					
 					// Push
@@ -1032,6 +1033,7 @@ void CBuddycloudExplorerContainer::HandleCommandL(TInt aCommand) {
 			}
 			else {
 				CExplorerStanzaBuilder::FormatBroadcasterXmppStanza(aQuery.iData, iBuddycloudLogic->GetNewIdStamp(), pEncNodeId);
+                CExplorerStanzaBuilder::InsertResultSetIntoStanza(aQuery.iData, _L8("30"));
 				aResourceId = R_LOCALIZED_STRING_TITLE_FOLLOWEDBY;
 			}	
 			
@@ -1045,6 +1047,7 @@ void CBuddycloudExplorerContainer::HandleCommandL(TInt aCommand) {
 			}
 			else {
 				CExplorerStanzaBuilder::FormatBroadcasterXmppStanza(aQuery.iData, iBuddycloudLogic->GetNewIdStamp(), aEncId);
+	            CExplorerStanzaBuilder::InsertResultSetIntoStanza(aQuery.iData, _L8("30"));
 				aResourceId = R_LOCALIZED_STRING_TITLE_FOLLOWEDBY;
 			}	
 		}
@@ -1275,8 +1278,8 @@ void CBuddycloudExplorerContainer::XmppStanzaAcknowledgedL(const TDesC8& aStanza
 					if(aXmlParser->MoveToElement(_L8("items"))) {
 						// Set queried channel
 						if(aIdEnum == EXmppIdGetMaitredList) {
-							TPtrC aEncNodeId = iTextUtilities->Utf8ToUnicodeL(aXmlParser->GetStringAttribute(_L8("id")));
-							TInt aFollowingId = iBuddycloudLogic->IsSubscribedTo(aEncNodeId, EItemChannel);
+							TPtrC aEncItemsId = iTextUtilities->Utf8ToUnicodeL(aXmlParser->GetStringAttribute(_L8("id")));
+							TInt aFollowingId = iBuddycloudLogic->IsSubscribedTo(aEncItemsId, EItemChannel);
 							
 							if(aFollowingId > 0) {
 								aChannelItem = static_cast <CFollowingChannelItem*> (iBuddycloudLogic->GetFollowingStore()->GetItemById(aFollowingId));
@@ -1284,6 +1287,8 @@ void CBuddycloudExplorerContainer::XmppStanzaAcknowledgedL(const TDesC8& aStanza
 								iExplorerLevels[aLevel]->SetQueriedChannel(aChannelItem);	
 							}
 						}
+						
+						TPtrC8 aItemsVar = aXmlParser->GetStringAttribute(_L8("var"));
 
 						// Handle items
 						while(aXmlParser->MoveToElement(_L8("item"))) {
@@ -1344,6 +1349,11 @@ void CBuddycloudExplorerContainer::XmppStanzaAcknowledgedL(const TDesC8& aStanza
 										// Set as a channel result type
 										aResultItem->SetResultType(EExplorerItemChannel);
 										aResultItem->SetIconId(KIconChannel);
+										
+										if(aItemsVar.Length() > 0 && aItemsVar.Compare(_L8("directory")) != 0) {
+										    // Set channel affiliation
+										    aResultItem->SetChannelAffiliation(CXmppEnumerationConverter::PubsubAffiliation(aItemsVar));
+										}
 									}
 								}
 								else if((aIdEnum == EXmppIdGetMaitredList && aElementName.Compare(_L8("title")) == 0) || 

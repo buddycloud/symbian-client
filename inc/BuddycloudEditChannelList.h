@@ -28,7 +28,6 @@ class CBuddycloudEditChannelList : public CAknSettingItemList, MXmppStanzaObserv
 		
 	private:
 		void SetTitleL(TInt aResourceId);
-		void ValidateChannelId();
 		
 		void CollectChannelMetadataL(const TDesC& aNodeId);
 

@@ -5,6 +5,13 @@ Any problems please send 'C:\logs\Buddycloud\LogicLog.txt' to ross@buddycloud.co
 
 ----------
 
+1.00.09
+
+- [bug] CExplorerStanzaBuilder::AppendMaitredXmppStanza could no longer handle multiple stanzas
+- [bug] #channels with invalid characters cause a stream error and disconnect
+- Improve date formatting in CBuddycloudMessagingContainer
+- Show affiliation bar for exploring followers/moderators/producers
+
 1.00.08
 
 - Add rsm element into maitred calls in CBuddycloudExplorerContainer

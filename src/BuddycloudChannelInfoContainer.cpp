@@ -339,6 +339,7 @@ void CBuddycloudChannelInfoContainer::HandleCommandL(TInt aCommand) {
 		}
 		else {
 			CExplorerStanzaBuilder::FormatBroadcasterXmppStanza(aViewReference().iNewViewData.iData, iBuddycloudLogic->GetNewIdStamp(), iQueryReference.iNewViewData.iData);
+            CExplorerStanzaBuilder::InsertResultSetIntoStanza(aViewReference().iNewViewData.iData, _L8("30"));
 			aResourceId = R_LOCALIZED_STRING_TITLE_FOLLOWEDBY;
 		}
 		

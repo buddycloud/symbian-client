@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?fileVersion 3.0.0?>
+
+<ManagedProjectBuildInfo>
+<project id="Buddycloud.com.symbian.cdt.build.projectType.exe.1575133871" name="Symbian Executable Project" projectType="com.symbian.cdt.build.projectType.exe">
+<configuration artifactExtension="exe" artifactName="Buddycloud" cleanCommand="del /s/q" description="" errorParsers="com.symbian.cdt.build.WinscwErrorParser;org.eclipse.cdt.core.MakeErrorParser;;com.symbian.cdt.build.RCOMPErrorParser;" id="S60_3rd_com.symbian.cdt.build.projectType.exe_winscw.udeb_S60_3rd.1545393909" name="S60 3.0 Emulator Debug" parent="S60_3rd_com.symbian.cdt.build.projectType.exe_winscw.udeb_S60_3rd">
+<toolChain id="com.nokia.sdk.S60_30.build.winscw.winscwUdebExe.1677361494" name="WINSCW UDEB Defaults" superClass="com.nokia.sdk.S60_30.build.winscw.winscwUdebExe">
+<option id="com.nokia.cdt.build.toolChain.S60_30.winscw.GlobalOptions.systemIncludePaths.winscwUdebExe.1583420725" name="System Include Paths" superClass="com.nokia.cdt.build.toolChain.S60_30.winscw.GlobalOptions.systemIncludePaths.winscwUdebExe" valueType="includePath">
+<listOptionValue builtIn="false" value="&quot;${EPOCROOT}epoc32\include&quot;"/>
+<listOptionValue builtIn="false" value="&quot;${EPOCROOT}epoc32\include\ecom&quot;"/>
+<listOptionValue builtIn="false" value="&quot;${EPOCROOT}epoc32\include\variant&quot;"/>
+<listOptionValue builtIn="false" value="${EPOCROOT}epoc32\include\oem"/>
+<listOptionValue builtIn="false" value="&quot;${EPOCROOT}epoc32\include\http&quot;"/>
+</option>
+<option id="com.symbian.cdt.sdk.91.build.winscw.exeUdeb.targetType.1794615888" name="TargetType" superClass="com.symbian.cdt.sdk.91.build.winscw.exeUdeb.targetType" value="com.symbian.cdt.sdk.91.build.winscw.exeUdeb.exe" valueType="enumerated"/>
+<option id="com.symbian.cdt.build.91.toolChain.winscw.GlobalOptions.uid2.udeb.69876407" name="UID2" superClass="com.symbian.cdt.build.91.toolChain.winscw.GlobalOptions.uid2.udeb" value="0x00000000" valueType="string"/>
+<option id="com.symbian.cdt.build.91.toolChain.winscw.GlobalOptions.uid3.udeb.1621650686" name="UID3" superClass="com.symbian.cdt.build.91.toolChain.winscw.GlobalOptions.uid3.udeb" value="0x2000C4A4" valueType="string"/>
+<option id="com.symbian.cdt.build.91.toolChain.winscw.GlobalOptions.vendorid.udeb.995814426" name="Vendor Id" superClass="com.symbian.cdt.build.91.toolChain.winscw.GlobalOptions.vendorid.udeb" value="0x00000000" valueType="string"/>
+<option id="com.symbian.cdt.build.91.toolChain.winscw.GlobalOptions.secureid.udeb.1266601109" name="Secure Id" superClass="com.symbian.cdt.build.91.toolChain.winscw.GlobalOptions.secureid.udeb" value="0x2000C4A4" valueType="string"/>
+<option id="com.symbian.cdt.build.91.toolChain.winscw.GlobalOptions.capability.udeb.979147713" name="Capability" superClass="com.symbian.cdt.build.91.toolChain.winscw.GlobalOptions.capability.udeb" value="ReadUserData WriteUserData ReadDeviceData Location NetworkServices" valueType="string"/>
+<option id="com.symbian.cdt.build.toolChain.winscw.GlobalOptions.userIncludePaths.381740595" name="User Include Paths" superClass="com.symbian.cdt.build.toolChain.winscw.GlobalOptions.userIncludePaths" valueType="includePath">
+<listOptionValue builtIn="false" value="${ProjDirPath}\inc"/>
+<listOptionValue builtIn="false" value="&quot;${ProjDirPath}\data&quot;"/>
+</option>
+<tool id="com.nokia.sdk.S60_30.build.winscw.compiler.udebExe.20054314" name="WINSCW C/C++ Compiler" superClass="com.nokia.sdk.S60_30.build.winscw.compiler.udebExe"/>
+<tool id="com.symbian.cdt.build.tool.winscw.preCompiledHeader.default.1107862513" name="WINSCW C/C++ Precompiled Header Gen" superClass="com.symbian.cdt.build.tool.winscw.preCompiledHeader.default"/>
+<tool id="com.symbian.cdt.sdk.91.build.winscw.linker.udebExe.845834232" name="WINSCW C/C++ Linker" superClass="com.symbian.cdt.sdk.91.build.winscw.linker.udebExe">
+<option id="com.symbian.cdt.build.91.buildDefinitions.winscw.linker.libraries.libraries.udebExe.1010817990" superClass="com.symbian.cdt.build.91.buildDefinitions.winscw.linker.libraries.libraries.udebExe" valueType="stringList">
+<listOptionValue builtIn="false" value="euser.lib"/>
+<listOptionValue builtIn="false" value="bafl.lib"/>
+<listOptionValue builtIn="false" value="ecom.lib"/>
+<listOptionValue builtIn="false" value="http.lib"/>
+<listOptionValue builtIn="false" value="inetprotutil.lib"/>
+<listOptionValue builtIn="false" value="commdb.lib"/>
+<listOptionValue builtIn="false" value="apparc.lib"/>
+<listOptionValue builtIn="false" value="etel3rdparty.lib"/>
+<listOptionValue builtIn="false" value="esock.lib"/>
+<listOptionValue builtIn="false" value="insock.lib"/>
+<listOptionValue builtIn="false" value="cone.lib"/>
+<listOptionValue builtIn="false" value="eikcore.lib"/>
+<listOptionValue builtIn="false" value="avkon.lib"/>
+<listOptionValue builtIn="false" value="commonengine.lib"/>
+<listOptionValue builtIn="false" value="efsrv.lib"/>
+<listOptionValue builtIn="false" value="estor.lib"/>
+<listOptionValue builtIn="false" value="fbscli.lib"/>
+<listOptionValue builtIn="false" value="gdi.lib"/>
+<listOptionValue builtIn="false" value="bitgdi.lib"/>
+<listOptionValue builtIn="false" value="ws32.lib"/>
+</option>
+</tool>
+<tool id="com.symbian.cdt.build.91.tool.winscw.aif.udeb.451020841" name="AIF Compiler" superClass="com.symbian.cdt.build.91.tool.winscw.aif.udeb"/>
+<tool id="com.symbian.cdt.build.91.tool.winscw.rcomp.udeb.1331752463" name="Resource Compiler" superClass="com.symbian.cdt.build.91.tool.winscw.rcomp.udeb"/>
+<tool id="com.symbian.cdt.build.buildDefinitions.makedef.winscw.default.1119136946" name="Def File Creator for WINSCW" superClass="com.symbian.cdt.build.buildDefinitions.makedef.winscw.default"/>
+<tool id="com.symbian.cdt.build.91.tool.winscw.mbm.udeb.646548097" name="MBM Compiler" superClass="com.symbian.cdt.build.91.tool.winscw.mbm.udeb">
+<option id="com.symbian.cdt.build.buildDefinitions.mbm.general.targetPath.167195873" superClass="com.symbian.cdt.build.buildDefinitions.mbm.general.targetPath" value="\private\2000C4A4\" valueType="string"/>
+</tool>
+<tool id="com.nokia.sdk.S60_30.build.winscw.mif.udebExe.1603132179" name="MIF Compiler" superClass="com.nokia.sdk.S60_30.build.winscw.mif.udebExe"/>
+<macros/>
+</toolChain>
+<resourceConfiguration exclude="false" id="S60_3rd_com.symbian.cdt.build.projectType.exe_winscw.udeb_S60_3rd.1545393909.520352094" name="Buddycloud.rss" rcbsApplicability="disable" resourcePath="/Buddycloud/data/Buddycloud.rss" toolsToInvoke="com.symbian.cdt.build.91.tool.winscw.rcomp.udeb.1331752463./Buddycloud/data/Buddycloud.rss">
+<tool id="com.symbian.cdt.build.91.tool.winscw.rcomp.udeb.1331752463./Buddycloud/data/Buddycloud.rss" name="Resource Compiler" superClass="com.symbian.cdt.build.91.tool.winscw.rcomp.udeb.1331752463">
+<option id="com.symbian.cdt.build.buildDefinitions.rcomp.general.targetPath.801074732" superClass="com.symbian.cdt.build.buildDefinitions.rcomp.general.targetPath" value="resource\apps" valueType="string"/>
+</tool>
+</resourceConfiguration>
+<resourceConfiguration exclude="false" id="S60_3rd_com.symbian.cdt.build.projectType.exe_winscw.udeb_S60_3rd.1545393909.1558755939" name="Buddycloud_reg.rss" rcbsApplicability="disable" resourcePath="/Buddycloud/data/Buddycloud_reg.rss" toolsToInvoke="com.symbian.cdt.build.91.tool.winscw.rcomp.udeb.1331752463./Buddycloud/data/Buddycloud_reg.rss">
+<tool id="com.symbian.cdt.build.91.tool.winscw.rcomp.udeb.1331752463./Buddycloud/data/Buddycloud_reg.rss" name="Resource Compiler" superClass="com.symbian.cdt.build.91.tool.winscw.rcomp.udeb.1331752463">
+<option id="com.symbian.cdt.build.buildDefinitions.rcomp.general.targetPath.342299065" superClass="com.symbian.cdt.build.buildDefinitions.rcomp.general.targetPath" value="private\10003a3f\apps" valueType="string"/>
+</tool>
+</resourceConfiguration>
+</configuration>
+<configuration artifactExtension="exe" artifactName="Buddycloud" cleanCommand="del /s/q" description="" id="S60_3rd_com.symbian.cdt.build.projectType.exe_gcce.udeb_S60_3rd.338913330" name="S60 3.0 Phone (GCCE) Debug" parent="S60_3rd_com.symbian.cdt.build.projectType.exe_gcce.udeb_S60_3rd">
+<toolChain id="com.nokia.sdk.S60_30.build.toolChain.gcce.gcceUdebExe.1030038712" name="GCCE EXE Defaults" superClass="com.nokia.sdk.S60_30.build.toolChain.gcce.gcceUdebExe">
+<option id="com.nokia.cdt.build.toolChain.S60_30.gcce.GlobalOptions.systemIncludePaths.gcceUdebExe.1086990998" name="System Include Paths" superClass="com.nokia.cdt.build.toolChain.S60_30.gcce.GlobalOptions.systemIncludePaths.gcceUdebExe" valueType="includePath">
+<listOptionValue builtIn="false" value="&quot;${EPOCROOT}epoc32\include&quot;"/>
+<listOptionValue builtIn="false" value="&quot;${EPOCROOT}epoc32\include\variant&quot;"/>
+<listOptionValue builtIn="false" value="${EPOCROOT}epoc32\include\oem"/>
+</option>
+<option id="com.symbian.cdt.sdk.91.build.gcce.targetType.exe.1814614733" name="TargetType" superClass="com.symbian.cdt.sdk.91.build.gcce.targetType.exe" value="exe" valueType="enumerated"/>
+<option id="com.symbian.cdt.build.toolChain.gcce.GlobalOptions.uid2.exe.33916091" name="UID2" superClass="com.symbian.cdt.build.toolChain.gcce.GlobalOptions.uid2.exe" value="0x00000000" valueType="string"/>
+<option id="com.symbian.cdt.build.toolChain.gcce.GlobalOptions.uid3.exe.1111203746" name="UID3" superClass="com.symbian.cdt.build.toolChain.gcce.GlobalOptions.uid3.exe" value="0x2000C4A4" valueType="string"/>
+<option id="com.symbian.cdt.build.toolChain.gcce.GlobalOptions.vendorid.exe.1959801964" name="Vendor Id" superClass="com.symbian.cdt.build.toolChain.gcce.GlobalOptions.vendorid.exe" value="0x00000000" valueType="string"/>
+<option id="com.symbian.cdt.build.toolChain.gcce.GlobalOptions.secureid.exe.181249032" name="Secure Id" superClass="com.symbian.cdt.build.toolChain.gcce.GlobalOptions.secureid.exe" value="0x2000C4A4" valueType="string"/>
+<option id="com.symbian.cdt.build.toolChain.gcce.GlobalOptions.capability.exe.452534537" name="Capability" superClass="com.symbian.cdt.build.toolChain.gcce.GlobalOptions.capability.exe" value="ReadUserData" valueType="string"/>
+<option id="com.symbian.cdt.build.toolChain.gcce.GlobalOptions.userIncludePaths.908976500" name="User Include Paths" superClass="com.symbian.cdt.build.toolChain.gcce.GlobalOptions.userIncludePaths" valueType="includePath">
+<listOptionValue builtIn="false" value="&quot;${ProjDirPath}\inc&quot;"/>
+<listOptionValue builtIn="false" value="&quot;${ProjDirPath}\data&quot;"/>
+</option>
+<tool id="com.nokia.cdt.build.tool.S60_30.gcce.compiler.exeUdeb.130069925" name="GCCE Compiler" superClass="com.nokia.cdt.build.tool.S60_30.gcce.compiler.exeUdeb"/>
+<tool id="com.symbian.cdt.build.tool.gcce.aif.exe.373624073" name="AIF Compiler" superClass="com.symbian.cdt.build.tool.gcce.aif.exe"/>
+<tool id="com.symbian.cdt.build.tool.gcce.rcomp.exe.200266591" name="Resource Compiler" superClass="com.symbian.cdt.build.tool.gcce.rcomp.exe"/>
+<tool id="com.symbian.cdt.build.tool.gcce.mbm.exe.1854230494" name="MBM Compiler" superClass="com.symbian.cdt.build.tool.gcce.mbm.exe"/>
+<tool id="com.symbian.cdt.build.tool.gcce.createsis.exe.1309110880" name="CreateSis (Installation File Generator)" superClass="com.symbian.cdt.build.tool.gcce.createsis.exe"/>
+<tool id="com.symbian.cdt.build.tool.gcce.linker.exeUdeb.1061504661" name="GCCE Linker" superClass="com.symbian.cdt.build.tool.gcce.linker.exeUdeb">
+<option id="com.symbian.cdt.build.buildDefinitions.gcce.linker.libraries.libraries.exeUdeb.62016447" superClass="com.symbian.cdt.build.buildDefinitions.gcce.linker.libraries.libraries.exeUdeb" valueType="stringList">
+<listOptionValue builtIn="false" value="euser.dso"/>
+<listOptionValue builtIn="false" value="apparc.dso"/>
+<listOptionValue builtIn="false" value="cone.dso"/>
+<listOptionValue builtIn="false" value="eikcore.dso"/>
+<listOptionValue builtIn="false" value="avkon.dso"/>
+<listOptionValue builtIn="false" value="commonengine.dso"/>
+<listOptionValue builtIn="false" value="efsrv.dso"/>
+<listOptionValue builtIn="false" value="estor.dso"/>
+</option>
+</tool>
+<tool id="com.symbian.cdt.build.tool.postLinker.exeUdeb.502344142" name="Post linker" superClass="com.symbian.cdt.build.tool.postLinker.exeUdeb"/>
+<tool id="com.nokia.cdt.build.tool.S60_30.gcce.mif.exeUdeb.1848007543" name="MIF Compiler" superClass="com.nokia.cdt.build.tool.S60_30.gcce.mif.exeUdeb"/>
+<macros/>
+</toolChain>
+<resourceConfiguration exclude="false" id="S60_3rd_com.symbian.cdt.build.projectType.exe_gcce.udeb_S60_3rd.338913330.1928925179" name="Buddycloud.rss" rcbsApplicability="disable" resourcePath="/Buddycloud/data/Buddycloud.rss" toolsToInvoke="com.symbian.cdt.build.tool.gcce.rcomp.exe.200266591./Buddycloud/data/Buddycloud.rss">
+<tool id="com.symbian.cdt.build.tool.gcce.rcomp.exe.200266591./Buddycloud/data/Buddycloud.rss" name="Resource Compiler" superClass="com.symbian.cdt.build.tool.gcce.rcomp.exe.200266591">
+<option id="com.symbian.cdt.build.buildDefinitions.rcomp.general.targetPath.473746567" superClass="com.symbian.cdt.build.buildDefinitions.rcomp.general.targetPath" value="resource\apps" valueType="string"/>
+</tool>
+</resourceConfiguration>
+<resourceConfiguration exclude="false" id="S60_3rd_com.symbian.cdt.build.projectType.exe_gcce.udeb_S60_3rd.338913330.705913668" name="Buddycloud_reg.rss" rcbsApplicability="disable" resourcePath="/Buddycloud/data/Buddycloud_reg.rss" toolsToInvoke="com.symbian.cdt.build.tool.gcce.rcomp.exe.200266591./Buddycloud/data/Buddycloud_reg.rss">
+<tool id="com.symbian.cdt.build.tool.gcce.rcomp.exe.200266591./Buddycloud/data/Buddycloud_reg.rss" name="Resource Compiler" superClass="com.symbian.cdt.build.tool.gcce.rcomp.exe.200266591">
+<option id="com.symbian.cdt.build.buildDefinitions.rcomp.general.targetPath.745888739" superClass="com.symbian.cdt.build.buildDefinitions.rcomp.general.targetPath" value="private\10003a3f\apps" valueType="string"/>
+</tool>
+</resourceConfiguration>
+</configuration>
+<configuration artifactExtension="exe" artifactName="Buddycloud" cleanCommand="del /s/q" description="" id="S60_3rd_com.symbian.cdt.build.projectType.exe_gcce.urel_S60_3rd.588699138" name="S60 3.0 Phone (GCCE) Release" parent="S60_3rd_com.symbian.cdt.build.projectType.exe_gcce.urel_S60_3rd">
+<toolChain id="com.nokia.sdk.S60_30.build.toolChain.gcce.gcceUrelExe.343453928" name="GCCE EXE Defaults" superClass="com.nokia.sdk.S60_30.build.toolChain.gcce.gcceUrelExe">
+<option id="com.nokia.cdt.build.toolChain.S60_30.gcce.GlobalOptions.systemIncludePaths.gcceUrelExe.1618678867" name="System Include Paths" superClass="com.nokia.cdt.build.toolChain.S60_30.gcce.GlobalOptions.systemIncludePaths.gcceUrelExe" valueType="includePath">
+<listOptionValue builtIn="false" value="&quot;${EPOCROOT}epoc32\include&quot;"/>
+<listOptionValue builtIn="false" value="&quot;${EPOCROOT}epoc32\include\variant&quot;"/>
+<listOptionValue builtIn="false" value="${EPOCROOT}epoc32\include\oem"/>
+<listOptionValue builtIn="false" value="&quot;${EPOCROOT}epoc32\include\http&quot;"/>
+<listOptionValue builtIn="false" value="&quot;${EPOCROOT}epoc32\include\ecom&quot;"/>
+</option>
+<option id="com.symbian.cdt.sdk.91.build.gcce.targetType.exe.1351368436" name="TargetType" superClass="com.symbian.cdt.sdk.91.build.gcce.targetType.exe" value="com.symbian.cdt.sdk.91.build.gcce.exe.exe" valueType="enumerated"/>
+<option id="com.symbian.cdt.build.toolChain.gcce.GlobalOptions.uid2.exe.783924334" name="UID2" superClass="com.symbian.cdt.build.toolChain.gcce.GlobalOptions.uid2.exe" value="0x00000000" valueType="string"/>
+<option id="com.symbian.cdt.build.toolChain.gcce.GlobalOptions.uid3.exe.121088403" name="UID3" superClass="com.symbian.cdt.build.toolChain.gcce.GlobalOptions.uid3.exe" value="0x2000C4A4" valueType="string"/>
+<option id="com.symbian.cdt.build.toolChain.gcce.GlobalOptions.vendorid.exe.1967766221" name="Vendor Id" superClass="com.symbian.cdt.build.toolChain.gcce.GlobalOptions.vendorid.exe" value="0x00000000" valueType="string"/>
+<option id="com.symbian.cdt.build.toolChain.gcce.GlobalOptions.secureid.exe.40487084" name="Secure Id" superClass="com.symbian.cdt.build.toolChain.gcce.GlobalOptions.secureid.exe" value="0x2000C4A4" valueType="string"/>
+<option id="com.symbian.cdt.build.toolChain.gcce.GlobalOptions.capability.exe.1412994405" name="Capability" superClass="com.symbian.cdt.build.toolChain.gcce.GlobalOptions.capability.exe" value="ReadUserData WriteUserData ReadDeviceData Location NetworkServices" valueType="string"/>
+<option id="com.symbian.cdt.build.toolChain.gcce.GlobalOptions.userIncludePaths.1826198411" name="User Include Paths" superClass="com.symbian.cdt.build.toolChain.gcce.GlobalOptions.userIncludePaths" valueType="includePath">
+<listOptionValue builtIn="false" value="&quot;${ProjDirPath}\inc&quot;"/>
+<listOptionValue builtIn="false" value="&quot;${ProjDirPath}\data&quot;"/>
+</option>
+<option id="com.symbian.cdt.build.toolChain.gcce.GlobalOptions.targetPath.502383142" superClass="com.symbian.cdt.build.toolChain.gcce.GlobalOptions.targetPath" value="\private\2000C4A4\" valueType="string"/>
+<tool id="com.nokia.cdt.build.tool.S60_30.gcce.compiler.exeUrel.1856909138" name="GCCE Compiler" superClass="com.nokia.cdt.build.tool.S60_30.gcce.compiler.exeUrel"/>
+<tool id="com.symbian.cdt.build.tool.gcce.aif.exe.531661434" name="AIF Compiler" superClass="com.symbian.cdt.build.tool.gcce.aif.exe"/>
+<tool id="com.symbian.cdt.build.tool.gcce.rcomp.exe.327171355" name="Resource Compiler" superClass="com.symbian.cdt.build.tool.gcce.rcomp.exe"/>
+<tool id="com.symbian.cdt.build.tool.gcce.mbm.exe.272949517" name="MBM Compiler" superClass="com.symbian.cdt.build.tool.gcce.mbm.exe">
+<option id="com.symbian.cdt.build.buildDefinitions.mbm.general.targetPath.2014130402" superClass="com.symbian.cdt.build.buildDefinitions.mbm.general.targetPath" value="\private\2000C4A4\" valueType="string"/>
+</tool>
+<tool id="com.symbian.cdt.build.tool.gcce.createsis.exe.326825608" name="CreateSis (Installation File Generator)" superClass="com.symbian.cdt.build.tool.gcce.createsis.exe">
+<option id="com.symbian.cdt.build.buildDefinitions.createsis.general.passPhrase.818082985" superClass="com.symbian.cdt.build.buildDefinitions.createsis.general.passPhrase" value="dangcert1" valueType="string"/>
+<option id="com.symbian.cdt.build.buildDefinitions.createsis.general.certificate.1382993692" superClass="com.symbian.cdt.build.buildDefinitions.createsis.general.certificate" value="C:\Symbian\Signing\DangerossStudios.cer" valueType="string"/>
+<option id="com.symbian.cdt.build.buildDefinitions.createsis.general.key.1704744080" superClass="com.symbian.cdt.build.buildDefinitions.createsis.general.key" value="C:\Symbian\Signing\TCTrustCenter.key" valueType="string"/>
+<option id="com.symbian.cdt.build.buildDefinitions.createsis.general.outputName.514637797" superClass="com.symbian.cdt.build.buildDefinitions.createsis.general.outputName" value="Buddycloud_3rd_Ed.sisx" valueType="string"/>
+</tool>
+<tool id="com.symbian.cdt.build.tool.gcce.linker.exeUrel.1793399791" name="GCCE Linker" superClass="com.symbian.cdt.build.tool.gcce.linker.exeUrel">
+<option id="com.symbian.cdt.build.buildDefinitions.gcce.linker.libraries.libraries.exeUrel.433404425" superClass="com.symbian.cdt.build.buildDefinitions.gcce.linker.libraries.libraries.exeUrel" valueType="stringList">
+<listOptionValue builtIn="false" value="euser.dso"/>
+<listOptionValue builtIn="false" value="ecom.dso"/>
+<listOptionValue builtIn="false" value="http.dso"/>
+<listOptionValue builtIn="false" value="inetprotutil.dso"/>
+<listOptionValue builtIn="false" value="commdb.dso"/>
+<listOptionValue builtIn="false" value="fbscli.dso"/>
+<listOptionValue builtIn="false" value="gdi.dso"/>
+<listOptionValue builtIn="false" value="bafl.dso"/>
+<listOptionValue builtIn="false" value="bitgdi.dso"/>
+<listOptionValue builtIn="false" value="esock.dso"/>
+<listOptionValue builtIn="false" value="insock.dso"/>
+<listOptionValue builtIn="false" value="etel3rdparty.dso"/>
+<listOptionValue builtIn="false" value="ws32.dso"/>
+<listOptionValue builtIn="false" value="apparc.dso"/>
+<listOptionValue builtIn="false" value="cone.dso"/>
+<listOptionValue builtIn="false" value="eikcore.dso"/>
+<listOptionValue builtIn="false" value="avkon.dso"/>
+<listOptionValue builtIn="false" value="commonengine.dso"/>
+<listOptionValue builtIn="false" value="efsrv.dso"/>
+<listOptionValue builtIn="false" value="estor.dso"/>
+</option>
+</tool>
+<tool id="com.symbian.cdt.build.tool.postLinker.exeUrel.1154909935" name="Post linker" superClass="com.symbian.cdt.build.tool.postLinker.exeUrel"/>
+<tool id="com.nokia.cdt.build.tool.S60_30.gcce.mif.exeUrel.806729771" name="MIF Compiler" superClass="com.nokia.cdt.build.tool.S60_30.gcce.mif.exeUrel"/>
+<macros/>
+</toolChain>
+<resourceConfiguration exclude="false" id="S60_3rd_com.symbian.cdt.build.projectType.exe_gcce.urel_S60_3rd.588699138.1185601169" name="Buddycloud.rss" rcbsApplicability="disable" resourcePath="/Buddycloud/data/Buddycloud.rss" toolsToInvoke="com.symbian.cdt.build.tool.gcce.rcomp.exe.327171355./Buddycloud/data/Buddycloud.rss">
+<tool id="com.symbian.cdt.build.tool.gcce.rcomp.exe.327171355./Buddycloud/data/Buddycloud.rss" name="Resource Compiler" superClass="com.symbian.cdt.build.tool.gcce.rcomp.exe.327171355">
+<option id="com.symbian.cdt.build.buildDefinitions.rcomp.general.targetPath.1161174942" superClass="com.symbian.cdt.build.buildDefinitions.rcomp.general.targetPath" value="resource\apps" valueType="string"/>
+</tool>
+</resourceConfiguration>
+<resourceConfiguration exclude="false" id="S60_3rd_com.symbian.cdt.build.projectType.exe_gcce.urel_S60_3rd.588699138.1915707709" name="Buddycloud_reg.rss" rcbsApplicability="disable" resourcePath="/Buddycloud/data/Buddycloud_reg.rss" toolsToInvoke="com.symbian.cdt.build.tool.gcce.rcomp.exe.327171355./Buddycloud/data/Buddycloud_reg.rss">
+<tool id="com.symbian.cdt.build.tool.gcce.rcomp.exe.327171355./Buddycloud/data/Buddycloud_reg.rss" name="Resource Compiler" superClass="com.symbian.cdt.build.tool.gcce.rcomp.exe.327171355">
+<option id="com.symbian.cdt.build.buildDefinitions.rcomp.general.targetPath.878846917" superClass="com.symbian.cdt.build.buildDefinitions.rcomp.general.targetPath" value="private\10003a3f\apps" valueType="string"/>
+</tool>
+</resourceConfiguration>
+</configuration>
+<macros/>
+</project>
+</ManagedProjectBuildInfo>

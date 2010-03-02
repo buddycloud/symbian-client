@@ -141,6 +141,41 @@ TPtrC8 CXmppEnumerationConverter::PubsubAffiliation(TXmppPubsubAffiliation aPubs
 /*
 ----------------------------------------------------------------------------
 --
+-- CXmppChannelIdUtilities
+--
+----------------------------------------------------------------------------
+*/
+
+void CXmppChannelIdUtilities::ValidateId(TDes& aId) {
+    aId.LowerCase();
+    
+    // Remove non-ascii characters
+    for(TInt i = aId.Length() - 1; i >= 0; i--) {
+        if(aId[i] >= 123) {
+            aId[i] = (aId[i] % 26) + 97;
+        }
+        else if(aId[i] != 32 && aId[i] != 95 && aId[i] != 45 && 
+                (aId[i] <= 47 || (aId[i] >= 57 && aId[i] <= 64) ||
+                (aId[i] >= 91 && aId[i] <= 96))) {
+            
+            aId.Delete(i, 1);
+        }
+    }
+    
+    // Trim whitespace
+    aId.Trim();
+    
+    // Add hyphens
+    for(TInt i = 0; i < aId.Length(); i++) {
+        if(aId[i] == 32 || aId[i] == 95) {
+            aId[i] = 45;
+        }
+    }
+}
+
+/*
+----------------------------------------------------------------------------
+--
 -- CXmppPubsubNodeParser
 --
 ----------------------------------------------------------------------------

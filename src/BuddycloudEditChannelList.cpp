@@ -37,7 +37,7 @@ void CBuddycloudEditChannelList::ConstructL(const TRect& aRect, TViewData aQuery
 		
 		iId.Copy(aEncData.Left(iId.MaxLength()));
 		
-		ValidateChannelId();
+		CXmppChannelIdUtilities::ValidateId(iId);
 		
 		if(iId.Length() > 0) {
 			iChannelSaveAllowed = true;
@@ -68,33 +68,6 @@ void CBuddycloudEditChannelList::SetTitleL(TInt aResourceId) {
 	HBufC* aTitle = iEikonEnv->AllocReadResourceLC(aResourceId);
 	aTitlePane->SetTextL(*aTitle);
 	CleanupStack::PopAndDestroy(); // aTitle
-}
-
-void CBuddycloudEditChannelList::ValidateChannelId() {
-	iId.LowerCase();
-	
-	// Remove non-ascii characters
-	for(TInt i = iId.Length() - 1; i >= 0; i--) {
-		if(iId[i] >= 123) {
-			iId[i] = (iId[i] % 26) + 97;
-		}
-		else if(iId[i] != 32 && iId[i] != 95 && iId[i] != 45 && 
-				(iId[i] <= 47 || (iId[i] >= 57 && iId[i] <= 64) ||
-				(iId[i] >= 91 && iId[i] <= 96))) {
-			
-			iId.Delete(i, 1);
-		}
-	}
-	
-	// Trim whitespace
-	iId.Trim();
-	
-	// Add hyphens
-	for(TInt i = 0; i < iId.Length(); i++) {
-		if(iId[i] == 32 || iId[i] == 95) {
-			iId[i] = 45;
-		}
-	}
 }
 
 void CBuddycloudEditChannelList::CollectChannelMetadataL(const TDesC& aNodeId) {
@@ -225,7 +198,7 @@ void CBuddycloudEditChannelList::EditItemL(TInt aIndex, TBool aCalledFromMenu) {
 				iId.Copy(iTitle);
 			}
 			
-			ValidateChannelId();
+			CXmppChannelIdUtilities::ValidateId(iId);
 			
 			LoadSettingsL();
 			
