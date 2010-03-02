@@ -5,6 +5,10 @@ Any problems please send 'C:\logs\Buddycloud\LogicLog.txt' to ross@buddycloud.co
 
 ----------
 
+1.00.10
+
+- [bug] Timestamp not displaying users local time
+
 1.00.09
 
 - [bug] CExplorerStanzaBuilder::AppendMaitredXmppStanza could no longer handle multiple stanzas

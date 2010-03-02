@@ -760,7 +760,8 @@ void CBuddycloudMessagingContainer::RenderWrappedText(TInt aIndex) {
 					aBuf.Format(_L("%dm ago"), aAfter.Int());
 				}
 				else {
-					aTimeReceived.FormatL(aBuf, _L("%J%:1%T%B"));
+	                TTime aLocalTime = aTimeReceived + User::UTCOffset();
+	                aLocalTime.FormatL(aBuf, _L("%J%:1%T%B"));
 					
 					if(aTimeReceived < (aTimeNow - TTimeIntervalDays(1))) {
 	                    TTimeIntervalDays aAfter = aTimeNow.DaysFrom(aTimeReceived);
