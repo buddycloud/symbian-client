@@ -4725,6 +4725,8 @@ void CBuddycloudLogic::XmppStateChanged(TXmppEngineState aState) {
 		}
 
 		// Store state
+        iDiscussionManager->CompressDiscussionL(true);
+        
 		SaveSettingsAndItemsL();
 		SavePlaceItemsL();
 
@@ -5740,6 +5742,7 @@ void CBuddycloudLogic::HandleIncomingMessageL(const TDesC8& aStanza) {
 		// Create atom entry
 		CAtomEntryData* aAtomEntry = CAtomEntryData::NewLC();
 		aAtomEntry->SetPublishTime(TimeStamp());
+        aAtomEntry->SetAuthorAffiliation(EPubsubAffiliationOwner);
 		aAtomEntry->SetAuthorNameL(aJid);
 		aAtomEntry->SetAuthorJidL(aJid);
 		aAtomEntry->SetPrivate(true);
@@ -5766,10 +5769,6 @@ void CBuddycloudLogic::HandleIncomingMessageL(const TDesC8& aStanza) {
 				}
 			}
 		} while(aXmlParser->MoveToNextElement());
-
-		if(aRosterItem->GetId().CompareF(aJid) == 0) {
-			aAtomEntry->SetAuthorAffiliation(EPubsubAffiliationOwner);
-		}
 		
 		// Set geoloc data
 		CGeolocData* aGeoloc = aRosterItem->GetGeolocItem(EGeolocItemCurrent);

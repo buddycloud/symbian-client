@@ -211,6 +211,9 @@ void CBuddycloudExplorerContainer::PopLevelL() {
 		delete iExplorerLevels[aLevel];
 		iExplorerLevels.Remove(aLevel);
 		
+		// Compress heap
+		User::Heap().Compress();
+		
 		// Set selected item
 		aLevel--;
 		iSelectedItem = iExplorerLevels[aLevel]->iSelectedResultItem;
@@ -232,6 +235,9 @@ void CBuddycloudExplorerContainer::RefreshLevelL() {
 		if(iExplorerLevels[aLevel]->GetQueriedStanza().Length() > 0) {
 			// Clear previous result data
 			iExplorerLevels[aLevel]->ClearResultItems();
+	        
+	        // Compress heap
+	        User::Heap().Compress();
 			
 			// Send query
 			ParseAndSendXmppStanzasL(iExplorerLevels[aLevel]->GetQueriedStanza());
@@ -551,7 +557,7 @@ void CBuddycloudExplorerContainer::RenderListItems() {
 		
 		// Check if rsm call is needed
 		if(iExplorerState == EExplorerIdle && iExplorerLevels[aLevel]->RsmAllowed() && 
-				(iScrollbarHandlePosition > (iTotalListSize - (iRect.Height() * 2)))) {
+				(iScrollbarHandlePosition > (iTotalListSize - (iRect.Height() * 3)))) {
 				
 			// Collect next set of results
 			RequestMoreResultsL();
@@ -1033,7 +1039,7 @@ void CBuddycloudExplorerContainer::HandleCommandL(TInt aCommand) {
 			}
 			else {
 				CExplorerStanzaBuilder::FormatBroadcasterXmppStanza(aQuery.iData, iBuddycloudLogic->GetNewIdStamp(), pEncNodeId);
-                CExplorerStanzaBuilder::InsertResultSetIntoStanza(aQuery.iData, _L8("30"));
+                CExplorerStanzaBuilder::InsertResultSetIntoStanza(aQuery.iData, _L8("50"));
 				aResourceId = R_LOCALIZED_STRING_TITLE_FOLLOWEDBY;
 			}	
 			
@@ -1047,7 +1053,7 @@ void CBuddycloudExplorerContainer::HandleCommandL(TInt aCommand) {
 			}
 			else {
 				CExplorerStanzaBuilder::FormatBroadcasterXmppStanza(aQuery.iData, iBuddycloudLogic->GetNewIdStamp(), aEncId);
-	            CExplorerStanzaBuilder::InsertResultSetIntoStanza(aQuery.iData, _L8("30"));
+	            CExplorerStanzaBuilder::InsertResultSetIntoStanza(aQuery.iData, _L8("50"));
 				aResourceId = R_LOCALIZED_STRING_TITLE_FOLLOWEDBY;
 			}	
 		}

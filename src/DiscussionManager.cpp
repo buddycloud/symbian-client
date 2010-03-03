@@ -761,6 +761,7 @@ CDiscussion* CDiscussionManager::GetDiscussionL(const TDesC& aId) {
 		}
 		else if(aCompressionNeeded) {
 			iDiscussions[i]->CompressL(true);
+			User::Heap().Compress();
 			
 			aCompressionNeeded = CompressionNeeded();
 		}		
@@ -790,6 +791,10 @@ void CDiscussionManager::DeleteDiscussionL(const TDesC& aId) {
 void CDiscussionManager::CompressDiscussionL(TBool aForced) {
 	for(TInt i = 0; i < iDiscussions.Count(); i++) {
 		iDiscussions[i]->CompressL(aForced);
+	}
+	
+	if(aForced) {
+	    User::Heap().Compress();
 	}
 	
 	iTimer->After(300000000);
