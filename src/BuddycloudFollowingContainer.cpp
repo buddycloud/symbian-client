@@ -840,10 +840,11 @@ void CBuddycloudFollowingContainer::DynInitMenuPaneL(TInt aResourceId, CEikMenuP
 		}
 	}
 	else if(aResourceId == R_STATUS_OPTIONS_ITEM_MENU) {
-		aMenuPane->SetItemDimmed(EMenuPrivateMessagesCommand, true);
 		aMenuPane->SetItemDimmed(EMenuChannelMessagesCommand, true);
-		aMenuPane->SetItemDimmed(EMenuGetPlaceInfoCommand, true);
-		aMenuPane->SetItemDimmed(EMenuChannelInfoCommand, true);
+        aMenuPane->SetItemDimmed(EMenuPrivateMessagesCommand, true);
+        aMenuPane->SetItemDimmed(EMenuChannelInfoCommand, true);
+        aMenuPane->SetItemDimmed(EMenuGetPlaceInfoCommand, true);
+        aMenuPane->SetItemDimmed(EMenuInviteToBuddycloudCommand, true);
 		aMenuPane->SetItemDimmed(EMenuFollowCommand, true);
 		aMenuPane->SetItemDimmed(EMenuUnfollowCommand, true);
 		aMenuPane->SetItemDimmed(EMenuAcceptCommand, true);
@@ -869,21 +870,29 @@ void CBuddycloudFollowingContainer::DynInitMenuPaneL(TInt aResourceId, CEikMenuP
 			else if(aItem->GetItemType() == EItemRoster) {
 				CFollowingRosterItem* aRosterItem = static_cast <CFollowingRosterItem*> (aItem);				
 				
-				if(!aRosterItem->OwnItem()) {
-					aMenuPane->SetItemDimmed(EMenuPrivateMessagesCommand, false);
-				}
-				
 				if(aRosterItem->GetId(EIdChannel).Length() > 0) {
+				    // Channel items
 					aMenuPane->SetItemDimmed(EMenuChannelMessagesCommand, false);
 					
 					if(iBuddycloudLogic->GetState() == ELogicOnline) {
 						aMenuPane->SetItemDimmed(EMenuChannelInfoCommand, false);
 					}
 				}
+				else if(!aRosterItem->OwnItem() && (aRosterItem->GetSubscription() == EPresenceSubscriptionTo || 
+				        aRosterItem->GetSubscription() == EPresenceSubscriptionBoth)) {
+				    
+			        // Invite
+				    aMenuPane->SetItemDimmed(EMenuInviteToBuddycloudCommand, false);
+				}
+				
+                // Private messages
+				if(!aRosterItem->OwnItem() || aRosterItem->GetUnread(EIdRoster) > 0) {
+                    aMenuPane->SetItemDimmed(EMenuPrivateMessagesCommand, false);
+                }              
 
 				// Follow & Unfollow
 				if(!aRosterItem->OwnItem()) {
-					if(aRosterItem->GetSubscription() == EPresenceSubscriptionFrom) {
+                    if(aRosterItem->GetSubscription() == EPresenceSubscriptionFrom) {
 						aMenuPane->SetItemDimmed(EMenuFollowCommand, false);
 					}
 					
@@ -993,17 +1002,6 @@ void CBuddycloudFollowingContainer::HandleCommandL(TInt aCommand) {
 			iBuddycloudLogic->SetMoodL(aMood);
 		}
 	}
-	else if(aCommand == EMenuFollowCommand) {
-		CFollowingItem* aItem = static_cast <CFollowingItem*> (iItemStore->GetItemById(iSelectedItem));
-
-		if(aItem && aItem->GetItemType() == EItemRoster) {
-			CFollowingRosterItem* aRosterItem = static_cast <CFollowingRosterItem*> (aItem);
-			
-			if(aCommand == EMenuFollowCommand) {
-				iBuddycloudLogic->FollowContactL(aRosterItem->GetId());
-			}
-		}
-	}
 	else if(aCommand == EMenuAddContactCommand) {
 		TBuf<64> aFollow;
 
@@ -1035,15 +1033,6 @@ void CBuddycloudFollowingContainer::HandleCommandL(TInt aCommand) {
                     iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KChannelInfoViewId), TUid::Uid(0), aViewReference);					
 				}
 			}
-		}
-	}
-	else if(aCommand == EMenuUnfollowCommand) {
-		CAknMessageQueryDialog* aDialog = new (ELeave) CAknMessageQueryDialog();
-
-		if(aDialog->ExecuteLD(R_DELETE_DIALOG) != 0) {
-			iBuddycloudLogic->UnfollowItemL(iSelectedItem);
-			
-			RenderScreen();
 		}
 	}
 	else if(aCommand == EMenuPrivateMessagesCommand || aCommand == EMenuChannelMessagesCommand) {
@@ -1126,6 +1115,52 @@ void CBuddycloudFollowingContainer::HandleCommandL(TInt aCommand) {
 			CleanupStack::PopAndDestroy(3); // aTextUtilities, aMessage, aHeader
 		}
 	}
+	else if(aCommand == EMenuInviteToBuddycloudCommand) {
+        CFollowingItem* aItem = static_cast <CFollowingItem*> (iItemStore->GetItemById(iSelectedItem));
+
+        if(aItem && aItem->GetItemType() == EItemRoster) {
+            CFollowingRosterItem* aRosterItem = static_cast <CFollowingRosterItem*> (aItem);
+            TInt aLocate = aRosterItem->GetId().Locate('@');
+            
+            if(aLocate != KErrNotFound) {          
+                HBufC* aMessage = HBufC::NewLC(1024);
+                TPtr pMessage(aMessage->Des());
+                pMessage.Append(_L("I'm on buddycloud! You can now post in my channel at http://buddycloud.com// or create your own channel. "));
+                pMessage.Insert(76, aRosterItem->GetId().Left(aLocate));
+                pMessage.Insert(75, aRosterItem->GetId().Mid(aLocate + 1));
+            
+                CAknTextQueryDialog* aDialog = CAknTextQueryDialog::NewL(pMessage, CAknQueryDialog::ENoTone);
+                aDialog->SetPredictiveTextInputPermitted(true);
+                aDialog->PrepareLC(R_MESSAGING_UPPER_DIALOG);
+            
+                if(aDialog->RunLD() != 0) {
+                    iBuddycloudLogic->PostMessageL(aRosterItem->GetItemId(), aRosterItem->GetId(), pMessage);    
+                }
+                
+                CleanupStack::PopAndDestroy(); // aMessage
+            }
+        }
+	}
+    else if(aCommand == EMenuFollowCommand) {
+        CFollowingItem* aItem = static_cast <CFollowingItem*> (iItemStore->GetItemById(iSelectedItem));
+
+        if(aItem && aItem->GetItemType() == EItemRoster) {
+            CFollowingRosterItem* aRosterItem = static_cast <CFollowingRosterItem*> (aItem);
+            
+            if(aCommand == EMenuFollowCommand) {
+                iBuddycloudLogic->FollowContactL(aRosterItem->GetId());
+            }
+        }
+    }
+    else if(aCommand == EMenuUnfollowCommand) {
+        CAknMessageQueryDialog* aDialog = new (ELeave) CAknMessageQueryDialog();
+
+        if(aDialog->ExecuteLD(R_DELETE_DIALOG) != 0) {
+            iBuddycloudLogic->UnfollowItemL(iSelectedItem);
+            
+            RenderScreen();
+        }
+    }
 	else if(aCommand == EMenuAcceptCommand) {
 		iBuddycloudLogic->RespondToNoticeL(iSelectedItem, ENoticeAccept);
 	}

@@ -618,6 +618,11 @@ RESOURCE MENU_PANE r_status_options_item_menu
 			command = EMenuGetPlaceInfoCommand; 
 			txt = r_string_item_showplacedetails;
 		},
+        MENU_ITEM
+        { 
+            command = EMenuInviteToBuddycloudCommand; 
+            txt = r_string_item_sendinvite;
+        },
 		MENU_ITEM
 		{ 
 			command = EMenuFollowCommand; 
