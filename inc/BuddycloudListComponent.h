@@ -132,7 +132,6 @@ class CBuddycloudListComponent : public CCoeControl, MBuddycloudLogicNotificatio
 		// Colours
 		TRgb iColourText;
  		TRgb iColourTextLink;
-		TRgb iColourTextTrans;
 		TRgb iColourTextSelected;		
 		TRgb iColourTextSelectedTrans;
 

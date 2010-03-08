@@ -148,7 +148,7 @@
 </extensions>
 </storageModule>
 <storageModule moduleId="CarbideConfigurationDataProvider">
-<SIS_BUILDER_DATA_ID CERTIFICATESTORAGE="C:\Symbian\Source\S60\Buddycloud\sign\TCTrustCenter.cer" CREATESTUBSTORAGE="false" ENABLEDSTORAGE="true" KEYSTORAGE="C:\Symbian\Source\S60\Buddycloud\sign\TCTrustCenter.key" PARTIALUPGRADESTORAGE="false" PASSWORDSTORAGE="dangtrus1" PKGFILESTORAGE="sis\Buddycloud_5th.pkg" SIGNEDSISFILENAMESTORAGE="buddycloud_9_4_presign.sis" SIGNINGTYPESTORAGE="2"/>
+<SIS_BUILDER_DATA_ID CERTIFICATESTORAGE="C:\Symbian\Code\Buddycloud\sign\TCTrustCenter.cer" CREATESTUBSTORAGE="false" ENABLEDSTORAGE="true" KEYSTORAGE="C:\Symbian\Code\Buddycloud\sign\TCTrustCenter.key" PARTIALUPGRADESTORAGE="false" PASSWORDSTORAGE="dangtrus1" PKGFILESTORAGE="sis\Buddycloud_5th.pkg" SIGNEDSISFILENAMESTORAGE="buddycloud_9_4_presign.sis" SIGNINGTYPESTORAGE="2"/>
 <ENV_VAR_DATA_ID/>
 <ARGUMENTS_DATA_ID ABLDFREEZEARGSSTORAGE="-r"/>
 <ROM_BUILDER_DATA_ID ROMBUILDWORKINGDIRECTORYSTORAGE="C:\"/>
@@ -175,7 +175,7 @@
 </extensions>
 </storageModule>
 <storageModule moduleId="CarbideConfigurationDataProvider">
-<SIS_BUILDER_DATA_ID CERTIFICATESTORAGE="C:\Symbian\Source\S60\Buddycloud\sign\TCTrustCenter.cer" CREATESTUBSTORAGE="false" ENABLEDSTORAGE="true" KEYSTORAGE="C:\Symbian\Source\S60\Buddycloud\sign\TCTrustCenter.key" PARTIALUPGRADESTORAGE="false" PASSWORDSTORAGE="dangtrus1" PKGFILESTORAGE="sis\Buddycloud_3rd_FP2.pkg" SIGNEDSISFILENAMESTORAGE="buddycloud_9_3_presign.sis" SIGNINGTYPESTORAGE="2"/>
+<SIS_BUILDER_DATA_ID CERTIFICATESTORAGE="C:\Symbian\Code\Buddycloud\sign\TCTrustCenter.cer" CREATESTUBSTORAGE="false" ENABLEDSTORAGE="true" KEYSTORAGE="C:\Symbian\Code\Buddycloud\sign\TCTrustCenter.key" PARTIALUPGRADESTORAGE="false" PASSWORDSTORAGE="dangtrus1" PKGFILESTORAGE="sis\Buddycloud_3rd_FP2.pkg" SIGNEDSISFILENAMESTORAGE="buddycloud_9_3_presign.sis" SIGNINGTYPESTORAGE="2"/>
 <ENV_VAR_DATA_ID/>
 <ARGUMENTS_DATA_ID ABLDFREEZEARGSSTORAGE="-r"/>
 <ROM_BUILDER_DATA_ID ROMBUILDWORKINGDIRECTORYSTORAGE="C:\"/>
@@ -202,7 +202,7 @@
 </extensions>
 </storageModule>
 <storageModule moduleId="CarbideConfigurationDataProvider">
-<SIS_BUILDER_DATA_ID CERTIFICATESTORAGE="C:\Symbian\Source\S60\Buddycloud\sign\TCTrustCenter.cer" CREATESTUBSTORAGE="false" ENABLEDSTORAGE="true" KEYSTORAGE="C:\Symbian\Source\S60\Buddycloud\sign\TCTrustCenter.key" PARTIALUPGRADESTORAGE="false" PASSWORDSTORAGE="dangtrus1" PKGFILESTORAGE="sis\Buddycloud_3rd.pkg" SIGNEDSISFILENAMESTORAGE="buddycloud_9_1_presign.sis" SIGNINGTYPESTORAGE="2"/>
+<SIS_BUILDER_DATA_ID CERTIFICATESTORAGE="C:\Symbian\Code\Buddycloud\sign\TCTrustCenter.cer" CREATESTUBSTORAGE="false" ENABLEDSTORAGE="true" KEYSTORAGE="C:\Symbian\Code\Buddycloud\sign\TCTrustCenter.key" PARTIALUPGRADESTORAGE="false" PASSWORDSTORAGE="dangtrus1" PKGFILESTORAGE="sis\Buddycloud_3rd.pkg" SIGNEDSISFILENAMESTORAGE="buddycloud_9_1_presign.sis" SIGNINGTYPESTORAGE="2"/>
 <ENV_VAR_DATA_ID/>
 <ARGUMENTS_DATA_ID ABLDFREEZEARGSSTORAGE="-r"/>
 <ROM_BUILDER_DATA_ID ROMBUILDWORKINGDIRECTORYSTORAGE="C:\"/>
@@ -229,7 +229,7 @@
 </extensions>
 </storageModule>
 <storageModule moduleId="CarbideConfigurationDataProvider">
-<SIS_BUILDER_DATA_ID CERTIFICATESTORAGE="C:\Symbian\Source\S60\Buddycloud\sign\TCTrustCenter.cer" CREATESTUBSTORAGE="false" ENABLEDSTORAGE="true" KEYSTORAGE="C:\Symbian\Source\S60\Buddycloud\sign\TCTrustCenter.key" PARTIALUPGRADESTORAGE="false" PASSWORDSTORAGE="dangtrus1" PKGFILESTORAGE="sis\Buddycloud_3rd_FP1.pkg" SIGNEDSISFILENAMESTORAGE="buddycloud_9_2_presign.sis" SIGNINGTYPESTORAGE="2"/>
+<SIS_BUILDER_DATA_ID CERTIFICATESTORAGE="C:\Symbian\Code\Buddycloud\sign\TCTrustCenter.cer" CREATESTUBSTORAGE="false" ENABLEDSTORAGE="true" KEYSTORAGE="C:\Symbian\Code\Buddycloud\sign\TCTrustCenter.key" PARTIALUPGRADESTORAGE="false" PASSWORDSTORAGE="dangtrus1" PKGFILESTORAGE="sis\Buddycloud_3rd_FP1.pkg" SIGNEDSISFILENAMESTORAGE="buddycloud_9_2_presign.sis" SIGNINGTYPESTORAGE="2"/>
 <ENV_VAR_DATA_ID/>
 <ARGUMENTS_DATA_ID ABLDFREEZEARGSSTORAGE="-r"/>
 <ROM_BUILDER_DATA_ID ROMBUILDWORKINGDIRECTORYSTORAGE="C:\"/>

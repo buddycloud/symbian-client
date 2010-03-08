@@ -1117,28 +1117,27 @@ void CBuddycloudFollowingContainer::HandleCommandL(TInt aCommand) {
 	}
 	else if(aCommand == EMenuInviteToBuddycloudCommand) {
         CFollowingItem* aItem = static_cast <CFollowingItem*> (iItemStore->GetItemById(iSelectedItem));
+        CFollowingRosterItem* aOwnItem = iBuddycloudLogic->GetOwnItem();
 
-        if(aItem && aItem->GetItemType() == EItemRoster) {
+        if(aOwnItem && aItem && aItem->GetItemType() == EItemRoster) {
             CFollowingRosterItem* aRosterItem = static_cast <CFollowingRosterItem*> (aItem);
-            TInt aLocate = aRosterItem->GetId().Locate('@');
+            TInt aLocate = aOwnItem->GetId().Locate('@');
             
-            if(aLocate != KErrNotFound) {          
-                HBufC* aMessage = HBufC::NewLC(1024);
-                TPtr pMessage(aMessage->Des());
-                pMessage.Append(_L("I'm on buddycloud! You can now post in my channel at http://buddycloud.com// or create your own channel. "));
-                pMessage.Insert(76, aRosterItem->GetId().Left(aLocate));
-                pMessage.Insert(75, aRosterItem->GetId().Mid(aLocate + 1));
-            
-                CAknTextQueryDialog* aDialog = CAknTextQueryDialog::NewL(pMessage, CAknQueryDialog::ENoTone);
-                aDialog->SetPredictiveTextInputPermitted(true);
-                aDialog->PrepareLC(R_MESSAGING_UPPER_DIALOG);
-            
-                if(aDialog->RunLD() != 0) {
-                    iBuddycloudLogic->PostMessageL(aRosterItem->GetItemId(), aRosterItem->GetId(), pMessage);    
-                }
-                
-                CleanupStack::PopAndDestroy(); // aMessage
+            HBufC* aMessage = HBufC::NewLC(1024);
+            TPtr pMessage(aMessage->Des());
+            pMessage.Append(_L("I'm on buddycloud! You can now post in my channel at http://buddycloud.com// or create your own channel. "));
+            pMessage.Insert(76, aOwnItem->GetId().Left(aLocate));
+            pMessage.Insert(75, aOwnItem->GetId().Mid(aLocate + 1));
+        
+            CAknTextQueryDialog* aDialog = CAknTextQueryDialog::NewL(pMessage, CAknQueryDialog::ENoTone);
+            aDialog->SetPredictiveTextInputPermitted(true);
+            aDialog->PrepareLC(R_MESSAGING_UPPER_DIALOG);
+        
+            if(aDialog->RunLD() != 0) {
+                iBuddycloudLogic->PostMessageL(aRosterItem->GetItemId(), aRosterItem->GetId(), pMessage);    
             }
+            
+            CleanupStack::PopAndDestroy(); // aMessage
         }
 	}
     else if(aCommand == EMenuFollowCommand) {

@@ -800,6 +800,12 @@ void CBuddycloudMessagingContainer::RenderListItems() {
 	if(iEntries.Count() > 0) {
 		TInt aItemSize = 0;
 		TRect aItemRect;
+		
+        TRgb aColourTextTransHigh = iColourText;
+        TRgb aColourTextTransLow = iColourText;	
+        
+        aColourTextTransLow.SetAlpha(80);
+        aColourTextTransHigh.SetAlpha(200);
 
 #ifdef __SERIES60_40__
 		iListItems.Reset();			
@@ -934,6 +940,11 @@ void CBuddycloudMessagingContainer::RenderListItems() {
 						aItemDrawPos = (aDrawPos + iItemIconSize + 2);
 					}
 				}
+				
+				// Set text colour
+				if(i != iSelectedItem && iEntries[i]->Comment()) {
+				    iBufferGc->SetPenColor(aColourTextTransHigh);
+				}
 					
 				// Render message text
 				if(aEntry->GetEntryType() < EEntryContentAction && i == iSelectedItem && aEntry->GetLinkCount() > 0) {						
@@ -957,7 +968,15 @@ void CBuddycloudMessagingContainer::RenderListItems() {
 
 				// Separator line
 				if((i != iSelectedItem) && ((i + 1) != iSelectedItem) && (i < (iEntries.Count() - 1))) {
-					iBufferGc->SetPenColor(iColourTextTrans);
+				    if(iEntries[i + 1]->Comment()) {
+				        iBufferGc->SetPenColor(aColourTextTransLow);
+				    }
+				    else {
+				        iBufferGc->SetPenColor(aColourTextTransHigh);
+				    }
+				    
+                    aItemLeftOffset = 1 + (iEntries[i + 1]->Comment() * (iItemIconSize / 2));
+				    
 					iBufferGc->SetPenStyle(CGraphicsContext::EDashedPen);
 					iBufferGc->DrawLine(TPoint(iLeftBarSpacer + aItemLeftOffset + 4, aItemDrawPos), TPoint((iRect.Width() - iRightBarSpacer - 5), aItemDrawPos));
 					iBufferGc->SetPenStyle(CGraphicsContext::ESolidPen);

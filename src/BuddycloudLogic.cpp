@@ -348,7 +348,7 @@ void CBuddycloudLogic::SendPresenceL() {
 	// Broad location
 	TPtrC8 aEncLocation(iTextUtilities->UnicodeToUtf8L(*iBroadLocationText));
 	
-	_LIT8(KPresenceStanza, "<presence><priority>10</priority><status></status><c xmlns='http://jabber.org/protocol/caps' node='http://buddycloud.com/caps' ver='s60-1.0.00'/><nick xmlns='http://jabber.org/protocol/nick'></nick></presence>\r\n");
+	_LIT8(KPresenceStanza, "<presence><priority>10</priority><status></status><c xmlns='http://jabber.org/protocol/caps' node='http://buddycloud.com/caps' ver='s60-1.1.00'/><nick xmlns='http://jabber.org/protocol/nick'></nick></presence>\r\n");
 	HBufC8* aPresenceStanza = HBufC8::NewLC(KPresenceStanza().Length() + aEncLocation.Length() + aEncNick->Des().Length());
 	TPtr8 pPresenceStanza(aPresenceStanza->Des());
 	pPresenceStanza.Copy(KPresenceStanza);
@@ -1715,7 +1715,7 @@ void CBuddycloudLogic::HandlePubsubEventL(const TDesC8& aStanza) {
 	TInt aNotifiedItemId = KErrNotFound;
 	TInt aNotifiedAudioId = KErrNotFound;
 	
-	TXmppPubsubEventType aPubsubEventType;
+	TXmppPubsubEventType aPubsubEventType = EPubsubEventNone;
 	
 	// Initialize xml parser
 	CXmlParser* aXmlParser = CXmlParser::NewLC(aStanza);

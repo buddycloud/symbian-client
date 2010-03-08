@@ -165,9 +165,6 @@ void CBuddycloudListComponent::ConfigureSkin() {
 	
 	iColourTextSelectedTrans = iColourTextSelected;
 	iColourTextSelectedTrans.SetAlpha(85);
-	
-	iColourTextTrans = iColourText;
-	iColourTextTrans.SetAlpha(125);
 }
 
 void CBuddycloudListComponent::NotificationEvent(TBuddycloudLogicNotificationType aEvent, TInt /*aId*/) {
