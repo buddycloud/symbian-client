@@ -326,12 +326,12 @@ void CBuddycloudMessagingContainer::TimerExpired(TInt aExpiryId) {
 #endif
 	}
 	else if(aExpiryId == KTimeTimerId) {
-		TTime aTime;
-		aTime.HomeTime();
-
 #ifdef __3_2_ONWARDS__
 		SetTitleL(iMessagingObject.iTitle);
 #else
+        TTime aTime;
+        aTime.HomeTime();
+
 		TBuf<32> aTextTime;
 		aTime.FormatL(aTextTime, _L("%J%:1%T%B"));
 	
@@ -346,16 +346,10 @@ void CBuddycloudMessagingContainer::TimerExpired(TInt aExpiryId) {
 	
 		SetTitleL(pTextTimeTopic);	
 		CleanupStack::PopAndDestroy(); // aTextTimeTopic
-#endif
-	
-		// Rewrap 
-		if(iEntries.Count() > 0) {
-			RenderWrappedText(iSelectedItem);
-			RenderScreen();
-		}
-		
+        
 		TDateTime aDateTime = aTime.DateTime();
-		iTimer->After((60 - aDateTime.Second() + 1) * 1000000);
+        iTimer->After((60 - aDateTime.Second() + 1) * 1000000);
+#endif
 	}
 }
 
@@ -745,29 +739,23 @@ void CBuddycloudMessagingContainer::RenderWrappedText(TInt aIndex) {
 			}
 			
 			if(aEntry->GetEntryType() < EEntryContentAction) {
-				TBuf<256> aBuf;
-				
 				// Time & date
 				TTime aTimeReceived = aEntry->GetPublishTime();
-				TTime aTimeNow = iBuddycloudLogic->GetTime();
-				
-				if(aTimeNow < aTimeReceived || aTimeReceived > (aTimeNow - TTimeIntervalMinutes(1))) {
-					aBuf.Append(_L("Seconds ago"));
-				}
-				else if(aTimeReceived >= (aTimeNow - TTimeIntervalHours(1))) {
-					TTimeIntervalMinutes aAfter;
-					aTimeNow.MinutesFrom(aTimeReceived, aAfter);
-					aBuf.Format(_L("%dm ago"), aAfter.Int());
-				}
-				else {
-	                TTime aLocalTime = aTimeReceived + User::UTCOffset();
-	                aLocalTime.FormatL(aBuf, _L("%J%:1%T%B"));
-					
-					if(aTimeReceived < (aTimeNow - TTimeIntervalDays(1))) {
-	                    TTimeIntervalDays aAfter = aTimeNow.DaysFrom(aTimeReceived);
-					    aBuf.AppendFormat(_L(" %dd ago"), aAfter.Int());
-					}
-				}
+                TTime aTimeNow;
+                TBuf<256> aBuf;
+                
+                aTimeReceived += User::UTCOffset();
+                aTimeNow.HomeTime();
+    
+                if(aTimeReceived.DayNoInYear() == aTimeNow.DayNoInYear()) {
+                    aTimeReceived.FormatL(aBuf, _L("%J%:1%T%*B"));
+                }
+                else if(aTimeReceived > aTimeNow - TTimeIntervalDays(6)) {
+                    aTimeReceived.FormatL(aBuf, _L("%*E %J%:1%T%*B"));
+                }
+                else {
+                    aTimeReceived.FormatL(aBuf, _L("%F%*N %*D%X %J%:1%T%*B"));
+                }
 				
 				TPtrC aLocation(aEntry->GetLocation()->GetString(EGeolocText));
 				

@@ -40,10 +40,10 @@ RESOURCE EIK_APP_INFO {}
 
 RESOURCE TBUF r_string_appversion 
 {
-	buf = "S60_9_1.00.13"; 
+	buf = "S60_9_1.00.14"; 
 }
 
-rls_string r_string_about_text "©2009 buddycloud\nVersion: 1.00.13\nhttp://buddycloud.com\n\nData Sent: %dKB\nData Received: %dKB" 
+rls_string r_string_about_text "©2009 buddycloud\nVersion: 1.00.14\nhttp://buddycloud.com\n\nData Sent: %dKB\nData Received: %dKB" 
 
 RESOURCE TBUF r_localized_string_about_text { buf = r_string_about_text; }
 
