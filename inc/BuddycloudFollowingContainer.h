@@ -98,6 +98,8 @@ class CBuddycloudFollowingContainer : public CBuddycloudListComponent, MBuddyclo
 		CFbsBitmap* iArrow2Mask;	
 
 		CBuddycloudFollowingStore* iItemStore;
+		
+		TInt iViewEntryItem;
 };
 
 #endif

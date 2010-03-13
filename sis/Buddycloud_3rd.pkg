@@ -10,7 +10,7 @@
 &EN
 ;
 ; standard SIS file header
-#{"Buddycloud"},(0x2000C4A4),1,0,14
+#{"Buddycloud"},(0x2000C4A4),1,0,15
 ;
 ;Localised Vendor name
 %{"buddycloud"}

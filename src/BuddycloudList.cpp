@@ -228,8 +228,10 @@ void CBuddycloudListStore::MoveItemById(TInt aItemId, TInt aPosition) {
 	}
 }
 
-void CBuddycloudListStore::AddItem(CBuddycloudListItem* aItem) {
+TInt CBuddycloudListStore::AddItem(CBuddycloudListItem* aItem) {
 	iItemStore.Append(aItem);
+	
+	return (iItemStore.Count() - 1);
 }
 
 void CBuddycloudListStore::InsertItem(TInt aIndex, CBuddycloudListItem* aItem) {
@@ -238,6 +240,15 @@ void CBuddycloudListStore::InsertItem(TInt aIndex, CBuddycloudListItem* aItem) {
 	}
 	else {
 		iItemStore.Append(aItem);
+	}
+}
+
+void CBuddycloudListStore::BubbleItem(TInt aIndex, TBubble aDirection) {	
+	if((aDirection == EBubbleUp && aIndex > 0) || (aDirection == EBubbleDown && aIndex < iItemStore.Count())) {
+		CBuddycloudListItem* aItem = iItemStore[aIndex];
+		
+		iItemStore.Remove(aIndex);
+		iItemStore.Insert(aItem, (aIndex + aDirection));
 	}
 }
 

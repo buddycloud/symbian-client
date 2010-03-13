@@ -61,11 +61,11 @@ enum TBuddycloudLogicState {
 };
 
 enum TBuddycloudLogicNotificationType {
-	ENotificationLogicEngineStarted, ENotificationLogicEngineDestroyed, ENotificationFollowingItemsUpdated, 
-	ENotificationFollowingItemsReconfigured, ENotificationFollowingItemDeleted, ENotificationPlaceItemsUpdated, 
-	ENotificationLocationUpdated, ENotificationNotifiedMessageEvent, ENotificationEditPlaceRequested, 
-	ENotificationEditPlaceCompleted, ENotificationActivityChanged, ENotificationConnectivityChanged, 
-	ENotificationAuthenticationFailed, ENotificationServerResolveFailed
+	ENotificationLogicEngineStarted, ENotificationLogicEngineShuttingDown, ENotificationLogicEngineDestroyed, 
+	ENotificationFollowingItemsUpdated, ENotificationFollowingItemsReconfigured, ENotificationFollowingItemDeleted, 
+	ENotificationPlaceItemsUpdated, ENotificationLocationUpdated, ENotificationNotifiedMessageEvent, 
+	ENotificationEditPlaceRequested, ENotificationEditPlaceCompleted, ENotificationActivityChanged, 
+	ENotificationConnectivityChanged, ENotificationAuthenticationFailed, ENotificationServerResolveFailed
 };
 
 enum TBuddycloudLogicTimeoutState {
@@ -240,9 +240,6 @@ class CBuddycloudLogic : public CBase, MLocationEngineNotification, MTimeInterfa
 		void SetCurrentPlaceL();
 		void SetCurrentPlaceL(TInt aPlaceId);
 		void SetNextPlaceL(TDesC& aPlace, TInt aPlaceId = KErrNotFound);
-
-	private:
-		TInt GetBubbleToPosition(CFollowingItem* aBubblingItem);
 
 	public: // From MDiscussionReadObserver
 		void DiscussionRead(TDesC& aDiscussionId, TInt aItemId);

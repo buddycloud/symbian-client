@@ -127,7 +127,6 @@ class CBuddycloudMessagingContainer : public CBuddycloudListComponent, MDiscussi
 
 	protected: // Variables
 		TViewData iMessagingObject;
-		TInt iFollowingItemIndex;
 		
 		HBufC* iMessagingId;
 		

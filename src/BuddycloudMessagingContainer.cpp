@@ -169,7 +169,6 @@ void CBuddycloudMessagingContainer::InitializeMessageDataL() {
 	
 	// Is a channel
 	CBuddycloudFollowingStore* aItemStore = iBuddycloudLogic->GetFollowingStore();
-	iFollowingItemIndex = aItemStore->GetIndexById(iMessagingObject.iId);
 	iItem = static_cast <CFollowingItem*> (aItemStore->GetItemById(iMessagingObject.iId));
 	
 	if(iItem && iItem->GetItemType() >= EItemRoster) {
@@ -1637,16 +1636,7 @@ void CBuddycloudMessagingContainer::HandleCommandL(TInt aCommand) {
 
 		iEntries.Reset();
 		
-		// Get item's index
-		TInt aFollowingIdsIndex = iBuddycloudLogic->GetFollowingStore()->GetIndexById(iMessagingObject.iId);
-		TInt aReturnItemId = iMessagingObject.iId;
-
-		// Switch index if all entries read
-		if(iDiscussion->GetUnreadEntries() == 0 && iFollowingItemIndex < aFollowingIdsIndex) {
-			aReturnItemId = iBuddycloudLogic->GetFollowingStore()->GetIdByIndex(iFollowingItemIndex);
-		}
-		
-		iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KFollowingViewId), TUid::Uid(aReturnItemId), KNullDesC8);
+		iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KFollowingViewId), TUid::Uid(iMessagingObject.iId), KNullDesC8);
 	}
 }
 

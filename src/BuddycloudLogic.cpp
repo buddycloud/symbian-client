@@ -69,7 +69,7 @@ CBuddycloudLogic::~CBuddycloudLogic() {
 	
 	if(iTextUtilities)
 		delete iTextUtilities;
-
+    
 	// Avatars & text
 	if(iAvatarRepository)
 		delete iAvatarRepository;
@@ -254,6 +254,8 @@ void CBuddycloudLogic::PrepareShutdown() {
 	if(iState != ELogicShutdown) {
 		iState = ELogicShutdown;
 		iTimer->Stop();
+	    
+		NotifyNotificationObservers(ENotificationLogicEngineShuttingDown);
 		
 		// Save settings & place items
 		SaveSettingsAndItemsL();
@@ -1267,8 +1269,8 @@ void CBuddycloudLogic::ProcessPubsubSubscriptionsL() {
 							
 				// Add to discussion manager
 				aDiscussion->SetDiscussionReadObserver(this, aSubscribedItem->GetItemId());		
-			
-				iFollowingList->InsertItem(GetBubbleToPosition(aSubscribedItem), aSubscribedItem);		
+				
+				iFollowingList->BubbleItem(iFollowingList->AddItem(aSubscribedItem), EBubbleUp);
 				iGenericList->RemoveItemByIndex(0);
 				
 				// Collect metadata
@@ -1712,6 +1714,7 @@ void CBuddycloudLogic::HandlePubsubEventL(const TDesC8& aStanza) {
 #endif
 	
 	TBool aBubbleEvent = false;
+	TBubble aBubbleDirection = EBubbleUp;
 	TInt aNotifiedItemId = KErrNotFound;
 	TInt aNotifiedAudioId = KErrNotFound;
 	
@@ -1910,9 +1913,7 @@ void CBuddycloudLogic::HandlePubsubEventL(const TDesC8& aStanza) {
 										
 										if(aDiscussion->AddEntryOrCommentLD(aAtomEntry, aReferenceId)) {
 											// Bubble
-											if(iFollowingList->GetIndexById(aNotifiedItemId) > 0) {
-												aBubbleEvent = true;
-											}
+											aBubbleEvent = true;
 											
 											// Notification
 											if(aAtomEntry->DirectReply() && iSettingNotifyReplyTo) {
@@ -1940,6 +1941,9 @@ void CBuddycloudLogic::HandlePubsubEventL(const TDesC8& aStanza) {
 									else if(aElement.Compare(_L8("retract")) == 0) {
 										// Channel post deleted
 										aDiscussion->DeleteEntryById(aItemId);
+										
+										aBubbleEvent = true;
+										aBubbleDirection = EBubbleDown;
 									}
 								}
 							}
@@ -2052,6 +2056,9 @@ void CBuddycloudLogic::HandlePubsubEventL(const TDesC8& aStanza) {
 							else if(aPubsubEventType == EPubsubEventPurge) {
 								// Handle purge event
 								aDiscussion->DeleteAllEntries();
+								
+								aBubbleEvent = true;
+								aBubbleDirection = EBubbleDown;
 							}
 							else if(aPubsubEventType == EPubsubEventDelete) {
 								// Handle delete event
@@ -2115,9 +2122,7 @@ void CBuddycloudLogic::HandlePubsubEventL(const TDesC8& aStanza) {
 								
 								// Add to discussion
 								if(aDiscussion->AddEntryOrCommentLD(aAtomEntry)) {
-									if(iFollowingList->GetIndexById(aNotifiedItemId) > 0) {
-										aBubbleEvent = true;
-									}
+									aBubbleEvent = true;
 									
 									aNotifiedAudioId = ESettingItemDirectReplyTone;
 								}
@@ -2129,8 +2134,7 @@ void CBuddycloudLogic::HandlePubsubEventL(const TDesC8& aStanza) {
 						if(aBubbleEvent) {
 							aItem->SetLastUpdated(TimeStamp());
 							
-							iFollowingList->RemoveItemById(aItem->GetItemId());
-							iFollowingList->InsertItem(GetBubbleToPosition(aItem), aItem);
+			                iFollowingList->BubbleItem(i, aBubbleDirection);
 						}
 						
 						break;
@@ -2246,8 +2250,7 @@ void CBuddycloudLogic::HandlePubsubRequestL(const TDesC8& aStanza) {
 			
 			if(iFollowingList->GetIndexById(aChannelItem->GetItemId()) > 0) {
 				// Bubble			
-				iFollowingList->RemoveItemById(aChannelItem->GetItemId());
-				iFollowingList->InsertItem(GetBubbleToPosition(aChannelItem), aChannelItem);
+				iFollowingList->BubbleItem(iFollowingList->GetIndexById(aChannelItem->GetItemId()), EBubbleUp);
 			}
 			
 			NotifyNotificationObservers(ENotificationFollowingItemsUpdated, aChannelItem->GetItemId());
@@ -2346,7 +2349,7 @@ TInt CBuddycloudLogic::FollowChannelL(const TDesC& aNode) {
 	aDiscussion->SetDiscussionReadObserver(this, aChannelItem->GetItemId());		
 	aChannelItem->SetUnreadData(aDiscussion);
 	
-	iFollowingList->InsertItem(GetBubbleToPosition(aChannelItem), aChannelItem);
+	iFollowingList->BubbleItem(iFollowingList->AddItem(aChannelItem), EBubbleUp);
 	CleanupStack::Pop(); // aChannelItem
 	CleanupStack::PopAndDestroy(); // aNodeId
 	
@@ -2467,7 +2470,7 @@ TInt CBuddycloudLogic::CreateChannelL(const TDesC& aNodeId, const TDesC& aTitle,
 	
 	aChannelItem->SetUnreadData(aDiscussion);
 	
-	iFollowingList->InsertItem(GetBubbleToPosition(aChannelItem), aChannelItem);
+	iFollowingList->BubbleItem(iFollowingList->AddItem(aChannelItem), EBubbleUp);
 	CleanupStack::Pop(); // aChannelItem
 		
 	// Get data
@@ -2680,76 +2683,18 @@ void CBuddycloudLogic::SetNextPlaceL(TDesC& aPlace, TInt aPlaceId) {
 	}
 }
 
-TInt CBuddycloudLogic::GetBubbleToPosition(CFollowingItem* aBubblingItem) {
-	//  BUBBLE LOGIC
-	// ---------------------------------------------------------------------
-	// OWN           <- Own Item always on top
-	// NOTICE        <- Notices bubble to top (below Own Item)
-	// NOTICE
-	// ROSTER     (1)<- PM's have message priority
-	// CHANNEL    (1)<- Unread Channel/Roster Item bubbles below Notices
-	// ROSTER        <- Other Items bubble below unread Items
-	// CHANNEL
-	// FEED
-	// CONTACT
-	// ---------------------------------------------------------------------
-
-	if(aBubblingItem->GetItemType() == EItemNotice) {
-		return 1;
-	}
-	else if(aBubblingItem->GetItemType() >= EItemRoster) {
-		CFollowingChannelItem* aBubblingChannelItem = static_cast <CFollowingChannelItem*> (aBubblingItem);		
-		TInt aBubblingChannelUnread = aBubblingChannelItem->GetUnread();
-		TInt aBubblingChannelReplies = aBubblingChannelItem->GetReplies();
-		TInt aBubblingPrivateUnread = 0;
-		
-		if(aBubblingItem->GetItemType() == EItemRoster) {
-			CFollowingRosterItem* aBubblingRosterItem = static_cast <CFollowingRosterItem*> (aBubblingItem);			
-			aBubblingPrivateUnread = aBubblingRosterItem->GetUnread();				
-		}
-
-		// Loop through other items
-		for(TInt i = 1; i < iFollowingList->Count(); i++) {
-			CFollowingItem* aListItem = static_cast <CFollowingItem*> (iFollowingList->GetItemByIndex(i));
-
-			if(aListItem->GetItemType() >= EItemRoster) {
-				CFollowingChannelItem* aListChannelItem = static_cast <CFollowingChannelItem*> (aListItem);
-				TInt aListChannelUnread = aListChannelItem->GetUnread();
-				TInt aListChannelReplies = aListChannelItem->GetReplies();
-				TInt aListPrivateUnread = 0;
-				
-				if(aListItem->GetItemType() == EItemRoster) {
-					CFollowingRosterItem* aListRosterItem = static_cast <CFollowingRosterItem*> (aListItem);			
-					aListPrivateUnread = aListRosterItem->GetUnread();
-				}
-				
-				// Bubble on activity (not channel post sorted)
-				if(aBubblingPrivateUnread > aListPrivateUnread || 
-						(aBubblingPrivateUnread >= aListPrivateUnread && aBubblingChannelReplies > aListChannelReplies) ||
-						(aBubblingPrivateUnread == aListPrivateUnread && aBubblingChannelReplies == aListChannelReplies && 
-								(aBubblingChannelUnread > 0 || aBubblingChannelUnread == aListChannelUnread))) {
-					
-					return i;
-				}
-			}
-		}
-	}
-	
-	return iFollowingList->Count();
-}
-
 void CBuddycloudLogic::DiscussionRead(TDesC& /*aDiscussionId*/, TInt aItemId) {
-	CFollowingItem* aFollowingItem = static_cast <CFollowingItem*> (iFollowingList->GetItemById(aItemId));
-	
-	if(iOwnItem && aFollowingItem) {
-		if(iOwnItem->GetItemId() != aFollowingItem->GetItemId()) {
-			iFollowingList->RemoveItemById(aFollowingItem->GetItemId());
-			iFollowingList->InsertItem(GetBubbleToPosition(aFollowingItem), aFollowingItem);
-			
-			iSettingsSaveNeeded = true;
-			NotifyNotificationObservers(ENotificationFollowingItemsUpdated);
-		}
-	}
+//	CFollowingItem* aFollowingItem = static_cast <CFollowingItem*> (iFollowingList->GetItemById(aItemId));
+//	
+//	if(iOwnItem && aFollowingItem) {
+//		if(iOwnItem->GetItemId() != aFollowingItem->GetItemId()) {
+//			iFollowingList->RemoveItemById(aFollowingItem->GetItemId());
+//			iFollowingList->InsertItem(GetBubbleToPosition(aFollowingItem), aFollowingItem);
+//			
+//			iSettingsSaveNeeded = true;
+//			NotifyNotificationObservers(ENotificationFollowingItemsUpdated);
+//		}
+//	}
 }
 
 #ifdef _DEBUG
@@ -3787,15 +3732,12 @@ void CBuddycloudLogic::PostMessageL(TInt aItemId, TDesC& aId, TDesC& aContent, c
 			// Add to discussion
 			CDiscussion* aDiscussion = iDiscussionManager->GetDiscussionL(aId);
 			if(aDiscussion->AddEntryOrCommentLD(aAtomEntry, aReferenceId)) {
-				if(iFollowingList->GetIndexById(aItem->GetItemId()) > 0) {
-					// Bubble item
-					iFollowingList->RemoveItemById(aItem->GetItemId());
-					iFollowingList->InsertItem(GetBubbleToPosition(aItem), aItem);
-					
-					NotifyNotificationObservers(ENotificationFollowingItemsUpdated, aItem->GetItemId());
-				}
+                aItem->SetLastUpdated(TimeStamp());
 				
-				aItem->SetLastUpdated(TimeStamp());
+                // Bubble item
+				iFollowingList->BubbleItem(iFollowingList->GetIndexById(aItem->GetItemId()), EBubbleUp);
+					
+				NotifyNotificationObservers(ENotificationFollowingItemsUpdated, aItem->GetItemId());
 			}
 		}
 		else {
@@ -5080,7 +5022,7 @@ void CBuddycloudLogic::XmppRosterL(const TDesC8& aStanza) {
 			
 			aRosterItem->SetUnreadData(aDiscussion);
 	
-			iFollowingList->InsertItem(GetBubbleToPosition(aRosterItem), aRosterItem);		
+			iFollowingList->BubbleItem(iFollowingList->AddItem(aRosterItem), EBubbleUp);
 			aRosterItemStore->RemoveItemByIndex(0);	
 		}
 		else {	
@@ -5258,7 +5200,7 @@ void CBuddycloudLogic::HandleRosterItemPushL(const TDesC8& aStanza) {
 				
 				aRosterItem->SetUnreadData(aDiscussion);
 		
-				iFollowingList->InsertItem(GetBubbleToPosition(aRosterItem), aRosterItem);		
+				iFollowingList->BubbleItem(iFollowingList->AddItem(aRosterItem), EBubbleUp);
 				CleanupStack::Pop(); // aRosterItem
 				
 				NotifyNotificationObservers(ENotificationFollowingItemsUpdated, aRosterItem->GetItemId());
@@ -5687,7 +5629,7 @@ void CBuddycloudLogic::ProcessPresenceSubscriptionL(const TDesC8& aStanza) {
 		aNoticeItem->SetTitleL(*aTitle);
 		aNoticeItem->SetDescriptionL(*aDescription);
 		
-		iFollowingList->InsertItem(GetBubbleToPosition(aNoticeItem), aNoticeItem);
+		iFollowingList->BubbleItem(iFollowingList->AddItem(aNoticeItem), EBubbleUp);
 		
 		NotifyNotificationObservers(ENotificationFollowingItemsUpdated);
 		NotifyNotificationObservers(ENotificationNotifiedMessageEvent);
@@ -5781,8 +5723,7 @@ void CBuddycloudLogic::HandleIncomingMessageL(const TDesC8& aStanza) {
 		if(aDiscussion->AddEntryOrCommentLD(aAtomEntry, aReferenceId)) {
 			if(!aRosterItem->OwnItem()) {
 				// Bubble item
-				iFollowingList->RemoveItemByIndex(iFollowingList->GetIndexById(aRosterItem->GetItemId()));
-				iFollowingList->InsertItem(GetBubbleToPosition(aRosterItem), aRosterItem);
+				iFollowingList->BubbleItem(iFollowingList->GetIndexById(aRosterItem->GetItemId()), EBubbleUp);
 				
 				NotifyNotificationObservers(ENotificationFollowingItemsUpdated, aRosterItem->GetItemId());
 			}

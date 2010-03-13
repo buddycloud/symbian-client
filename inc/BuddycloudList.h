@@ -24,6 +24,11 @@ enum TSortByType {
 	ESortByUnsorted, ESortByDistance, ESortByActivity, ESortByAlphabetically
 };
 
+enum TBubble {
+	EBubbleUp = -1,
+	EBubbleDown = 1
+};
+
 /*
 ----------------------------------------------------------------------------
 --
@@ -116,8 +121,9 @@ class CBuddycloudListStore : public CBase {
 		void MoveItemById(TInt aItemId, TInt aPosition);
 
 	public: // Add & insert items
-		void AddItem(CBuddycloudListItem* aItem);
-		void InsertItem(TInt aIndex, CBuddycloudListItem* aItem);
+		TInt AddItem(CBuddycloudListItem* aItem);
+		void InsertItem(TInt aIndex, CBuddycloudListItem* aItem);	
+		virtual void BubbleItem(TInt aIndex, TBubble aDirection);
 
 	public: // Remove & delete items
 		void RemoveItemByIndex(TInt aIndex);

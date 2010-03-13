@@ -5,7 +5,7 @@
 RELEASE NOTES
 =============
 
-Application version:	1.00.00
+Application version:	1.01.00
 
 Phone(s) Tested On:	Nokia 3250, E61, E61i, N95, N73, 6220, N96, N78, E90, E71, E66, E51
 

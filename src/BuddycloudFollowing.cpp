@@ -286,6 +286,67 @@ CBuddycloudFollowingStore* CBuddycloudFollowingStore::NewLC() {
 	return self;
 }
 
+void CBuddycloudFollowingStore::BubbleItem(TInt aIndex, TBubble aDirection) {	
+	// Never bubble top item
+	if(aIndex >= 1 && aIndex < iItemStore.Count()) {
+		CFollowingItem* aBubblingItem = static_cast <CFollowingItem*> (iItemStore[aIndex]);
+		
+		if(aBubblingItem->GetItemType() == EItemNotice) {
+			// Auto insert notice item
+			iItemStore.Remove(aIndex);
+			iItemStore.Insert(aBubblingItem, 1);
+			
+			return;
+		}
+		else if(aBubblingItem->GetItemType() >= EItemRoster) {
+			// Get bubbling items unread/replies
+			CFollowingChannelItem* aBubblingChannelItem = static_cast <CFollowingChannelItem*> (aBubblingItem);		
+			TUint aBubbleValue = (aBubblingChannelItem->GetReplies() * 100);
+			
+			if(aBubblingItem->GetItemType() == EItemRoster) {
+				CFollowingRosterItem* aBubblingRosterItem = static_cast <CFollowingRosterItem*> (aBubblingItem);			
+				
+				aBubbleValue += (aBubblingRosterItem->GetUnread() * 10000);
+			}			
+			
+			// Initialize first list item
+			TInt aListPosition = aIndex + aDirection;
+			
+			while(aListPosition > 0 && aListPosition < iItemStore.Count()) {
+				CFollowingItem* aListItem = static_cast <CFollowingItem*> (iItemStore[aListPosition]);
+
+				if(aListItem->GetItemType() >= EItemRoster) {
+					CFollowingChannelItem* aListChannelItem = static_cast <CFollowingChannelItem*> (aListItem);
+					TUint aListValue = (aListChannelItem->GetReplies() * 100);
+					
+					if(aListItem->GetItemType() == EItemRoster) {
+						CFollowingRosterItem* aListRosterItem = static_cast <CFollowingRosterItem*> (aListItem);			
+						
+						aListValue += (aListRosterItem->GetUnread() * 10000);
+					}
+					
+					if((aDirection == EBubbleDown && (aBubbleValue > aListValue ||
+								(aBubbleValue == aListValue && (aBubblingChannelItem->GetUnread() > 0 || aListChannelItem->GetUnread() == 0)))) || 
+							(aDirection == EBubbleUp && (aBubbleValue < aListValue || 
+									(aBubbleValue == aListValue && aBubblingChannelItem->GetUnread() == 0 && aListChannelItem->GetUnread() > 0)))) {
+						
+						iItemStore.Remove(aIndex);
+						iItemStore.Insert(aBubblingItem, (aListPosition - aDirection));
+						
+						return;						
+					}
+				}
+				
+				// Next
+				aListPosition += aDirection;
+			}
+			
+			iItemStore.Remove(aIndex);
+			iItemStore.Insert(aBubblingItem, (aListPosition - aDirection));
+		}
+	}
+}
+
 void CBuddycloudFollowingStore::FilterItemL(TInt aIndex) {
 	CBuddycloudListStore::FilterItemL(aIndex);
 	

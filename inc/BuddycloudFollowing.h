@@ -191,8 +191,11 @@ class CBuddycloudFollowingStore : public CBuddycloudListStore {
 	public:
 		static CBuddycloudFollowingStore* NewL();
 		static CBuddycloudFollowingStore* NewLC();
-
-	protected: // From CBuddycloudListStore
+	
+	public: // CBuddycloudListStore
+		void BubbleItem(TInt aIndex, TBubble aDirection);
+		
+	protected: // CBuddycloudListStore
 		void FilterItemL(TInt aIndex);
 };
 

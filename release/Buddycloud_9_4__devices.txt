@@ -5,7 +5,7 @@
 RELEASE NOTES
 =============
 
-Application version:	1.00.00
+Application version:	1.01.00
 
 Phone(s) Tested On:	Nokia 5530, 5800, N97, N97 mini, X6
 

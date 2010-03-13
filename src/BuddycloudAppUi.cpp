@@ -58,10 +58,7 @@ void CBuddycloudAppUi::ConstructL() {
 	AknsUtils::InitSkinSupportL();
 		
 	iBuddycloudLogic = CBuddycloudLogic::NewL(this);	
-	iBuddycloudLogic->AddNotificationObserver(this);
-	
-	CreateViewsL();
-	StateChanged(ELogicOffline);
+	iBuddycloudLogic->AddNotificationObserver(this);	
 }
 
 CBuddycloudAppUi::~CBuddycloudAppUi() {
@@ -229,8 +226,6 @@ void CBuddycloudAppUi::ShutdownComplete() {
 	Exit();
 }
 
-// #define _DEVICEDEBUG
-
 TBool CBuddycloudAppUi::ProcessCommandParametersL(CApaCommandLine &aCommandLine) {	
 	if(aCommandLine.OpaqueData().Length() > 0) {
 		// User started
@@ -244,9 +239,6 @@ TBool CBuddycloudAppUi::ProcessCommandParametersL(CApaCommandLine &aCommandLine)
 			iAllowFocus = true;
 		}
 		else {
-#ifdef _DEVICEDEBUG
-			iAllowFocus = true;
-#else			
 			TApaTask aTask(iEikonEnv->WsSession());
 			aTask.SetWgId(iEikonEnv->RootWin().Identifier());
 			aTask.SendToBackground();
@@ -254,13 +246,15 @@ TBool CBuddycloudAppUi::ProcessCommandParametersL(CApaCommandLine &aCommandLine)
 			// Auto start disabled
 			iTimer = CCustomTimer::NewL(this);
 			iTimer->After(5000000);
-#endif
 		}
 	}
 	
 	if(iAllowFocus) {
 		// Continue startup
-		iBuddycloudLogic->Startup();
+	    CreateViewsL();
+	    StateChanged(ELogicOffline);
+
+	    iBuddycloudLogic->Startup();
 	}
   
 	return false;

@@ -32,14 +32,16 @@
 
 CBuddycloudFollowingContainer::CBuddycloudFollowingContainer(MViewAccessorObserver* aViewAccessor, 
 		CBuddycloudLogic* aBuddycloudLogic) : CBuddycloudListComponent(aViewAccessor, aBuddycloudLogic) {
+	
+	iViewEntryItem = 0;
 }
 
 void CBuddycloudFollowingContainer::ConstructL(const TRect& aRect, TInt aItem) {
 	iRect = aRect;
 	iSelectedItem = aItem;
 
-	PrecacheImagesL();
-	CreateWindowL();
+    PrecacheImagesL();
+    CreateWindowL();
 
 	// Tabs
 	iNaviPane = (CAknNavigationControlContainer*) iEikonEnv->AppUiFactory()->StatusPane()->ControlL(TUid::Uid(EEikStatusPaneUidNavi));
@@ -81,6 +83,13 @@ void CBuddycloudFollowingContainer::ConstructL(const TRect& aRect, TInt aItem) {
 	iBuddycloudLogic->AddStatusObserver(this);
 
 	iItemStore = iBuddycloudLogic->GetFollowingStore();
+	   
+    // Bubble setting
+    CFollowingItem* aEntryItem = static_cast <CFollowingItem*> (iItemStore->GetItemById(aItem));
+    
+    if(aEntryItem && aEntryItem->GetItemType() >= EItemRoster) {
+        iViewEntryItem = aItem;
+    }
 
 	SetRect(iRect);	
 	RenderScreen();
@@ -96,6 +105,9 @@ CBuddycloudFollowingContainer::~CBuddycloudFollowingContainer() {
 
 	if(iBuddycloudLogic) {
 		iBuddycloudLogic->RemoveStatusObserver();
+		
+		// Bubble entry item
+		iItemStore->BubbleItem(iItemStore->GetIndexById(iViewEntryItem), EBubbleDown);
 	}
 
 	// Edwin
@@ -230,6 +242,10 @@ void CBuddycloudFollowingContainer::NotificationEvent(TBuddycloudLogicNotificati
 		
 		RenderWrappedText(iSelectedItem);			
 		RenderScreen();
+	}
+	else if(aEvent == ENotificationLogicEngineShuttingDown) {
+		// Bubble entry item
+		iItemStore->BubbleItem(iItemStore->GetIndexById(iViewEntryItem), EBubbleDown);
 	}
 	else {
 		CBuddycloudListComponent::NotificationEvent(aEvent, aId);
@@ -1048,6 +1064,11 @@ void CBuddycloudFollowingContainer::HandleCommandL(TInt aCommand) {
 				// Private messages
 				CFollowingRosterItem* aRosterItem = static_cast <CFollowingRosterItem*> (aItem);			
 				aViewReference().iNewViewData.iData.Copy(aRosterItem->GetId());
+			}
+			
+			if(iViewEntryItem == iSelectedItem) {
+				// Defer bubbling
+				iViewEntryItem = 0;
 			}
 
 			iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KMessagingViewId), TUid::Uid(iSelectedItem), aViewReference);					
