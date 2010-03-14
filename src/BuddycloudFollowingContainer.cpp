@@ -107,7 +107,9 @@ CBuddycloudFollowingContainer::~CBuddycloudFollowingContainer() {
 		iBuddycloudLogic->RemoveStatusObserver();
 		
 		// Bubble entry item
-		iItemStore->BubbleItem(iItemStore->GetIndexById(iViewEntryItem), EBubbleDown);
+		if(iViewEntryItem > 0) {
+			iItemStore->BubbleItem(iItemStore->GetIndexById(iViewEntryItem), EBubbleDown);
+		}
 	}
 
 	// Edwin
@@ -1066,10 +1068,13 @@ void CBuddycloudFollowingContainer::HandleCommandL(TInt aCommand) {
 				aViewReference().iNewViewData.iData.Copy(aRosterItem->GetId());
 			}
 			
-			if(iViewEntryItem == iSelectedItem) {
-				// Defer bubbling
-				iViewEntryItem = 0;
+			if(iViewEntryItem > 0 && iViewEntryItem != iSelectedItem) {
+				// Bubble entry item down
+				iItemStore->BubbleItem(iItemStore->GetIndexById(iViewEntryItem), EBubbleDown);
 			}
+			
+			// Defer destruction bubbling
+			iViewEntryItem = 0;
 
 			iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KMessagingViewId), TUid::Uid(iSelectedItem), aViewReference);					
 		}

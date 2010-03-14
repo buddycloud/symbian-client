@@ -5,6 +5,14 @@ Any problems please send 'C:\logs\Buddycloud\LogicLog.txt' to ross@buddycloud.co
 
 ----------
 
+1.00.16
+
+- Some bubble logic tweaking (bubble before switching views, not after)
+- Re-collect channel metadata if previously failed to collect
+- Collect own user's channel node metadata on cold connection
+- Only synchronize roster-to-channel if user's node is whitelist access model
+- Remove pre-following of #beta-testers and #translators in _DEBUG builds
+
 1.00.15
 
 - Avoid any view setup/rendering before auto-start setting is read

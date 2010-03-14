@@ -1205,6 +1205,11 @@ void CBuddycloudLogic::ProcessPubsubSubscriptionsL() {
 					aChannelItem->SetPubsubSubscription(aSubscribedItem->GetPubsubSubscription());
 					aChannelItem->SetPubsubAffiliation(aSubscribedItem->GetPubsubAffiliation());
 					
+					if(aChannelItem->GetSubTitle().Length() == 0) {
+						// Re-collect metadata
+						CollectChannelMetadataL(aSubscribedItem->GetId());		
+					}
+					
 					iGenericList->DeleteItemByIndex(x);
 					
 					aItemFound = true;
@@ -1300,9 +1305,9 @@ void CBuddycloudLogic::ProcessPubsubSubscriptionsL() {
 	
 	// Send queued stanzas
 	iXmppEngine->SendQueuedXmppStanzas();
-
-	// Collect users pubsub node subscribers
-	CollectUsersPubsubNodeAffiliationsL();
+	
+	// Collect users channel metadata
+	CollectChannelMetadataL(iOwnItem->GetId(EIdChannel), EXmppIdGetUsersMetadata);
 	
 	// TODO: Workaround for google
 	SendPresenceToPubsubL(KNullDesC8);
@@ -1452,20 +1457,6 @@ void CBuddycloudLogic::ProcessUsersPubsubNodeAffiliationsL() {
 	}
 
 	CleanupStack::PopAndDestroy(2); // aDeltaList, aEncId	
-	
-#ifdef _DEBUG
-	// Pre-follow debug channels
-	_LIT(KBetaTestersChannel, "/channel/beta-testers");
-	_LIT(KTranslatorsChannel, "/channel/translators");
-	
-	if(!IsSubscribedTo(KBetaTestersChannel, EItemChannel)) {
-		FollowChannelL(KBetaTestersChannel);
-	}
-	
-	if(!IsSubscribedTo(KTranslatorsChannel, EItemChannel)) {
-		FollowChannelL(KTranslatorsChannel);
-	}
-#endif
 }
 
 void CBuddycloudLogic::CollectLastPubsubNodeItemsL(const TDesC& aNode, const TDesC8& aHistoryAfterItem) {
@@ -1510,7 +1501,7 @@ void CBuddycloudLogic::CollectUserPubsubNodeL(const TDesC& aJid, const TDesC& aN
 	}
 }
 
-void CBuddycloudLogic::CollectChannelMetadataL(const TDesC& aNode) {
+void CBuddycloudLogic::CollectChannelMetadataL(const TDesC& aNode, TInt aStampId) {
 #ifdef _DEBUG
 	WriteToLog(_L8("BL    CBuddycloudLogic::CollectChannelMetadataL"));
 #endif
@@ -1520,7 +1511,7 @@ void CBuddycloudLogic::CollectChannelMetadataL(const TDesC& aNode) {
 	_LIT8(KDiscoItemsStanza, "<iq to='' type='get' id='%02d:%02d'><query xmlns='http://jabber.org/protocol/disco#info' node=''/></iq>\r\n");
 	HBufC8* aDiscoItemsStanza = HBufC8::NewLC(KDiscoItemsStanza().Length() + KBuddycloudPubsubServer().Length() + aEncId.Length());
 	TPtr8 pDiscoItemsStanza(aDiscoItemsStanza->Des());
-	pDiscoItemsStanza.AppendFormat(KDiscoItemsStanza, EXmppIdGetChannelMetadata, GetNewIdStamp());
+	pDiscoItemsStanza.AppendFormat(KDiscoItemsStanza, aStampId, GetNewIdStamp());
 	pDiscoItemsStanza.Insert(91, aEncId);
 	pDiscoItemsStanza.Insert(8, KBuddycloudPubsubServer);
 	
@@ -2683,7 +2674,7 @@ void CBuddycloudLogic::SetNextPlaceL(TDesC& aPlace, TInt aPlaceId) {
 	}
 }
 
-void CBuddycloudLogic::DiscussionRead(TDesC& /*aDiscussionId*/, TInt aItemId) {
+void CBuddycloudLogic::DiscussionRead(TDesC& /*aDiscussionId*/, TInt /*aItemId*/) {
 //	CFollowingItem* aFollowingItem = static_cast <CFollowingItem*> (iFollowingList->GetItemById(aItemId));
 //	
 //	if(iOwnItem && aFollowingItem) {
@@ -5354,6 +5345,29 @@ void CBuddycloudLogic::XmppStanzaAcknowledgedL(const TDesC8& aStanza, const TDes
 				else if(aIdEnum == EXmppIdPublishMood || aIdEnum == EXmppIdPublishFuturePlace) {
 					// Publish mood or future place result
 					SetActivityStatus(KNullDesC);
+				}
+				else if(aIdEnum == EXmppIdGetUsersMetadata) {
+					// Handle users channel metadata result
+					if(aXmlParser->MoveToElement(_L8("query"))) {
+						TPtrC aAttributeNode(iTextUtilities->Utf8ToUnicodeL(aXmlParser->GetStringAttribute(_L8("node"))));
+						
+						if(aAttributeNode.Compare(iOwnItem->GetId(EIdChannel)) == 0) {
+							// Check is users own node
+							while(aXmlParser->MoveToElement(_L8("field"))) {
+								TPtrC8 aAttributeVar(aXmlParser->GetStringAttribute(_L8("var")));
+								
+								if(aXmlParser->MoveToElement(_L8("value"))) {
+									// TODO: Check users avatar hash
+									if(aAttributeVar.Compare(_L8("pubsub#access_model")) == 0) {
+										if(CXmppEnumerationConverter::PubsubAccessModel(aXmlParser->GetStringData()) == EPubsubAccessWhitelist) {
+											// Collect users pubsub node subscribers and synchronize
+											CollectUsersPubsubNodeAffiliationsL();
+										}
+									}
+								}
+							}
+						}
+					}
 				}
 				else if(aIdEnum == EXmppIdGetChannelMetadata) {
 					// Handle channel metadata result

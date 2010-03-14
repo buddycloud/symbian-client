@@ -205,7 +205,7 @@ class CBuddycloudLogic : public CBase, MLocationEngineNotification, MTimeInterfa
 		void CollectLastPubsubNodeItemsL(const TDesC& aNode, const TDesC8& aHistoryAfterItem);		
 		void CollectUserPubsubNodeL(const TDesC& aJid, const TDesC& aNodeLeaf, const TDesC8& aHistoryAfterItem = KNullDesC8);
 		
-		void CollectChannelMetadataL(const TDesC& aNode);
+		void CollectChannelMetadataL(const TDesC& aNode, TInt aStampId = EXmppIdGetChannelMetadata);
 		void ProcessChannelMetadataL(const TDesC8& aStanza);
 		
 	public: // Pubsub
