@@ -25,6 +25,7 @@
 #include "DiscussionManager.h"
 #include "LocationEngine.h"
 #include "NotificationEngine.h"
+#include "PhoneUtilities.h"
 #include "Timer.h"
 #include "TextUtilities.h"
 #include "XmppEngine.h"
@@ -369,6 +370,7 @@ class CBuddycloudLogic : public CBase, MLocationEngineNotification, MTimeInterfa
 		CFollowingRosterItem* iOwnItem;
 		
 		CTextUtilities* iTextUtilities;
+		CPhoneUtilities* iPhoneUtilities;
 
 		// Connection State
 		TBuddycloudLogicState iState;
@@ -387,6 +389,7 @@ class CBuddycloudLogic : public CBase, MLocationEngineNotification, MTimeInterfa
 		TBool iOffsetReceived;
 		TBool iRosterSynchronized;
 		TBool iPubsubSubscribedTo;
+		TXmppPubsubAccessModel iUserChannelAccessModel;
 		
         CBuddycloudListStore* iGenericList;
 

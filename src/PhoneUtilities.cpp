@@ -16,10 +16,22 @@
 #include <TelephonyInternalPSKeys.h>
 #include "PhoneUtilities.h"
 
+CPhoneUtilities* CPhoneUtilities::NewL() {
+	CPhoneUtilities* self = NewLC();
+	CleanupStack::Pop(self);
+	return self;
+}
+
+CPhoneUtilities* CPhoneUtilities::NewLC() {
+	CPhoneUtilities* self = new (ELeave) CPhoneUtilities();
+	CleanupStack::PushL(self);
+	return self;
+}
+
 void CPhoneUtilities::GetPhoneModelL(TDes& aPhoneModel) {
 	RFs aSession;
 	RFile aFile;
-	TFileText text;
+	TFileText aText;
 	
 	if(aSession.Connect() == KErrNone) {
 		CleanupClosePushL(aSession);
@@ -29,8 +41,8 @@ void CPhoneUtilities::GetPhoneModelL(TDes& aPhoneModel) {
 		if(aFile.Open(aSession, KModelFile, EFileRead) == KErrNone) {
 			CleanupClosePushL(aFile);
 
-			text.Set(aFile);
-			text.Read(aPhoneModel);
+			aText.Set(aFile);
+			aText.Read(aPhoneModel);
 			
 			CleanupStack::PopAndDestroy(&aFile);	
 		}
@@ -42,7 +54,7 @@ void CPhoneUtilities::GetPhoneModelL(TDes& aPhoneModel) {
 void CPhoneUtilities::GetFirmwareVersionL(TDes& aFirmwareVersion) {
 	RFs aSession;
 	RFile aFile;
-	TFileText text;
+	TFileText aText;
 	
 	if(aSession.Connect() == KErrNone) {
 		CleanupClosePushL(aSession);
@@ -52,8 +64,8 @@ void CPhoneUtilities::GetFirmwareVersionL(TDes& aFirmwareVersion) {
 		if(aFile.Open(aSession, KModelFile, EFileRead) == KErrNone) {
 			CleanupClosePushL(aFile);
 
-			text.Set(aFile);
-			text.Read(aFirmwareVersion);
+			aText.Set(aFile);
+			aText.Read(aFirmwareVersion);
 			
 			CleanupStack::PopAndDestroy(&aFile);	
 		}

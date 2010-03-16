@@ -132,6 +132,7 @@ class CBuddycloudListStore : public CBase {
 
 		void DeleteItemByIndex(TInt aIndex);
 		void DeleteItemById(TInt aItemId);
+		void DeleteAll();
 		
 	public: // Filter items
 		TDesC& GetFilterText();

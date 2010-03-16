@@ -13,13 +13,19 @@
 #ifndef PHONEUTILITIES_H_
 #define PHONEUTILITIES_H_
 
+#include <e32base.h>
+
 class CPhoneUtilities {		
 	public:
-		static void GetPhoneModelL(TDes& aPhoneModel);
-		static void GetFirmwareVersionL(TDes& aFirmwareVersion);
+		static CPhoneUtilities* NewL();
+		static CPhoneUtilities* NewLC();
+
+	public:
+		void GetPhoneModelL(TDes& aPhoneModel);
+		void GetFirmwareVersionL(TDes& aFirmwareVersion);
 		
 	public:
-		static TBool InCall();
+		TBool InCall();
 };
 
 #endif /*PHONEUTILITIES_H_*/

@@ -37,7 +37,6 @@
 #include "BuddycloudConstants.h"
 #include "BuddycloudLogic.h"
 #include "FileUtilities.h"
-#include "PhoneUtilities.h"
 #include "SearchResultMessageQueryDialog.h"
 #include "TimeUtilities.h"
 #include "XmlParser.h"
@@ -69,6 +68,9 @@ CBuddycloudLogic::~CBuddycloudLogic() {
 	
 	if(iTextUtilities)
 		delete iTextUtilities;
+	
+	if(iPhoneUtilities)
+		delete iPhoneUtilities;
     
 	// Avatars & text
 	if(iAvatarRepository)
@@ -150,6 +152,7 @@ void CBuddycloudLogic::ConstructL() {
 	iTimer = CCustomTimer::NewL(this);
 	
 	iTextUtilities = CTextUtilities::NewL();
+	iPhoneUtilities = CPhoneUtilities::NewL();
 	
 #ifdef _DEBUG
 	WriteToLog(_L8("BL    Initialize CAvatarRepository"));
@@ -1422,7 +1425,7 @@ void CBuddycloudLogic::ProcessUsersPubsubNodeAffiliationsL() {
 	}
 	
 	// Remove users from subscribers
-	if(iGenericList->Count() > 0) {
+	if(iUserChannelAccessModel == EPubsubAccessWhitelist && iGenericList->Count() > 0) {
 		_LIT8(KSubscriptionStanza, "<iq to='' type='set' id='subscription:%02d'><pubsub xmlns='http://jabber.org/protocol/pubsub#owner'><subscriptions node=''></subscriptions></pubsub></iq>\r\n");	
 		_LIT8(KSubscriptionItem, "<subscription jid='' subscription=''/>");
 		
@@ -1455,6 +1458,8 @@ void CBuddycloudLogic::ProcessUsersPubsubNodeAffiliationsL() {
 		iXmppEngine->SendAndForgetXmppStanza(pSubscriptionStanza, true);
 		CleanupStack::PopAndDestroy(); // aSubscriptionStanza
 	}
+	
+	iGenericList->DeleteAll();
 
 	CleanupStack::PopAndDestroy(2); // aDeltaList, aEncId	
 }
@@ -2145,7 +2150,7 @@ void CBuddycloudLogic::HandlePubsubEventL(const TDesC8& aStanza) {
 	if(aNotifiedItemId != KErrNotFound || aNotifiedAudioId != KErrNotFound) {
 		NotifyNotificationObservers(ENotificationFollowingItemsUpdated, aNotifiedItemId);
 		
-		if(aNotifiedAudioId != KErrNotFound && !CPhoneUtilities::InCall()) {
+		if(aNotifiedAudioId != KErrNotFound && !iPhoneUtilities->InCall()) {
 			NotifyNotificationObservers(ENotificationNotifiedMessageEvent, aNotifiedItemId);
 
 			iNotificationEngine->NotifyL(aNotifiedAudioId);
@@ -4739,9 +4744,66 @@ void CBuddycloudLogic::XmppUnhandledStanza(const TDesC8& aStanza) {
 			}
 		}
 		else if(aXmlParser->MoveToElement(_L8("query"))) {			
-			if(aAttributeType.Compare(_L8("set")) == 0) {
-				TPtrC8 aAttributeXmlns = aXmlParser->GetStringAttribute(_L8("xmlns"));
+			TPtrC8 aAttributeXmlns = aXmlParser->GetStringAttribute(_L8("xmlns"));
 
+			if(aAttributeType.Compare(_L8("get")) == 0) {
+				if(aAttributeXmlns.Compare(_L8("http://jabber.org/protocol/disco#info")) == 0) {
+					TPtrC8 aAttributeNode = aXmlParser->GetStringAttribute(_L8("node"));
+					
+					// Send Disco result
+					_LIT8(KNodeAttribute, " node=''");
+					_LIT8(KDiscoStanza, "<iq to='' type='result' id=''><query xmlns='http://jabber.org/protocol/disco#info'><identity category='client' type='mobile'/><feature var='http://jabber.org/protocol/pubsub'/><feature var='http://jabber.org/protocol/geoloc'/><feature var='http://jabber.org/protocol/mood'/><feature var='http://www.w3.org/2005/Atom'/><feature var='http://buddycloud.com/protocol/channels'/><feature var='http://buddycloud.com/protocol/place'/><feature var='urn:oslo:nearbyobjects'/></query></iq>\r\n");
+
+					HBufC8* aDiscoStanza = HBufC8::NewLC(KDiscoStanza().Length() + KNodeAttribute().Length() + aAttributeNode.Length() + aAttributeFrom.Length() + aAttributeId.Length());
+					TPtr8 pDiscoStanza(aDiscoStanza->Des());
+					pDiscoStanza.Copy(KDiscoStanza);
+					
+					if(aAttributeNode.Length() > 0) {
+						pDiscoStanza.Insert(82, KNodeAttribute);
+						pDiscoStanza.Insert(89, aAttributeNode);
+					}
+					
+					pDiscoStanza.Insert(28, aAttributeId);
+					pDiscoStanza.Insert(8, aAttributeFrom);
+
+					iXmppEngine->SendAndForgetXmppStanza(pDiscoStanza, false);
+					CleanupStack::PopAndDestroy(); // aDiscoStanza
+				}
+				else if(aAttributeXmlns.Compare(_L8("jabber:iq:version")) == 0) {
+					// Send XEP-0092: Software Version
+					_LIT8(KVersionStanza, "<iq to='' type='result' id=''><query xmlns='jabber:iq:version'><name>Buddycloud</name><version></version><os> {}</os></query></iq>\r\n");
+					
+					// Buddycloud client version
+					HBufC* aVersion = CEikonEnv::Static()->AllocReadResourceLC(R_STRING_APPVERSION);
+					HBufC8* aEncVersion = iTextUtilities->UnicodeToUtf8L(*aVersion).AllocLC();
+					TPtr8 pEncVersion(aEncVersion->Des());
+					
+					// Phone model
+					TBuf<128> aPhoneModel;
+					iPhoneUtilities->GetPhoneModelL(aPhoneModel);
+					HBufC8* aEncPhoneModel = iTextUtilities->UnicodeToUtf8L(aPhoneModel).AllocLC();
+					TPtr8 pEncPhoneModel(aEncPhoneModel->Des());
+					
+					// Firmware version
+					TBuf<128> aFirmwareVersion;
+					iPhoneUtilities->GetFirmwareVersionL(aFirmwareVersion);
+					HBufC8* aEncFirmwareVersion = iTextUtilities->UnicodeToUtf8L(aFirmwareVersion).AllocLC();
+					TPtr8 pEncFirmwareVersion(aEncFirmwareVersion->Des());
+
+					HBufC8* aVersionStanza = HBufC8::NewLC(KVersionStanza().Length() + aAttributeFrom.Length() + aAttributeId.Length() + pEncVersion.Length() + pEncPhoneModel.Length() + pEncFirmwareVersion.Length());
+					TPtr8 pVersionStanza(aVersionStanza->Des());
+					pVersionStanza.Copy(KVersionStanza);
+					pVersionStanza.Insert(111, pEncFirmwareVersion);
+					pVersionStanza.Insert(109, pEncPhoneModel);
+					pVersionStanza.Insert(95, pEncVersion);
+					pVersionStanza.Insert(28, aAttributeId);
+					pVersionStanza.Insert(8, aAttributeFrom);
+
+					iXmppEngine->SendAndForgetXmppStanza(pVersionStanza, false);
+					CleanupStack::PopAndDestroy(5); // aVersionStanza, aEncFirmwareVersion, aEncPhoneModel, aEncVersion, aVersion
+				}
+			}
+			else if(aAttributeType.Compare(_L8("set")) == 0) {
 				if(aAttributeXmlns.Compare(_L8("jabber:iq:roster")) == 0) {
 					// Roster Push (Update)
 					HandleRosterItemPushL(aStanza);
@@ -5359,10 +5421,11 @@ void CBuddycloudLogic::XmppStanzaAcknowledgedL(const TDesC8& aStanza, const TDes
 								if(aXmlParser->MoveToElement(_L8("value"))) {
 									// TODO: Check users avatar hash
 									if(aAttributeVar.Compare(_L8("pubsub#access_model")) == 0) {
-										if(CXmppEnumerationConverter::PubsubAccessModel(aXmlParser->GetStringData()) == EPubsubAccessWhitelist) {
-											// Collect users pubsub node subscribers and synchronize
-											CollectUsersPubsubNodeAffiliationsL();
-										}
+										// Store users access model
+										iUserChannelAccessModel = CXmppEnumerationConverter::PubsubAccessModel(aXmlParser->GetStringData());
+										
+										// Collect users pubsub node subscribers and synchronize
+										CollectUsersPubsubNodeAffiliationsL();
 									}
 								}
 							}
@@ -5743,7 +5806,7 @@ void CBuddycloudLogic::HandleIncomingMessageL(const TDesC8& aStanza) {
 			}
 			
 			// Notify arrival
-			if(aDiscussion->Notify() && !CPhoneUtilities::InCall()) {
+			if(aDiscussion->Notify() && !iPhoneUtilities->InCall()) {
 				NotifyNotificationObservers(ENotificationNotifiedMessageEvent, aRosterItem->GetItemId());
 				
 				iNotificationEngine->NotifyL(ESettingItemPrivateMessageTone);

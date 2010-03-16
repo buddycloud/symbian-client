@@ -914,11 +914,7 @@ void CBuddycloudFollowingContainer::DynInitMenuPaneL(TInt aResourceId, CEikMenuP
 						aMenuPane->SetItemDimmed(EMenuFollowCommand, false);
 					}
 					
-					if(aRosterItem->GetSubscription() == EPresenceSubscriptionTo || 
-							aRosterItem->GetSubscription() == EPresenceSubscriptionBoth) {
-						
-						aMenuPane->SetItemDimmed(EMenuUnfollowCommand, false);
-					}
+					aMenuPane->SetItemDimmed(EMenuUnfollowCommand, false);
 				}
 				
 				if(aRosterItem->GetGeolocItem(EGeolocItemCurrent)->GetString(EGeolocText).Length() > 0) {

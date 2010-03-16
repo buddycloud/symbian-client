@@ -2,7 +2,7 @@
 ============================================================================
  Name        : Buddycloud.r01
  Author      : Ross Savage
- Copyright   : 2008 Buddycloud
+ Copyright   : Buddycloud 2008
  Description : Localisation File : English
  
                Please only translate text between quotations e.g. "Test"
@@ -22,7 +22,7 @@ rls_string r_string_translatedby "Fordítás: bkos"
 
 rls_string r_string_followingtab_hint "Ismerősök/Csatornák"
 rls_string r_string_placestab_hint "Helyek"
-rls_string r_string_explorertab_hint "Explorer"
+rls_string r_string_explorertab_hint "Böngésző"
 
 // CBA
 rls_string r_string_options_menu "Opciók"
@@ -39,12 +39,12 @@ rls_string r_string_item_newplace "Új hely"
 rls_string r_string_options_edititem "Változtat"
 rls_string r_string_options_searchplace "Részletek keresése"
 rls_string r_string_options_remove "Eltávolítás"
-rls_string r_string_options_delete "Delete"
+rls_string r_string_options_delete "Törlés"
 
 // Notes
 rls_string r_string_note_noresultsfound "Nincsen keresési eredmény"
 rls_string r_string_note_requestsent "Kérés elküldve"
-rls_string r_string_note_feedbacksent "Feedback sent"
+rls_string r_string_note_feedbacksent "Visszajelzés elküldve"
 rls_string r_string_note_messagequeued "Üzenet következős kapcsolódáskor lesz elküldve"
 rls_string r_string_note_offlinerequired "Ezt csak offline módban csinálhatod"
 rls_string r_string_note_updatesucessful "Frissítés sikeres"
@@ -96,7 +96,7 @@ rls_string r_string_note_followinglistempty "You are not following anything.\n\n
 // Menu: Messaging
 rls_string r_string_options_postrequest "Írási jog kérése"
 rls_string r_string_options_jumptounread "Ugrás az olvasatlanokhoz"
-rls_string r_string_options_addcomment "Post comment"
+rls_string r_string_options_addcomment "Hozzászólás írása"
 rls_string r_string_options_postmessage "Új hozzászólás írása"
 rls_string r_string_options_postmedia "Média közzététele"
 rls_string r_string_options_notificationon "Figyelmeztetés bekapcs."
@@ -107,7 +107,7 @@ rls_string r_string_item_reportpost "Hozzászólás jelentése"
 rls_string r_string_item_removepost "Hozzászólás törlése"
 
 rls_string r_string_options_itemchannel "Csatorna"
-rls_string r_string_channel_copychannelid "Copy #Channel Id"
+rls_string r_string_channel_copychannelid "#Csatorna Id másolása"
 rls_string r_string_channel_markread "Csatorna megjelölése olvasottként"
 rls_string r_string_options_reportchannel "Report channel"
 
@@ -143,21 +143,21 @@ rls_string r_string_item_seeproducing "Létrehozott csatornák"
 rls_string r_string_item_seenearby "Mi van a környékén?"
 
 rls_string r_string_title_followedby "$OBJECT követői"
-rls_string r_string_title_moderatedby "$OBJECT's moderators"
+rls_string r_string_title_moderatedby "$OBJECT moderátorai"
 rls_string r_string_title_isfollowing "$USER követ"
-rls_string r_string_title_ismoderating "$USER is moderating"
+rls_string r_string_title_ismoderating "$USER moderál"
 rls_string r_string_title_isproducing "$USER csatornái"
 rls_string r_string_title_nearbyto "$OBJECT közelében"
 
 rls_string r_string_note_requesting "Kérés..."
 rls_string r_string_note_channelrank "Helyezés"
 rls_string r_string_note_channelsince "Days broadcasting"
-rls_string r_string_note_channelowner "Produced by"
-rls_string r_string_note_channellocation "Location"
-rls_string r_string_note_channelfollowers "Followers"
+rls_string r_string_note_channelowner "Karbantartó"
+rls_string r_string_note_channellocation "Hely"
+rls_string r_string_note_channelfollowers "Követők"
 
 // Menu: Channels
-rls_string r_string_list_nearbytoyou "Explore Nearby"
+rls_string r_string_list_nearbytoyou "Közelbnen lévők böngészése"
 rls_string r_string_list_featuredchannels "Kiemelt csatornák"
 rls_string r_string_list_channelsyoumightlike "Számodra érdekes csatornák"
 rls_string r_string_list_followersfavourites "Követők kedvencei"
@@ -171,9 +171,9 @@ rls_string r_string_note_mediauploadready "Erre kattintva feltöltheted a médi�
 
 rls_string r_string_item_changerole "Jogok változtatása"
 rls_string r_string_changerole_itemlist_outcast "Tiltás a csatornából"
-rls_string r_string_changerole_itemlist_follower "Follower"
-rls_string r_string_changerole_itemlist_publisher "Follower + post"
-rls_string r_string_changerole_itemlist_moderator "Moderator"
+rls_string r_string_changerole_itemlist_follower "Követő"
+rls_string r_string_changerole_itemlist_publisher "Követő + hozzászólás"
+rls_string r_string_changerole_itemlist_moderator "Moderátor"
 
 rls_string r_string_note_affiliationrequest_title "Hozzászólási felkérés"
 rls_string r_string_note_affiliationrequest_text "$USER engedélyt kért, hogy írhasson ebbe a csatornába. Engedélyzéshez az 'Elfogad' gombot, ellenkező esetben a 'Visszautasít' gombot kell nyomni."
@@ -192,14 +192,14 @@ rls_string r_string_note_subscriptionrejected "Követési felkérésed vissza le
 rls_string r_string_settings_account_title "Fiók"
 rls_string r_string_settings_itemlist_fullname "Teljes név"
 rls_string r_string_settings_itemlist_username "Id"
-rls_string r_string_settings_itemlist_username_hint "e.g. 'name@gmail.com'"
+rls_string r_string_settings_itemlist_username_hint "pl. 'nev@gmail.com'"
 rls_string r_string_settings_itemlist_password "Jelszó"
 rls_string r_string_settings_itemlist_password_hint "XMPP szerver jelszó"
 rls_string r_string_settings_itemlist_server "XMPP szerver"
 
 // Preference settings
 rls_string r_string_settings_itemlist_language "Nyelv kijelzése"
-rls_string r_string_settings_itemlist_blocking "Allow private messages"
+rls_string r_string_settings_itemlist_blocking "Személyes üzenetek engedélyezése"
 rls_string r_string_settings_itemlist_blockingalwaysshow "Mindenkitől"
 rls_string r_string_settings_itemlist_blockingfollowers "Csak követők"
 rls_string r_string_settings_itemlist_accesspoint "Használandó Hozzáférési Pont"
@@ -270,9 +270,9 @@ rls_string r_string_editchannel_itemlist_description_hint "Csatorna leírása"
 rls_string r_string_editchannel_itemlist_access "Hozzáférés"
 rls_string r_string_editchannel_itemlist_access_open "Csatorna megnyitása"
 rls_string r_string_editchannel_itemlist_access_whitelist "Csak tagok"
-rls_string r_string_editchannel_itemlist_defaultaffiliation "New followers can"
-rls_string r_string_editchannel_itemlist_defaultaffiliation_member "Read only"
-rls_string r_string_editchannel_itemlist_defaultaffiliation_publisher "Read and post"
+rls_string r_string_editchannel_itemlist_defaultaffiliation "Új követők lehetőségei:"
+rls_string r_string_editchannel_itemlist_defaultaffiliation_member "Csak olvasás"
+rls_string r_string_editchannel_itemlist_defaultaffiliation_publisher "Hozzászólás olvasása és írása"
 
 rls_string r_string_note_channelexists "Ez a #csatorna_azonosító már létezik. Kérlek használj egy másikat."
 
@@ -285,17 +285,17 @@ rls_string r_string_exit_title "Kilépés megerősítése"
 rls_string r_string_exit_text "Kilépéssel a buddycloud csatlakozásod is megszűnok. Biztosan ezt szeretnéd?"
 
 // Authorization Error
-rls_string r_string_authorizationerror_title "Authorization failed"
+rls_string r_string_authorizationerror_title "Hitelesítés sikertelen"
 rls_string r_string_authorizationerror_text "Username already exists or password is incorrect. Please check your Account settings and try again."
 
 // Resolve Error
-rls_string r_string_serverresolveerror_title "Connection error"
+rls_string r_string_serverresolveerror_title "Kapcsolódási hiba"
 rls_string r_string_serverresolveerror_text "XMPP server could not be resolved. Please enter your XMPP server and try again."
 
 // Delete Item Message
 rls_string r_string_deleteitem_title "Eltávolítás megerősítése"
 rls_string r_string_deleteitem_text "Biztos, hogy el szeretnéd távolítani?"
-rls_string r_string_deletechannel_text "Deleting this channel will also delete all content.\n\nAre you sure?"
+rls_string r_string_deletechannel_text "A csatorna törlésével minden tartalom is eltűnik. Biztosan ezt szeretnéd?"
 
 // Sms/Email Messages
 rls_string r_string_invitemessage_title "Csatlakozz a buddycloudhoz!"
@@ -329,14 +329,14 @@ rls_string r_string_note_offline "Offline"
 rls_string r_string_step2_title "Legyél híres!"
 rls_string r_string_step2_text "A buddycloud csatornák új lehetőséget nyújtanak saját tartalmad közlésére követőiddel. A buddycloud csatornák segítségével híres lehetsz ismereteiddel egyedi helyszínekről és témákról és egy saját társaságot alakíthastz ki a követőiddel."
 
-rls_string r_string_step3_title "How do you want to log in?"
+rls_string r_string_step3_title "Hogyan szeretnél bejelentkezni?"
 rls_string r_string_step3_text "Recommended: Instantly sign-in using your Google/OVI account (or any Jabber account).\n\nAlternatively: Register for a buddycloud account."
 rls_string r_string_step3_label1 "Use existing account"
 rls_string r_string_step3_label2 "Register new account"
 
-rls_string r_string_step4_title "Who are you?"
+rls_string r_string_step4_title "Ki vagy?"
 rls_string r_string_step4_text1 "Enter your existing account details.\n\nThis looks like 'name@gmail.com' or 'name@ovi.com'."
-rls_string r_string_step4_text2 "Choose a new username and password to start using buddycloud.  If you have already registered for buddycloud on another phone, enter those details here."
+rls_string r_string_step4_text2 "Válassz egy új felhasználónevet és jelszót a buddycloud használásához. Ha már regisztráltál a buddycloudnál egy másik telefonról, akkor add meg azokat az adatokat."
 
 rls_string r_string_step5_title "Gratulálunk!"
 rls_string r_string_step5_text "You are setup and ready to use buddycloud channels."

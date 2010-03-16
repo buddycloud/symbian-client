@@ -290,6 +290,14 @@ void CBuddycloudListStore::DeleteItemById(TInt aItemId) {
 	}
 }
 
+void CBuddycloudListStore::DeleteAll() {
+	for(TInt i = 0; i < iItemStore.Count(); i++) {
+		delete iItemStore[i];
+	}
+
+	iItemStore.Reset();
+}
+
 TDesC& CBuddycloudListStore::GetFilterText() {
 	return *iFilterText;
 }

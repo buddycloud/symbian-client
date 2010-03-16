@@ -11,13 +11,9 @@
 */
 
 // INCLUDE FILES
-#include <aknquerydialog.h>
-#include <aknmessagequerydialog.h>
 #include <e32math.h>
 #include <imcvcodc.h>
-#include <Buddycloud.rsg>
 #include "Md5Wrapper.h"
-#include "PhoneUtilities.h"
 #include "TextUtilities.h"
 #include "XmppEngine.h"
 
@@ -785,78 +781,6 @@ void CXmppEngine::HandleXmppStanzaL(const TDesC8& aStanza) {
 			}
 			
 			aStanzaIsProcessed = true;
-		}
-		else if(aElement.Compare(_L8("iq")) == 0) {
-			TPtrC8 aAttributeType = aXmlParser->GetStringAttribute(_L8("type"));
-	
-			if(aAttributeType.Compare(_L8("get")) == 0) {
-				TPtrC8 aAttributeFrom = aXmlParser->GetStringAttribute(_L8("from"));
-	
-				if(aXmlParser->MoveToElement(_L8("query"))) {
-					TPtrC8 aAttributeXmlns = aXmlParser->GetStringAttribute(_L8("xmlns"));
-	
-					if(aAttributeXmlns.Compare(_L8("http://jabber.org/protocol/disco#info")) == 0) {
-						TPtrC8 aAttributeNode = aXmlParser->GetStringAttribute(_L8("node"));
-						
-						// Send Disco result
-						_LIT8(KNodeAttribute, " node=''");
-						_LIT8(KDiscoStanza, "<iq to='' type='result' id=''><query xmlns='http://jabber.org/protocol/disco#info'><identity category='client' type='mobile'/><feature var='http://jabber.org/protocol/pubsub'/><feature var='http://jabber.org/protocol/geoloc'/><feature var='http://jabber.org/protocol/mood'/><feature var='http://www.w3.org/2005/Atom'/><feature var='http://buddycloud.com/protocol/channels'/><feature var='http://buddycloud.com/protocol/place'/><feature var='urn:oslo:nearbyobjects'/></query></iq>\r\n");
-	
-						HBufC8* aDiscoStanza = HBufC8::NewLC(KDiscoStanza().Length() + KNodeAttribute().Length() + aAttributeNode.Length() + aAttributeFrom.Length() + aAttributeId.Length());
-						TPtr8 pDiscoStanza(aDiscoStanza->Des());
-						pDiscoStanza.Copy(KDiscoStanza);
-						
-						if(aAttributeNode.Length() > 0) {
-							pDiscoStanza.Insert(82, KNodeAttribute);
-							pDiscoStanza.Insert(89, aAttributeNode);
-						}
-						
-						pDiscoStanza.Insert(28, aAttributeId);
-						pDiscoStanza.Insert(8, aAttributeFrom);
-	
-						WriteToStreamL(pDiscoStanza);
-						CleanupStack::PopAndDestroy();
-						
-						aStanzaIsProcessed = true;
-					}
-					else if(aAttributeXmlns.Compare(_L8("jabber:iq:version")) == 0) {
-						// Send XEP-0092: Software Version
-						_LIT8(KVersionStanza, "<iq to='' type='result' id=''><query xmlns='jabber:iq:version'><name>Buddycloud</name><version></version><os> {}</os></query></iq>\r\n");
-						
-						// Buddycloud client version
-						CTextUtilities* aTextUtilities = CTextUtilities::NewLC();
-						HBufC* aVersion = CEikonEnv::Static()->AllocReadResourceLC(R_STRING_APPVERSION);
-						HBufC8* aEncVersion = aTextUtilities->UnicodeToUtf8L(*aVersion).AllocLC();
-						TPtr8 pEncVersion(aEncVersion->Des());
-						
-						// Phone model
-						TBuf<128> aPhoneModel;
-						CPhoneUtilities::GetPhoneModelL(aPhoneModel);
-						HBufC8* aEncPhoneModel = aTextUtilities->UnicodeToUtf8L(aPhoneModel).AllocLC();
-						TPtr8 pEncPhoneModel(aEncPhoneModel->Des());
-						
-						// Firmware version
-						TBuf<128> aFirmwareVersion;
-						CPhoneUtilities::GetFirmwareVersionL(aFirmwareVersion);
-						HBufC8* aEncFirmwareVersion = aTextUtilities->UnicodeToUtf8L(aFirmwareVersion).AllocLC();
-						TPtr8 pEncFirmwareVersion(aEncFirmwareVersion->Des());
-	
-						HBufC8* aVersionStanza = HBufC8::NewLC(KVersionStanza().Length() + aAttributeFrom.Length() + aAttributeId.Length() + pEncVersion.Length() + pEncPhoneModel.Length() + pEncFirmwareVersion.Length());
-						TPtr8 pVersionStanza(aVersionStanza->Des());
-						pVersionStanza.Copy(KVersionStanza);
-						pVersionStanza.Insert(111, pEncFirmwareVersion);
-						pVersionStanza.Insert(109, pEncPhoneModel);
-						pVersionStanza.Insert(95, pEncVersion);
-						pVersionStanza.Insert(28, aAttributeId);
-						pVersionStanza.Insert(8, aAttributeFrom);
-	
-						WriteToStreamL(pVersionStanza);
-						CleanupStack::PopAndDestroy(6); // aVersionStanza, aEncFirmwareVersion, aEncPhoneModel, aEncVersion, aVersion, aTextUtilities
-						
-						aStanzaIsProcessed = true;
-					}
-				}
-			}
 		}
 	}
 	

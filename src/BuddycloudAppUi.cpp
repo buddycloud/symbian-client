@@ -315,7 +315,8 @@ void CBuddycloudAppUi::HandleCommandL(TInt aCommand) {
 		
 		TBuf<128> aPhoneModel;
 		TInt aLocateResult = KErrNotFound;
-		CPhoneUtilities::GetPhoneModelL(aPhoneModel);
+		CPhoneUtilities* aPhoneUtilities = CPhoneUtilities::NewLC();
+		aPhoneUtilities->GetPhoneModelL(aPhoneModel);
 		
 		while((aLocateResult = aPhoneModel.Locate(' ')) != KErrNotFound) {
 			aPhoneModel.Replace(aLocateResult, 1, _L("%20"));
@@ -330,7 +331,7 @@ void CBuddycloudAppUi::HandleCommandL(TInt aCommand) {
 	
 		CBrowserLauncher* aLauncher = CBrowserLauncher::NewLC();
 		aLauncher->LaunchBrowserWithLinkL(pUrlLink);
-		CleanupStack::PopAndDestroy(3); // aLauncher, aUrlLink, aVersion
+		CleanupStack::PopAndDestroy(4); // aLauncher, aUrlLink, aPhoneUtilities, aVersion
 	}
 	else if(aCommand == EMenuAboutCommand) {
 		TInt aDataSent;
