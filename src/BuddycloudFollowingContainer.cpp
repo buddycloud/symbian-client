@@ -834,7 +834,6 @@ void CBuddycloudFollowingContainer::DynInitMenuPaneL(TInt aResourceId, CEikMenuP
 		aMenuPane->SetItemDimmed(EMenuConnectCommand, true);
 		aMenuPane->SetItemDimmed(EMenuDisconnectCommand, true);
 		aMenuPane->SetItemDimmed(EMenuOptionsItemCommand, true);
-		aMenuPane->SetItemDimmed(EMenuOptionsExploreCommand, true);
 		aMenuPane->SetItemDimmed(EMenuOptionsSettingsCommand, false);
 
 		if(iBuddycloudLogic->GetState() == ELogicOffline) {
@@ -846,15 +845,9 @@ void CBuddycloudFollowingContainer::DynInitMenuPaneL(TInt aResourceId, CEikMenuP
 
 		CFollowingItem* aItem = static_cast <CFollowingItem*> (iItemStore->GetItemById(iSelectedItem));
 
-		if(aItem) {
-			if(aItem->GetItemType() >= EItemRoster && iBuddycloudLogic->GetState() == ELogicOnline) {
-				aMenuPane->SetItemDimmed(EMenuOptionsExploreCommand, false);
-			}
-			
-			if(aItem->GetItemType() != EItemNotice || iBuddycloudLogic->GetState() == ELogicOnline) {
-				aMenuPane->SetItemTextL(EMenuOptionsItemCommand, aItem->GetTitle().Left(32));
-				aMenuPane->SetItemDimmed(EMenuOptionsItemCommand, false);
-			}
+		if((aItem && aItem->GetItemType() != EItemNotice) || iBuddycloudLogic->GetState() == ELogicOnline) {
+			aMenuPane->SetItemTextL(EMenuOptionsItemCommand, aItem->GetTitle().Left(32));
+			aMenuPane->SetItemDimmed(EMenuOptionsItemCommand, false);
 		}
 	}
 	else if(aResourceId == R_STATUS_OPTIONS_ITEM_MENU) {
@@ -863,6 +856,12 @@ void CBuddycloudFollowingContainer::DynInitMenuPaneL(TInt aResourceId, CEikMenuP
         aMenuPane->SetItemDimmed(EMenuChannelInfoCommand, true);
         aMenuPane->SetItemDimmed(EMenuGetPlaceInfoCommand, true);
         aMenuPane->SetItemDimmed(EMenuInviteToBuddycloudCommand, true);
+		aMenuPane->SetItemDimmed(EMenuSeeFollowersCommand, true);
+		aMenuPane->SetItemDimmed(EMenuSeeModeratorsCommand, true);
+		aMenuPane->SetItemDimmed(EMenuSeeFollowingCommand, true);
+		aMenuPane->SetItemDimmed(EMenuSeeModeratingCommand, true);
+		aMenuPane->SetItemDimmed(EMenuSeeProducingCommand, true);
+		aMenuPane->SetItemDimmed(EMenuSeeNearbyCommand, true);
 		aMenuPane->SetItemDimmed(EMenuFollowCommand, true);
 		aMenuPane->SetItemDimmed(EMenuUnfollowCommand, true);
 		aMenuPane->SetItemDimmed(EMenuAcceptCommand, true);
@@ -894,6 +893,10 @@ void CBuddycloudFollowingContainer::DynInitMenuPaneL(TInt aResourceId, CEikMenuP
 					
 					if(iBuddycloudLogic->GetState() == ELogicOnline) {
 						aMenuPane->SetItemDimmed(EMenuChannelInfoCommand, false);
+						aMenuPane->SetItemDimmed(EMenuSeeFollowersCommand, false);
+						aMenuPane->SetItemDimmed(EMenuSeeFollowingCommand, false);
+						aMenuPane->SetItemDimmed(EMenuSeeModeratingCommand, false);
+						aMenuPane->SetItemDimmed(EMenuSeeProducingCommand, false);
 					}
 				}
 				else if(!aRosterItem->OwnItem() && (aRosterItem->GetSubscription() == EPresenceSubscriptionTo || 
@@ -919,6 +922,10 @@ void CBuddycloudFollowingContainer::DynInitMenuPaneL(TInt aResourceId, CEikMenuP
 				
 				if(aRosterItem->GetGeolocItem(EGeolocItemCurrent)->GetString(EGeolocText).Length() > 0) {
 					aMenuPane->SetItemDimmed(EMenuGetPlaceInfoCommand, false);
+					
+					if(iBuddycloudLogic->GetState() == ELogicOnline) {
+						aMenuPane->SetItemDimmed(EMenuSeeNearbyCommand, false);
+					}
 				}
 			}
 			else if(aItem->GetItemType() == EItemChannel) {
@@ -928,6 +935,8 @@ void CBuddycloudFollowingContainer::DynInitMenuPaneL(TInt aResourceId, CEikMenuP
 				
 				if(iBuddycloudLogic->GetState() == ELogicOnline) {
 					aMenuPane->SetItemDimmed(EMenuChannelInfoCommand, false);
+					aMenuPane->SetItemDimmed(EMenuSeeFollowersCommand, false);
+					aMenuPane->SetItemDimmed(EMenuSeeModeratorsCommand, false);
 				}
 				
 				if(aChannelItem->GetPubsubAffiliation() < EPubsubAffiliationOwner) {
@@ -956,37 +965,6 @@ void CBuddycloudFollowingContainer::DynInitMenuPaneL(TInt aResourceId, CEikMenuP
 			
 			if(iBuddycloudLogic->GetState() == ELogicOnline) {
 				aMenuPane->SetItemDimmed(EMenuChannelInfoCommand, false);
-			}
-		}
-	}
-	else if(aResourceId == R_EXPLORER_OPTIONS_EXPLORE_MENU) {
-		aMenuPane->SetItemDimmed(EMenuSeeFollowersCommand, true);
-		aMenuPane->SetItemDimmed(EMenuSeeModeratorsCommand, true);
-		aMenuPane->SetItemDimmed(EMenuSeperator, true);
-		aMenuPane->SetItemDimmed(EMenuSeeFollowingCommand, true);
-		aMenuPane->SetItemDimmed(EMenuSeeModeratingCommand, true);
-		aMenuPane->SetItemDimmed(EMenuSeeProducingCommand, true);
-		aMenuPane->SetItemDimmed(EMenuSeeNearbyCommand, true);
-		
-		CFollowingItem* aItem = static_cast <CFollowingItem*> (iItemStore->GetItemById(iSelectedItem));
-
-		if(aItem && aItem->GetItemType() >= EItemRoster) {
-			if(aItem->GetId().Length() > 0) {
-				aMenuPane->SetItemDimmed(EMenuSeeFollowersCommand, false);
-				
-				if(aItem->GetItemType() == EItemChannel) {
-					aMenuPane->SetItemDimmed(EMenuSeeModeratorsCommand, false);
-				}
-				else {
-					aMenuPane->SetItemDimmed(EMenuSeperator, false);
-				}
-			}
-			
-			if(aItem->GetItemType() == EItemRoster) {
-				aMenuPane->SetItemDimmed(EMenuSeeFollowingCommand, false);
-				aMenuPane->SetItemDimmed(EMenuSeeModeratingCommand, false);
-				aMenuPane->SetItemDimmed(EMenuSeeProducingCommand, false);
-				aMenuPane->SetItemDimmed(EMenuSeeNearbyCommand, false);
 			}
 		}
 	}

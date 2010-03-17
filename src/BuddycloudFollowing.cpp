@@ -315,7 +315,10 @@ void CBuddycloudFollowingStore::BubbleItem(TInt aIndex, TBubble aDirection) {
 			while(aListPosition > 0 && aListPosition < iItemStore.Count()) {
 				CFollowingItem* aListItem = static_cast <CFollowingItem*> (iItemStore[aListPosition]);
 
-				if(aListItem->GetItemType() >= EItemRoster) {
+				if(aListItem->GetItemType() == EItemNotice) {
+					break;
+				}
+				else if(aListItem->GetItemType() >= EItemRoster) {
 					CFollowingChannelItem* aListChannelItem = static_cast <CFollowingChannelItem*> (aListItem);
 					TUint aListValue = (aListChannelItem->GetReplies() * 100);
 					
@@ -327,7 +330,7 @@ void CBuddycloudFollowingStore::BubbleItem(TInt aIndex, TBubble aDirection) {
 					
 					if((aDirection == EBubbleDown && (aBubbleValue > aListValue ||
 								(aBubbleValue == aListValue && (aBubblingChannelItem->GetUnread() > 0 || aListChannelItem->GetUnread() == 0)))) || 
-							(aDirection == EBubbleUp && (aBubbleValue < aListValue || 
+							(aDirection == EBubbleUp && (aBubbleValue < aListValue ||
 									(aBubbleValue == aListValue && aBubblingChannelItem->GetUnread() == 0 && aListChannelItem->GetUnread() > 0)))) {
 						
 						iItemStore.Remove(aIndex);

@@ -814,7 +814,6 @@ void CBuddycloudPlacesContainer::DynInitMenuPaneL(TInt aResourceId, CEikMenuPane
 		aMenuPane->SetItemDimmed(EMenuOptionsItemCommand, true);
 		aMenuPane->SetItemDimmed(EMenuBookmarkPlaceCommand, true);
 		aMenuPane->SetItemDimmed(EMenuSetNextPlaceCommand, true);
-		aMenuPane->SetItemDimmed(EMenuOptionsExploreCommand, true);
 		aMenuPane->SetItemDimmed(EMenuDisconnectCommand, true);
 		
 		if(iBuddycloudLogic->GetState() == ELogicOnline) {
@@ -851,10 +850,6 @@ void CBuddycloudPlacesContainer::DynInitMenuPaneL(TInt aResourceId, CEikMenuPane
 					}
 						
 					aMenuPane->SetItemDimmed(EMenuOptionsItemCommand, false);				
-					
-					if(aPlace->GetGeoloc()->GetReal(EGeolocLatitude) != 0.0 || aPlace->GetGeoloc()->GetReal(EGeolocLongitude) != 0.0) {
-						aMenuPane->SetItemDimmed(EMenuOptionsExploreCommand, false);
-					}
 				}
 			}
 		}
@@ -867,6 +862,7 @@ void CBuddycloudPlacesContainer::DynInitMenuPaneL(TInt aResourceId, CEikMenuPane
 		aMenuPane->SetItemDimmed(EMenuSetAsNextPlaceCommand, true);
 		aMenuPane->SetItemDimmed(EMenuEditPlaceCommand, true);
 		aMenuPane->SetItemDimmed(EMenuSetAsPlaceCommand, true);
+		aMenuPane->SetItemDimmed(EMenuSeeNearbyCommand, true);
 		aMenuPane->SetItemDimmed(EMenuDeletePlaceCommand, true);
 
 		CBuddycloudExtendedPlace* aPlace = static_cast <CBuddycloudExtendedPlace*> (iPlaceStore->GetItemById(iSelectedItem));
@@ -883,18 +879,12 @@ void CBuddycloudPlacesContainer::DynInitMenuPaneL(TInt aResourceId, CEikMenuPane
 				aMenuPane->SetItemDimmed(EMenuSetAsPlaceCommand, false);
 				aMenuPane->SetItemDimmed(EMenuEditPlaceCommand, false);
 				aMenuPane->SetItemDimmed(EMenuDeletePlaceCommand, false);
+				
+				if(aPlace->GetGeoloc()->GetReal(EGeolocLatitude) != 0.0 || aPlace->GetGeoloc()->GetReal(EGeolocLongitude) != 0.0) {
+					aMenuPane->SetItemDimmed(EMenuSeeNearbyCommand, false);
+				}
 			}
 		}
-	}
-	else if(aResourceId == R_EXPLORER_OPTIONS_EXPLORE_MENU) {
-		aMenuPane->SetItemDimmed(EMenuSeeFollowersCommand, true);
-		aMenuPane->SetItemDimmed(EMenuSeeModeratorsCommand, true);
-		aMenuPane->SetItemDimmed(EMenuSeperator, true);
-		aMenuPane->SetItemDimmed(EMenuSeeFollowingCommand, true);
-		aMenuPane->SetItemDimmed(EMenuSeeModeratingCommand, true);
-		aMenuPane->SetItemDimmed(EMenuSeeProducingCommand, true);
-		
-		aMenuPane->SetItemDimmed(EMenuSeeNearbyCommand, false);
 	}
 }
 

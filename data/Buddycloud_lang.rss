@@ -555,12 +555,6 @@ RESOURCE MENU_PANE r_status_options_menu
 		},
 		MENU_ITEM
 		{ 
-			command = EMenuOptionsExploreCommand; 
-			cascade = r_explorer_options_explore_menu; 
-			txt = r_string_options_explore;
-		},
-		MENU_ITEM
-		{ 
 			command = EMenuSetStatusCommand; 
 			txt = r_string_update_setstatus;
 		},
@@ -623,6 +617,36 @@ RESOURCE MENU_PANE r_status_options_item_menu
             command = EMenuInviteToBuddycloudCommand; 
             txt = r_string_item_sendinvite;
         },
+		MENU_ITEM
+		{ 
+			command = EMenuSeeFollowersCommand; 
+			txt = r_string_item_seefollowers;
+		},
+		MENU_ITEM
+		{ 
+			command = EMenuSeeModeratorsCommand; 
+			txt = r_string_item_seemoderators;
+		},
+		MENU_ITEM
+		{ 
+			command = EMenuSeeFollowingCommand; 
+			txt = r_string_item_seefollowing;
+		},
+		MENU_ITEM
+		{ 
+			command = EMenuSeeModeratingCommand; 
+			txt = r_string_item_seemoderating;
+		},
+		MENU_ITEM
+		{ 
+			command = EMenuSeeProducingCommand; 
+			txt = r_string_item_seeproducing;
+		},
+		MENU_ITEM
+		{ 
+			command = EMenuSeeNearbyCommand; 
+			txt = r_string_item_seenearby;
+		},
 		MENU_ITEM
 		{ 
 			command = EMenuFollowCommand; 
@@ -926,12 +950,6 @@ RESOURCE MENU_PANE r_places_options_menu
 		},
 		MENU_ITEM
 		{ 
-			command = EMenuOptionsExploreCommand; 
-			cascade = r_explorer_options_explore_menu; 
-			txt = r_string_options_explore;
-		},
-		MENU_ITEM
-		{ 
 			command = EMenuBookmarkPlaceCommand; 
 			txt = r_string_options_setcurrent;
 		},
@@ -991,6 +1009,11 @@ RESOURCE MENU_PANE r_places_options_item_menu
 		},
 		MENU_ITEM
 		{ 
+			command = EMenuSeeNearbyCommand; 
+			txt = r_string_item_seenearby;
+		},
+		MENU_ITEM
+		{ 
 			command = EMenuDeletePlaceCommand; 
 			txt = r_string_options_removeplace;
 		}
@@ -1022,12 +1045,6 @@ RESOURCE MENU_PANE r_explorer_options_menu
 			command = EMenuOptionsItemCommand; 
 			cascade = r_explorer_options_item_menu; 
 			txt = "";
-		},
-		MENU_ITEM
-		{ 
-			command = EMenuOptionsExploreCommand; 
-			cascade = r_explorer_options_explore_menu; 
-			txt = r_string_options_explore;
 		},
 		MENU_ITEM
 		{ 
@@ -1065,31 +1082,6 @@ RESOURCE MENU_PANE r_explorer_options_item_menu
 	{
 		MENU_ITEM
 		{ 
-			command = EMenuSetAsPlaceCommand; 
-			txt = r_string_item_setcurrent;
-		},
-		MENU_ITEM
-		{ 
-			command = EMenuSetAsNextPlaceCommand; 
-			txt = r_string_item_setnext;
-		},
-		MENU_ITEM
-		{ 
-			command = EMenuBookmarkPlaceCommand; 
-			txt = r_string_item_subscribe;
-		},
-		MENU_ITEM
-		{ 
-			command = EMenuChannelInfoCommand; 
-			txt = r_string_item_showchanneldetails;
-		},
-		MENU_ITEM
-		{ 
-			command = EMenuFollowCommand; 
-			txt = r_string_item_follow;
-		},
-		MENU_ITEM
-		{ 
 			command = EMenuChannelMessagesCommand; 
 			txt = r_string_item_viewchannelmessages;
 		},
@@ -1100,21 +1092,9 @@ RESOURCE MENU_PANE r_explorer_options_item_menu
 		},
 		MENU_ITEM
 		{ 
-			command = EMenuChangePermissionCommand; 
-			txt = r_string_item_changerole;
+			command = EMenuChannelInfoCommand; 
+			txt = r_string_item_showchanneldetails;
 		},
-		MENU_ITEM
-		{ 
-			command = EMenuUnfollowCommand; 
-			txt = r_string_item_unfollow;
-		}
-	};
-}
-
-RESOURCE MENU_PANE r_explorer_options_explore_menu
-{
-	items =
-	{
 		MENU_ITEM
 		{ 
 			command = EMenuSeeFollowersCommand; 
@@ -1124,11 +1104,6 @@ RESOURCE MENU_PANE r_explorer_options_explore_menu
 		{ 
 			command = EMenuSeeModeratorsCommand; 
 			txt = r_string_item_seemoderators;
-		},
-		MENU_ITEM
-		{ 
-			command = EMenuSeperator; 
-			txt = r_string_menuseperator;
 		},
 		MENU_ITEM
 		{ 
@@ -1147,8 +1122,38 @@ RESOURCE MENU_PANE r_explorer_options_explore_menu
 		},
 		MENU_ITEM
 		{ 
+			command = EMenuSetAsPlaceCommand; 
+			txt = r_string_item_setcurrent;
+		},
+		MENU_ITEM
+		{ 
+			command = EMenuSetAsNextPlaceCommand; 
+			txt = r_string_item_setnext;
+		},
+		MENU_ITEM
+		{ 
+			command = EMenuBookmarkPlaceCommand; 
+			txt = r_string_item_subscribe;
+		},
+		MENU_ITEM
+		{ 
 			command = EMenuSeeNearbyCommand; 
 			txt = r_string_item_seenearby;
+		},
+		MENU_ITEM
+		{ 
+			command = EMenuChangePermissionCommand; 
+			txt = r_string_item_changerole;
+		},
+		MENU_ITEM
+		{ 
+			command = EMenuFollowCommand; 
+			txt = r_string_item_follow;
+		},
+		MENU_ITEM
+		{ 
+			command = EMenuUnfollowCommand; 
+			txt = r_string_item_unfollow;
 		}
 	};
 }
@@ -1274,9 +1279,18 @@ RESOURCE MENU_PANE r_channelinfo_options_menu
 		},
 		MENU_ITEM
 		{ 
-			command = EMenuOptionsExploreCommand; 
-			cascade = r_explorer_options_explore_menu; 
-			txt = r_string_options_explore;
+			command = EMenuSeeFollowersCommand; 
+			txt = r_string_item_seefollowers;
+		},
+		MENU_ITEM
+		{ 
+			command = EMenuSeeModeratorsCommand; 
+			txt = r_string_item_seemoderators;
+		},
+		MENU_ITEM
+		{ 
+			command = EMenuSeeNearbyCommand; 
+			txt = r_string_item_seenearby;
 		},
 		MENU_ITEM
 		{ 

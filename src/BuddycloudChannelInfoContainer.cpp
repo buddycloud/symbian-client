@@ -239,7 +239,9 @@ void CBuddycloudChannelInfoContainer::DynInitMenuPaneL(TInt aResourceId, CEikMen
 	if(aResourceId == R_CHANNELINFO_OPTIONS_MENU) {
 		aMenuPane->SetItemDimmed(EMenuFollowCommand, true);
 		aMenuPane->SetItemDimmed(EMenuEditChannelCommand, true);
-		aMenuPane->SetItemDimmed(EMenuOptionsExploreCommand, true);
+		aMenuPane->SetItemDimmed(EMenuSeeFollowersCommand, true);
+		aMenuPane->SetItemDimmed(EMenuSeeModeratorsCommand, true);
+		aMenuPane->SetItemDimmed(EMenuSeeNearbyCommand, true);
 		aMenuPane->SetItemDimmed(EMenuReportChannelCommand, true);
 		aMenuPane->SetItemDimmed(EMenuDeleteCommand, true);
 		
@@ -259,19 +261,6 @@ void CBuddycloudChannelInfoContainer::DynInitMenuPaneL(TInt aResourceId, CEikMen
 				aMenuPane->SetItemDimmed(EMenuFollowCommand, false);
 			}
 			
-			aMenuPane->SetItemDimmed(EMenuOptionsExploreCommand, false);
-		}
-	}
-	else if(aResourceId == R_EXPLORER_OPTIONS_EXPLORE_MENU) {
-		aMenuPane->SetItemDimmed(EMenuSeeFollowersCommand, true);
-		aMenuPane->SetItemDimmed(EMenuSeeModeratorsCommand, true);
-		aMenuPane->SetItemDimmed(EMenuSeperator, true);
-		aMenuPane->SetItemDimmed(EMenuSeeFollowingCommand, true);
-		aMenuPane->SetItemDimmed(EMenuSeeModeratingCommand, true);
-		aMenuPane->SetItemDimmed(EMenuSeeProducingCommand, true);
-		aMenuPane->SetItemDimmed(EMenuSeeNearbyCommand, true);
-		
-		if(iCollectionState == EChannelInfoCollected) {
 			aMenuPane->SetItemDimmed(EMenuSeeFollowersCommand, false);
 			aMenuPane->SetItemDimmed(EMenuSeeModeratorsCommand, false);
 			

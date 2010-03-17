@@ -676,7 +676,6 @@ void CBuddycloudExplorerContainer::DynInitMenuPaneL(TInt aResourceId, CEikMenuPa
 		aMenuPane->SetItemDimmed(EMenuRefreshCommand, true);
 		aMenuPane->SetItemDimmed(EMenuEditChannelCommand, true);
 		aMenuPane->SetItemDimmed(EMenuOptionsItemCommand, true);
-		aMenuPane->SetItemDimmed(EMenuOptionsExploreCommand, true);
 		aMenuPane->SetItemDimmed(EMenuDisconnectCommand, true);
 		
 		if(iBuddycloudLogic->GetState() == ELogicOnline) {			
@@ -689,7 +688,6 @@ void CBuddycloudExplorerContainer::DynInitMenuPaneL(TInt aResourceId, CEikMenuPa
 					if(aResultItem->GetResultType() >= EExplorerItemPlace && aResultItem->GetResultType() <= EExplorerItemChannel) {
 						aMenuPane->SetItemTextL(EMenuOptionsItemCommand, aResultItem->GetTitle().Left(32));
 						aMenuPane->SetItemDimmed(EMenuOptionsItemCommand, false);
-						aMenuPane->SetItemDimmed(EMenuOptionsExploreCommand, false);
 					}
 					
 					if(aResultItem->GetResultType() == EExplorerItemDirectory || aResultItem->GetResultType() == EExplorerItemChannel) {
@@ -707,14 +705,20 @@ void CBuddycloudExplorerContainer::DynInitMenuPaneL(TInt aResourceId, CEikMenuPa
 		}
 	}
 	else if(aResourceId == R_EXPLORER_OPTIONS_ITEM_MENU) {
+		aMenuPane->SetItemDimmed(EMenuChannelMessagesCommand, true);
+		aMenuPane->SetItemDimmed(EMenuPrivateMessagesCommand, true);
+		aMenuPane->SetItemDimmed(EMenuChannelInfoCommand, true);
+		aMenuPane->SetItemDimmed(EMenuSeeFollowersCommand, true);
+		aMenuPane->SetItemDimmed(EMenuSeeModeratorsCommand, true);
+		aMenuPane->SetItemDimmed(EMenuSeeFollowingCommand, true);
+		aMenuPane->SetItemDimmed(EMenuSeeModeratingCommand, true);
+		aMenuPane->SetItemDimmed(EMenuSeeProducingCommand, true);
 		aMenuPane->SetItemDimmed(EMenuSetAsPlaceCommand, true);
 		aMenuPane->SetItemDimmed(EMenuSetAsNextPlaceCommand, true);
 		aMenuPane->SetItemDimmed(EMenuBookmarkPlaceCommand, true);
-		aMenuPane->SetItemDimmed(EMenuChannelInfoCommand, true);
-		aMenuPane->SetItemDimmed(EMenuFollowCommand, true);
-		aMenuPane->SetItemDimmed(EMenuPrivateMessagesCommand, true);
-		aMenuPane->SetItemDimmed(EMenuChannelMessagesCommand, true);
+		aMenuPane->SetItemDimmed(EMenuSeeNearbyCommand, true);
 		aMenuPane->SetItemDimmed(EMenuChangePermissionCommand, true);
+		aMenuPane->SetItemDimmed(EMenuFollowCommand, true);
 		aMenuPane->SetItemDimmed(EMenuUnfollowCommand, true);
 		
 		if(iExplorerLevels[aLevel]->iResultItems.Count() > 0) {
@@ -722,6 +726,7 @@ void CBuddycloudExplorerContainer::DynInitMenuPaneL(TInt aResourceId, CEikMenuPa
 			
 			if(aResultItem->GetResultType() == EExplorerItemPlace) {
 				aMenuPane->SetItemDimmed(EMenuSetAsNextPlaceCommand, false);
+				aMenuPane->SetItemDimmed(EMenuSeeNearbyCommand, false);
 				
 				if(aResultItem->GetDistance() < 1000) {
 					// Allow set current if less than 1km
@@ -746,6 +751,16 @@ void CBuddycloudExplorerContainer::DynInitMenuPaneL(TInt aResourceId, CEikMenuPa
 						// Allow channel moderation
 						aMenuPane->SetItemDimmed(EMenuChangePermissionCommand, false);
 					}
+					
+					aMenuPane->SetItemDimmed(EMenuSeeFollowersCommand, false);
+					aMenuPane->SetItemDimmed(EMenuSeeFollowingCommand, false);
+					aMenuPane->SetItemDimmed(EMenuSeeModeratingCommand, false);
+					aMenuPane->SetItemDimmed(EMenuSeeProducingCommand, false);
+					aMenuPane->SetItemDimmed(EMenuSeeNearbyCommand, false);
+				}
+				else {
+					aMenuPane->SetItemDimmed(EMenuSeeFollowersCommand, false);
+					aMenuPane->SetItemDimmed(EMenuSeeModeratorsCommand, false);
 				}
 				
 				if(aFollowerId > 0) {
@@ -780,35 +795,6 @@ void CBuddycloudExplorerContainer::DynInitMenuPaneL(TInt aResourceId, CEikMenuPa
 					aMenuPane->SetItemDimmed(EMenuFollowCommand, false);
 				}
 			}
-		}
-	}
-	else if(aResourceId == R_EXPLORER_OPTIONS_EXPLORE_MENU) {
-		aMenuPane->SetItemDimmed(EMenuSeeFollowersCommand, true);
-		aMenuPane->SetItemDimmed(EMenuSeeModeratorsCommand, true);
-		aMenuPane->SetItemDimmed(EMenuSeperator, true);
-		aMenuPane->SetItemDimmed(EMenuSeeFollowingCommand, true);
-		aMenuPane->SetItemDimmed(EMenuSeeModeratingCommand, true);
-		aMenuPane->SetItemDimmed(EMenuSeeProducingCommand, true);
-		aMenuPane->SetItemDimmed(EMenuSeeNearbyCommand, true);
-		
-		if(iExplorerLevels[aLevel]->iResultItems.Count() > 0) {
-			CExplorerResultItem* aResultItem = iExplorerLevels[aLevel]->iResultItems[iSelectedItem];
-			
-			if(aResultItem->GetResultType() == EExplorerItemChannel) {
-				aMenuPane->SetItemDimmed(EMenuSeeFollowersCommand, false);
-				aMenuPane->SetItemDimmed(EMenuSeeModeratorsCommand, false);
-			}
-			else if(aResultItem->GetResultType() == EExplorerItemPerson) {
-				aMenuPane->SetItemDimmed(EMenuSeeFollowersCommand, false);
-				aMenuPane->SetItemDimmed(EMenuSeperator, false);
-				aMenuPane->SetItemDimmed(EMenuSeeFollowingCommand, false);
-				aMenuPane->SetItemDimmed(EMenuSeeModeratingCommand, false);
-				aMenuPane->SetItemDimmed(EMenuSeeProducingCommand, false);
-				aMenuPane->SetItemDimmed(EMenuSeeNearbyCommand, false);
-			}
-			else if(aResultItem->GetResultType() == EExplorerItemPlace) {
-				aMenuPane->SetItemDimmed(EMenuSeeNearbyCommand, false);
-			}			
 		}
 	}
 }
