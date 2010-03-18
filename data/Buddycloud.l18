@@ -13,7 +13,6 @@
 CHARACTER_SET UTF8
 
 rls_string r_string_app_caption "buddycloud"
-rls_string r_string_menuseperator "──────────"
 
 // DO NOT TRANSLATE
 
@@ -91,7 +90,7 @@ rls_string r_string_settings_usersettings "Instellingen"
 rls_string r_string_settings_communitysettings "Online delen"
 rls_string r_string_settings_clearconnection "Verbinding wijzigen"
 
-rls_string r_string_note_followinglistempty "Je bent niets aan het volgen.\n\nGebruik Explorer om dingen te volgen.\n"
+rls_string r_string_note_followinglistempty "Je bent niets aan het volgen.\n\nGebruik Explorer om dingen te volgen."
 
 // Menu: Messaging
 rls_string r_string_options_postrequest "Verzoek om op te sturen"
@@ -125,7 +124,7 @@ rls_string r_string_note_placevisits "Plaats geweest"
 rls_string r_string_note_placepopulation "Populatie"
 rls_string r_string_note_learningplace "Plaats verkennen"
 rls_string r_string_note_updatingplace "Plaatsnaam updaten..."
-rls_string r_string_note_placeslistempty "Je hebt geen gemarkeerde plaats.\n\nOm deze plaats te kennen.\n'Opties > Markeer nieuwe plaats'\n"
+rls_string r_string_note_placeslistempty "Je hebt geen gemarkeerde plaats.\n\nOm deze plaats te kennen.\n'Opties > Markeer nieuwe plaats'"
 
 // Menu: Nearby
 rls_string r_string_options_refresh "Ververs"
@@ -209,6 +208,9 @@ rls_string r_string_settings_itemlist_autostart "Programma starten met de opstar
 
 // Notification settings
 rls_string r_string_settings_notifications_title "Aankondiging"
+rls_string r_string_settings_itemlist_markchannelsread "Mark all channels read"
+rls_string r_string_settings_itemlist_markchannelsread_empty "Reset"
+
 rls_string r_string_settings_itemlist_notifyfollowing "Kanalen die ik volg"
 rls_string r_string_settings_itemlist_notifymoderating "Kanalen die ik moderate"
 rls_string r_string_settings_itemlist_notifyreply "Antwoord op post"
@@ -295,7 +297,7 @@ rls_string r_string_serverresolveerror_text "XMPP server kan niet verholpen word
 // Delete Item Message
 rls_string r_string_deleteitem_title "Verwijdering bevestigen"
 rls_string r_string_deleteitem_text "Weet u zeker dat u dit wilt verwijderen?"
-rls_string r_string_deletechannel_text "Verwijderen van dit kanaal verwijdert alle inhoud.\n\nWeet je het zeker?\n"
+rls_string r_string_deletechannel_text "Verwijderen van dit kanaal verwijdert alle inhoud.\n\nWeet je het zeker?"
 
 // Sms/Email Messages
 rls_string r_string_invitemessage_title "Meld je aan op buddycloud!"
@@ -327,15 +329,15 @@ rls_string r_string_note_offline "Offline"
 
 // Setup 
 rls_string r_string_step2_title "Wordt beroemd!"
-rls_string r_string_step2_text "buddycloud channels geven u een nieuwe wijze om u bekend te maken.\n\nU kunt uw eigen channels aanmaken voor uw unieke kennis aan de wereld te laten zien, kan over een plaats zijn of een bepaald onderwerp, en om een gemeenschap van aanhangers op te bouwen.\n"
+rls_string r_string_step2_text "buddycloud channels geven u een nieuwe wijze om u bekend te maken.\n\nU kunt uw eigen channels aanmaken voor uw unieke kennis aan de wereld te laten zien, kan over een plaats zijn of een bepaald onderwerp, en om een gemeenschap van aanhangers op te bouwen."
 
 rls_string r_string_step3_title "Hoe wil je inloggen?"
-rls_string r_string_step3_text "Aanbevolen: Direct inschrijven met je Google/OVI account (of  Jabber account).\n\nAlternatief is: Registreer voor een buddycloud account.\n"
+rls_string r_string_step3_text "Aanbevolen: Direct inschrijven met je Google/OVI account (of  Jabber account).\n\nAlternatief is: Registreer voor een buddycloud account."
 rls_string r_string_step3_label1 "Gebruik bestaand account"
 rls_string r_string_step3_label2 "Registreer nieuwe account"
 
 rls_string r_string_step4_title "Wie ben je?"
-rls_string r_string_step4_text1 "Voer je bestaande account details in.\n\nZiet er zo uit 'naam@gmail.com' or 'naam@ovi.com'.\n"
+rls_string r_string_step4_text1 "Voer je bestaande account details in.\n\nZiet er zo uit 'naam@gmail.com' or 'naam@ovi.com'."
 rls_string r_string_step4_text2 "Kies een nieuwe gebruikersnaam en wachtwoord om buddycloud te gebruiken.  Ben je al geregistreerd bij buddycloud met een anderetelefoon, voer de details hier in."
 
 rls_string r_string_step5_title "Gefeliciteerd!"

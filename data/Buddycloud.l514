@@ -13,7 +13,6 @@
 CHARACTER_SET UTF8
 
 rls_string r_string_app_caption "buddycloud"
-rls_string r_string_menuseperator "──────────"
 
 // DO NOT TRANSLATE
 
@@ -209,6 +208,9 @@ rls_string r_string_settings_itemlist_autostart "Start wif fone"
 
 // Notification settings
 rls_string r_string_settings_notifications_title "No tifficashuns"
+rls_string r_string_settings_itemlist_markchannelsread "Mark all channels read"
+rls_string r_string_settings_itemlist_markchannelsread_empty "Reset"
+
 rls_string r_string_settings_itemlist_notifyfollowing "Iz stawkin dose channls"
 rls_string r_string_settings_itemlist_notifymoderating "Channels I moderate"
 rls_string r_string_settings_itemlist_notifyreply "Replies to my post"
@@ -327,15 +329,15 @@ rls_string r_string_note_offline "Awffline"
 
 // Setup 
 rls_string r_string_step2_title "B famoose!"
-rls_string r_string_step2_text "buddycloud channels gives you a new way to broadcast your awesomeness to your followers.\n\nbuddycloud channels enables you to become famous for your unique knowledge about a place or topic and to build up a community of followers."
+rls_string r_string_step2_text "buddycloud channels gives you a new way to broadcast your awesomeness to your followers.\n\nbuddycloud channels enables you to become famous for your unique knowledge about a place or topic and to build up a community of followers.\n"
 
 rls_string r_string_step3_title "How do you want to log in?"
-rls_string r_string_step3_text "Recommended: Instantly sign-in using your Google/OVI account (or any Jabber account).\n\nAlternatively: Register for a buddycloud account."
+rls_string r_string_step3_text "Recommended: Instantly sign-in using your Google/OVI account (or any Jabber account).\n\nAlternatively: Register for a buddycloud account.\n"
 rls_string r_string_step3_label1 "Yoo haz olreddy accaunt"
 rls_string r_string_step3_label2 "Register new account"
 
 rls_string r_string_step4_title "Who are you?"
-rls_string r_string_step4_text1 "Enter your existing account details.\n\nThis looks like 'name@gmail.com' or 'name@ovi.com'."
+rls_string r_string_step4_text1 "Enter your existing account details.\n\nThis looks like 'name@gmail.com' or 'name@ovi.com'.\n"
 rls_string r_string_step4_text2 "Choose a new username and password to start using buddycloud.  If you have already registered for buddycloud on another phone, enter those details here."
 
 rls_string r_string_step5_title "Conga-rat-shoelaces!"

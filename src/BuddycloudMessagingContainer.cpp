@@ -1293,19 +1293,26 @@ void CBuddycloudMessagingContainer::DynInitMenuPaneL(TInt aResourceId, CEikMenuP
 		aMenuPane->SetItemDimmed(EMenuSeeFollowersCommand, true);
 		aMenuPane->SetItemDimmed(EMenuSeeModeratorsCommand, true);
 		aMenuPane->SetItemDimmed(EMenuEditChannelCommand, true);
-		
-		if(iItem->GetItemType() == EItemChannel && iItem->GetSubTitle().Length() > 0) {
-			aMenuPane->SetItemDimmed(EMenuCopyChannelIdCommand, false);
-		}
+		aMenuPane->SetItemDimmed(EMenuUnfollowCommand, true);
 		
 		if(iDiscussion->GetUnreadEntries() > 0) {
 			aMenuPane->SetItemDimmed(EMenuMarkReadCommand, false);
+		}
+		
+		if(iItem->GetItemType() == EItemChannel && iItem->GetSubTitle().Length() > 0) {
+			aMenuPane->SetItemDimmed(EMenuCopyChannelIdCommand, false);
 		}
 		
 		if(iBuddycloudLogic->GetState() == ELogicOnline) {
 			aMenuPane->SetItemDimmed(EMenuSeeFollowersCommand, false);
 			aMenuPane->SetItemDimmed(EMenuSeeModeratorsCommand, false);
 			aMenuPane->SetItemDimmed(EMenuEditChannelCommand, false);
+			
+			CFollowingChannelItem* aChannelItem = static_cast <CFollowingChannelItem*> (iItem);	
+			
+			if(aChannelItem->GetPubsubAffiliation() < EPubsubAffiliationOwner) {
+				aMenuPane->SetItemDimmed(EMenuUnfollowCommand, false);
+			}
 		}		
 	}
 	else if(aResourceId == R_MESSAGING_FOLLOW_MENU) {
@@ -1539,6 +1546,13 @@ void CBuddycloudMessagingContainer::HandleCommandL(TInt aCommand) {
 		if(aEntry) {
 			iBuddycloudLogic->FollowContactL(aEntry->GetAuthorJid());
 		}
+	}
+	else if(aCommand == EMenuUnfollowCommand) {
+        CAknMessageQueryDialog* aDialog = new (ELeave) CAknMessageQueryDialog();
+
+        if(aDialog->ExecuteLD(R_DELETE_DIALOG) != 0) {
+			iBuddycloudLogic->UnfollowItemL(iMessagingObject.iId);
+        }
 	}
 	else if(aCommand == EMenuFollowLinkCommand || aCommand == EMenuChannelInfoCommand || 
 			aCommand == EMenuChannelMessagesCommand || aCommand == EMenuPrivateMessagesCommand) {

@@ -57,7 +57,7 @@ TKeyResponse CBuddycloudPreferencesSettingsList::OfferKeyEventL(const TKeyEvent&
 	TKeyResponse aResult = EKeyWasNotConsumed;
 
 	if(aType == EEventKey) {
-		if(aKeyEvent.iCode == EKeyLeftArrow ) {
+		if(aKeyEvent.iCode == EKeyLeftArrow) {
 			SaveL();
 			
 			iCoeEnv->AppUi()->ActivateViewL(TVwsViewId(TUid::Uid(APPUID), KAccountSettingsViewId));
@@ -82,8 +82,13 @@ TKeyResponse CBuddycloudPreferencesSettingsList::OfferKeyEventL(const TKeyEvent&
 
 void CBuddycloudPreferencesSettingsList::EditItemL(TInt aIndex, TBool aCalledFromMenu) {
 	CAknSettingItemArray* aItemArray = SettingItemArray();
+	TInt aIdentifier = ((*aItemArray)[aIndex])->Identifier();
 	
 	CAknSettingItemList::EditItemL(aIndex, aCalledFromMenu);
+	
+	if(aIdentifier == ESettingPreferencesMarkChannelsRead) {
+		iBuddycloudLogic->SettingsItemChanged(ESettingItemMarkAllChannelsRead);
+	}
 	
 	((*aItemArray)[aIndex])->StoreL();
 	((*aItemArray)[aIndex])->UpdateListBoxTextL();
@@ -105,6 +110,9 @@ CAknSettingItem* CBuddycloudPreferencesSettingsList::CreateSettingItemL (TInt aI
 			break;
 		case ESettingPreferencesAutoStart:
 			aSettingItem = new (ELeave) CAknBinaryPopupSettingItem(aIdentifier, iBuddycloudLogic->GetBoolSetting(ESettingItemAutoStart));
+			break;
+		case ESettingPreferencesMarkChannelsRead:
+			aSettingItem = new (ELeave) CAknSettingItem(aIdentifier);
 			break;
 		default:
 			break;

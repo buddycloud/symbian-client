@@ -122,7 +122,8 @@ enum TSettingsPreferencesItems {
 	ESettingPreferencesLanguage = 1,
 	ESettingPreferencesBlocking,
 	ESettingPreferencesAccessPoint,
-	ESettingPreferencesAutoStart
+	ESettingPreferencesAutoStart,
+	ESettingPreferencesMarkChannelsRead
 };
 
 enum TSettingsNotificationsItems {

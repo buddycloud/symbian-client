@@ -13,7 +13,6 @@
 CHARACTER_SET UTF8
 
 rls_string r_string_app_caption "buddycloud"
-rls_string r_string_menuseperator "──────────"
 
 // DO NOT TRANSLATE
 
@@ -209,6 +208,9 @@ rls_string r_string_settings_itemlist_autostart "Mit dem Handy starten"
 
 // Notification settings
 rls_string r_string_settings_notifications_title "Benachrichtigungen"
+rls_string r_string_settings_itemlist_markchannelsread "Mark all channels read"
+rls_string r_string_settings_itemlist_markchannelsread_empty "Reset"
+
 rls_string r_string_settings_itemlist_notifyfollowing "Channels denen ich folge"
 rls_string r_string_settings_itemlist_notifymoderating "Channels die ich moderiere"
 rls_string r_string_settings_itemlist_notifyreply "Antworten zu meinem Beitrag"

@@ -54,7 +54,7 @@ enum TBoolSettingItems {
 	ESettingItemCellOn = ESettingItemLanguage + 1, ESettingItemWifiOn, ESettingItemBtOn, ESettingItemGpsOn, 
 	ESettingItemCellAvailable, ESettingItemWifiAvailable, ESettingItemBtAvailable, ESettingItemGpsAvailable, 
 	ESettingItemNewInstall, ESettingItemNotifyReplyTo, ESettingItemAutoStart, ESettingItemAccessPoint, 
-	ESettingItemMessageBlocking
+	ESettingItemMessageBlocking, ESettingItemMarkAllChannelsRead
 };
 
 enum TBuddycloudLogicState {

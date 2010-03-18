@@ -5,6 +5,12 @@ Any problems please send 'C:\logs\Buddycloud\LogicLog.txt' to ross@buddycloud.co
 
 ----------
 
+1.00.19
+
+- Add 'Unfollow' menu item into CBuddycloudMessagingContainer Channel sub-menu
+- Add 'Mark all channel read' menu item & logic in CBuddycloudPreferencesSettingsList
+- Update languages from 99translations
+
 1.00.18
 
 - [bug] Following requests do not stick to the top of CBuddycloudFollowingContainer

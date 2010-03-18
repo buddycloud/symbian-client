@@ -586,6 +586,37 @@ void CBuddycloudLogic::SettingsItemChanged(TInt aSettingsItemId) {
 	else if(aSettingsItemId == ESettingItemBtOn) {
 		iLocationEngine->SetBtActive(iSettingBtOn);
 	}
+	else if(aSettingsItemId == ESettingItemMarkAllChannelsRead) {
+		for(TInt i = 0; i < iFollowingList->Count(); i++) {
+			CFollowingItem* aItem = static_cast <CFollowingItem*> (iFollowingList->GetItemByIndex(i));
+			
+			if(aItem && aItem->GetItemType() >= EItemRoster) {
+				CFollowingChannelItem* aChannelItem = static_cast <CFollowingChannelItem*> (aItem);
+				
+				if(aChannelItem->GetId().Length() > 0 && aChannelItem->GetUnread() > 0) {
+					CDiscussion* aDiscussion = iDiscussionManager->GetDiscussionL(aChannelItem->GetId());
+					
+					// Cache discussion to memory
+					aDiscussion->CacheL();
+					
+					// Set all posts to read
+					for(TInt x = 0; x < aDiscussion->EntryCount(); x++) {
+						CThreadedEntry* aThreadedEntry = aDiscussion->GetThreadedEntryByIndex(x);
+						aThreadedEntry->GetEntry()->SetRead(true);
+						
+						for(TInt y = 0; y < aThreadedEntry->CommentCount(); y++) {
+							aThreadedEntry->GetCommentByIndex(y)->SetRead(true);
+						}
+					}
+					
+					// Compress discussion to disk
+					aDiscussion->CompressL(true);
+				}
+			}
+		}
+		
+		ShowInformationDialogL(R_LOCALIZED_STRING_NOTE_UPDATESUCCESS);
+	}
 
 	iSettingsSaveNeeded = true;
 }

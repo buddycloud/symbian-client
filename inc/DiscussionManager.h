@@ -133,6 +133,7 @@ class CDiscussion : public CBase, public MDiscussionUnreadData, MAtomEntryObserv
 		void SetNotify(TBool aNotify);
 		
 	public: // Cleaning & compression
+		void CacheL();
 		void CompressL(TBool aForced = false);
 		void CleanL();
 

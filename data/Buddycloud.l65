@@ -13,7 +13,6 @@
 CHARACTER_SET UTF8
 
 rls_string r_string_app_caption "buddycloud"
-rls_string r_string_menuseperator "──────────"
 
 // DO NOT TRANSLATE
 
@@ -209,6 +208,9 @@ rls_string r_string_settings_itemlist_autostart "전화기가 켜질때 자동�
 
 // Notification settings
 rls_string r_string_settings_notifications_title "알림설정하기"
+rls_string r_string_settings_itemlist_markchannelsread "Mark all channels read"
+rls_string r_string_settings_itemlist_markchannelsread_empty "Reset"
+
 rls_string r_string_settings_itemlist_notifyfollowing "내가 따라다니는 채널들"
 rls_string r_string_settings_itemlist_notifymoderating "내가 관리하는 채널들"
 rls_string r_string_settings_itemlist_notifyreply "나의 포스트에 대한 답글들"
@@ -314,7 +316,7 @@ rls_string r_string_dialog_setnextlocation "다음 장소 설정하기:"
 rls_string r_string_dialog_newmessage "포스트 쓰기:"
 rls_string r_string_dialog_newcomment "코멘트 남기기:"
 rls_string r_string_dialog_requestcomment "코멘트 요청하기:"
-rls_string r_string_dialog_addcontact "연락처( 예.'test@gmail.com)또는 채널 아이디( 예.'#help')를 입력하십시오  "
+rls_string r_string_dialog_addcontact "연락처( 예.'test@gmail.com)또는 채널 아이디( 예.'# 도움말')를 입력하십시오  "
 
 // Notes
 rls_string r_string_note_connecting "연결중..."

@@ -886,6 +886,11 @@ RESOURCE MENU_PANE r_messaging_options_channel_menu
 		{ 
 			command = EMenuCopyChannelIdCommand; 
 			txt = r_string_channel_copychannelid;
+		},
+		MENU_ITEM
+		{ 
+			command = EMenuUnfollowCommand; 
+			txt = r_string_item_unfollow;
 		}
 	};
 }
@@ -1411,6 +1416,12 @@ RESOURCE AVKON_SETTING_ITEM_LIST r_preferences_settings_item_list
 			setting_page_resource = r_settings_item_autostart_page;
 			associated_resource = r_settings_item_onoff_assoc;
 			name = r_string_settings_itemlist_autostart;
+		},
+		AVKON_SETTING_ITEM
+		{
+			identifier = ESettingPreferencesMarkChannelsRead;
+			name = r_string_settings_itemlist_markchannelsread;
+			empty_item_text = r_string_settings_itemlist_markchannelsread_empty;
 		}
 	};
 }

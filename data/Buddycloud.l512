@@ -13,7 +13,6 @@
 CHARACTER_SET UTF8
 
 rls_string r_string_app_caption "buddycloud"
-rls_string r_string_menuseperator "──────────"
 
 // DO NOT TRANSLATE
 
@@ -209,6 +208,9 @@ rls_string r_string_settings_itemlist_autostart "Set sail when ye wake"
 
 // Notification settings
 rls_string r_string_settings_notifications_title "No'ifica'ions"
+rls_string r_string_settings_itemlist_markchannelsread "Mark all channels read"
+rls_string r_string_settings_itemlist_markchannelsread_empty "Reset"
+
 rls_string r_string_settings_itemlist_notifyfollowing "Channnels I be lookin' at"
 rls_string r_string_settings_itemlist_notifymoderating "Channnels I be overseein'"
 rls_string r_string_settings_itemlist_notifyreply "Replies t' ma posts"

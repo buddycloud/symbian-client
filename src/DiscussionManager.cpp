@@ -254,6 +254,10 @@ void CDiscussion::SetNotify(TBool aNotify) {
 	iNotify = aNotify;
 }
 
+void CDiscussion::CacheL() {
+	ReadDiscussionToMemoryL();
+}
+
 void CDiscussion::CompressL(TBool aForced) {
 	if(iDiscussionInMemory) {
 		TTime aNow;
