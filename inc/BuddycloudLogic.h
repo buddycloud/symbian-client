@@ -194,7 +194,7 @@ class CBuddycloudLogic : public CBase, MLocationEngineNotification, MTimeInterfa
 		void FollowContactL(const TDesC& aContact);
 
 	private: // Pubsub
-		void SendPresenceToPubsubL(const TDesC8& aLastNodeId, TXmppMessagePriority aPriority = EXmppPriorityNormal);
+		void SendPresenceToPubsubL(TInt64 aLastNodeId, TXmppMessagePriority aPriority = EXmppPriorityNormal);
 		void SetLastNodeIdReceived(const TDesC8& aNodeItemId);
 		
 		void CollectPubsubSubscriptionsL(const TDesC8& aAfter = KNullDesC8);
@@ -378,7 +378,7 @@ class CBuddycloudLogic : public CBase, MLocationEngineNotification, MTimeInterfa
 		
 		HBufC* iServerActivityText;
         HBufC* iBroadLocationText;        
-        HBufC8* iLastNodeIdReceived;
+        TInt64 iLastNodeIdReceived;
 
 		// Time Stamps
 		TTimeIntervalSeconds iServerOffset;

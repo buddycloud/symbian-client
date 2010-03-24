@@ -81,9 +81,6 @@ CBuddycloudLogic::~CBuddycloudLogic() {
 	
 	if(iBroadLocationText)
 		delete iBroadLocationText;
-	
-	if(iLastNodeIdReceived) 
-		delete iLastNodeIdReceived;
 
 	// Engines
 	if(iLocationEngine)
@@ -147,7 +144,7 @@ void CBuddycloudLogic::ConstructL() {
 	iState = ELogicOffline;
 	iServerActivityText = HBufC::NewL(0);
 	iBroadLocationText = HBufC::NewL(0);
-	iLastNodeIdReceived = _L8("1").AllocL();
+	iLastNodeIdReceived = 1;
 
 	iTimer = CCustomTimer::NewL(this);
 	
@@ -633,7 +630,7 @@ void CBuddycloudLogic::ResetStoredDataL() {
 	
 	// Reset broad location & last node id received
 	iBroadLocationText->Des().Zero();
-	iLastNodeIdReceived->Des().Copy(_L8("1"));
+	iLastNodeIdReceived = 1;
 		
 	// Remove following items
 	for(TInt i = iFollowingList->Count() - 1; i >= 0; i--) {
@@ -1157,36 +1154,43 @@ void CBuddycloudLogic::FollowContactL(const TDesC& aContact) {
 	}
 }
 
-void CBuddycloudLogic::SendPresenceToPubsubL(const TDesC8& aLastNodeId, TXmppMessagePriority aPriority) {
+void CBuddycloudLogic::SendPresenceToPubsubL(TInt64 aLastNodeId, TXmppMessagePriority aPriority) {
 #ifdef _DEBUG
 	WriteToLog(_L8("BL    CBuddycloudLogic::SendPresenceToPubsubL"));
 #endif
 
 	// Send direct presence
-	_LIT8(KRsmElement, "<set xmlns='http://jabber.org/protocol/rsm'><after></after></set>");
+	_LIT8(KRsmElement, "<set xmlns='http://jabber.org/protocol/rsm'><after>%Ld</after></set>");
+	HBufC8* aRsmElement = HBufC8::NewLC(KRsmElement().Length() + 32);
+	TPtr8 pRsmElement(aRsmElement->Des());
+	
+	if(aLastNodeId > 0) {
+		pRsmElement.Format(KRsmElement, aLastNodeId);
+	}
+	
 	_LIT8(KPubsubPresence, "<presence to=''></presence>\r\n");
-	HBufC8* aPubsubPresence = HBufC8::NewLC(KPubsubPresence().Length() + KRsmElement().Length() + KBuddycloudPubsubServer().Length() + aLastNodeId.Length());
+	HBufC8* aPubsubPresence = HBufC8::NewLC(KPubsubPresence().Length() + pRsmElement.Length() + KBuddycloudPubsubServer().Length());
 	TPtr8 pPubsubPresence(aPubsubPresence->Des());
 	pPubsubPresence.Append(KPubsubPresence);
 	
-	if(aLastNodeId.Length() > 0) {
-		pPubsubPresence.Insert(16, KRsmElement);
-		pPubsubPresence.Insert(16 + 51, aLastNodeId);
+	if(pRsmElement.Length() > 0) {
+		pPubsubPresence.Insert(16, pRsmElement);
 	}
 	
 	pPubsubPresence.Insert(14, KBuddycloudPubsubServer);
 	
 	iXmppEngine->SendAndForgetXmppStanza(pPubsubPresence, false, aPriority);
-	CleanupStack::PopAndDestroy(); // aPubsubPresence	
+	CleanupStack::PopAndDestroy(2); // aPubsubPresence, aRsmElement
 }
 
 void CBuddycloudLogic::SetLastNodeIdReceived(const TDesC8& aNodeItemId) {
-	if(aNodeItemId.Length() > 0) {
-		if(iLastNodeIdReceived) {
-			delete iLastNodeIdReceived;
+	TLex8 aNodeIdLex(aNodeItemId);
+	TInt64 aNodeIdVal;
+	
+	if(aNodeIdLex.Val(aNodeIdVal) == KErrNone) {
+		if(aNodeIdVal > iLastNodeIdReceived) {
+			iLastNodeIdReceived = aNodeIdVal;
 		}
-		
-		iLastNodeIdReceived = aNodeItemId.Alloc();
 	}
 }
 
@@ -1219,7 +1223,6 @@ void CBuddycloudLogic::ProcessPubsubSubscriptionsL() {
 	WriteToLog(_L8("BL    CBuddycloudLogic::ProcessPubsubSubscriptionsL"));
 #endif
 	
-	TPtrC8 pLastNodeIdReceived(iLastNodeIdReceived->Des());
 	TBool aItemFound = false;
 	
 	// Synchronize local channel to received channel subscriptions
@@ -1319,7 +1322,7 @@ void CBuddycloudLogic::ProcessPubsubSubscriptionsL() {
 			CleanupStack::PopAndDestroy(); // aNodeParser
 			
 			// Collect node items			
-			if(pLastNodeIdReceived.Length() > 1) {
+			if(iLastNodeIdReceived != 1) {
 				CollectLastPubsubNodeItemsL(aDiscussion->GetDiscussionId(), _L8("1"));
 			}
 		}
@@ -1335,7 +1338,7 @@ void CBuddycloudLogic::ProcessPubsubSubscriptionsL() {
 	NotifyNotificationObservers(ENotificationFollowingItemsUpdated);
 	
 	// Send presence to pubsub
-	SendPresenceToPubsubL(pLastNodeIdReceived, EXmppPriorityHigh);
+	SendPresenceToPubsubL(iLastNodeIdReceived, EXmppPriorityHigh);
 	
 	// Send queued stanzas
 	iXmppEngine->SendQueuedXmppStanzas();
@@ -1344,7 +1347,7 @@ void CBuddycloudLogic::ProcessPubsubSubscriptionsL() {
 	CollectChannelMetadataL(iOwnItem->GetId(EIdChannel), EXmppIdGetUsersMetadata);
 	
 	// TODO: Workaround for google
-	SendPresenceToPubsubL(KNullDesC8);
+	SendPresenceToPubsubL(0);
 	
 	// Enable google presence queuing
 	if(iSettingXmppServer.Match(_L("*google.com*")) != KErrNotFound) {
@@ -3050,13 +3053,9 @@ void CBuddycloudLogic::SaveSettingsAndItemsL() {
 		HBufC* aVersion = CCoeEnv::Static()->AllocReadResourceLC(R_STRING_APPVERSION);
 		aFile.WriteL(iTextUtilities->UnicodeToUtf8L(*aVersion));
 		CleanupStack::PopAndDestroy(); // aVersion
-		
-		aFile.WriteL(_L8("' lastnodeid='"));
-		aFile.WriteL(*iLastNodeIdReceived);
-		aFile.WriteL(_L8("'>\r\n"));
 
 		// Settings
-		aBuf.Format(_L8("\t\t<settings apmode='%d' apid='%d' apname='"), iSettingConnectionMode, iSettingConnectionModeId);
+		aBuf.Format(_L8("' lastnodeid='%Ld'>\r\n\t\t<settings apmode='%d' apid='%d' apname='"), iLastNodeIdReceived, iSettingConnectionMode, iSettingConnectionModeId);
 		aFile.WriteL(aBuf);
 		aFile.WriteL(iTextUtilities->UnicodeToUtf8L(iXmppEngine->GetConnectionName()));
 		aFile.WriteL(_L8("'>\r\n\t\t\t<account"));
@@ -4620,13 +4619,13 @@ void CBuddycloudLogic::XmppStateChanged(TXmppEngineState aState) {
 		}
 		else {
 			// Send presence to pubsub
-			SendPresenceToPubsubL(*iLastNodeIdReceived, EXmppPriorityHigh);
+			SendPresenceToPubsubL(iLastNodeIdReceived, EXmppPriorityHigh);
 			
 			// Send queued stanzas
 			iXmppEngine->SendQueuedXmppStanzas();
 			
 			// TODO: Workaround for google
-			SendPresenceToPubsubL(KNullDesC8);
+			SendPresenceToPubsubL(0);
 						
 			// Enable google presence queuing
 			if(iSettingXmppServer.Match(_L("*google.com*")) != KErrNotFound) {

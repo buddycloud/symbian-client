@@ -208,8 +208,8 @@ rls_string r_string_settings_itemlist_autostart "Mit'm Händy start'n"
 
 // Notification settings
 rls_string r_string_settings_notifications_title "Do spuit d'Musi"
-rls_string r_string_settings_itemlist_markchannelsread "Mark all channels read"
-rls_string r_string_settings_itemlist_markchannelsread_empty "Reset"
+rls_string r_string_settings_itemlist_markchannelsread "Olle Sterndaln wegblos'n"
+rls_string r_string_settings_itemlist_markchannelsread_empty "Drau Di!"
 
 rls_string r_string_settings_itemlist_notifyfollowing "Tschännl de I foig"
 rls_string r_string_settings_itemlist_notifymoderating " Meine Platzhiarsch Tschännl"

@@ -5,10 +5,15 @@ Any problems please send 'C:\logs\Buddycloud\LogicLog.txt' to ross@buddycloud.co
 
 ----------
 
+1.00.20
+
+- Change the Last Node Id to TInt64 and only store if it's the latest one
+- Update from 99translations
+
 1.00.19
 
 - Add 'Unfollow' menu item into CBuddycloudMessagingContainer Channel sub-menu
-- Add 'Mark all channel read' menu item & logic in CBuddycloudPreferencesSettingsList
+- Add 'Mark all channel read' setting item & logic in CBuddycloudPreferencesSettingsList
 - Update languages from 99translations
 
 1.00.18
