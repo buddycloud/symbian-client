@@ -14,6 +14,7 @@
 #include <f32file.h>
 #include "AtomEntryData.h"
 #include "BuddycloudList.h"
+#include "DiscussionInterfaces.h"
 #include "Timer.h"
 
 #ifndef DISCUSSIONMANAGER_H_
@@ -28,12 +29,6 @@ class CDiscussion;
 --
 ----------------------------------------------------------------------------
 */
-
-class MThreadedEntryObserver {
-	public:
-		virtual void EntryAdded(CAtomEntryData* aEntry) = 0;
-		virtual void EntryDeleted(CAtomEntryData* aEntry) = 0;
-};
 
 class CThreadedEntry : public CBase {
 	public:
@@ -77,33 +72,7 @@ class CThreadedEntry : public CBase {
 ----------------------------------------------------------------------------
 */
 
-class MDiscussionReadObserver {
-	public:
-		virtual void DiscussionRead(TDesC& aDiscussionId, TInt aItemId) = 0;		
-#ifdef _DEBUG
-		virtual void DiscussionDebug(const TDesC8& aMessage) = 0;
-#endif
-};
-
-class MDiscussionUpdateObserver {
-	public:
-		virtual void EntryAdded(CAtomEntryData* aAtomEntry) = 0;
-		virtual void EntryDeleted(CAtomEntryData* aAtomEntry) = 0;
-};
-
-class MDiscussionUnreadData {
-	public:
-		MDiscussionUnreadData() {
-			iUnreadEntries = 0;
-			iUnreadReplies = 0;
-		}
-	
-	public:
-		TInt iUnreadEntries;
-		TInt iUnreadReplies;
-};
-
-class CDiscussion : public CBase, public MDiscussionUnreadData, MAtomEntryObserver, MThreadedEntryObserver {
+class CDiscussion : public CBase, public MAtomEntryObserver, MThreadedEntryObserver {
 	public:
 		static CDiscussion* NewL(const TDesC& aDiscussionId);
 		static CDiscussion* NewLC(const TDesC& aDiscussionId);
@@ -116,7 +85,7 @@ class CDiscussion : public CBase, public MDiscussionUnreadData, MAtomEntryObserv
 	public: // Unread
 		TInt GetUnreadEntries();
 		TInt GetUnreadReplies();
-		void SetUnreadData(TInt aEntries, TInt aReplies = 0);
+		void SetUnreadData(MDiscussionUnreadData* aUnreadData);
 		
 	public: // Observers
 		void SetDiscussionReadObserver(MDiscussionReadObserver* aObserver, TInt aItemId);
@@ -174,6 +143,7 @@ class CDiscussion : public CBase, public MDiscussionUnreadData, MAtomEntryObserv
 		// Observers
 		MDiscussionReadObserver* iDiscussionReadObserver;
 		MDiscussionUpdateObserver* iDiscussionUpdateObserver;
+		MDiscussionUnreadData* iUnreadData;
 		
 		HBufC* iDiscussionId;
 		TInt iDiscussionIndexer;
@@ -182,7 +152,6 @@ class CDiscussion : public CBase, public MDiscussionUnreadData, MAtomEntryObserv
 		// Cache handling
 		TTime iLastUpdate;
 		TBool iDiscussionInMemory;
-		
 		
 		// Flags
 		TBool iNotify;

@@ -1693,13 +1693,6 @@ RESOURCE AVKON_SETTING_ITEM_LIST r_beacon_settings_item_list
 		},
 		AVKON_SETTING_ITEM
 		{
-			identifier = ESettingPositioningBtOn;
-			setting_page_resource = r_settings_item_bt_page;
-			associated_resource = r_settings_item_onoff_assoc;
-			name = r_string_settings_itemlist_bt;
-		},
-		AVKON_SETTING_ITEM
-		{
 			identifier = ESettingPositioningGpsOn;
 			setting_page_resource = r_settings_item_gps_page;
 			associated_resource = r_settings_item_onoff_assoc;
@@ -1718,13 +1711,6 @@ RESOURCE AVKON_SETTING_PAGE r_settings_item_cell_page
 RESOURCE AVKON_SETTING_PAGE r_settings_item_wlan_page
 {
 	label = r_string_settings_itemlist_wlan;
-	type = EAknCtPopupSettingList;
-	editor_resource_id = r_binary_editor;
-}
-
-RESOURCE AVKON_SETTING_PAGE r_settings_item_bt_page
-{
-	label = r_string_settings_itemlist_bt;
 	type = EAknCtPopupSettingList;
 	editor_resource_id = r_binary_editor;
 }
@@ -2220,7 +2206,6 @@ RESOURCE TBUF r_localized_string_positioning_stationary { buf = r_string_positio
 RESOURCE TBUF r_localized_string_positioning_moving { buf = r_string_positioning_moving; }
 RESOURCE TBUF r_localized_string_positioning_cell { buf = r_string_positioning_cell; }
 RESOURCE TBUF r_localized_string_positioning_wifigps { buf = r_string_positioning_wifigps; }
-RESOURCE TBUF r_localized_string_positioning_bt { buf = r_string_positioning_bt; }
 RESOURCE TBUF r_localized_string_positioning_none { buf = r_string_positioning_none; }
 
 // Setup

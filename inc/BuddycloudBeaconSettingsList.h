@@ -41,9 +41,6 @@ class CBuddycloudBeaconSettingsList : public CAknSettingItemList {
 		CAknNavigationDecorator* iNaviDecorator;
 
 		CBuddycloudLogic* iBuddycloudLogic;
-		
-		TBool iWlanValue;
-		TBool iGpsValue;
 };
 
 #endif

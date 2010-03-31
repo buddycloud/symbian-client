@@ -1,139 +1,56 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 <svg
-   xmlns:dc="http://purl.org/dc/elements/1.1/"
-   xmlns:cc="http://creativecommons.org/ns#"
-   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns="http://www.w3.org/2000/svg"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    version="1.0"
    width="54.189999"
    height="54.189999"
-   id="svg2483"
-   sodipodi:version="0.32"
-   inkscape:version="0.46"
-   sodipodi:docname="positioning.svg"
-   inkscape:output_extension="org.inkscape.output.svg.inkscape"
-   inkscape:export-filename="C:\Symbian\Source\S60\Buddycloud\gfx\svg\positioning_te.png"
-   inkscape:export-xdpi="26.57317"
-   inkscape:export-ydpi="26.57317">
-  <metadata
-     id="metadata15">
-    <rdf:RDF>
-      <cc:Work
-         rdf:about="">
-        <dc:format>image/svg+xml</dc:format>
-        <dc:type
-           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-      </cc:Work>
-    </rdf:RDF>
-  </metadata>
-  <sodipodi:namedview
-     inkscape:window-height="480"
-     inkscape:window-width="640"
-     inkscape:pageshadow="2"
-     inkscape:pageopacity="0.0"
-     guidetolerance="10.0"
-     gridtolerance="10.0"
-     objecttolerance="10.0"
-     borderopacity="1.0"
-     bordercolor="#666666"
-     pagecolor="#ffffff"
-     id="base"
-     showgrid="true"
-     inkscape:snap-global="false">
-    <inkscape:grid
-       type="xygrid"
-       id="grid2390" />
-  </sodipodi:namedview>
+   id="svg2483">
   <defs
-     id="defs2486">
-    <inkscape:perspective
-       sodipodi:type="inkscape:persp3d"
-       inkscape:vp_x="0 : 27.094999 : 1"
-       inkscape:vp_y="0 : 1000 : 0"
-       inkscape:vp_z="54.189999 : 27.094999 : 1"
-       inkscape:persp3d-origin="27.094999 : 18.063333 : 1"
-       id="perspective17" />
-  </defs>
+     id="defs2486" />
   <path
      d="M 3.5711926,1.1883231 L 3.5816039,8.8634845 L 11.24755,14.871337 L 11.24755,24.894905 L 15.282902,24.894905 L 15.282675,14.871337 L 23.058454,8.840047 L 23.051893,1.1883231 L 3.5711926,1.1883231 z M 7.574667,5.3603532 L 11.223548,5.3603532 L 11.223548,10.152306 L 7.5986692,7.5640206 L 7.574667,5.3603532 z M 15.275889,5.3603532 L 18.904406,5.3852435 L 18.904406,7.5640206 L 15.275889,10.152635 L 15.275889,5.3603532 z"
      id="rect2494"
-     style="fill:#26ac62;fill-opacity:1;stroke:#ffffff;stroke-width:1.38403546999999990;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-     inkscape:export-filename="C:\Symbian\Source\S60\Buddycloud\gfx\svg\path3333.png"
-     inkscape:export-xdpi="95.254723"
-     inkscape:export-ydpi="95.254723" />
+     style="fill:#f2304a;fill-opacity:1;stroke:#ffffff;stroke-width:1.38403547;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
   <path
-     d="M 1.9943164,33.038047 L 3.2507695,35.865741 L 6.6062954,34.43569 L 8.4626769,38.613545 C 7.5611171,39.631374 7.2768887,41.097228 7.8621711,42.414427 C 8.4474526,43.731626 9.7364369,44.527012 11.111416,44.57463 L 12.933838,48.676061 L 9.6303369,50.083942 L 10.88679,52.911637 L 20.574509,48.813242 L 19.318056,45.985547 L 15.832471,47.471027 L 13.998729,43.344121 C 14.900288,42.326292 15.184515,40.860436 14.599235,39.543239 C 14.013952,38.226041 12.724969,37.430654 11.349989,37.383036 L 9.5049276,33.230655 L 12.938489,31.767346 L 11.682036,28.939652 L 1.9943164,33.038047 z"
+     d="M 18.523975,33.038047 L 19.780429,35.865741 L 23.135954,34.43569 L 24.992336,38.613545 C 24.090776,39.631374 23.806548,41.097228 24.39183,42.414427 C 24.977112,43.731626 26.266096,44.527012 27.641075,44.57463 L 29.463497,48.676061 L 26.159996,50.083942 L 27.416449,52.911637 L 37.104168,48.813242 L 35.847715,45.985547 L 32.36213,47.471027 L 30.528388,43.344121 C 31.429947,42.326292 31.714174,40.860436 31.128894,39.543239 C 30.543611,38.226041 29.254628,37.430654 27.879648,37.383036 L 26.034587,33.230655 L 29.468148,31.767346 L 28.211695,28.939652 L 18.523975,33.038047 z"
      id="path3282"
-     style="fill:#26ac62;fill-opacity:1;stroke:#ffffff;stroke-width:1.34753298999999990;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-     inkscape:export-filename="C:\Symbian\Source\S60\Buddycloud\gfx\svg\path3333.png"
-     inkscape:export-xdpi="95.254723"
-     inkscape:export-ydpi="95.254723" />
+     style="fill:#f2304a;fill-opacity:1;stroke:#ffffff;stroke-width:1.34753299;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
   <rect
      width="11.45768"
      height="8.3296642"
-     x="-2.0706947"
-     y="37.871498"
+     x="13.036653"
+     y="44.352829"
      transform="matrix(0.9199403,-0.3920584,0.4060575,0.9138475,0,0)"
      id="rect3294"
-     style="fill:#26ac62;fill-opacity:1;stroke:#ffffff;stroke-width:1.30031884000000010;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-     inkscape:export-filename="C:\Symbian\Source\S60\Buddycloud\gfx\svg\path3333.png"
-     inkscape:export-xdpi="95.254723"
-     inkscape:export-ydpi="95.254723" />
+     style="fill:#f2304a;fill-opacity:1;stroke:#ffffff;stroke-width:1.30031884;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
   <rect
      width="12.683738"
      height="8.4834995"
-     x="-23.499002"
-     y="37.808865"
+     x="-8.3916464"
+     y="44.290195"
      transform="matrix(0.9199403,-0.3920584,0.4060575,0.9138475,0,0)"
      id="rect3296"
-     style="fill:#26ac62;fill-opacity:1;stroke:#ffffff;stroke-width:1.30031884000000010;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-     inkscape:export-filename="C:\Symbian\Source\S60\Buddycloud\gfx\svg\path3333.png"
-     inkscape:export-xdpi="95.254723"
-     inkscape:export-ydpi="95.254723" />
+     style="fill:#f2304a;fill-opacity:1;stroke:#ffffff;stroke-width:1.30031884;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
   <path
      d="M 41.247098,4.5355797 C 39.657476,4.5355797 38.355099,5.7989576 38.355097,7.3752947 C 38.355097,8.454721 38.965986,9.3921423 39.857804,9.8776177 C 39.858958,10.389089 39.864001,12.388562 39.857804,13.448348 C 38.416906,15.207556 37.504509,21.714449 37.504509,21.714449 L 33.96039,21.742566 L 33.96039,24.947788 L 48.477101,24.891556 L 48.477101,21.714449 L 44.961335,21.714449 C 44.961335,21.714449 43.934812,15.237532 42.437923,13.532696 C 42.43457,12.469264 42.457677,10.545755 42.466275,9.9619656 C 43.449778,9.5075221 44.139098,8.521584 44.139099,7.3752947 C 44.139099,5.7989574 42.836722,4.5355795 41.247098,4.5355797 z"
      id="path3318"
-     style="fill:#26ac62;fill-opacity:1;stroke:#ffffff;stroke-width:1.35524260999999990;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-     inkscape:export-filename="C:\Symbian\Source\S60\Buddycloud\gfx\svg\path3333.png"
-     inkscape:export-xdpi="95.254723"
-     inkscape:export-ydpi="95.254723" />
+     style="fill:#f2304a;fill-opacity:1;stroke:#ffffff;stroke-width:1.35524261;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
   <path
      d="M 31.697993,1.1339572 C 32.486805,1.1339572 33.275617,1.1339572 34.06443,1.1339572 C 30.854956,6.097419 30.774719,8.0748382 34.06443,14.020551 C 33.275617,14.020551 32.486805,14.020551 31.697993,14.020551 C 28.809466,9.7643097 28.809466,5.3509085 31.697993,1.1339572 z"
      id="rect3323"
-     style="fill:#26ac62;fill-opacity:1;stroke:#ffffff;stroke-width:1.30837679000000010;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-     inkscape:export-filename="C:\Symbian\Source\S60\Buddycloud\gfx\svg\path3333.png"
-     inkscape:export-xdpi="95.254723"
-     inkscape:export-ydpi="95.254723" />
+     style="fill:#f2304a;fill-opacity:1;stroke:#ffffff;stroke-width:1.30837679;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
   <path
      d="M 35.695765,3.4997394 C 36.279136,3.4997394 36.862507,3.4997394 37.445879,3.4997394 C 35.072292,6.5953704 35.012952,7.8286537 37.445879,11.536899 C 36.862507,11.536899 36.279136,11.536899 35.695765,11.536899 C 33.559536,8.8823497 33.559536,6.1297836 35.695765,3.4997394 z"
      id="path3327"
-     style="fill:#26ac62;fill-opacity:1;stroke:#ffffff;stroke-width:0.88858861000000000;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-     inkscape:export-filename="C:\Symbian\Source\S60\Buddycloud\gfx\svg\path3333.png"
-     inkscape:export-xdpi="95.254723"
-     inkscape:export-ydpi="95.254723" />
+     style="fill:#f2304a;fill-opacity:1;stroke:#ffffff;stroke-width:0.88858861;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
   <path
      d="M 50.733631,1.1536024 C 49.944819,1.1536024 49.156006,1.1536024 48.367194,1.1536024 C 51.576668,6.1170642 51.656905,8.0944832 48.367194,14.040196 C 49.156006,14.040196 49.944819,14.040196 50.733631,14.040196 C 53.622158,9.7839546 53.622158,5.3705536 50.733631,1.1536024 z"
      id="path3329"
-     style="fill:#26ac62;fill-opacity:1;stroke:#ffffff;stroke-width:1.30837679000000010;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-     inkscape:export-filename="C:\Symbian\Source\S60\Buddycloud\gfx\svg\path3333.png"
-     inkscape:export-xdpi="95.254723"
-     inkscape:export-ydpi="95.254723" />
+     style="fill:#f2304a;fill-opacity:1;stroke:#ffffff;stroke-width:1.30837679;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
   <path
      d="M 46.735858,3.5193845 C 46.152488,3.5193845 45.569116,3.5193845 44.985745,3.5193845 C 47.359332,6.6150154 47.418671,7.8482986 44.985745,11.556543 C 45.569116,11.556543 46.152488,11.556543 46.735858,11.556543 C 48.872087,8.9019947 48.872087,6.1494288 46.735858,3.5193845 z"
      id="path3331"
-     style="fill:#26ac62;fill-opacity:1;stroke:#ffffff;stroke-width:0.88858861000000000;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-     inkscape:export-filename="C:\Symbian\Source\S60\Buddycloud\gfx\svg\path3333.png"
-     inkscape:export-xdpi="95.254723"
-     inkscape:export-ydpi="95.254723" />
-  <path
-     d="M 42.429916,40.672587 L 48.119684,45.069124 L 36.601433,51.773768 L 36.568802,45.008721 L 31.267107,44.952037 L 36.701719,40.689488 L 31.097055,35.921909 L 36.568802,35.978593 L 36.601433,29.213545 L 48.119684,35.918189 L 42.429916,40.672587 z M 40.039678,35.054425 L 42.186109,36.360051 L 39.991571,38.220453 L 40.039678,35.054425 z M 39.991571,43.193851 L 42.072741,44.827515 L 40.039678,46.133141 L 39.991571,43.193851 z"
-     id="path3333"
-     style="fill:#26ac62;fill-opacity:1;fill-rule:evenodd;stroke:#ffffff;stroke-width:1.34753298999999990;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-     sodipodi:nodetypes="ccccccccccccccccccc"
-     inkscape:export-xdpi="95.254723"
-     inkscape:export-ydpi="95.254723" />
+     style="fill:#f2304a;fill-opacity:1;stroke:#ffffff;stroke-width:0.88858861;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
 </svg>

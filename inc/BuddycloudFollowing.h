@@ -15,7 +15,7 @@
 
 #include <e32base.h>
 #include "BuddycloudList.h"
-#include "DiscussionManager.h"
+#include "DiscussionInterfaces.h"
 #include "GeolocData.h"
 #include "XmppConstants.h"
 
@@ -110,14 +110,10 @@ class CFollowingChannelItem : public CFollowingItem {
 		void SetPubsubAffiliation(TXmppPubsubAffiliation aPubsubAffiliation);
 		
 	public:
-		void SetUnreadData(MDiscussionUnreadData* aUnreadData, TIdType aType = EIdChannel);
-		
-	public:
-		TInt GetUnread(TIdType aType = EIdChannel);
-		TInt GetReplies();
+		MDiscussionUnreadData* GetUnreadData(TIdType aType = EIdChannel);
 		
 	protected:
-		MDiscussionUnreadData* iChannelUnreadData;
+		MDiscussionUnreadData iChannelUnreadData;
 		
 		TXmppPubsubSubscription iPubsubSubscription;
 		TXmppPubsubAffiliation iPubsubAffiliation;
@@ -161,13 +157,10 @@ class CFollowingRosterItem : public CFollowingChannelItem {
 		void SetGeolocItemL(TGeolocItemType aGeolocItem, CGeolocData* aGeoloc);
 		
 	public:
-		void SetUnreadData(MDiscussionUnreadData* aUnreadData, TIdType aType = EIdRoster);
-		
-	public:
-		TInt GetUnread(TIdType aType = EIdRoster);
+		MDiscussionUnreadData* GetUnreadData(TIdType aType = EIdRoster);
 
 	protected:
-		MDiscussionUnreadData* iRosterUnreadData;
+		MDiscussionUnreadData iRosterUnreadData;
 		
 		HBufC* iJid;
 

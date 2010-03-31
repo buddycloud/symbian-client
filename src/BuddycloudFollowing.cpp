@@ -98,6 +98,8 @@ CFollowingChannelItem* CFollowingChannelItem::NewLC(){
 CFollowingChannelItem::CFollowingChannelItem() {
 	iItemType = EItemChannel;
 	iIconId = KIconChannel;
+	iChannelUnreadData.iEntries = 0;
+	iChannelUnreadData.iReplies = 0;
 }
 
 TXmppPubsubSubscription CFollowingChannelItem::GetPubsubSubscription() {
@@ -116,24 +118,8 @@ void CFollowingChannelItem::SetPubsubAffiliation(TXmppPubsubAffiliation aPubsubA
 	iPubsubAffiliation = aPubsubAffiliation;
 }
 
-void CFollowingChannelItem::SetUnreadData(MDiscussionUnreadData* aUnreadData, TIdType /*aType*/) {
-	iChannelUnreadData = aUnreadData;
-}
-
-TInt CFollowingChannelItem::GetUnread(TIdType /*aType*/) {
-	if(iChannelUnreadData) {
-		return iChannelUnreadData->iUnreadEntries;
-	}
-	
-	return 0;
-}
-
-TInt CFollowingChannelItem::GetReplies() {
-	if(iChannelUnreadData) {
-		return iChannelUnreadData->iUnreadReplies;
-	}
-	
-	return 0;
+MDiscussionUnreadData* CFollowingChannelItem::GetUnreadData(TIdType /*aType*/) {
+	return &iChannelUnreadData;
 }
 
 /*
@@ -171,6 +157,11 @@ CFollowingRosterItem::~CFollowingRosterItem() {
 CFollowingRosterItem::CFollowingRosterItem() {
 	iItemType = EItemRoster;
 	iIconId = KIconPerson;
+	
+	iChannelUnreadData.iEntries = 0;
+	iChannelUnreadData.iReplies = 0;
+	iRosterUnreadData.iEntries = 0;
+	iRosterUnreadData.iReplies = 0;
 
 	iSubscription = EPresenceSubscriptionUnknown;
 }
@@ -245,24 +236,12 @@ void CFollowingRosterItem::SetGeolocItemL(TGeolocItemType aGeolocItem, CGeolocDa
 	iGeolocs[aGeolocItem] = aGeoloc;
 }
 
-void CFollowingRosterItem::SetUnreadData(MDiscussionUnreadData* aUnreadData, TIdType aType) {
+MDiscussionUnreadData* CFollowingRosterItem::GetUnreadData(TIdType aType) {
 	if(aType == EIdRoster) {
-		iRosterUnreadData = aUnreadData;
-	}
-	else {
-		iChannelUnreadData = aUnreadData;
-	}
-}
-
-TInt CFollowingRosterItem::GetUnread(TIdType aType) {
-	if(aType == EIdRoster && iRosterUnreadData) {
-		return iRosterUnreadData->iUnreadEntries;
-	}
-	else if(iChannelUnreadData) {
-		return iChannelUnreadData->iUnreadEntries;
+		return &iRosterUnreadData;
 	}
 	
-	return 0;
+	return &iChannelUnreadData;
 }
 
 /*
@@ -301,12 +280,12 @@ void CBuddycloudFollowingStore::BubbleItem(TInt aIndex, TBubble aDirection) {
 		else if(aBubblingItem->GetItemType() >= EItemRoster) {
 			// Get bubbling items unread/replies
 			CFollowingChannelItem* aBubblingChannelItem = static_cast <CFollowingChannelItem*> (aBubblingItem);		
-			TUint aBubbleValue = (aBubblingChannelItem->GetReplies() * 100);
+			TUint aBubbleValue = (aBubblingChannelItem->GetUnreadData()->iReplies * 100);
 			
 			if(aBubblingItem->GetItemType() == EItemRoster) {
 				CFollowingRosterItem* aBubblingRosterItem = static_cast <CFollowingRosterItem*> (aBubblingItem);			
 				
-				aBubbleValue += (aBubblingRosterItem->GetUnread() * 10000);
+				aBubbleValue += (aBubblingRosterItem->GetUnreadData()->iEntries * 10000);
 			}			
 			
 			// Initialize first list item
@@ -320,18 +299,18 @@ void CBuddycloudFollowingStore::BubbleItem(TInt aIndex, TBubble aDirection) {
 				}
 				else if(aListItem->GetItemType() >= EItemRoster) {
 					CFollowingChannelItem* aListChannelItem = static_cast <CFollowingChannelItem*> (aListItem);
-					TUint aListValue = (aListChannelItem->GetReplies() * 100);
+					TUint aListValue = (aListChannelItem->GetUnreadData()->iReplies * 100);
 					
 					if(aListItem->GetItemType() == EItemRoster) {
 						CFollowingRosterItem* aListRosterItem = static_cast <CFollowingRosterItem*> (aListItem);			
 						
-						aListValue += (aListRosterItem->GetUnread() * 10000);
+						aListValue += (aListRosterItem->GetUnreadData()->iEntries * 10000);
 					}
 					
 					if((aDirection == EBubbleDown && (aBubbleValue > aListValue ||
-								(aBubbleValue == aListValue && (aBubblingChannelItem->GetUnread() > 0 || aListChannelItem->GetUnread() == 0)))) || 
+								(aBubbleValue == aListValue && (aBubblingChannelItem->GetUnreadData()->iEntries > 0 || aListChannelItem->GetUnreadData()->iEntries == 0)))) || 
 							(aDirection == EBubbleUp && (aBubbleValue < aListValue ||
-									(aBubbleValue == aListValue && aBubblingChannelItem->GetUnread() == 0 && aListChannelItem->GetUnread() > 0)))) {
+									(aBubbleValue == aListValue && aBubblingChannelItem->GetUnreadData()->iEntries == 0 && aListChannelItem->GetUnreadData()->iEntries > 0)))) {
 						
 						iItemStore.Remove(aIndex);
 						iItemStore.Insert(aBubblingItem, (aListPosition - aDirection));

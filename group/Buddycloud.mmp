@@ -57,10 +57,8 @@ LIBRARY           apgrfx.lib commdb.lib bitgdi.lib imageconversion.lib aknskins.
 LIBRARY           form.lib hwrmvibraclient.lib mediaclientaudio.lib centralrepository.lib charconv.lib
 LIBRARY           flogger.lib sendui.lib esock.lib insock.lib ezlib.lib securesocket.lib hash.lib
 
-#ifndef __3_2_ONWARDS__
-LIBRARY           bteng.lib
-#else
-LIBRARY           btengsettings.lib cmmanager.lib
+#ifdef __3_2_ONWARDS__
+LIBRARY           cmmanager.lib
 #endif
 
 #ifdef __SERIES60_40__
@@ -72,7 +70,7 @@ SECUREID          0x2000C4A4
 CAPABILITY        Location LocalServices NetworkServices ReadDeviceData WriteDeviceData ReadUserData WriteUserData SwEvent
 
 SOURCEPATH ..\src
-SOURCE            BuddycloudLogic.cpp WlanDataHandler.cpp CellTowerDataHandler.cpp BtDataHandler.cpp 
+SOURCE            BuddycloudLogic.cpp WlanDataHandler.cpp CellTowerDataHandler.cpp
 SOURCE            DataHander.cpp GpsDataHandler.cpp LocationEngine.cpp SignalStrengthDataHandler.cpp 
 SOURCE            TcpIpEngine.cpp Timer.cpp XmlParser.cpp XmppEngine.cpp ConnectionMonitor.cpp BuddycloudMessagingView.cpp 
 SOURCE            BuddycloudMessagingContainer.cpp NotificationEngine.cpp AvatarRepository.cpp AudioPlayer.cpp 

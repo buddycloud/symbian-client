@@ -27,7 +27,7 @@
 <ARGUMENTS_DATA_ID ABLDBUILDARGSSTORAGE="-v" ABLDCLEANARGSSTORAGE="-v -really" ABLDFREEZEARGSSTORAGE="-v"/>
 <ROM_BUILDER_DATA_ID ROMBUILDWORKINGDIRECTORYSTORAGE="C:\"/>
 </storageModule>
-<storageModule filesCache="C:\Symbian\Code\Buddycloud\group\Buddycloud.mmp;C:\Symbian\Code\Buddycloud\group\bld.inf;C:\Symbian\SDKs\S60\S60_3rd_FP2_SDK\epoc32\include\blddef.h;" includesCache="C:/Symbian/Code/Buddycloud/inc[LOCAL];C:/Symbian/SDKs/S60/S60_3rd_FP2_SDK/epoc32/include;C:/Symbian/SDKs/S60/S60_3rd_FP2_SDK/epoc32/include/mmf/plugin;" macrosCache="__EXE__;__WINSCW__;__SUPPORT_CPP_EXCEPTIONS__;__SYMBIAN32__;__S60_3X__;_UNICODE;__SERIES60_3X__;_DEBUG;__S60_32__;__WINS__;__CW32__;" moduleId="configDataCache" sourcesCache="/Buddycloud/data;/Buddycloud/inc;/Buddycloud/src;" timestampCache="1267536449015" useMmpMacrosCache="true"/>
+<storageModule filesCache="C:\Symbian\Code\Buddycloud\group\Buddycloud.mmp;C:\Symbian\Code\Buddycloud\group\bld.inf;C:\Symbian\SDKs\S60\S60_3rd_FP2_SDK\epoc32\include\blddef.h;" includesCache="C:/Symbian/Code/Buddycloud/inc[LOCAL];C:/Symbian/SDKs/S60/S60_3rd_FP2_SDK/epoc32/include;C:/Symbian/SDKs/S60/S60_3rd_FP2_SDK/epoc32/include/mmf/plugin;" macrosCache="__EXE__;__WINSCW__;__SUPPORT_CPP_EXCEPTIONS__;__SYMBIAN32__;__S60_3X__;_UNICODE;__SERIES60_3X__;_DEBUG;__S60_32__;__WINS__;__CW32__;" moduleId="configDataCache" sourcesCache="/Buddycloud/data;/Buddycloud/inc;/Buddycloud/src;" timestampCache="1270052568109" useMmpMacrosCache="true"/>
 <storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
 <storageModule moduleId="org.eclipse.cdt.core.language.mapping"/>
 <storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
@@ -100,7 +100,7 @@
 <ARGUMENTS_DATA_ID ABLDFREEZEARGSSTORAGE="-r"/>
 <ROM_BUILDER_DATA_ID ROMBUILDWORKINGDIRECTORYSTORAGE="C:\"/>
 </storageModule>
-<storageModule filesCache="C:\Symbian\SDKs\S60\S60_5th_Edition_SDK_v1.0\epoc32\include\blddef.h;C:\Symbian\Code\Buddycloud\group\Buddycloud.mmp;C:\Symbian\Code\Buddycloud\group\bld.inf;" includesCache="C:/Symbian/Code/Buddycloud/inc[LOCAL];C:/Symbian/SDKs/S60/S60_5th_Edition_SDK_v1.0/epoc32/include;C:/Symbian/SDKs/S60/S60_5th_Edition_SDK_v1.0/epoc32/include/mmf/plugin;" macrosCache="__S60_50__;__EXE__;__WINSCW__;__SUPPORT_CPP_EXCEPTIONS__;__SYMBIAN32__;__S60_3X__;_UNICODE;__S60_5X__;__SERIES60_3X__;_DEBUG;__WINS__;__CW32__;" moduleId="configDataCache" sourcesCache="/Buddycloud/data;/Buddycloud/inc;/Buddycloud/src;" timestampCache="1267536449046" useMmpMacrosCache="true"/>
+<storageModule filesCache="C:\Symbian\SDKs\S60\S60_5th_Edition_SDK_v1.0\epoc32\include\blddef.h;C:\Symbian\Code\Buddycloud\group\Buddycloud.mmp;C:\Symbian\Code\Buddycloud\group\bld.inf;" includesCache="C:/Symbian/Code/Buddycloud/inc[LOCAL];C:/Symbian/SDKs/S60/S60_5th_Edition_SDK_v1.0/epoc32/include;C:/Symbian/SDKs/S60/S60_5th_Edition_SDK_v1.0/epoc32/include/mmf/plugin;" macrosCache="__S60_50__;__EXE__;__WINSCW__;__SUPPORT_CPP_EXCEPTIONS__;__SYMBIAN32__;__S60_3X__;_UNICODE;__S60_5X__;__SERIES60_3X__;_DEBUG;__WINS__;__CW32__;" moduleId="configDataCache" sourcesCache="/Buddycloud/data;/Buddycloud/inc;/Buddycloud/src;" timestampCache="1270052568140" useMmpMacrosCache="true"/>
 <storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
 </cconfiguration>
 
@@ -127,7 +127,7 @@
 </extensions>
 </storageModule>
 <storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
-<storageModule filesCache="C:\Symbian\Code\Buddycloud\group\Buddycloud.mmp;C:\Symbian\Code\Buddycloud\group\bld.inf;" includesCache="C:/Symbian/Code/Buddycloud/inc[LOCAL];C:/epoc32/include;C:/epoc32/include/mmf/plugin;" macrosCache="__EXE__;__SYMBIAN32__;_UNICODE;_DEBUG;" moduleId="configDataCache" sourcesCache="/Buddycloud/data;/Buddycloud/inc;/Buddycloud/src;" timestampCache="1267526715828" useMmpMacrosCache="true"/>
+<storageModule filesCache="C:\Symbian\Code\Buddycloud\group\Buddycloud.mmp;C:\Symbian\Code\Buddycloud\group\bld.inf;" includesCache="C:/Symbian/Code/Buddycloud/inc[LOCAL];C:/epoc32/include;C:/epoc32/include/mmf/plugin;" macrosCache="__EXE__;__SYMBIAN32__;_UNICODE;_DEBUG;" moduleId="configDataCache" sourcesCache="/Buddycloud/data;/Buddycloud/inc;/Buddycloud/src;" timestampCache="1270052568125" useMmpMacrosCache="true"/>
 <storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
 <storageModule moduleId="org.eclipse.cdt.core.language.mapping"/>
 </cconfiguration>
@@ -153,7 +153,7 @@
 <ARGUMENTS_DATA_ID ABLDFREEZEARGSSTORAGE="-r"/>
 <ROM_BUILDER_DATA_ID ROMBUILDWORKINGDIRECTORYSTORAGE="C:\"/>
 </storageModule>
-<storageModule filesCache="C:\Symbian\SDKs\S60\S60_5th_Edition_SDK_v1.0\epoc32\include\blddef.h;C:\Symbian\Code\Buddycloud\group\Buddycloud.mmp;C:\Symbian\Code\Buddycloud\group\bld.inf;" includesCache="C:/Symbian/Code/Buddycloud/inc[LOCAL];C:/Symbian/SDKs/S60/S60_5th_Edition_SDK_v1.0/epoc32/include;C:/Symbian/SDKs/S60/S60_5th_Edition_SDK_v1.0/epoc32/include/mmf/plugin;" macrosCache="__GENERIC_MARM__;__EXE__;__SYMBIAN32__;__SUPPORT_CPP_EXCEPTIONS__;__EPOC32__;__EABI__;__GCCE__;NDEBUG;__MARM__;__S60_50__;_UNICODE;__S60_3X__;__S60_5X__;__SERIES60_3X__;__MARM_ARMV5__;" moduleId="configDataCache" sourcesCache="/Buddycloud/data;/Buddycloud/inc;/Buddycloud/src;" timestampCache="1267536449062" useMmpMacrosCache="true"/>
+<storageModule filesCache="C:\Symbian\SDKs\S60\S60_5th_Edition_SDK_v1.0\epoc32\include\blddef.h;C:\Symbian\Code\Buddycloud\group\Buddycloud.mmp;C:\Symbian\Code\Buddycloud\group\bld.inf;" includesCache="C:/Symbian/Code/Buddycloud/inc[LOCAL];C:/Symbian/SDKs/S60/S60_5th_Edition_SDK_v1.0/epoc32/include;C:/Symbian/SDKs/S60/S60_5th_Edition_SDK_v1.0/epoc32/include/mmf/plugin;" macrosCache="__GENERIC_MARM__;__EXE__;__SYMBIAN32__;__SUPPORT_CPP_EXCEPTIONS__;__EPOC32__;__EABI__;__GCCE__;NDEBUG;__MARM__;__S60_50__;_UNICODE;__S60_3X__;__S60_5X__;__SERIES60_3X__;__MARM_ARMV5__;" moduleId="configDataCache" sourcesCache="/Buddycloud/data;/Buddycloud/inc;/Buddycloud/src;" timestampCache="1270052568156" useMmpMacrosCache="true"/>
 <storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
 <storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
 <storageModule moduleId="org.eclipse.cdt.core.language.mapping"/>
@@ -180,7 +180,7 @@
 <ARGUMENTS_DATA_ID ABLDFREEZEARGSSTORAGE="-r"/>
 <ROM_BUILDER_DATA_ID ROMBUILDWORKINGDIRECTORYSTORAGE="C:\"/>
 </storageModule>
-<storageModule filesCache="C:\Symbian\Code\Buddycloud\group\Buddycloud.mmp;C:\Symbian\Code\Buddycloud\group\bld.inf;C:\Symbian\SDKs\S60\S60_3rd_FP2_SDK\epoc32\include\blddef.h;" includesCache="C:/Symbian/Code/Buddycloud/inc[LOCAL];C:/Symbian/SDKs/S60/S60_3rd_FP2_SDK/epoc32/include;C:/Symbian/SDKs/S60/S60_3rd_FP2_SDK/epoc32/include/mmf/plugin;" macrosCache="__GENERIC_MARM__;__EXE__;__SYMBIAN32__;__SUPPORT_CPP_EXCEPTIONS__;__EPOC32__;__EABI__;__GCCE__;NDEBUG;__MARM__;_UNICODE;__S60_3X__;__SERIES60_3X__;__MARM_ARMV5__;__S60_32__;" moduleId="configDataCache" sourcesCache="/Buddycloud/data;/Buddycloud/inc;/Buddycloud/src;" timestampCache="1267536449078" useMmpMacrosCache="true"/>
+<storageModule filesCache="C:\Symbian\Code\Buddycloud\group\Buddycloud.mmp;C:\Symbian\Code\Buddycloud\group\bld.inf;C:\Symbian\SDKs\S60\S60_3rd_FP2_SDK\epoc32\include\blddef.h;" includesCache="C:/Symbian/Code/Buddycloud/inc[LOCAL];C:/Symbian/SDKs/S60/S60_3rd_FP2_SDK/epoc32/include;C:/Symbian/SDKs/S60/S60_3rd_FP2_SDK/epoc32/include/mmf/plugin;" macrosCache="__GENERIC_MARM__;__EXE__;__SYMBIAN32__;__SUPPORT_CPP_EXCEPTIONS__;__EPOC32__;__EABI__;__GCCE__;NDEBUG;__MARM__;_UNICODE;__S60_3X__;__SERIES60_3X__;__MARM_ARMV5__;__S60_32__;" moduleId="configDataCache" sourcesCache="/Buddycloud/data;/Buddycloud/inc;/Buddycloud/src;" timestampCache="1270052568171" useMmpMacrosCache="true"/>
 <storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
 <storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
 <storageModule moduleId="org.eclipse.cdt.core.language.mapping"/>
@@ -207,7 +207,7 @@
 <ARGUMENTS_DATA_ID ABLDFREEZEARGSSTORAGE="-r"/>
 <ROM_BUILDER_DATA_ID ROMBUILDWORKINGDIRECTORYSTORAGE="C:\"/>
 </storageModule>
-<storageModule filesCache="C:\Symbian\SDKs\S60\S60_3rd_MR\Epoc32\include\blddef.h;C:\Symbian\Code\Buddycloud\group\Buddycloud.mmp;C:\Symbian\Code\Buddycloud\group\bld.inf;" includesCache="C:/Symbian/Code/Buddycloud/inc[LOCAL];C:/Symbian/SDKs/S60/S60_3rd_MR/Epoc32/include;C:/Symbian/SDKs/S60/S60_3rd_MR/Epoc32/include/mmf/plugin;" macrosCache="__GENERIC_MARM__;__SERIES60_30__;__EXE__;__SYMBIAN32__;__SUPPORT_CPP_EXCEPTIONS__;__EPOC32__;__EABI__;__GCCE__;NDEBUG;__MARM__;_UNICODE;__SERIES60_3X__;__MARM_ARMV5__;" moduleId="configDataCache" sourcesCache="/Buddycloud/data;/Buddycloud/inc;/Buddycloud/src;" timestampCache="1267536449093" useMmpMacrosCache="true"/>
+<storageModule filesCache="C:\Symbian\SDKs\S60\S60_3rd_MR\Epoc32\include\blddef.h;C:\Symbian\Code\Buddycloud\group\Buddycloud.mmp;C:\Symbian\Code\Buddycloud\group\bld.inf;" includesCache="C:/Symbian/Code/Buddycloud/inc[LOCAL];C:/Symbian/SDKs/S60/S60_3rd_MR/Epoc32/include;C:/Symbian/SDKs/S60/S60_3rd_MR/Epoc32/include/mmf/plugin;" macrosCache="__GENERIC_MARM__;__SERIES60_30__;__EXE__;__SYMBIAN32__;__SUPPORT_CPP_EXCEPTIONS__;__EPOC32__;__EABI__;__GCCE__;NDEBUG;__MARM__;_UNICODE;__SERIES60_3X__;__MARM_ARMV5__;" moduleId="configDataCache" sourcesCache="/Buddycloud/data;/Buddycloud/inc;/Buddycloud/src;" timestampCache="1270052568203" useMmpMacrosCache="true"/>
 <storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
 <storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
 <storageModule moduleId="org.eclipse.cdt.core.language.mapping"/>
@@ -234,7 +234,7 @@
 <ARGUMENTS_DATA_ID ABLDFREEZEARGSSTORAGE="-r"/>
 <ROM_BUILDER_DATA_ID ROMBUILDWORKINGDIRECTORYSTORAGE="C:\"/>
 </storageModule>
-<storageModule filesCache="C:\Symbian\SDKs\S60\S60_3rd_FP1\Epoc32\include\blddef.h;C:\Symbian\Code\Buddycloud\group\Buddycloud.mmp;C:\Symbian\Code\Buddycloud\group\bld.inf;" includesCache="C:/Symbian/Code/Buddycloud/inc[LOCAL];C:/Symbian/SDKs/S60/S60_3rd_FP1/Epoc32/include;C:/Symbian/SDKs/S60/S60_3rd_FP1/Epoc32/include/mmf/plugin;" macrosCache="__GENERIC_MARM__;__EXE__;__SYMBIAN32__;__SUPPORT_CPP_EXCEPTIONS__;__EPOC32__;__EABI__;__GCCE__;NDEBUG;__SERIES60_31__;__MARM__;_UNICODE;__SERIES60_3X__;__MARM_ARMV5__;" moduleId="configDataCache" sourcesCache="/Buddycloud/data;/Buddycloud/inc;/Buddycloud/src;" timestampCache="1267536449109" useMmpMacrosCache="true"/>
+<storageModule filesCache="C:\Symbian\SDKs\S60\S60_3rd_FP1\Epoc32\include\blddef.h;C:\Symbian\Code\Buddycloud\group\Buddycloud.mmp;C:\Symbian\Code\Buddycloud\group\bld.inf;" includesCache="C:/Symbian/Code/Buddycloud/inc[LOCAL];C:/Symbian/SDKs/S60/S60_3rd_FP1/Epoc32/include;C:/Symbian/SDKs/S60/S60_3rd_FP1/Epoc32/include/mmf/plugin;" macrosCache="__GENERIC_MARM__;__EXE__;__SYMBIAN32__;__SUPPORT_CPP_EXCEPTIONS__;__EPOC32__;__EABI__;__GCCE__;NDEBUG;__SERIES60_31__;__MARM__;_UNICODE;__SERIES60_3X__;__MARM_ARMV5__;" moduleId="configDataCache" sourcesCache="/Buddycloud/data;/Buddycloud/inc;/Buddycloud/src;" timestampCache="1270052568218" useMmpMacrosCache="true"/>
 <storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
 <storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
 <storageModule moduleId="org.eclipse.cdt.core.language.mapping"/>
@@ -261,7 +261,7 @@
 <ARGUMENTS_DATA_ID ABLDFREEZEARGSSTORAGE="-r"/>
 <ROM_BUILDER_DATA_ID ROMBUILDWORKINGDIRECTORYSTORAGE="C:\"/>
 </storageModule>
-<storageModule filesCache="C:\Symbian\SDKs\S60\S60_3rd_MR\Epoc32\include\blddef.h;C:\Symbian\Code\Buddycloud\group\Buddycloud.mmp;C:\Symbian\Code\Buddycloud\group\bld.inf;" includesCache="C:/Symbian/Code/Buddycloud/inc[LOCAL];C:/Symbian/SDKs/S60/S60_3rd_MR/Epoc32/include;C:/Symbian/SDKs/S60/S60_3rd_MR/Epoc32/include/mmf/plugin;" macrosCache="__GENERIC_MARM__;__SERIES60_30__;__EXE__;__SYMBIAN32__;__SUPPORT_CPP_EXCEPTIONS__;__EPOC32__;__EABI__;__GCCE__;__MARM__;_UNICODE;_DEBUG;__SERIES60_3X__;__MARM_ARMV5__;" moduleId="configDataCache" sourcesCache="/Buddycloud/data;/Buddycloud/inc;/Buddycloud/src;" timestampCache="1267536449140" useMmpMacrosCache="true"/>
+<storageModule filesCache="C:\Symbian\SDKs\S60\S60_3rd_MR\Epoc32\include\blddef.h;C:\Symbian\Code\Buddycloud\group\Buddycloud.mmp;C:\Symbian\Code\Buddycloud\group\bld.inf;" includesCache="C:/Symbian/Code/Buddycloud/inc[LOCAL];C:/Symbian/SDKs/S60/S60_3rd_MR/Epoc32/include;C:/Symbian/SDKs/S60/S60_3rd_MR/Epoc32/include/mmf/plugin;" macrosCache="__GENERIC_MARM__;__SERIES60_30__;__EXE__;__SYMBIAN32__;__SUPPORT_CPP_EXCEPTIONS__;__EPOC32__;__EABI__;__GCCE__;__MARM__;_UNICODE;_DEBUG;__SERIES60_3X__;__MARM_ARMV5__;" moduleId="configDataCache" sourcesCache="/Buddycloud/data;/Buddycloud/inc;/Buddycloud/src;" timestampCache="1270052568234" useMmpMacrosCache="true"/>
 <storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
 <storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
 <storageModule moduleId="org.eclipse.cdt.core.language.mapping"/>
@@ -288,7 +288,7 @@
 <ARGUMENTS_DATA_ID ABLDFREEZEARGSSTORAGE="-r"/>
 <ROM_BUILDER_DATA_ID ROMBUILDWORKINGDIRECTORYSTORAGE="C:\"/>
 </storageModule>
-<storageModule filesCache="C:\Symbian\SDKs\S60\S60_5th_Edition_SDK_v1.0\epoc32\include\blddef.h;C:\Symbian\Code\Buddycloud\group\Buddycloud.mmp;C:\Symbian\Code\Buddycloud\group\bld.inf;" includesCache="C:/Symbian/Code/Buddycloud/inc[LOCAL];C:/Symbian/SDKs/S60/S60_5th_Edition_SDK_v1.0/epoc32/include;C:/Symbian/SDKs/S60/S60_5th_Edition_SDK_v1.0/epoc32/include/mmf/plugin;" macrosCache="__GENERIC_MARM__;__EXE__;__SYMBIAN32__;__SUPPORT_CPP_EXCEPTIONS__;__EPOC32__;__EABI__;__GCCE__;__MARM__;__S60_50__;_UNICODE;__S60_3X__;__S60_5X__;_DEBUG;__SERIES60_3X__;__MARM_ARMV5__;" moduleId="configDataCache" sourcesCache="/Buddycloud/data;/Buddycloud/inc;/Buddycloud/src;" timestampCache="1267536449140" useMmpMacrosCache="true"/>
+<storageModule filesCache="C:\Symbian\SDKs\S60\S60_5th_Edition_SDK_v1.0\epoc32\include\blddef.h;C:\Symbian\Code\Buddycloud\group\Buddycloud.mmp;C:\Symbian\Code\Buddycloud\group\bld.inf;" includesCache="C:/Symbian/Code/Buddycloud/inc[LOCAL];C:/Symbian/SDKs/S60/S60_5th_Edition_SDK_v1.0/epoc32/include;C:/Symbian/SDKs/S60/S60_5th_Edition_SDK_v1.0/epoc32/include/mmf/plugin;" macrosCache="__GENERIC_MARM__;__EXE__;__SYMBIAN32__;__SUPPORT_CPP_EXCEPTIONS__;__EPOC32__;__EABI__;__GCCE__;__MARM__;__S60_50__;_UNICODE;__S60_3X__;__S60_5X__;_DEBUG;__SERIES60_3X__;__MARM_ARMV5__;" moduleId="configDataCache" sourcesCache="/Buddycloud/data;/Buddycloud/inc;/Buddycloud/src;" timestampCache="1270052568281" useMmpMacrosCache="true"/>
 <storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
 <storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
 <storageModule moduleId="org.eclipse.cdt.core.language.mapping"/>
@@ -315,7 +315,7 @@
 <ARGUMENTS_DATA_ID ABLDFREEZEARGSSTORAGE="-r"/>
 <ROM_BUILDER_DATA_ID ROMBUILDWORKINGDIRECTORYSTORAGE="C:\"/>
 </storageModule>
-<storageModule filesCache="C:\Symbian\Code\Buddycloud\group\Buddycloud.mmp;C:\Symbian\Code\Buddycloud\group\bld.inf;C:\Symbian\SDKs\S60\S60_3rd_FP2_SDK\epoc32\include\blddef.h;" includesCache="C:/Symbian/Code/Buddycloud/inc[LOCAL];C:/Symbian/SDKs/S60/S60_3rd_FP2_SDK/epoc32/include;C:/Symbian/SDKs/S60/S60_3rd_FP2_SDK/epoc32/include/mmf/plugin;" macrosCache="__GENERIC_MARM__;__EXE__;__SYMBIAN32__;__SUPPORT_CPP_EXCEPTIONS__;__EPOC32__;__EABI__;__GCCE__;__MARM__;_UNICODE;__S60_3X__;_DEBUG;__SERIES60_3X__;__MARM_ARMV5__;__S60_32__;" moduleId="configDataCache" sourcesCache="/Buddycloud/data;/Buddycloud/inc;/Buddycloud/src;" timestampCache="1267536449156" useMmpMacrosCache="true"/>
+<storageModule filesCache="C:\Symbian\Code\Buddycloud\group\Buddycloud.mmp;C:\Symbian\Code\Buddycloud\group\bld.inf;C:\Symbian\SDKs\S60\S60_3rd_FP2_SDK\epoc32\include\blddef.h;" includesCache="C:/Symbian/Code/Buddycloud/inc[LOCAL];C:/Symbian/SDKs/S60/S60_3rd_FP2_SDK/epoc32/include;C:/Symbian/SDKs/S60/S60_3rd_FP2_SDK/epoc32/include/mmf/plugin;" macrosCache="__GENERIC_MARM__;__EXE__;__SYMBIAN32__;__SUPPORT_CPP_EXCEPTIONS__;__EPOC32__;__EABI__;__GCCE__;__MARM__;_UNICODE;__S60_3X__;_DEBUG;__SERIES60_3X__;__MARM_ARMV5__;__S60_32__;" moduleId="configDataCache" sourcesCache="/Buddycloud/data;/Buddycloud/inc;/Buddycloud/src;" timestampCache="1270052568312" useMmpMacrosCache="true"/>
 <storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
 <storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
 <storageModule moduleId="org.eclipse.cdt.core.language.mapping"/>
@@ -342,7 +342,7 @@
 <ARGUMENTS_DATA_ID ABLDFREEZEARGSSTORAGE="-r"/>
 <ROM_BUILDER_DATA_ID ROMBUILDWORKINGDIRECTORYSTORAGE="C:\"/>
 </storageModule>
-<storageModule filesCache="C:\Symbian\SDKs\S60\S60_3rd_FP1\Epoc32\include\blddef.h;C:\Symbian\Code\Buddycloud\group\Buddycloud.mmp;C:\Symbian\Code\Buddycloud\group\bld.inf;" includesCache="C:/Symbian/Code/Buddycloud/inc[LOCAL];C:/Symbian/SDKs/S60/S60_3rd_FP1/Epoc32/include;C:/Symbian/SDKs/S60/S60_3rd_FP1/Epoc32/include/mmf/plugin;" macrosCache="__GENERIC_MARM__;__EXE__;__SYMBIAN32__;__SUPPORT_CPP_EXCEPTIONS__;__EPOC32__;__EABI__;__GCCE__;__SERIES60_31__;__MARM__;_UNICODE;_DEBUG;__SERIES60_3X__;__MARM_ARMV5__;" moduleId="configDataCache" sourcesCache="/Buddycloud/data;/Buddycloud/inc;/Buddycloud/src;" timestampCache="1267536449187" useMmpMacrosCache="true"/>
+<storageModule filesCache="C:\Symbian\SDKs\S60\S60_3rd_FP1\Epoc32\include\blddef.h;C:\Symbian\Code\Buddycloud\group\Buddycloud.mmp;C:\Symbian\Code\Buddycloud\group\bld.inf;" includesCache="C:/Symbian/Code/Buddycloud/inc[LOCAL];C:/Symbian/SDKs/S60/S60_3rd_FP1/Epoc32/include;C:/Symbian/SDKs/S60/S60_3rd_FP1/Epoc32/include/mmf/plugin;" macrosCache="__GENERIC_MARM__;__EXE__;__SYMBIAN32__;__SUPPORT_CPP_EXCEPTIONS__;__EPOC32__;__EABI__;__GCCE__;__SERIES60_31__;__MARM__;_UNICODE;_DEBUG;__SERIES60_3X__;__MARM_ARMV5__;" moduleId="configDataCache" sourcesCache="/Buddycloud/data;/Buddycloud/inc;/Buddycloud/src;" timestampCache="1270052568328" useMmpMacrosCache="true"/>
 <storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
 <storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
 <storageModule moduleId="org.eclipse.cdt.core.language.mapping"/>

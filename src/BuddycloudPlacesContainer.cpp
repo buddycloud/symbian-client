@@ -216,9 +216,8 @@ void CBuddycloudPlacesContainer::RenderWrappedText(TInt aIndex) {
 					
 					HBufC* aCellText = iCoeEnv->AllocReadResourceLC(R_LOCALIZED_STRING_POSITIONING_CELL);
 					HBufC* aWifiGpsText = iCoeEnv->AllocReadResourceLC(R_LOCALIZED_STRING_POSITIONING_WIFIGPS);
-					HBufC* aBtText = iCoeEnv->AllocReadResourceLC(R_LOCALIZED_STRING_POSITIONING_BT);
 	
-					HBufC* aTextToWrap = HBufC::NewLC(aCellText->Des().Length() + aWifiGpsText->Des().Length() + aBtText->Des().Length() + (KNewSentance().Length() * 2));
+					HBufC* aTextToWrap = HBufC::NewLC(aCellText->Des().Length() + aWifiGpsText->Des().Length() + KNewSentance().Length());
 					TPtr pTextToWrap(aTextToWrap->Des());
 					
 					if(iLocationInterface->CellDataAvailable()) {
@@ -236,14 +235,6 @@ void CBuddycloudPlacesContainer::RenderWrappedText(TInt aIndex) {
 						CleanupStack::PopAndDestroy(); // aStationaryText
 					}
 					
-					if(iLocationInterface->BtDataAvailable()) {
-						if(pTextToWrap.Length() > 0) {
-							pTextToWrap.Append(KNewSentance);
-						}
-						
-						pTextToWrap.Append(*aBtText);
-					}
-					
 					if(pTextToWrap.Length() == 0) {
 						HBufC* aNoPositioningText = iCoeEnv->AllocReadResourceLC(R_LOCALIZED_STRING_POSITIONING_NONE);
 						
@@ -252,7 +243,7 @@ void CBuddycloudPlacesContainer::RenderWrappedText(TInt aIndex) {
 					}
 					
 					aPlace->SetDescriptionL(pTextToWrap);
-					CleanupStack::PopAndDestroy(4); // aTextToWrap, aBtText, aWifiGpsText, aCellText
+					CleanupStack::PopAndDestroy(3); // aTextToWrap, aWifiGpsText, aCellText
 				}				
 			}
 				
@@ -438,18 +429,10 @@ void CBuddycloudPlacesContainer::RenderListItems() {
 							
 							// Gps
 							if(iLocationInterface->GpsDataAvailable()) {
-								iBufferGc->BitBltMasked(TPoint(iLeftBarSpacer + 6, (aItemDrawPos + 2 + (iItemIconSize / 2))), iAvatarRepository->GetImage(KIconPositioning, false, iIconMidmapSize), TRect(0, (iItemIconSize / 2), (iItemIconSize / 2), iItemIconSize), iAvatarRepository->GetImage(KIconPositioning, true, iIconMidmapSize), true);
+								iBufferGc->BitBltMasked(TPoint(iLeftBarSpacer + 6, (aItemDrawPos + 2 + (iItemIconSize / 2))), iAvatarRepository->GetImage(KIconPositioning, false, iIconMidmapSize), TRect(0, (iItemIconSize / 2), iItemIconSize, iItemIconSize), iAvatarRepository->GetImage(KIconPositioning, true, iIconMidmapSize), true);
 							}
 							else {
-								iBufferGc->BitBltMasked(TPoint(iLeftBarSpacer + 6, (aItemDrawPos + 2 + (iItemIconSize / 2))), iAvatarRepository->GetImage(KIconNoPosition, false, iIconMidmapSize), TRect(0, (iItemIconSize / 2), (iItemIconSize / 2), iItemIconSize), iAvatarRepository->GetImage(KIconNoPosition, true, iIconMidmapSize), true);
-							}
-							
-							// Bluetooth
-							if(iLocationInterface->BtDataAvailable()) {
-								iBufferGc->BitBltMasked(TPoint((iLeftBarSpacer + 6 + (iItemIconSize / 2)), (aItemDrawPos + 2 + (iItemIconSize / 2))), iAvatarRepository->GetImage(KIconPositioning, false, iIconMidmapSize), TRect((iItemIconSize / 2), (iItemIconSize / 2), iItemIconSize, iItemIconSize), iAvatarRepository->GetImage(KIconPositioning, true, iIconMidmapSize), true);
-							}
-							else {
-								iBufferGc->BitBltMasked(TPoint((iLeftBarSpacer + 6 + (iItemIconSize / 2)), (aItemDrawPos + 2 + (iItemIconSize / 2))), iAvatarRepository->GetImage(KIconNoPosition, false, iIconMidmapSize), TRect((iItemIconSize / 2), (iItemIconSize / 2), iItemIconSize, iItemIconSize), iAvatarRepository->GetImage(KIconNoPosition, true, iIconMidmapSize), true);
+								iBufferGc->BitBltMasked(TPoint(iLeftBarSpacer + 6, (aItemDrawPos + 2 + (iItemIconSize / 2))), iAvatarRepository->GetImage(KIconNoPosition, false, iIconMidmapSize), TRect(0, (iItemIconSize / 2), iItemIconSize, iItemIconSize), iAvatarRepository->GetImage(KIconNoPosition, true, iIconMidmapSize), true);
 							}
 						}
 						else {

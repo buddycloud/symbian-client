@@ -186,8 +186,7 @@ CDiscussion::~CDiscussion() {
 CDiscussion::CDiscussion() {
 	iNotify = true;
 	iItemId = KErrNotFound;
-	iUnreadEntries = 0;
-	iUnreadReplies = 0;
+	iUnreadData = NULL;
 }
 
 void CDiscussion::ConstructL(const TDesC& aDiscussionId) {
@@ -195,16 +194,23 @@ void CDiscussion::ConstructL(const TDesC& aDiscussionId) {
 }
 
 TInt CDiscussion::GetUnreadEntries() {
-	return iUnreadEntries;
+	if(iUnreadData) {
+		return iUnreadData->iEntries;
+	}
+	
+	return 0;
 }
 
 TInt CDiscussion::GetUnreadReplies() {
-	return iUnreadReplies;
+	if(iUnreadData) {
+		return iUnreadData->iReplies;
+	}
+	
+	return 0;
 }
 
-void CDiscussion::SetUnreadData(TInt aEntries, TInt aReplies) {
-	iUnreadEntries = aEntries;
-	iUnreadReplies = aReplies;
+void CDiscussion::SetUnreadData(MDiscussionUnreadData* aUnreadData) {
+	iUnreadData = aUnreadData;
 }
 
 void CDiscussion::SetDiscussionReadObserver(MDiscussionReadObserver* aObserver, TInt aItemId) {
@@ -533,24 +539,26 @@ void CDiscussion::ParseEntryForLinksL(CAtomEntryData* aEntry) {
 }
 
 void CDiscussion::EntryRead(CAtomEntryData* aEntry) {
-	TInt aLastUnread = iUnreadEntries;
-	
 	iLastUpdate.UniversalTime();
 
-	if(!aEntry->Read()) {
-		iUnreadEntries--;
-		
-		if(aEntry->DirectReply()) {
-			iUnreadReplies--;
-		}
-	}
+	if(iUnreadData) {
+		TInt aLastUnread = iUnreadData->iEntries;	
 	
-	if(iUnreadEntries <= 0) {
-		iUnreadEntries = 0;
-		iUnreadReplies = 0;
+		if(!aEntry->Read()) {
+			iUnreadData->iEntries--;
+			
+			if(aEntry->DirectReply()) {
+				iUnreadData->iReplies--;
+			}
+		}
 		
-		if(iDiscussionReadObserver && aLastUnread != iUnreadEntries) {
-			iDiscussionReadObserver->DiscussionRead(*iDiscussionId, iItemId);
+		if(iUnreadData->iEntries <= 0) {
+			iUnreadData->iEntries = 0;
+			iUnreadData->iReplies = 0;
+			
+			if(iDiscussionReadObserver && aLastUnread != iUnreadData->iEntries) {
+				iDiscussionReadObserver->DiscussionRead(*iDiscussionId, iItemId);
+			}
 		}
 	}
 }
@@ -561,11 +569,13 @@ void CDiscussion::EntryAdded(CAtomEntryData* aEntry) {
 	aEntry->SetObserver(this);
 
 	// Set counters
-	if(!aEntry->Read()) {
-		iUnreadEntries++;
-		
-		if(aEntry->DirectReply()) {
-			iUnreadReplies++;
+	if(iUnreadData) {
+		if(!aEntry->Read()) {
+			iUnreadData->iEntries++;
+			
+			if(aEntry->DirectReply()) {
+				iUnreadData->iReplies++;
+			}
 		}
 	}
 	
@@ -599,8 +609,10 @@ void CDiscussion::ReadDiscussionToMemoryL() {
 		RFile aFile;		
 		TInt aFileSize;
 		
-		iUnreadEntries = 0;
-		iUnreadReplies = 0;
+		if(iUnreadData) {
+			iUnreadData->iEntries = 0;
+			iUnreadData->iReplies = 0;
+		}
 		
 		iDiscussionInMemory = true;
 		

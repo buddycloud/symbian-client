@@ -173,7 +173,6 @@ class CXmppEngine : public CBase, MTcpIpEngineNotification, MConnectionMonitorNo
 
 	private: // Stream handling
 		void OpenStream();
-		void QueryServerTimeL();
 		void WriteToStreamL(const TDesC8& aData);
 		void ReadFromStreamL(const TDesC8& aData);
 		void ProcessStanzaInBufferL(TInt aLength);

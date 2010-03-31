@@ -40,9 +40,6 @@ CLocationEngine::~CLocationEngine() {
 	if(iWlanDataHandler)
 		delete iWlanDataHandler;
 
-	if(iBtDataHandler)
-		delete iBtDataHandler;
-
 	if(iSignalStrengthDataHandler)
 		delete iSignalStrengthDataHandler;
 
@@ -60,7 +57,6 @@ CLocationEngine::CLocationEngine() {
 	iCellEnabled = false;
 	iGpsEnabled = false;
 	iWlanEnabled = false;
-	iBtEnabled = false;
 	
 	iGpsLatitude = 0.0;
 	iGpsLongitude = 0.0;
@@ -82,7 +78,6 @@ void CLocationEngine::ConstructL(MLocationEngineNotification* aEngineObserver) {
 	iCellTowerDataHandler = CCellTowerDataHandler::NewL(this);
 	iSignalStrengthDataHandler = CSignalStrengthDataHandler::NewL(this);
 	iWlanDataHandler = CWlanDataHandler::NewL(this);
-	iBtDataHandler = CBtDataHandler::NewL(this);
 	iGpsDataHandler = CGpsDataHandler::NewL(this);
 
 	iEngineState = ELocationIdle;
@@ -174,26 +169,6 @@ void CLocationEngine::SetWlanActive(TBool aActive) {
 	}
 }
 
-void CLocationEngine::SetBtActive(TBool aActive) {
-	if(iBtEnabled != aActive) {
-		iBtEnabled = aActive;
-	
-		if(iEngineState > ELocationIdle) {
-			if( !iBtEnabled ) {
-				iBtDataHandler->SetWaiting(false);
-				iBtDataHandler->Stop();
-			}
-			else {
-				iBtDataHandler->StartL();
-			}
-		}
-	}
-}
-
-void CLocationEngine::SetBtLaunch(TInt aSeconds) {
-	iBtDataHandler->SetLaunch(aSeconds);
-}
-
 void CLocationEngine::TriggerEngine() {
 	if(iCellEnabled && iEngineState == ELocationIdle) {
 #ifndef __WINSCW__
@@ -220,13 +195,11 @@ void CLocationEngine::StopEngine() {
 		iSignalStrengthDataHandler->SetWaiting(false);
 		iGpsDataHandler->SetWaiting(false);
 		iWlanDataHandler->SetWaiting(false);
-		iBtDataHandler->SetWaiting(false);
 		
 		iCellTowerDataHandler->Stop();
 		iSignalStrengthDataHandler->Stop();
 		iGpsDataHandler->Stop();
 		iWlanDataHandler->Stop();
-		iBtDataHandler->Stop();
 		
 		iGpsLatitude = 0.0;
 		iGpsLongitude = 0.0;
@@ -256,10 +229,6 @@ TBool CLocationEngine::GpsDataAvailable() {
 
 TBool CLocationEngine::WlanDataAvailable() {
 	return iWlanDataHandler->AvailableWlanNetworks();
-}
-
-TBool CLocationEngine::BtDataAvailable() {
-	return iBtDataHandler->AvailableBtDevices();
 }
 
 void CLocationEngine::GetGpsPosition(TReal& aLatitude, TReal& aLongitude) {
@@ -331,9 +300,7 @@ void CLocationEngine::InsertIntoPayload(TInt aPosition, const TDesC8& aString, T
 }
 
 void CLocationEngine::BuildLocationPayload() {
-	if(!iGpsDataHandler->IsWaiting() && !iWlanDataHandler->IsWaiting() &&
-			!iBtDataHandler->IsWaiting() && !iSignalStrengthDataHandler->IsWaiting()) {
-
+	if(!iGpsDataHandler->IsWaiting() && !iWlanDataHandler->IsWaiting() && !iSignalStrengthDataHandler->IsWaiting()) {
 		TPtr8 pLogStanza(iLogStanza->Des());
 		InsertIntoPayload(128 + 20, GetCurrentTime(), pLogStanza);
 		InsertIntoPayload(52, *iLangCode, pLogStanza);
@@ -351,8 +318,7 @@ void CLocationEngine::TimerExpired(TInt /*aExpiryId*/) {
 	switch(iEngineState) {
 		case ELocationShutdown:
 			if(iCellTowerDataHandler->IsConnected() || iGpsDataHandler->IsConnected() ||
-					iWlanDataHandler->IsConnected() || iBtDataHandler->IsConnected() ||
-					iSignalStrengthDataHandler->IsConnected()) {
+					iWlanDataHandler->IsConnected() || iSignalStrengthDataHandler->IsConnected()) {
 
 				iTimer->After(KShutdownTimeout);
 			}
@@ -361,7 +327,7 @@ void CLocationEngine::TimerExpired(TInt /*aExpiryId*/) {
 			}
 			break;
 		case ELocationWaitForTimeout:
-			if(iCellEnabled || iWlanEnabled || iBtEnabled || iGpsEnabled) {
+			if(iCellEnabled || iWlanEnabled || iGpsEnabled) {
 				iEngineState = ELocationWaitForResources;
 				iTimer->After(KResourceTimeout);
 
@@ -377,9 +343,6 @@ void CLocationEngine::TimerExpired(TInt /*aExpiryId*/) {
 				if(iGpsEnabled) {
 					iGpsDataHandler->SetWaiting(true);
 				}
-				
-				iBtDataHandler->SetWaiting(true);
-				
 				
 				// Start resources
 				if(iCellEnabled) {
@@ -409,8 +372,6 @@ void CLocationEngine::TimerExpired(TInt /*aExpiryId*/) {
 						iGpsDataHandler->StartL();
 					}
 				}
-				
-				iBtDataHandler->CollectData();
 			}
 			else {
 				iEngineState = ELocationWaitForTimeout;
@@ -418,16 +379,13 @@ void CLocationEngine::TimerExpired(TInt /*aExpiryId*/) {
 			}
 			break;
 		case ELocationWaitForResources:
-			if(iSignalStrengthDataHandler->IsWaiting() || iWlanDataHandler->IsWaiting() ||
-					iBtDataHandler->IsWaiting() || iGpsDataHandler->IsWaiting()) {
-
+			if(iSignalStrengthDataHandler->IsWaiting() || iWlanDataHandler->IsWaiting() || iGpsDataHandler->IsWaiting()) {
 				if(iSignalStrengthDataHandler->IsWaiting()) {
 					InsertSignalStrengthL(0);
 					iSignalStrengthDataHandler->SetWaiting(false);
 				}
 
 				iWlanDataHandler->SetWaiting(false);
-				iBtDataHandler->SetWaiting(false);
 				iGpsDataHandler->SetWaiting(false);
 
 				iSignalStrengthDataHandler->Stop();
@@ -529,28 +487,6 @@ void CLocationEngine::WlanData(TDesC8& aMac, TDesC8& aSecurity, TUint aRxLevel) 
 void CLocationEngine::WlanNotification(TWlanNotification /*aCode*/) {
 	if(iWlanDataHandler->IsWaiting()) {
 		iWlanDataHandler->SetWaiting(false);
-		
-		BuildLocationPayload();
-	}
-}
-
-void CLocationEngine::BtData(TDesC8& aMac) {
-	if(iBtDataHandler->IsWaiting()) {
-		_LIT8(KBtData, "<reference><id></id><type>bluetooth</type></reference>");
-		HBufC8* aBtData = HBufC8::NewLC(KBtData().Length() + aMac.Length());
-		TPtr8 pBtData(aBtData->Des());
-		pBtData.Copy(KBtData);
-		pBtData.Insert(15, aMac);
-
-		TPtr8 pLogStanza(iLogStanza->Des());
-		InsertIntoPayload(pLogStanza.Length() - 23, pBtData, pLogStanza);
-		CleanupStack::PopAndDestroy();
-	}
-}
-
-void CLocationEngine::BtNotification(TBtNotification /*aCode*/) {
-	if(iBtDataHandler->IsWaiting()) {
-		iBtDataHandler->SetWaiting(false);
 		
 		BuildLocationPayload();
 	}

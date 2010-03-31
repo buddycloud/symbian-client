@@ -51,8 +51,8 @@ enum TIntSettingItems {
 };
 
 enum TBoolSettingItems {
-	ESettingItemCellOn = ESettingItemLanguage + 1, ESettingItemWifiOn, ESettingItemBtOn, ESettingItemGpsOn, 
-	ESettingItemCellAvailable, ESettingItemWifiAvailable, ESettingItemBtAvailable, ESettingItemGpsAvailable, 
+	ESettingItemCellOn = ESettingItemLanguage + 1, ESettingItemWifiOn, ESettingItemGpsOn, 
+	ESettingItemCellAvailable, ESettingItemWifiAvailable, ESettingItemGpsAvailable, 
 	ESettingItemNewInstall, ESettingItemNotifyReplyTo, ESettingItemAutoStart, ESettingItemAccessPoint, 
 	ESettingItemMessageBlocking, ESettingItemMarkAllChannelsRead
 };
@@ -379,14 +379,10 @@ class CBuddycloudLogic : public CBase, MLocationEngineNotification, MTimeInterfa
 		HBufC* iServerActivityText;
         HBufC* iBroadLocationText;        
         TInt64 iLastNodeIdReceived;
-
-		// Time Stamps
-		TTimeIntervalSeconds iServerOffset;
 		
 		// Internal flags
 		TInt iIdStamp;
 		
-		TBool iOffsetReceived;
 		TBool iRosterSynchronized;
 		TBool iPubsubSubscribedTo;
 		TXmppPubsubAccessModel iUserChannelAccessModel;
@@ -405,7 +401,6 @@ class CBuddycloudLogic : public CBase, MLocationEngineNotification, MTimeInterfa
         // Positioning settings
         TBool iSettingCellOn;
         TBool iSettingWlanOn;
-        TBool iSettingBtOn;
         TBool iSettingGpsOn;
         
         // Notifications settings

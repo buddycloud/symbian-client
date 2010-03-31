@@ -45,7 +45,6 @@ class MLocationEngineDataInterface {
 		virtual TBool CellDataAvailable() = 0;
 		virtual TBool GpsDataAvailable() = 0;
 		virtual TBool WlanDataAvailable() = 0;
-		virtual TBool BtDataAvailable() = 0;
 		
 	public: // Access to GPS position
 		virtual void GetGpsPosition(TReal& aLatitude, TReal& aLongitude) = 0;

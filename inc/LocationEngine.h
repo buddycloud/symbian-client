@@ -15,7 +15,6 @@
 #define LOCATIONENGINE_H_
 
 #include <e32base.h>
-#include "BtDataHandler.h"
 #include "CellTowerDataHandler.h"
 #include "GpsDataHandler.h"
 #include "LocationInterfaces.h"
@@ -55,8 +54,7 @@ enum TLocationError {
 */
 
 class CLocationEngine : public CBase, MLocationEngineDataInterface, MXmppStanzaObserver, MTimeoutNotification, 
-							MGpsNotification, MCellTowerNotification, MWlanNotification, MBtNotification, 
-							MSignalStrengthNotification {
+							MGpsNotification, MCellTowerNotification, MWlanNotification, MSignalStrengthNotification {
 	public:
 		static CLocationEngine* NewL(MLocationEngineNotification* aEngineObserver);
 		static CLocationEngine* NewLC(MLocationEngineNotification* aEngineObserver);
@@ -77,9 +75,6 @@ class CLocationEngine : public CBase, MLocationEngineDataInterface, MXmppStanzaO
 		void SetCellActive(TBool aActive);
 		void SetGpsActive(TBool aActive);
 		void SetWlanActive(TBool aActive);
-		void SetBtActive(TBool aActive);
-		
-		void SetBtLaunch(TInt aSeconds);
 
 		void TriggerEngine();
 		
@@ -92,7 +87,6 @@ class CLocationEngine : public CBase, MLocationEngineDataInterface, MXmppStanzaO
 		TBool CellDataAvailable();
 		TBool GpsDataAvailable();
 		TBool WlanDataAvailable();
-		TBool BtDataAvailable();
 		
 	public: // From MLocationEngineDataInterface
 		void GetGpsPosition(TReal& aLatitude, TReal& aLongitude);
@@ -126,10 +120,6 @@ class CLocationEngine : public CBase, MLocationEngineDataInterface, MXmppStanzaO
 		void WlanData(TDesC8& aMac, TDesC8& aSecurity, TUint aRxLevel);
 		void WlanNotification(TWlanNotification aCode);
 
-	public: // Implemented functions from MBtNotification
-		void BtData(TDesC8& aMac);
-		void BtNotification(TBtNotification aCode);
-		
 	public: // Implemented functions from MSignalStrengthNotification
 		void SignalStrengthData(TInt32 aSignalStrength, TInt8 aSignalBars);
 		void SignalStrengthError(TSignalStrengthError aError);
@@ -181,13 +171,11 @@ class CLocationEngine : public CBase, MLocationEngineDataInterface, MXmppStanzaO
 		
 		// Other resources
 		CWlanDataHandler* iWlanDataHandler;
-		CBtDataHandler* iBtDataHandler;
 		CSignalStrengthDataHandler* iSignalStrengthDataHandler;
 
 		TBool iCellEnabled;
 		TBool iGpsEnabled;
 		TBool iWlanEnabled;
-		TBool iBtEnabled;
 		
 		// Location server results
 		TLocationMotionState iMotionState;

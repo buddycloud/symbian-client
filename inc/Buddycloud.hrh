@@ -138,7 +138,6 @@ enum TSettingsNotificationsItems {
 enum TSettingsPositioningItems {
 	ESettingPositioningCellOn = 1, 
 	ESettingPositioningWifiOn, 
-	ESettingPositioningBtOn, 
 	ESettingPositioningGpsOn
 };
 

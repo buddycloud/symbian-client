@@ -193,8 +193,8 @@ void CXmppEngine::TimerExpired(TInt aExpiryId) {
 						iStateTimer->After(30000000);
 						iSilenceState = EXmppPingSent;
 		
-						// Send 'Ping'
-						QueryServerTimeL();
+						// Send ping
+						WriteToStreamL(_L8("<iq type='get' id='ping1'><ping xmlns='urn:xmpp:ping'/></iq>\r\n"));
 					}
 				}
 				else if(iSilenceState == EXmppPingSent) {
@@ -583,10 +583,6 @@ void CXmppEngine::OpenStream() {
 	CleanupStack::PopAndDestroy();
 }
 
-void CXmppEngine::QueryServerTimeL() {
-	WriteToStreamL(_L8("<iq to='buddycloud.com' type='get' id='time1'><time xmlns='urn:xmpp:time'/></iq>\r\n"));
-}
-
 void CXmppEngine::WriteToStreamL(const TDesC8& aData) {
 	if(iStreamCompressed) {
 		iEngineObserver->XmppStanzaWritten(aData);
@@ -852,9 +848,6 @@ void CXmppEngine::XmppStanzaAcknowledgedL(const TDesC8& aStanza, const TDesC8& a
 		WriteToStreamL(KSessionStanza);
 	}
 	else if(aId.Compare(_L8("sess1")) == 0) {
-		// Established Session
-		QueryServerTimeL();		
-		
 		// Request Roster
 		_LIT8(KRosterStanza, "<iq type='get' id='roster1'><query xmlns='jabber:iq:roster'/></iq>\r\n");
 		

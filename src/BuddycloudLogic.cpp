@@ -169,7 +169,6 @@ void CBuddycloudLogic::ConstructL() {
 	iSettingCellOn = true;
 	iSettingWlanOn = true;
 	iSettingGpsOn = false;
-	iSettingBtOn = false;
 	
 #ifdef _DEBUG
 	WriteToLog(_L8("BL    Initialize CBuddycloudFollowingStore"));
@@ -228,7 +227,6 @@ void CBuddycloudLogic::Startup() {
 	
 	iLocationEngine->SetCellActive(iSettingCellOn);
 	iLocationEngine->SetWlanActive(iSettingWlanOn);
-	iLocationEngine->SetBtActive(iSettingBtOn);
 	iLocationEngine->SetGpsActive(iSettingGpsOn);
 	
 	// Load places
@@ -496,8 +494,6 @@ TBool& CBuddycloudLogic::GetBoolSetting(TBoolSettingItems aItem) {
 			return iSettingCellOn;
 		case ESettingItemWifiOn:
 			return iSettingWlanOn;
-		case ESettingItemBtOn:
-			return iSettingBtOn;
 		case ESettingItemGpsOn:
 			return iSettingGpsOn;
 		case ESettingItemNotifyReplyTo:
@@ -580,9 +576,6 @@ void CBuddycloudLogic::SettingsItemChanged(TInt aSettingsItemId) {
 	else if(aSettingsItemId == ESettingItemGpsOn) {
 		iLocationEngine->SetGpsActive(iSettingGpsOn);
 	}
-	else if(aSettingsItemId == ESettingItemBtOn) {
-		iLocationEngine->SetBtActive(iSettingBtOn);
-	}
 	else if(aSettingsItemId == ESettingItemMarkAllChannelsRead) {
 		for(TInt i = 0; i < iFollowingList->Count(); i++) {
 			CFollowingItem* aItem = static_cast <CFollowingItem*> (iFollowingList->GetItemByIndex(i));
@@ -590,7 +583,7 @@ void CBuddycloudLogic::SettingsItemChanged(TInt aSettingsItemId) {
 			if(aItem && aItem->GetItemType() >= EItemRoster) {
 				CFollowingChannelItem* aChannelItem = static_cast <CFollowingChannelItem*> (aItem);
 				
-				if(aChannelItem->GetId().Length() > 0 && aChannelItem->GetUnread() > 0) {
+				if(aChannelItem->GetId().Length() > 0 && aChannelItem->GetUnreadData()->iEntries > 0) {
 					CDiscussion* aDiscussion = iDiscussionManager->GetDiscussionL(aChannelItem->GetId());
 					
 					// Cache discussion to memory
@@ -1258,7 +1251,6 @@ void CBuddycloudLogic::ProcessPubsubSubscriptionsL() {
 				// No longer subscribed to a channel, remove
 				iDiscussionManager->DeleteDiscussionL(aChannelItem->GetId());	
 				
-				aChannelItem->SetUnreadData(NULL);
 				aChannelItem->SetIdL(KNullDesC);
 				
 				if(aItem->GetItemType() == EItemChannel) {
@@ -1290,8 +1282,8 @@ void CBuddycloudLogic::ProcessPubsubSubscriptionsL() {
 					aChannelItem->SetIdL(aSubscribedItem->GetId());
 					aChannelItem->SetPubsubSubscription(aSubscribedItem->GetPubsubSubscription());
 					aChannelItem->SetPubsubAffiliation(aSubscribedItem->GetPubsubAffiliation());
-					aChannelItem->SetUnreadData(aDiscussion);
-	
+					
+					aDiscussion->SetUnreadData(aChannelItem->GetUnreadData());
 					aDiscussion->SetDiscussionReadObserver(this, aChannelItem->GetItemId());
 					
 //					iGenericList->DeleteItemByIndex(0);
@@ -1307,9 +1299,9 @@ void CBuddycloudLogic::ProcessPubsubSubscriptionsL() {
 				// Set channel data
 				aSubscribedItem->SetItemId(iNextItemId++);
 				aSubscribedItem->SetTitleL(iTextUtilities->Utf8ToUnicodeL(aNodeParser->GetNode(1)));
-				aSubscribedItem->SetUnreadData(aDiscussion);
 							
 				// Add to discussion manager
+				aDiscussion->SetUnreadData(aSubscribedItem->GetUnreadData());
 				aDiscussion->SetDiscussionReadObserver(this, aSubscribedItem->GetItemId());		
 				
 				iFollowingList->BubbleItem(iFollowingList->AddItem(aSubscribedItem), EBubbleUp);
@@ -1988,10 +1980,10 @@ void CBuddycloudLogic::HandlePubsubEventL(const TDesC8& aStanza) {
 							if(aChannelItem->GetItemType() == EItemRoster && aChannelItem->GetId().CompareF(aNodeId) != 0) {
 								// Set new node id
 								aChannelItem->SetIdL(aNodeId);
-								aChannelItem->SetUnreadData(aDiscussion);
 								
 								// Set discussion id
-								aDiscussion->SetDiscussionIdL(aNodeId);								
+								aDiscussion->SetDiscussionIdL(aNodeId);		
+								aDiscussion->SetUnreadData(aChannelItem->GetUnreadData());
 								aDiscussion->SetDiscussionReadObserver(this, aChannelItem->GetItemId());
 								
 								// Collect node items
@@ -2119,7 +2111,6 @@ void CBuddycloudLogic::HandlePubsubEventL(const TDesC8& aStanza) {
 									if(aChannelItem->GetItemType() == EItemRoster) {
 										// Clear user channel id
 										aChannelItem->SetIdL(KNullDesC);
-										aChannelItem->SetUnreadData(NULL);
 									
 										// Reset status & geoloc data
 										aRosterItem->SetDescriptionL(KNullDesC);
@@ -2376,8 +2367,8 @@ TInt CBuddycloudLogic::FollowChannelL(const TDesC& aNode) {
 	
 	// Set discussion
 	CDiscussion* aDiscussion = iDiscussionManager->GetDiscussionL(aChannelItem->GetId());
+	aDiscussion->SetUnreadData(aChannelItem->GetUnreadData());
 	aDiscussion->SetDiscussionReadObserver(this, aChannelItem->GetItemId());		
-	aChannelItem->SetUnreadData(aDiscussion);
 	
 	iFollowingList->BubbleItem(iFollowingList->AddItem(aChannelItem), EBubbleUp);
 	CleanupStack::Pop(); // aChannelItem
@@ -2413,8 +2404,6 @@ void CBuddycloudLogic::UnfollowChannelL(TInt aItemId) {
 
 	if(aItem && aItem->GetItemType() >= EItemRoster) {
 		CFollowingChannelItem* aChannelItem = static_cast <CFollowingChannelItem*> (aItem);
-		
-		aChannelItem->SetUnreadData(NULL);
 
 		if(aChannelItem->GetId().Length() > 0) {
 			HBufC8* aEncNode = iTextUtilities->UnicodeToUtf8L(aChannelItem->GetId()).AllocLC();
@@ -2496,9 +2485,8 @@ TInt CBuddycloudLogic::CreateChannelL(const TDesC& aNodeId, const TDesC& aTitle,
 	
 	// Add to discussion
 	CDiscussion* aDiscussion = iDiscussionManager->GetDiscussionL(aChannelItem->GetId());
+	aDiscussion->SetUnreadData(aChannelItem->GetUnreadData());
 	aDiscussion->SetDiscussionReadObserver(this, aChannelItem->GetItemId());
-	
-	aChannelItem->SetUnreadData(aDiscussion);
 	
 	iFollowingList->BubbleItem(iFollowingList->AddItem(aChannelItem), EBubbleUp);
 	CleanupStack::Pop(); // aChannelItem
@@ -2877,7 +2865,6 @@ void CBuddycloudLogic::LoadSettingsAndItemsL() {
 				if(aXmlParser->MoveToElement(_L8("beacons"))) {					
 					iSettingCellOn = aXmlParser->GetBoolAttribute(_L8("cell"));
 					iSettingWlanOn = aXmlParser->GetBoolAttribute(_L8("wlan"));
-					iSettingBtOn = aXmlParser->GetBoolAttribute(_L8("bt"));
 					iSettingGpsOn = aXmlParser->GetBoolAttribute(_L8("gps"));
 				}
 				
@@ -2934,12 +2921,13 @@ void CBuddycloudLogic::LoadSettingsAndItemsL() {
 					if(pTimeAttribute.Length() > 0) {
 						aChannelItem->SetLastUpdated(aTimeUtilities->DecodeL(pTimeAttribute));
 					}
+					
+					aChannelItem->GetUnreadData()->iEntries = aItemXml->GetIntAttribute(_L8("unreadentries"), 0);
+					aChannelItem->GetUnreadData()->iReplies = aItemXml->GetIntAttribute(_L8("unreadreplies"), 0);
 
 					CDiscussion* aDiscussion = iDiscussionManager->GetDiscussionL(aChannelItem->GetId());
+					aDiscussion->SetUnreadData(aChannelItem->GetUnreadData());
 					aDiscussion->SetDiscussionReadObserver(this, aChannelItem->GetItemId());		
-					aDiscussion->SetUnreadData(aItemXml->GetIntAttribute(_L8("unreadentries")), aItemXml->GetIntAttribute(_L8("unreadreplies")));
-					
-					aChannelItem->SetUnreadData(aDiscussion);
 
 					iFollowingList->AddItem(aChannelItem);
 					CleanupStack::Pop(); // aChannelItem
@@ -2970,21 +2958,22 @@ void CBuddycloudLogic::LoadSettingsAndItemsL() {
 						}
 					}
 					
+					aRosterItem->GetUnreadData()->iEntries = aItemXml->GetIntAttribute(_L8("unreadprivate"), 0);
+										
 					CDiscussion* aDiscussion = iDiscussionManager->GetDiscussionL(aRosterItem->GetId());
+					aDiscussion->SetUnreadData(aRosterItem->GetUnreadData());
 					aDiscussion->SetDiscussionReadObserver(this, aRosterItem->GetItemId());			
-					aDiscussion->SetUnreadData(aItemXml->GetIntAttribute(_L8("unreadprivate")));
-					
-					aRosterItem->SetUnreadData(aDiscussion);
 					
 					// Channel
 					if(aItemXml->MoveToElement(_L8("channel"))) {
 						aRosterItem->SetIdL(iTextUtilities->Utf8ToUnicodeL(aItemXml->GetStringAttribute(_L8("jid"))), EIdChannel);
 						
-						aDiscussion = iDiscussionManager->GetDiscussionL(aRosterItem->GetId(EIdChannel));
-						aDiscussion->SetDiscussionReadObserver(this, aRosterItem->GetItemId());			
-						aDiscussion->SetUnreadData(aItemXml->GetIntAttribute(_L8("unreadentries")), aItemXml->GetIntAttribute(_L8("unreadreplies")));
+						aRosterItem->GetUnreadData(EIdChannel)->iEntries = aItemXml->GetIntAttribute(_L8("unreadentries"), 0);
+						aRosterItem->GetUnreadData(EIdChannel)->iReplies = aItemXml->GetIntAttribute(_L8("unreadreplies"), 0);
 						
-						aRosterItem->SetUnreadData(aDiscussion, EIdChannel);
+						aDiscussion = iDiscussionManager->GetDiscussionL(aRosterItem->GetId(EIdChannel));
+						aDiscussion->SetUnreadData(aRosterItem->GetUnreadData(EIdChannel));
+						aDiscussion->SetDiscussionReadObserver(this, aRosterItem->GetItemId());			
 					}
 
 					// Location
@@ -3098,7 +3087,7 @@ void CBuddycloudLogic::SaveSettingsAndItemsL() {
 		aFile.WriteL(iTextUtilities->UnicodeToUtf8L(iSettingDirectReplyToneFile));
 		
 		// Beacons
-		aBuf.Format(_L8("'/>\r\n\t\t\t<beacons cell='%d' wlan='%d' bt='%d' gps='%d'/>\r\n\t\t\t<communities>\r\n"), iSettingCellOn, iSettingWlanOn, iSettingBtOn, iSettingGpsOn);
+		aBuf.Format(_L8("'/>\r\n\t\t\t<beacons cell='%d' wlan='%d' gps='%d'/>\r\n\t\t\t<communities>\r\n"), iSettingCellOn, iSettingWlanOn, iSettingGpsOn);
 		aFile.WriteL(aBuf);
 		
 		// Communities
@@ -3504,7 +3493,6 @@ void CBuddycloudLogic::WriteToLog(const TDesC8& aText) {
 TTime CBuddycloudLogic::TimeStamp() {
 	TTime aNow;
 	aNow.UniversalTime();
-	aNow -= iServerOffset;
 
 	return aNow;
 }
@@ -4643,9 +4631,6 @@ void CBuddycloudLogic::XmppStateChanged(TXmppEngineState aState) {
 		SetActivityStatus(R_LOCALIZED_STRING_NOTE_CONNECTING);
 		
 		if(aState == EXmppReconnect) {
-			// Set offline
-			iOffsetReceived = false;
-			
 			if(iState != ELogicConnecting) {
 				// Notify observers
 				iOwnerObserver->StateChanged(ELogicConnecting);
@@ -4666,7 +4651,6 @@ void CBuddycloudLogic::XmppStateChanged(TXmppEngineState aState) {
 		// XMPP state changes to an Offline state
 		iTimer->Stop();
 		iTimerState = ETimeoutNone;
-		iOffsetReceived = false;
 		iPubsubSubscribedTo = false;
 				
 		if(iSettingAccessPoint) {
@@ -4725,51 +4709,6 @@ void CBuddycloudLogic::XmppUnhandledStanza(const TDesC8& aStanza) {
 					
 				if(aAttributeType.Compare(_L8("set")) == 0) {	
 					AcknowledgePubsubEventL(aAttributeId);
-				}
-			}
-		}
-		else if(aXmlParser->MoveToElement(_L8("time"))) {
-			if(aAttributeType.Compare(_L8("result")) == 0) {			
-				if(aXmlParser->MoveToElement(_L8("utc"))) {
-					if( !iOffsetReceived ) {
-						iOffsetReceived = true;
-						
-						// XEP-0090: Server Time
-						CTimeUtilities* aTimeUtilities = CTimeUtilities::NewLC();
-		
-						// Server time
-						TTime aServerTime = aTimeUtilities->DecodeL(aXmlParser->GetStringData());
-		
-						// Utc Phone time
-						TTime aPhoneTime;
-						aPhoneTime.UniversalTime();
-		
-						// Calculate offset
-						aPhoneTime.SecondsFrom(aServerTime, iServerOffset);
-		
-						// Calculate BT beacon sync
-						aPhoneTime = TimeStamp();
-						TTime aBeaconTime = aPhoneTime;
-						aBeaconTime.RoundUpToNextMinute();
-						TDateTime aDateTime = aBeaconTime.DateTime();
-		
-						if(aDateTime.Minute() % 5 > 0) {
-							TTimeIntervalMinutes aAddMinutes(5 - (aDateTime.Minute() % 5));
-							aBeaconTime += aAddMinutes;
-						}
-		
-						TTimeIntervalSeconds aNextBeaconSeconds;
-						aBeaconTime.SecondsFrom(aPhoneTime, aNextBeaconSeconds);
-						iLocationEngine->SetBtLaunch(aNextBeaconSeconds.Int());
-		
-#ifdef _DEBUG
-						TBuf8<256> aLog;
-						aLog.Format(_L8("LOGIC Server/Phone offset is %d seconds. BT launch in %d seconds."), iServerOffset.Int(), aNextBeaconSeconds.Int());
-						WriteToLog(aLog);
-#endif
-		
-						CleanupStack::PopAndDestroy(); // aTimeUtilities
-					}
 				}
 			}
 		}
@@ -5101,10 +5040,9 @@ void CBuddycloudLogic::XmppRosterL(const TDesC8& aStanza) {
 			
 			// Add to discussion manager
 			CDiscussion* aDiscussion = iDiscussionManager->GetDiscussionL(aRosterItem->GetId());
+			aDiscussion->SetUnreadData(aRosterItem->GetUnreadData());
 			aDiscussion->SetDiscussionReadObserver(this, aRosterItem->GetItemId());
-			
-			aRosterItem->SetUnreadData(aDiscussion);
-	
+				
 			iFollowingList->BubbleItem(iFollowingList->AddItem(aRosterItem), EBubbleUp);
 			aRosterItemStore->RemoveItemByIndex(0);	
 		}
@@ -5160,9 +5098,8 @@ void CBuddycloudLogic::HandleUserItemConfigurationL(const TDesC& aJid) {
 		}
 	
 		CDiscussion* aDiscussion = iDiscussionManager->GetDiscussionL(pJid);
+		aDiscussion->SetUnreadData(aRosterItem->GetUnreadData());
 		aDiscussion->SetDiscussionReadObserver(this, aRosterItem->GetItemId());
-		
-		aRosterItem->SetUnreadData(aDiscussion);
 		
 		iFollowingList->InsertItem(0, aRosterItem);
 		CleanupStack::Pop();
@@ -5279,10 +5216,9 @@ void CBuddycloudLogic::HandleRosterItemPushL(const TDesC8& aStanza) {
 				
 				// Add to discussion manager
 				CDiscussion* aDiscussion = iDiscussionManager->GetDiscussionL(aRosterItem->GetId());
+				aDiscussion->SetUnreadData(aRosterItem->GetUnreadData());
 				aDiscussion->SetDiscussionReadObserver(this, aRosterItem->GetItemId());
 				
-				aRosterItem->SetUnreadData(aDiscussion);
-		
 				iFollowingList->BubbleItem(iFollowingList->AddItem(aRosterItem), EBubbleUp);
 				CleanupStack::Pop(); // aRosterItem
 				
@@ -5772,7 +5708,6 @@ void CBuddycloudLogic::HandleIncomingMessageL(const TDesC8& aStanza) {
 		aRosterItem->SetItemId(iNextItemId++);
 		aRosterItem->SetIdL(aJid);
 		aRosterItem->SetTitleL(aJid);
-		aRosterItem->SetUnreadData(aDiscussion);
 		
 		TInt aLocate = aRosterItem->GetId().Locate('@');
 		
@@ -5781,6 +5716,7 @@ void CBuddycloudLogic::HandleIncomingMessageL(const TDesC8& aStanza) {
 			aRosterItem->SetSubTitleL(aRosterItem->GetId().Mid(aLocate));
 		}
 		
+		aDiscussion->SetUnreadData(aRosterItem->GetUnreadData());
 		aDiscussion->SetDiscussionReadObserver(this, aRosterItem->GetItemId());
 
 		iFollowingList->AddItem(aRosterItem);

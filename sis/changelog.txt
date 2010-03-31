@@ -5,6 +5,14 @@ Any problems please send 'C:\logs\Buddycloud\LogicLog.txt' to ross@buddycloud.co
 
 ----------
 
+1.00.21
+
+- Rework of discussion entry & reply counters, moving counter from discussion to item
+- Use XEP-0199 for pinging now instead of XEP-0202
+- Remove server time synchronization, and calculation of BT launch time
+- Remove BT resource handling from the CLocationEngine
+- Remove settings item options for BT in CBuddycloudBeaconSettingsList
+
 1.00.20
 
 - Change the Last Node Id to TInt64 and only store if it's the latest one

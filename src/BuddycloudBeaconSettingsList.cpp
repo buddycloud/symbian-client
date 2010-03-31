@@ -83,9 +83,6 @@ void CBuddycloudBeaconSettingsList::EditItemL(TInt aIndex, TBool aCalledFromMenu
 		case ESettingPositioningWifiOn:
 			iBuddycloudLogic->SettingsItemChanged(ESettingItemWifiOn);
 			break;
-		case ESettingPositioningBtOn:
-			iBuddycloudLogic->SettingsItemChanged(ESettingItemBtOn);
-			break;
 		case ESettingPositioningGpsOn:
 			iBuddycloudLogic->SettingsItemChanged(ESettingItemGpsOn);
 			break;
@@ -102,9 +99,6 @@ CAknSettingItem* CBuddycloudBeaconSettingsList::CreateSettingItemL (TInt aIdenti
 			break;
 		case ESettingPositioningWifiOn:
 			aSettingItem = new (ELeave) CAknBinaryPopupSettingItem(aIdentifier, iBuddycloudLogic->GetBoolSetting(ESettingItemWifiOn));
-			break;
-		case ESettingPositioningBtOn:
-			aSettingItem = new (ELeave) CAknBinaryPopupSettingItem(aIdentifier, iBuddycloudLogic->GetBoolSetting(ESettingItemBtOn));
 			break;
 		case ESettingPositioningGpsOn:
 			aSettingItem = new (ELeave) CAknBinaryPopupSettingItem(aIdentifier, iBuddycloudLogic->GetBoolSetting(ESettingItemGpsOn));

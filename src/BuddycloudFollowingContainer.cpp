@@ -451,16 +451,16 @@ void CBuddycloudFollowingContainer::RenderListItems() {
 								
 								iBufferGc->UseFont(iSecondaryFont);
 							
-								if(aChannelItem->GetUnread() > 0) {
+								if(aChannelItem->GetUnreadData()->iEntries > 0) {
 									// Draw channel messages
-									aBuf.Format(_L("%d"), aChannelItem->GetUnread());
+									aBuf.Format(_L("%d"), aChannelItem->GetUnreadData()->iEntries);
 									aMessageIconOffset = (iItemIconSize / 2) + iSecondaryFont->TextWidthInPixels(aBuf);
 									
 									// Message Icon
 									iBufferGc->SetBrushStyle(CGraphicsContext::ENullBrush);
 									iBufferGc->BitBltMasked(TPoint((iRect.Width() - iRightBarSpacer - 3 - (iItemIconSize / 2)), aUnreadPos), iAvatarRepository->GetImage(KIconMessage2, false, iIconMidmapSize), TRect(0, 0, (iItemIconSize / 2), (iItemIconSize / 2)), iAvatarRepository->GetImage(KIconMessage2, true, iIconMidmapSize), true);								
 									
-									if(aChannelItem->GetReplies() > 0) {
+									if(aChannelItem->GetUnreadData()->iReplies > 0) {
 										// Draw direct reply icon
 										iBufferGc->BitBltMasked(TPoint((iRect.Width() - iRightBarSpacer - 3 - (iItemIconSize / 2)), aUnreadPos), iAvatarRepository->GetImage(KOverlayReply, false, iIconMidmapSize), TRect(0, 0, (iItemIconSize / 2), (iItemIconSize / 2)), iAvatarRepository->GetImage(KOverlayReply, true, iIconMidmapSize), true);
 									}
@@ -475,11 +475,11 @@ void CBuddycloudFollowingContainer::RenderListItems() {
 								if(aItem->GetItemType() == EItemRoster) {
 									CFollowingRosterItem* aRosterItem = static_cast <CFollowingRosterItem*> (aItem);
 									
-									if(aRosterItem->GetUnread() > 0) {
+									if(aRosterItem->GetUnreadData()->iEntries > 0) {
 										// Draw private messages
-										aBuf.Format(_L("%d"), aRosterItem->GetUnread());
+										aBuf.Format(_L("%d"), aRosterItem->GetUnreadData()->iEntries);
 										
-										if(aRosterItem->GetUnread() > aChannelItem->GetUnread()) {
+										if(aRosterItem->GetUnreadData()->iEntries > aChannelItem->GetUnreadData()->iEntries) {
 											aMessageIconOffset = (iItemIconSize / 2) + iSecondaryFont->TextWidthInPixels(aBuf);
 										}
 										
@@ -618,7 +618,7 @@ void CBuddycloudFollowingContainer::RenderListItems() {
 								if(aItem->GetItemType() == EItemRoster) {
 									CFollowingRosterItem* aRosterItem = static_cast <CFollowingRosterItem*> (aItem);
 									
-									if(aRosterItem->GetUnread() > 0) {
+									if(aRosterItem->GetUnreadData()->iEntries > 0) {
 										// Draw private message icon
 										aMessageIconOffset += (iItemIconSize / 2);
 										iBufferGc->BitBltMasked(TPoint(iRect.Width() - aMessageIconOffset, (aItemDrawPos + 1)), iAvatarRepository->GetImage(KIconMessage1, false, iIconMidmapSize), TRect(0, 0, (iItemIconSize / 2), (iItemIconSize / 2)), iAvatarRepository->GetImage(KIconMessage1, true, iIconMidmapSize), true);										
@@ -628,12 +628,12 @@ void CBuddycloudFollowingContainer::RenderListItems() {
 								// Channel messages
 								CFollowingChannelItem* aChannelItem = static_cast <CFollowingChannelItem*> (aItem);
 															
-								if(aChannelItem->GetUnread() > 0) {
+								if(aChannelItem->GetUnreadData()->iEntries > 0) {
 									// Draw private message icon
 									aMessageIconOffset += (iItemIconSize / 2);
 									iBufferGc->BitBltMasked(TPoint(iRect.Width() - aMessageIconOffset, (aItemDrawPos + 1)), iAvatarRepository->GetImage(KIconMessage2, false, iIconMidmapSize), TRect(0, 0, (iItemIconSize / 2), (iItemIconSize / 2)), iAvatarRepository->GetImage(KIconMessage2, true, iIconMidmapSize), true);
 								
-									if(aChannelItem->GetReplies() > 0) {
+									if(aChannelItem->GetUnreadData()->iReplies > 0) {
 										// Draw direct reply icon
 										iBufferGc->BitBltMasked(TPoint(iRect.Width() - aMessageIconOffset, (aItemDrawPos + 1)), iAvatarRepository->GetImage(KOverlayReply, false, iIconMidmapSize), TRect(0, 0, (iItemIconSize / 2), (iItemIconSize / 2)), iAvatarRepository->GetImage(KOverlayReply, true, iIconMidmapSize), true);
 									}
@@ -907,7 +907,7 @@ void CBuddycloudFollowingContainer::DynInitMenuPaneL(TInt aResourceId, CEikMenuP
 				}
 				
                 // Private messages
-				if(!aRosterItem->OwnItem() || aRosterItem->GetUnread(EIdRoster) > 0) {
+				if(!aRosterItem->OwnItem() || aRosterItem->GetUnreadData()->iEntries > 0) {
                     aMenuPane->SetItemDimmed(EMenuPrivateMessagesCommand, false);
                 }              
 
@@ -959,7 +959,7 @@ void CBuddycloudFollowingContainer::DynInitMenuPaneL(TInt aResourceId, CEikMenuP
 				aMenuPane->SetItemDimmed(EMenuChannelMessagesCommand, false);
 			}
 			
-			if(aRosterItem->GetUnread() > 0) {
+			if(aRosterItem->GetUnreadData()->iEntries > 0) {
 				aMenuPane->SetItemDimmed(EMenuPrivateMessagesCommand, false);
 			}
 			
@@ -1125,9 +1125,9 @@ void CBuddycloudFollowingContainer::HandleCommandL(TInt aCommand) {
             
             HBufC* aMessage = HBufC::NewLC(1024);
             TPtr pMessage(aMessage->Des());
-            pMessage.Append(_L("I'm on buddycloud! You can now post in my channel at http://buddycloud.com// or create your own channel. "));
-            pMessage.Insert(76, aOwnItem->GetId().Left(aLocate));
-            pMessage.Insert(75, aOwnItem->GetId().Mid(aLocate + 1));
+            pMessage.Append(_L("I'm on buddycloud! You can now post in my channel at http://buddycloud.com/user// or create your own channel. "));
+            pMessage.Insert(81, aOwnItem->GetId().Left(aLocate));
+            pMessage.Insert(80, aOwnItem->GetId().Mid(aLocate + 1));
         
             CAknTextQueryDialog* aDialog = CAknTextQueryDialog::NewL(pMessage, CAknQueryDialog::ENoTone);
             aDialog->SetPredictiveTextInputPermitted(true);
