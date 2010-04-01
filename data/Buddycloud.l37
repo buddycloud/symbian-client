@@ -54,7 +54,6 @@ rls_string r_string_positioning_stationary "يمكنك الآن احفظ هذا 
 rls_string r_string_positioning_moving "أنت تتحرك حاليا. ارتباطك الآن لا يستطيع أن يضمن لك سيتم وضعها هنا مرة أخرى"
 rls_string r_string_positioning_cell "خلية نمط التعلم قد يستغرق عدة دقائق"
 rls_string r_string_positioning_wifigps "لا يزال بإمكانك احفظ هذا المكان الآن ، كما تعتبر منارات واي فاي"
-rls_string r_string_positioning_bt "اذا كان المستخدمون buddycloud أخرى هي قريبة منك ، فإننا سوف المفاجئة لكنت مكانهم"
 rls_string r_string_positioning_none "ي تحديد المواقع المتاحة حاليا. الرجاء التحقق من إعدادات لتحديد المواقع"
 
 // Menu: Search
@@ -98,8 +97,8 @@ rls_string r_string_options_jumptounread "القفز الى غير المقرو�
 rls_string r_string_options_addcomment "Post comment"
 rls_string r_string_options_postmessage "Post topic"
 rls_string r_string_options_postmedia "يقدم الوسائط المتعددة"
-rls_string r_string_options_notificationon "Enable buzz"
-rls_string r_string_options_notificationoff "Disable buzz"
+rls_string r_string_options_notificationon "Enable notifications"
+rls_string r_string_options_notificationoff "Disable notifications"
 rls_string r_string_item_likepost "♥ post"
 rls_string r_string_item_copypost "Copy post"
 rls_string r_string_item_reportpost "Report post"
@@ -229,7 +228,6 @@ rls_string r_string_settings_itemlist_tonedefault "النغمة الافتراض
 rls_string r_string_settings_beacons_title "المواقع"
 rls_string r_string_settings_itemlist_cell "برج الجوال"
 rls_string r_string_settings_itemlist_wlan "واي فاي"
-rls_string r_string_settings_itemlist_bt "بلوتوث"
 rls_string r_string_settings_itemlist_gps "(GPS) نظام تحديد المواقع"
 rls_string r_string_settings_itemlist_on "على"
 rls_string r_string_settings_itemlist_off "بعيدا"

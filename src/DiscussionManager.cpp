@@ -602,7 +602,9 @@ void CDiscussion::EntryDeleted(CAtomEntryData* aEntry) {
 
 
 void CDiscussion::ReadDiscussionToMemoryL() {
-	if(!iDiscussionInMemory) {
+	TPtr pId(iDiscussionId->Des());
+	
+	if(!iDiscussionInMemory && pId.Length() > 0) {
 		RFs aSession = CCoeEnv::Static()->FsSession();	
 		TFileName aFilePath = GetFileName(aSession);
 		
@@ -658,7 +660,9 @@ void CDiscussion::ReadDiscussionToMemoryL() {
 }
 
 void CDiscussion::WriteDiscussionToFileL() {
-	if(iDiscussionInMemory) {
+	TPtr pId(iDiscussionId->Des());
+	
+	if(iDiscussionInMemory && pId.Length() > 0) {
 		RFs aSession = CCoeEnv::Static()->FsSession();	
 		TFileName aFilePath = GetFileName(aSession);
 
@@ -766,21 +770,23 @@ CDiscussion* CDiscussionManager::GetDiscussionL(const TDesC& aId) {
 	CDiscussion* aDiscussion;
 	
 	// Find discussion from cache
-	for(TInt i = 0; i < iDiscussions.Count(); i++) {
-		if(aId.Compare(iDiscussions[i]->GetDiscussionId()) == 0) {	
-			aDiscussion = iDiscussions[i];
-			
-			iDiscussions.Remove(i);
-			iDiscussions.Insert(aDiscussion, 0);
-			
-			return aDiscussion;
+	if(aId.Length() > 0) {
+		for(TInt i = 0; i < iDiscussions.Count(); i++) {
+			if(aId.Compare(iDiscussions[i]->GetDiscussionId()) == 0) {	
+				aDiscussion = iDiscussions[i];
+				
+				iDiscussions.Remove(i);
+				iDiscussions.Insert(aDiscussion, 0);
+				
+				return aDiscussion;
+			}
+			else if(aCompressionNeeded) {
+				iDiscussions[i]->CompressL(true);
+				User::Heap().Compress();
+				
+				aCompressionNeeded = CompressionNeeded();
+			}		
 		}
-		else if(aCompressionNeeded) {
-			iDiscussions[i]->CompressL(true);
-			User::Heap().Compress();
-			
-			aCompressionNeeded = CompressionNeeded();
-		}		
 	}
 	
 	aDiscussion = CDiscussion::NewLC(aId);

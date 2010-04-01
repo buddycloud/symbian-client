@@ -54,7 +54,6 @@ rls_string r_string_positioning_stationary "คุณบุคมาร์คส
 rls_string r_string_positioning_moving "คุณกำลังเดินทางอยู่ การบุคมาร์คไม่สามารถบอกได้ว่าคุณจะกลับมาสถานที่นี้อีก"
 rls_string r_string_positioning_cell "กำลังค้นหาข้อมูลจากเสาส่งสัญญาณโทรศัพท์ อาจจะใช้เวลาหลายนาที"
 rls_string r_string_positioning_wifigps "คุณบุคมาร์คสถานที่นี้ได้ตราบใดที่ยังพบ Wifi"
-rls_string r_string_positioning_bt "ถ้ามีสมาชิก buddycloud ท่านอื่นอยู่ใกล้ๆคุณ เราจะใช้สถานที่เดียวกันกับพวกเขา"
 rls_string r_string_positioning_none "ไม่พบตำแหน่งใดๆ กรุณาตรวจสอบการตั้งค่าตำแหน่งของคุณ"
 
 // Menu: Search
@@ -98,8 +97,8 @@ rls_string r_string_options_jumptounread "ไปยังข้อความ�
 rls_string r_string_options_addcomment "Post comment"
 rls_string r_string_options_postmessage "Post topic"
 rls_string r_string_options_postmedia "โพสต์ภาพ,เสียง"
-rls_string r_string_options_notificationon "Enable buzz"
-rls_string r_string_options_notificationoff "Disable buzz"
+rls_string r_string_options_notificationon "Enable notifications"
+rls_string r_string_options_notificationoff "Disable notifications"
 rls_string r_string_item_likepost "♥ post"
 rls_string r_string_item_copypost "Copy post"
 rls_string r_string_item_reportpost "Report post"
@@ -229,7 +228,6 @@ rls_string r_string_settings_itemlist_tonedefault "โทนเสียงต�
 rls_string r_string_settings_beacons_title "ตำแหน่ง"
 rls_string r_string_settings_itemlist_cell "เสาส่งสัญญาณ"
 rls_string r_string_settings_itemlist_wlan "WIFI"
-rls_string r_string_settings_itemlist_bt "Bluetooth"
 rls_string r_string_settings_itemlist_gps "GPS"
 rls_string r_string_settings_itemlist_on "เปิด"
 rls_string r_string_settings_itemlist_off "ปิด"
