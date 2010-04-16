@@ -5,6 +5,18 @@ Any problems please send 'C:\logs\Buddycloud\LogicLog.txt' to ross@buddycloud.co
 
 ----------
 
+1.01.00
+
+* Submitted to Horizons for signing
+
+1.00.24
+
+- [bug] Subscription/affiliation list cache is not emptied after a half completed login sync
+
+1.00.23
+
+- Add extra debug output for caching of discussion data
+
 1.00.22
 
 - [bug] Uninitialized channel items are creating cache files, this could cause weird behaviour

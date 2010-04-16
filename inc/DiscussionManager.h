@@ -133,7 +133,7 @@ class CDiscussion : public CBase, public MAtomEntryObserver, MThreadedEntryObser
 			
 	private: // File interfaces
 		void ReadDiscussionToMemoryL();
-		void WriteDiscussionToFileL();
+		TBool WriteDiscussionToFileL();
 		void DeleteDiscussionFileL();
 		
 	private:

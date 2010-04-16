@@ -1200,7 +1200,12 @@ void CBuddycloudLogic::CollectPubsubSubscriptionsL(const TDesC8& aAfter) {
 	TPtr8 pPubsubSubscriptions(aPubsubSubscriptions->Des());
 	pPubsubSubscriptions.AppendFormat(KPubsubSubscriptions, EXmppIdGetPubsubSubscriptions, GetNewIdStamp());
 	
-	if(aAfter.Length() > 0) {
+	if(aAfter.Length() == 0) {
+		// Clear subscription list store
+		iGenericList->DeleteAll();
+	}
+	else {
+		// Add rsm element
 		pPubsubSubscriptions.Insert(pPubsubSubscriptions.Length() - 22, KRsmAfterElement);
 		pPubsubSubscriptions.Insert(pPubsubSubscriptions.Length() - 30, aAfter);
 	}
@@ -1363,7 +1368,12 @@ void CBuddycloudLogic::CollectUsersPubsubNodeAffiliationsL(const TDesC8& aAfter)
 		TPtr8 pNodeAffiliations(aNodeAffiliations->Des());
 		pNodeAffiliations.AppendFormat(KNodeAffiliations, EXmppIdGetUsersPubsubNodeAffiliations, GetNewIdStamp());
 		
-		if(aAfter.Length() > 0) {
+		if(aAfter.Length() == 0) {
+			// Clear affiliation list store
+			iGenericList->DeleteAll();
+		}
+		else {
+			// Add rsm element
 			pNodeAffiliations.Insert(pNodeAffiliations.Length() - 22, KRsmAfterElement);
 			pNodeAffiliations.Insert(pNodeAffiliations.Length() - 30, aAfter);
 		}
@@ -1954,6 +1964,11 @@ void CBuddycloudLogic::HandlePubsubEventL(const TDesC8& aStanza) {
 												aNotifiedAudioId = ESettingItemChannelPostTone;
 											}
 										}
+#ifdef _DEBUG
+										else {
+											WriteToLog(_L8("BL    Duplicate entry/comment without topic ignored"));
+										}
+#endif
 										
 										CleanupStack::PopAndDestroy(); // aAtomEntryParser
 										

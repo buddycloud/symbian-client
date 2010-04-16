@@ -155,7 +155,7 @@ void CBuddycloudAppUi::CreateViewsL() {
 	CleanupStack::Pop();
 
 	if(iBuddycloudLogic->GetDescSetting(ESettingItemUsername).Length() > 0) {
-		if(iBuddycloudLogic->GetFollowingStore()->Count() > 1) {
+		if(iBuddycloudLogic->GetFollowingStore()->Count() > 5) {
 			ActivateLocalViewL(KFollowingViewId);
 		}
 		else {

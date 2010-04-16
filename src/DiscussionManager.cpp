@@ -271,9 +271,7 @@ void CDiscussion::CompressL(TBool aForced) {
 		
 		if(aForced || (iLastUpdate + TTimeIntervalSeconds(450)) <= aNow) {
 			// Save to file if older
-			WriteDiscussionToFileL();
-			
-			if(iDiscussionUpdateObserver == NULL) {			
+			if(WriteDiscussionToFileL() && iDiscussionUpdateObserver == NULL) {			
 				// Free memory
 				for(TInt i = 0; i < iEntries.Count(); i++) {
 					delete iEntries[i];
@@ -287,7 +285,7 @@ void CDiscussion::CompressL(TBool aForced) {
 #ifdef _DEBUG
 				if(iDiscussionReadObserver) {
 					TBuf8<256> aBuf;
-					aBuf.Format(_L8("DISC  Discussion %d (%d) saved to file and uncached"), iItemId, aForced);
+					aBuf.Format(_L8("DISC  Discussion %d (%d) is uncached from memory"), iItemId, aForced);
 					iDiscussionReadObserver->DiscussionDebug(aBuf);
 				}
 #endif
@@ -610,6 +608,7 @@ void CDiscussion::ReadDiscussionToMemoryL() {
 		
 		RFile aFile;		
 		TInt aFileSize;
+		TBuf8<128> aBuf;
 		
 		if(iUnreadData) {
 			iUnreadData->iEntries = 0;
@@ -618,16 +617,23 @@ void CDiscussion::ReadDiscussionToMemoryL() {
 		
 		iDiscussionInMemory = true;
 		
+#ifdef _DEBUG
+		if(iDiscussionReadObserver) {
+			aBuf.Format(_L8("DISC  Start: Cache discussion %d to memory"), iItemId);
+			iDiscussionReadObserver->DiscussionDebug(aBuf);
+		}
+#endif
+		
 		if(aFile.Open(aSession, aFilePath, EFileStreamText|EFileRead) == KErrNone) {
 			CleanupClosePushL(aFile);
 			aFile.Size(aFileSize);
 
 			// Create buffer & read file
-			HBufC8* aBuf = HBufC8::NewLC(aFileSize);
-			TPtr8 pBuf(aBuf->Des());
-			aFile.Read(pBuf);
+			HBufC8* aFileData = HBufC8::NewLC(aFileSize);
+			TPtr8 pFileData(aFileData->Des());
+			aFile.Read(pFileData);
 
-			CXmlParser* aXmlParser = CXmlParser::NewLC(*aBuf);
+			CXmlParser* aXmlParser = CXmlParser::NewLC(pFileData);
 
 			if(aXmlParser->MoveToElement(_L8("discussion"))) {
 				// Buzz
@@ -645,21 +651,28 @@ void CDiscussion::ReadDiscussionToMemoryL() {
 				CleanupStack::PopAndDestroy(); // CXmppAtomEntryParser
 			}
 
-			CleanupStack::PopAndDestroy(2); // aXmlParser, aBuf
+			CleanupStack::PopAndDestroy(2); // aXmlParser, aFileData
 			CleanupStack::PopAndDestroy(&aFile);
 			
 #ifdef _DEBUG
 			if(iDiscussionReadObserver) {
-				TBuf8<256> aBuf;
-				aBuf.Format(_L8("DISC  Discussion %d cached to memory: %d bytes"), iItemId, aFileSize);
+				aBuf.Format(_L8("DISC  End: Cache discussion %d to memory (%d bytes)"), iItemId, aFileSize);
 				iDiscussionReadObserver->DiscussionDebug(aBuf);
 			}
 #endif
 		}
+#ifdef _DEBUG
+		else {
+			if(iDiscussionReadObserver) {
+				aBuf.Format(_L8("DISC  Fail: Cache discussion %d to memory"), iItemId);
+				iDiscussionReadObserver->DiscussionDebug(aBuf);
+			}
+		}
+#endif		
 	}
 }
 
-void CDiscussion::WriteDiscussionToFileL() {
+TBool CDiscussion::WriteDiscussionToFileL() {
 	TPtr pId(iDiscussionId->Des());
 	
 	if(iDiscussionInMemory && pId.Length() > 0) {
@@ -668,6 +681,13 @@ void CDiscussion::WriteDiscussionToFileL() {
 
 		RFileWriteStream aFile;
 		TBuf8<128> aBuf;
+		
+#ifdef _DEBUG
+		if(iDiscussionReadObserver) {
+			aBuf.Format(_L8("DISC  Start: Save discussion %d to file"), iItemId);
+			iDiscussionReadObserver->DiscussionDebug(aBuf);
+		}
+#endif
 	
 		if(aFile.Replace(aSession, aFilePath, EFileStreamText|EFileWrite) == KErrNone) {
 			CleanupClosePushL(aFile);
@@ -705,8 +725,27 @@ void CDiscussion::WriteDiscussionToFileL() {
 
 			CleanupStack::PopAndDestroy(); // CXmppAtomEntryParser
 			CleanupStack::PopAndDestroy(&aFile);
+			
+#ifdef _DEBUG
+			if(iDiscussionReadObserver) {
+				aBuf.Format(_L8("DISC  End: Save discussion %d to file"), iItemId);
+				iDiscussionReadObserver->DiscussionDebug(aBuf);
+			}
+#endif
+		
+			return true;
 		}
+#ifdef _DEBUG
+		else {
+			if(iDiscussionReadObserver) {
+				aBuf.Format(_L8("DISC  Fail: Save discussion %d to file"), iItemId);
+				iDiscussionReadObserver->DiscussionDebug(aBuf);
+			}
+		}
+#endif		
 	}
+	
+	return false;
 }
 
 void CDiscussion::DeleteDiscussionFileL() {

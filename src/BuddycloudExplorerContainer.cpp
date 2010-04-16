@@ -108,22 +108,22 @@ CBuddycloudExplorerContainer::~CBuddycloudExplorerContainer() {
 }
 
 void CBuddycloudExplorerContainer::NotificationEvent(TBuddycloudLogicNotificationType aEvent, TInt aId) {
-	if(aEvent == ENotificationLocationUpdated) {
+	if(aEvent == ENotificationConnectivityChanged || aEvent == ENotificationLocationUpdated) {
 		TInt aLevel = iExplorerLevels.Count() - 1;
 
-		if(iExplorerState < EExplorerRequesting && 
+		if(iBuddycloudLogic->GetState() == ELogicOnline && iExplorerState < EExplorerRequesting && 
 				iExplorerLevels.Count() > 0 && iExplorerLevels[aLevel]->iResultItems.Count() == 0) {			
 			
 			// Re-request explorer level results
 			RefreshLevelL();
-		}		
-	}
-#ifdef __SERIES60_40__
-	else if(aEvent == ENotificationConnectivityChanged) {
-		DynInitToolbarL(R_EXPLORER_TOOLBAR, iViewAccessor->ViewToolbar());
+		}	
 		
-	}
+#ifdef __SERIES60_40__
+		if(aEvent == ENotificationConnectivityChanged) {
+			DynInitToolbarL(R_EXPLORER_TOOLBAR, iViewAccessor->ViewToolbar());
+		}
 #endif		
+	}
 	else {
 		CBuddycloudListComponent::NotificationEvent(aEvent, aId);
 	}
