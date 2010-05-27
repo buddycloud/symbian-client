@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CarbideBuilderConfigInfo version="1">
+  <configuration name="Emulator Debug (WINSCW) [S60_3rd_FP2_SDK]">
+    <sisBuilder additionalOptions="" cert="" contentSearchLocation="" key="" outputFileName="" password="" pkgFile="(none)" signedFileName=""/>
+    <envVars/>
+  </configuration>
+  <configuration name="Emulator Debug (WINSCW) [S60_3rd_MR]">
+    <sisBuilder additionalOptions="" cert="" contentSearchLocation="" key="" outputFileName="" password="" pkgFile="(none)" signedFileName=""/>
+    <envVars/>
+  </configuration>
+  <configuration name="Phone Debug (GCCE) [S60_3rd_MR]">
+    <sisBuilder additionalOptions="" cert="C:\Symbian\Source\S60\Buddycloud\sign\Buddycloud.cer" contentSearchLocation="" key="C:\Symbian\Source\S60\Buddycloud\sign\TCTrustCenter.key" outputFileName="Buddycloud_3rd_Ed.sis" password="cstapny" pkgFile="sis/Buddycloud_3rd.pkg" signedFileName="Buddycloud_3rd_Ed.sisx"/>
+    <envVars/>
+  </configuration>
+  <configuration name="Phone Debug (GCCE) [S60_3rd_FP1]">
+    <sisBuilder additionalOptions="" cert="C:\Symbian\Source\S60\Buddycloud\sign\Buddycloud.cer" contentSearchLocation="" key="C:\Symbian\Source\S60\Buddycloud\sign\TCTrustCenter.key" outputFileName="Buddycloud_3rd_Ed_FP1.sis" password="cstapny" pkgFile="sis/Buddycloud_3rd.pkg" signedFileName="Buddycloud_3rd_Ed_FP1.sisx"/>
+    <envVars/>
+  </configuration>
+  <configuration name="Phone Debug (GCCE) [S60_3rd_FP2_SDK]">
+    <sisBuilder additionalOptions="" cert="C:\Symbian\Source\S60\Buddycloud\sign\Buddycloud.cer" contentSearchLocation="" key="C:\Symbian\Source\S60\Buddycloud\sign\TCTrustCenter.key" outputFileName="Buddycloud_3rd_Ed_FP2.sis" password="cstapny" pkgFile="sis/Buddycloud_3rd_FP2.pkg" signedFileName="Buddycloud_3rd_Ed_FP2.sisx"/>
+    <envVars/>
+  </configuration>
+  <configuration name="Emulator Debug (WINSCW) [S60_3rd_FP1]">
+    <sisBuilder additionalOptions="" cert="" contentSearchLocation="" key="" outputFileName="" password="" pkgFile="(none)" signedFileName=""/>
+    <envVars/>
+  </configuration>
+  <configuration name="Emulator Debug (WINSCW) [S60_5th_Edition_SDK_v0.9]">
+    <sisBuilder additionalOptions="" cert="" contentSearchLocation="" key="" outputFileName="" password="" pkgFile="(none)" signedFileName=""/>
+    <envVars/>
+  </configuration>
+  <configuration name="Phone Debug (GCCE) [S60_5th_Edition_SDK_v0.9]">
+    <sisBuilder additionalOptions="" cert="C:\Symbian\Source\S60\Buddycloud\sign\Buddycloud.cer" contentSearchLocation="" key="C:\Symbian\Source\S60\Buddycloud\sign\TCTrustCenter.key" outputFileName="Buddycloud_5th_Ed.sis" password="cstapny" pkgFile="sis/Buddycloud_3rd_FP2.pkg" signedFileName="Buddycloud_5th_Ed.sisx"/>
+    <envVars/>
+  </configuration>
+  <configuration name="Phone Release (GCCE) [S60_3rd_FP2_SDK]">
+    <sisBuilder additionalOptions="" cert="C:\Symbian\Source\S60\Buddycloud\sign\TCTrustCenter.cer" contentSearchLocation="" key="C:\Symbian\Source\S60\Buddycloud\sign\TCTrustCenter.key" outputFileName="Buddycloud_3rd_Ed_FP2.sis" password="cstapny" pkgFile="sis/Buddycloud_3rd_FP2.pkg" signedFileName="Buddycloud_9_3__0_02_xx.sis"/>
+    <envVars/>
+  </configuration>
+  <configuration name="Phone Release (GCCE) [S60_3rd_MR]">
+    <sisBuilder additionalOptions="" cert="C:\Symbian\Source\S60\Buddycloud\sign\TCTrustCenter.cer" contentSearchLocation="" key="C:\Symbian\Source\S60\Buddycloud\sign\TCTrustCenter.key" outputFileName="Buddycloud_3rd_Ed.sis" password="cstapny" pkgFile="sis/Buddycloud_3rd.pkg" signedFileName="Buddycloud_9_1__0_02_xx.sis"/>
+    <envVars/>
+  </configuration>
+  <configuration name="Phone Release (GCCE) [S60_3rd_FP1]">
+    <sisBuilder additionalOptions="" cert="C:\Symbian\Source\S60\Buddycloud\sign\TCTrustCenter.cer" contentSearchLocation="" key="C:\Symbian\Source\S60\Buddycloud\sign\TCTrustCenter.key" outputFileName="Buddycloud_3rd_Ed_FP1.sis" password="cstapny" pkgFile="sis/Buddycloud_3rd_FP1.pkg" signedFileName="Buddycloud_9_2__0_02_xx.sis"/>
+    <envVars/>
+  </configuration>
+  <configuration name="Phone Release (GCCE) [S60_5th_Edition_SDK_v0.9]">
+    <sisBuilder additionalOptions="" cert="C:\Symbian\Source\S60\Buddycloud\sign\TCTrustCenter.cer" contentSearchLocation="" key="C:\Symbian\Source\S60\Buddycloud\sign\TCTrustCenter.key" outputFileName="Buddycloud_5th_Ed.sis" password="cstapny" pkgFile="sis/Buddycloud_3rd_FP2.pkg" signedFileName="Buddycloud_9_4__0_02_xx.sis"/>
+    <envVars/>
+  </configuration>
+</CarbideBuilderConfigInfo>

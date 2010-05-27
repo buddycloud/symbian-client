@@ -1,0 +1,12 @@
+ADDITIONAL SDK SETUP
+====================
+
+In order to successfully build a Buddycloud client additional files need to be 
+included into your S60 SDK directory. 
+
+These files include build definitions and additional SDK API Plugin files provided by Nokia.
+
+
+These files can be copied from the "addition sdk includes" directory.
+
+Open the directory of the SDK in use, then copy the "epoc32" directory to the root of your SDK directory.
